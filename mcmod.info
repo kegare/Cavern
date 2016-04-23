@@ -1,0 +1,20 @@
+{
+  "modListVersion": 2,
+  "modList": [{
+    "modid": "cavern",
+    "name": "Cavern",
+    "description": "Adds the cave dimensions.",
+    "version": "1.0.0",
+    "url": "http://kegare.github.io/",
+    "updateJSON": "",
+    "authorList": ["kegare"],
+    "credits": "Authored by kegare",
+    "logoFile": "logo.png",
+    "screenshots": [],
+    "parent": "",
+    "requiredMods": ["Forge"],
+    "dependencies": [],
+    "dependants": [],
+    "useDependencyInformation": true
+  }]
+}

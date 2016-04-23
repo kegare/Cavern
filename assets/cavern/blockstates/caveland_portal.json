@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "axis=z": { "model": "cavern:caveland_portal_ew" },
+        "axis=x": { "model": "cavern:caveland_portal_ns" }
+    }
+}

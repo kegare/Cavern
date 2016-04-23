@@ -1,9 +1,9 @@
 # Cavern
-Minecraft mod.
+Minecraft mod. Adds the cave dimension!
 
 ----
 ## Requires
-* [Minecraft Forge](http://files.minecraftforge.net/)
+* [Minecraft Forge](http://files.minecraftforge.net/) 12.16.0.1865
 
 ----
 ## License
@@ -14,4 +14,4 @@ Minecraft mod.
 
 ----
 ## Links
-* [Caveworld 2](http://kegare.github.io/caveworld)
+* [Cavern](http://minecraft.curseforge.com/projects/cavern)
