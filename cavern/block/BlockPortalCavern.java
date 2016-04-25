@@ -300,9 +300,8 @@ public class BlockPortalCavern extends BlockPortal
 	@Override
 	public void randomDisplayTick(IBlockState state, World worldIn, BlockPos pos, Random rand) {}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+	public ItemStack getItem(World world, BlockPos pos, IBlockState state)
 	{
 		return new ItemStack(this);
 	}

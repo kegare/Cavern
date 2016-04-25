@@ -16,6 +16,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class CaveItems
@@ -53,6 +55,7 @@ public class CaveItems
 		GameRegistry.register(magnite_shovel);
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void registerModels()
 	{
 		registerModelWithMeta(cave_item, "aquamarine", "magnite_ingot");
@@ -65,11 +68,13 @@ public class CaveItems
 		registerModel(magnite_shovel, "magnite_shovel");
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void registerModel(Item item, String modelName)
 	{
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(Cavern.MODID + ":" + modelName, "inventory"));
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void registerModelWithMeta(Item item, String... modelName)
 	{
 		List<ModelResourceLocation> models = Lists.newArrayList();
@@ -87,11 +92,13 @@ public class CaveItems
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void registerVanillaModel(Item item, String modelName)
 	{
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation("minecraft:" + modelName, "inventory"));
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void registerVanillaModelWithMeta(Item item, String... modelName)
 	{
 		List<ModelResourceLocation> models = Lists.newArrayList();

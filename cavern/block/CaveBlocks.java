@@ -20,6 +20,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class CaveBlocks
@@ -74,6 +76,7 @@ public class CaveBlocks
 		OreDictionary.registerOre("treeSapling", new ItemStack(perverted_sapling, 1, OreDictionary.WILDCARD_VALUE));
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void registerModels()
 	{
 		ModelLoader.setCustomStateMapper(cave_block, new StateMap.Builder().withName(BlockCave.VARIANT).build());
@@ -91,21 +94,25 @@ public class CaveBlocks
 		registerVanillaModelWithMeta(perverted_sapling, "oak_sapling", "spruce_sapling", "birch_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling");
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void registerModel(Block block, String modelName)
 	{
 		CaveItems.registerModel(Item.getItemFromBlock(block), modelName);
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void registerModelWithMeta(Block block, String... modelName)
 	{
 		CaveItems.registerModelWithMeta(Item.getItemFromBlock(block), modelName);
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void registerVanillaModel(Block block, String modelName)
 	{
 		CaveItems.registerVanillaModel(Item.getItemFromBlock(block), modelName);
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void registerVanillaModelWithMeta(Block block, String... modelName)
 	{
 		CaveItems.registerVanillaModelWithMeta(Item.getItemFromBlock(block), modelName);
