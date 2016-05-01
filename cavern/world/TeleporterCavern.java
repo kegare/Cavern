@@ -462,7 +462,7 @@ public class TeleporterCavern extends Teleporter
 						int blockZ = z2 + (j2 - 1) * j1 - i2 * i1;
 						boolean flag = k2 < 0;
 
-						worldObj.setBlockState(new BlockPos(blockX, blockY, blockZ), flag ? Blocks.mossy_cobblestone.getDefaultState() : Blocks.air.getDefaultState());
+						worldObj.setBlockState(pos.set(blockX, blockY, blockZ), flag ? Blocks.mossy_cobblestone.getDefaultState() : Blocks.air.getDefaultState());
 					}
 				}
 			}
@@ -481,7 +481,7 @@ public class TeleporterCavern extends Teleporter
 					int blockZ = z2 + (j2 - 1) * j1;
 					boolean flag1 = j2 == 0 || j2 == 3 || k2 == -1 || k2 == 3;
 
-					worldObj.setBlockState(new BlockPos(blockX, blockY, blockZ), flag1 ? Blocks.mossy_cobblestone.getDefaultState() : state, 2);
+					worldObj.setBlockState(pos.set(blockX, blockY, blockZ), flag1 ? Blocks.mossy_cobblestone.getDefaultState() : state, 2);
 				}
 			}
 
@@ -492,9 +492,8 @@ public class TeleporterCavern extends Teleporter
 					int blockX = x2 + (j2 - 1) * i1;
 					int blockY = y2 + k2;
 					int blockZ = z2 + (j2 - 1) * j1;
-					BlockPos blockpos = new BlockPos(blockX, blockY, blockZ);
 
-					worldObj.notifyNeighborsOfStateChange(blockpos, worldObj.getBlockState(blockpos).getBlock());
+					worldObj.notifyNeighborsOfStateChange(pos.set(blockX, blockY, blockZ), worldObj.getBlockState(pos).getBlock());
 				}
 			}
 		}

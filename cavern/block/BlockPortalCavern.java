@@ -82,27 +82,27 @@ public class BlockPortalCavern extends BlockPortal
 	}
 
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
 	{
 		EnumFacing.Axis axis = state.getValue(AXIS);
 		Size size;
 
 		if (axis == EnumFacing.Axis.X)
 		{
-			size = new Size(worldIn, pos, EnumFacing.Axis.X);
+			size = new Size(world, pos, EnumFacing.Axis.X);
 
 			if (!size.func_150860_b() || size.field_150864_e < size.field_150868_h * size.field_150862_g)
 			{
-				worldIn.setBlockState(pos, Blocks.air.getDefaultState());
+				world.setBlockState(pos, Blocks.air.getDefaultState());
 			}
 		}
 		else if (axis == EnumFacing.Axis.Z)
 		{
-			size = new Size(worldIn, pos, EnumFacing.Axis.Z);
+			size = new Size(world, pos, EnumFacing.Axis.Z);
 
 			if (!size.func_150860_b() || size.field_150864_e < size.field_150868_h * size.field_150862_g)
 			{
-				worldIn.setBlockState(pos, Blocks.air.getDefaultState());
+				world.setBlockState(pos, Blocks.air.getDefaultState());
 			}
 		}
 	}
@@ -333,7 +333,7 @@ public class BlockPortalCavern extends BlockPortal
 				this.field_150866_c = EnumFacing.SOUTH;
 			}
 
-			for (BlockPos blockpos1 = pos; pos.getY() > blockpos1.getY() - 21 && pos.getY() > 0 && func_150857_a(worldIn.getBlockState(pos.down())); pos = pos.down())
+			for (BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && func_150857_a(worldIn.getBlockState(pos.down())); pos = pos.down())
 			{
 				;
 			}

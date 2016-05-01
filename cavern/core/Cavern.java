@@ -103,8 +103,11 @@ public class Cavern
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		proxy.registerBlockColors();
-		proxy.registerItemColors();
+		if (event.getSide().isClient())
+		{
+			CaveBlocks.registerBlockColors();
+			CaveBlocks.registerItemBlockColors();
+		}
 
 		CavernConfig.syncConfig();
 		CavernConfig.syncBiomesConfig();
@@ -223,6 +226,8 @@ public class Cavern
 	@EventHandler
 	public void onServerStarting(FMLServerStartingEvent event)
 	{
+		event.registerServerCommand(new CommandCavern());
+
 		GeneralConfig.refreshMiningPointItems();
 		GeneralConfig.refreshMiningPoints();
 

@@ -240,7 +240,7 @@ public class BlockAcresia extends BlockCrops
 		Random rand = world instanceof World ? ((World)world).rand : RANDOM;
 		int count = quantityDropped(state, fortune, rand);
 
-		for (int i = 0; i < count; i++)
+		for (int i = 0; i < count; ++i)
 		{
 			Item item = getItemDropped(state, rand, fortune);
 

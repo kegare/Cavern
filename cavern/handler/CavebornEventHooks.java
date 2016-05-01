@@ -47,47 +47,55 @@ public class CavebornEventHooks
 	{
 		if (event.player instanceof EntityPlayerMP)
 		{
-			EntityPlayerMP player = (EntityPlayerMP)event.player;
-			ConfigCaveborn.Type caveborn = GeneralConfig.caveborn.getType();
+			final EntityPlayerMP player = (EntityPlayerMP)event.player;
+			final ConfigCaveborn.Type caveborn = GeneralConfig.caveborn.getType();
 
 			if (caveborn != ConfigCaveborn.Type.DISABLED && firstJoinPlayers.contains(player.getUniqueID().toString()))
 			{
-				BlockPortalCavern portal = caveborn.getPortalBlock();
+				final MinecraftServer server = player.mcServer;
 
-				if (portal != null)
+				server.addScheduledTask(new Runnable()
 				{
-					MinecraftServer server = player.mcServer;
-					int dim = portal.getDimension();
-					Teleporter teleporter = new TeleporterCavern(server.worldServerForDimension(dim), portal);
-
-					boolean force = player.forceSpawn;
-
-					player.forceSpawn = true;
-					player.timeUntilPortal = player.getPortalCooldown();
-
-					server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
-
-					player.forceSpawn = force;
-
-					WorldServer world = player.getServerForPlayer();
-					BlockPos pos = player.getPosition();
-
-					for (BlockPos blockpos : BlockPos.getAllInBox(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
+					@Override
+					public void run()
 					{
-						if (world.getBlockState(blockpos).getBlock() == portal)
-						{
-							world.setBlockToAir(blockpos);
+						BlockPortalCavern portal = caveborn.getPortalBlock();
 
-							break;
+						if (portal != null)
+						{
+							int dim = portal.getDimension();
+							Teleporter teleporter = new TeleporterCavern(server.worldServerForDimension(dim), portal);
+
+							boolean force = player.forceSpawn;
+
+							player.forceSpawn = true;
+							player.timeUntilPortal = player.getPortalCooldown();
+
+							server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
+
+							player.forceSpawn = force;
+
+							WorldServer world = player.getServerForPlayer();
+							BlockPos pos = player.getPosition();
+
+							for (BlockPos blockpos : BlockPos.getAllInBox(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
+							{
+								if (world.getBlockState(blockpos).getBlock() == portal)
+								{
+									world.setBlockToAir(blockpos);
+
+									break;
+								}
+							}
+
+							double x = player.posX;
+							double y = player.posY + player.getEyeHeight();
+							double z = player.posZ;
+
+							world.playSound(null, x, y, z, SoundEvents.block_glass_break, SoundCategory.BLOCKS, 1.0F, 0.65F);
 						}
 					}
-
-					double x = player.posX;
-					double y = player.posY + player.getEyeHeight();
-					double z = player.posZ;
-
-					world.playSound(null, x, y, z, SoundEvents.block_glass_break, SoundCategory.BLOCKS, 1.0F, 0.65F);
-				}
+				});
 			}
 		}
 	}

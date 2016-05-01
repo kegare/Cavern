@@ -13,12 +13,24 @@ import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ColorizerFoliage;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -116,6 +128,45 @@ public class CaveBlocks
 	public static void registerVanillaModelWithMeta(Block block, String... modelName)
 	{
 		CaveItems.registerVanillaModelWithMeta(Item.getItemFromBlock(block), modelName);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void registerBlockColors()
+	{
+		final Minecraft mc = FMLClientHandler.instance().getClient();
+		final BlockColors colors = mc.getBlockColors();
+
+		colors.registerBlockColorHandler(new IBlockColor()
+		{
+			@Override
+			public int colorMultiplier(IBlockState state, IBlockAccess world, BlockPos pos, int tintIndex)
+			{
+				perverted_leaves.setGraphicsLevel(mc.gameSettings.fancyGraphics);
+
+				BlockPlanks.EnumType type = state.getValue(BlockOldLeaf.VARIANT);
+
+				return type == BlockPlanks.EnumType.SPRUCE ? ColorizerFoliage.getFoliageColorPine() : type == BlockPlanks.EnumType.BIRCH ? ColorizerFoliage.getFoliageColorBirch() : world != null && pos != null ? BiomeColorHelper.getFoliageColorAtPos(world, pos) : ColorizerFoliage.getFoliageColorBasic();
+			}
+		}, new Block[] {perverted_leaves});
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void registerItemBlockColors()
+	{
+		final Minecraft mc = FMLClientHandler.instance().getClient();
+		final BlockColors blockColors = mc.getBlockColors();
+		final ItemColors colors = mc.getItemColors();
+
+		colors.registerItemColorHandler(new IItemColor()
+		{
+			@Override
+			public int getColorFromItemstack(ItemStack stack, int tintIndex)
+			{
+				IBlockState state = ((ItemBlock)stack.getItem()).getBlock().getStateFromMeta(stack.getMetadata());
+
+				return blockColors.colorMultiplier(state, null, null, tintIndex);
+			}
+		}, new Block[] {perverted_leaves});
 	}
 
 	public static void registerRecipes()

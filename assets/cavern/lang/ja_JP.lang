@@ -8,8 +8,8 @@ gui.disabled=無効
 cavern.description=洞窟ディメンションを追加します。
 
 cavern.version.message=%s の新しいバージョンが利用可能です
-cavern.version.message.beta=あなたは %s のベータバージョンを利用しています。
-cavern.version.message.alpha=あなたは %s のアルファバージョンを利用しています。
+cavern.version.message.beta=あなたは %s のベータバージョンを利用しています
+cavern.version.message.alpha=あなたは %s のアルファバージョンを利用しています
 
 cavern.config.title=Cavernの設定
 cavern.config.detail=詳細情報

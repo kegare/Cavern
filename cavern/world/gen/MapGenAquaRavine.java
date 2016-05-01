@@ -10,9 +10,9 @@ public class MapGenAquaRavine extends MapGenCavernRavine
 	{
 		if (rand.nextInt(500) == 0)
 		{
-			double blockX = x * 16 + rand.nextInt(16);
+			double blockX = chunkX * 16 + rand.nextInt(16);
 			double blockY = rand.nextInt(rand.nextInt(10) + world.provider.getAverageGroundLevel());
-			double blockZ = z * 16 + rand.nextInt(16);
+			double blockZ = chunkZ * 16 + rand.nextInt(16);
 
 			for (int i = 0; i < 2; ++i)
 			{
@@ -20,7 +20,7 @@ public class MapGenAquaRavine extends MapGenCavernRavine
 				float upDownRadian = (rand.nextFloat() - 0.5F) * 2.0F / 8.0F;
 				float scale = (rand.nextFloat() * 2.0F + rand.nextFloat()) * 9.0F;
 
-				func_180707_a(rand.nextLong(), chunkX, chunkZ, primer, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 20.0D);
+				func_180707_a(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 20.0D);
 			}
 		}
 	}

@@ -130,14 +130,14 @@ public class MapGenAquaCaves extends MapGenCavernCaves
 
 		for (int i = 0; i < chance; ++i)
 		{
-			double blockX = x * 16 + rand.nextInt(16);
+			double blockX = chunkX * 16 + rand.nextInt(16);
 			double blockY = rand.nextInt(rand.nextInt(worldHeight - 80) + 80);
-			double blockZ = z * 16 + rand.nextInt(16);
+			double blockZ = chunkZ * 16 + rand.nextInt(16);
 			int count = 1;
 
 			if (rand.nextInt(5) == 0)
 			{
-				func_180703_a(rand.nextLong(), chunkX, chunkZ, primer, blockX, blockY, blockZ);
+				func_180703_a(rand.nextLong(), x, z, primer, blockX, blockY, blockZ);
 
 				count += rand.nextInt(8);
 			}
@@ -153,7 +153,7 @@ public class MapGenAquaCaves extends MapGenCavernCaves
 					scale *= rand.nextFloat() * rand.nextFloat() * 3.5F + 1.0F;
 				}
 
-				func_180702_a(rand.nextLong(), chunkX, chunkZ, primer, blockX, blockY, blockZ, scale * 2.75F, leftRightRadian, upDownRadian, 0, 0, 1.2D);
+				func_180702_a(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale * 2.75F, leftRightRadian, upDownRadian, 0, 0, 1.2D);
 			}
 		}
 	}
