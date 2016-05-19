@@ -55,9 +55,9 @@ public class WorldGenSpruceTreePerverted extends WorldGenTaiga2
 					{
 						if (y >= 0 && y < world.getHeight())
 						{
-							IBlockState state = world.getBlockState(blockpos.set(x, y, z));
+							IBlockState state = world.getBlockState(blockpos.setPos(x, y, z));
 
-							if (!state.getBlock().isAir(state, world, blockpos.set(x, y, z)) && !state.getBlock().isLeaves(state, world, blockpos.set(x, y, z)))
+							if (!state.getBlock().isAir(state, world, blockpos.setPos(x, y, z)) && !state.getBlock().isLeaves(state, world, blockpos.setPos(x, y, z)))
 							{
 								flag = false;
 							}
@@ -81,7 +81,7 @@ public class WorldGenSpruceTreePerverted extends WorldGenTaiga2
 				BlockPos down = pos.down();
 				IBlockState state = world.getBlockState(down);
 
-				if (state.getBlock().canSustainPlant(state, world, down, EnumFacing.UP, (BlockSapling)Blocks.sapling) && pos.getY() < world.getHeight() - treeHeight - 1)
+				if (state.getBlock().canSustainPlant(state, world, down, EnumFacing.UP, (BlockSapling)Blocks.SAPLING) && pos.getY() < world.getHeight() - treeHeight - 1)
 				{
 					state.getBlock().onPlantGrow(state, world, down, pos);
 

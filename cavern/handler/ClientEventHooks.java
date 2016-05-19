@@ -304,12 +304,12 @@ public class ClientEventHooks
 			{
 				if (mc.currentScreen != null && GuiDownloadCaveTerrain.class == mc.currentScreen.getClass())
 				{
-					event.setGui(new GuiLoadCaveTerrain(mc.getNetHandler()));
+					event.setGui(new GuiLoadCaveTerrain(mc.getConnection()));
 				}
 			}
 			else if (GuiDownloadTerrain.class == gui.getClass())
 			{
-				event.setGui(new GuiDownloadCaveTerrain(mc.getNetHandler()));
+				event.setGui(new GuiDownloadCaveTerrain(mc.getConnection()));
 			}
 		}
 	}
@@ -336,15 +336,15 @@ public class ClientEventHooks
 		if (Version.DEV_DEBUG || Version.getStatus() == Status.AHEAD || Version.getStatus() == Status.BETA || GeneralConfig.versionNotify && Version.isOutdated())
 		{
 			ITextComponent name = new TextComponentString(Cavern.metadata.name);
-			name.getChatStyle().setColor(TextFormatting.AQUA);
+			name.getStyle().setColor(TextFormatting.AQUA);
 			ITextComponent latest = new TextComponentString(Version.getLatest().toString());
-			latest.getChatStyle().setColor(TextFormatting.YELLOW);
+			latest.getStyle().setColor(TextFormatting.YELLOW);
 
 			ITextComponent message;
 
 			message = new TextComponentTranslation("cavern.version.message", name);
 			message.appendText(" : ").appendSibling(latest);
-			message.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Cavern.metadata.url));
+			message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Cavern.metadata.url));
 
 			mc.ingameGUI.getChatGUI().printChatMessage(message);
 			message = null;
@@ -374,7 +374,7 @@ public class ClientEventHooks
 
 		if (CavernAPI.dimension.isEntityInCaves(entity))
 		{
-			if (state.getMaterial() == Material.water)
+			if (state.getMaterial() == Material.WATER)
 			{
 				if (entity instanceof EntityPlayer)
 				{
@@ -384,7 +384,7 @@ public class ClientEventHooks
 					{
 						GlStateManager.setFog(GlStateManager.FogMode.EXP);
 
-						if (player.isPotionActive(MobEffects.waterBreathing))
+						if (player.isPotionActive(MobEffects.WATER_BREATHING))
 						{
 							event.setDensity(0.005F);
 						}

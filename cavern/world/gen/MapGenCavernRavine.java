@@ -11,15 +11,15 @@ import net.minecraft.world.gen.MapGenRavine;
 
 public class MapGenCavernRavine extends MapGenRavine
 {
-	protected static final IBlockState BLK_STONE = Blocks.stone.getDefaultState();
-	protected static final IBlockState BLK_GRAVEL = Blocks.gravel.getDefaultState();
-	protected static final IBlockState BLK_ICE = Blocks.ice.getDefaultState();
-	protected static final IBlockState BLK_WATER = Blocks.flowing_water.getDefaultState();
+	protected static final IBlockState BLK_STONE = Blocks.STONE.getDefaultState();
+	protected static final IBlockState BLK_GRAVEL = Blocks.GRAVEL.getDefaultState();
+	protected static final IBlockState BLK_ICE = Blocks.ICE.getDefaultState();
+	protected static final IBlockState BLK_WATER = Blocks.FLOWING_WATER.getDefaultState();
 
 	private final float[] parabolicField = new float[1024];
 
 	@Override
-	protected void func_180707_a(long ravineSeed, int chunkX, int chunkZ, ChunkPrimer primer, double blockX, double blockY, double blockZ, float scale, float leftRightRadian, float upDownRadian, int currentY, int targetY, double scaleHeight)
+	protected void addTunnel(long ravineSeed, int chunkX, int chunkZ, ChunkPrimer primer, double blockX, double blockY, double blockZ, float scale, float leftRightRadian, float upDownRadian, int currentY, int targetY, double scaleHeight)
 	{
 		Random random = new Random(ravineSeed);
 		int worldHeight = worldObj.getActualHeight();
@@ -144,7 +144,7 @@ public class MapGenCavernRavine extends MapGenRavine
 				blockY = world.provider.getAverageGroundLevel() + rand.nextInt(10);
 			}
 
-			func_180707_a(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 3.0D);
+			addTunnel(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 3.0D);
 		}
 	}
 
@@ -153,11 +153,11 @@ public class MapGenCavernRavine extends MapGenRavine
 	{
 		if (y - 1 < 10)
 		{
-			data.setBlockState(x, y, z, field_186135_a);
+			data.setBlockState(x, y, z, FLOWING_LAVA);
 		}
 		else
 		{
-			data.setBlockState(x, y, z, field_186136_b);
+			data.setBlockState(x, y, z, AIR);
 		}
 	}
 }

@@ -131,10 +131,10 @@ public class MinerStats implements IMinerStats
 				MinecraftServer server = player.mcServer;
 
 				ITextComponent name = new TextComponentTranslation(current.getUnlocalizedName());
-				name.getChatStyle().setBold(true);
+				name.getStyle().setBold(true);
 
 				ITextComponent component = new TextComponentTranslation("cavern.minerrank.promoted", player.getDisplayName(), name);
-				component.getChatStyle().setColor(TextFormatting.GRAY).setItalic(true);
+				component.getStyle().setColor(TextFormatting.GRAY).setItalic(true);
 
 				server.getPlayerList().sendChatMsg(component);
 
@@ -142,7 +142,7 @@ public class MinerStats implements IMinerStats
 				double y = player.posY + player.getEyeHeight();
 				double z = player.posZ;
 
-				player.getServerForPlayer().playSound(null, x, y, z, CaveSounds.rank_promote, SoundCategory.MASTER, 1.0F, 1.0F);
+				player.getServerWorld().playSound(null, x, y, z, CaveSounds.rank_promote, SoundCategory.MASTER, 1.0F, 1.0F);
 			}
 
 			MinecraftForge.EVENT_BUS.post(new MinerStatsEvent.PromoteRank(entityPlayer, this));
@@ -256,7 +256,7 @@ public class MinerStats implements IMinerStats
 			{
 				Block block = Block.getBlockFromItem(entry.getItem());
 
-				if (block != null && block != Blocks.air)
+				if (block != null && block != Blocks.AIR)
 				{
 					setPointAmount(block, entry.getItemDamage(), amount);
 				}

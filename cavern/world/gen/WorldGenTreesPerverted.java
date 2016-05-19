@@ -72,7 +72,7 @@ public class WorldGenTreesPerverted extends WorldGenTrees
 					{
 						if (y >= 0 && y < world.getHeight())
 						{
-							if (!isReplaceable(world,blockpos.set(x, y, z)))
+							if (!isReplaceable(world,blockpos.setPos(x, y, z)))
 							{
 								flag = false;
 							}
@@ -118,7 +118,7 @@ public class WorldGenTreesPerverted extends WorldGenTrees
 									BlockPos blockpos = new BlockPos(x, y, z);
 									state = world.getBlockState(blockpos);
 
-									if (state.getBlock().isAir(state, world, blockpos) || state.getBlock().isLeaves(state, world, blockpos) || state.getMaterial() == Material.vine)
+									if (state.getBlock().isAir(state, world, blockpos) || state.getBlock().isLeaves(state, world, blockpos) || state.getMaterial() == Material.VINE)
 									{
 										setBlockAndNotifyAdequately(world, blockpos, stateLeaves);
 									}
@@ -132,7 +132,7 @@ public class WorldGenTreesPerverted extends WorldGenTrees
 						BlockPos up = pos.up(y);
 						state = world.getBlockState(up);
 
-						if (state.getBlock().isAir(state, world, up) || state.getBlock().isLeaves(state, world, up) || state.getMaterial() == Material.vine)
+						if (state.getBlock().isAir(state, world, up) || state.getBlock().isLeaves(state, world, up) || state.getMaterial() == Material.VINE)
 						{
 							setBlockAndNotifyAdequately(world, pos.up(y), stateWood);
 
@@ -173,7 +173,7 @@ public class WorldGenTreesPerverted extends WorldGenTrees
 							{
 								for (int z = pos.getZ() - range; z <= pos.getZ() + range; ++z)
 								{
-									blockpos.set(x, y, z);
+									blockpos.setPos(x, y, z);
 
 									state = world.getBlockState(blockpos);
 
@@ -237,12 +237,12 @@ public class WorldGenTreesPerverted extends WorldGenTrees
 
 	private void setCocoa(World world, int age, BlockPos pos, EnumFacing side)
 	{
-		setBlockAndNotifyAdequately(world, pos, Blocks.cocoa.getDefaultState().withProperty(BlockCocoa.AGE, Integer.valueOf(age)).withProperty(BlockCocoa.FACING, side));
+		setBlockAndNotifyAdequately(world, pos, Blocks.COCOA.getDefaultState().withProperty(BlockCocoa.AGE, Integer.valueOf(age)).withProperty(BlockCocoa.FACING, side));
 	}
 
 	private void setVine(World world, BlockPos pos, PropertyBool prop)
 	{
-		setBlockAndNotifyAdequately(world, pos, Blocks.vine.getDefaultState().withProperty(prop, Boolean.valueOf(true)));
+		setBlockAndNotifyAdequately(world, pos, Blocks.VINE.getDefaultState().withProperty(prop, Boolean.valueOf(true)));
 	}
 
 	private void setVines(World world, BlockPos pos, PropertyBool prop)

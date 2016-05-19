@@ -72,7 +72,7 @@ public class CaveAchievements
 		{
 			if (itemstack.getItem() == null)
 			{
-				itemstack = new ItemStack(Blocks.stone);
+				itemstack = new ItemStack(Blocks.STONE);
 			}
 
 			CaveAchievement achievement = new CaveAchievement(name, column, row, itemstack, parent);

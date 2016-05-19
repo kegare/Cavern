@@ -9,12 +9,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public enum MinerRank
 {
-	BEGINNER(0, 0, "beginner", Items.wooden_pickaxe),
-	STONE_MINER(1, 50, "stoneMiner", Items.stone_pickaxe),
-	IRON_MINER(2, 100, "ironMiner", Items.iron_pickaxe),
-	GOLD_MINER(3, 1000, "goldMiner", Items.golden_pickaxe),
+	BEGINNER(0, 0, "beginner", Items.WOODEN_PICKAXE),
+	STONE_MINER(1, 50, "stoneMiner", Items.STONE_PICKAXE),
+	IRON_MINER(2, 100, "ironMiner", Items.IRON_PICKAXE),
+	GOLD_MINER(3, 1000, "goldMiner", Items.GOLDEN_PICKAXE),
 	AQUA_MINER(4, 3000, "aquaMiner", CaveItems.aquamarine_pickaxe),
-	DIAMOND_MINER(5, 10000, "diamondMiner", Items.diamond_pickaxe);
+	DIAMOND_MINER(5, 10000, "diamondMiner", Items.DIAMOND_PICKAXE);
 
 	private int rank;
 	private int phase;

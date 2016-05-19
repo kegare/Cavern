@@ -44,7 +44,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.HoverChecker;
@@ -378,7 +378,7 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 							{
 								Block block = Block.getBlockFromName(blockField.getText());
 
-								if (block != null && block != Blocks.air)
+								if (block != null && block != Blocks.AIR)
 								{
 									int meta = BlockMeta.getMetaFromString(block, blockMetaField.getText());
 
@@ -395,7 +395,7 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 							{
 								Block block = Block.getBlockFromName(targetField.getText());
 
-								if (block != null && block != Blocks.air)
+								if (block != null && block != Blocks.AIR)
 								{
 									int meta = BlockMeta.getMetaFromString(block, targetMetaField.getText());
 
@@ -1379,7 +1379,7 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 				return true;
 			}
 
-			for (BiomeGenBase biome : vein.getBiomeList())
+			for (Biome biome : vein.getBiomeList())
 			{
 				if (CaveFilters.biomeFilter(biome, filter))
 				{

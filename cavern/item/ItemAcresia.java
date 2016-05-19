@@ -85,7 +85,7 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 				IBlockState state = world.getBlockState(pos);
 				Block soil = state.getBlock();
 
-				if (soil != Blocks.bedrock && soil.canSustainPlant(state, world, pos, facing, this) && world.isAirBlock(pos.up()))
+				if (soil != Blocks.BEDROCK && soil.canSustainPlant(state, world, pos, facing, this) && world.isAirBlock(pos.up()))
 				{
 					world.setBlockState(pos.up(), getPlant(world, pos));
 
@@ -112,9 +112,9 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 
 				player.getFoodStats().addStats(getHealAmount(stack), getSaturationModifier(stack));
 
-				world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.entity_player_burp, SoundCategory.PLAYERS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+				world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
 
-				player.addStat(StatList.func_188057_b(this));
+				player.addStat(StatList.getObjectUseStats(this));
 			}
 
 	        return stack;

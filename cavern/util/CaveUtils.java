@@ -24,14 +24,16 @@ import com.google.common.collect.Sets;
 import cavern.core.Cavern;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class CaveUtils
 {
@@ -98,16 +100,16 @@ public class CaveUtils
 		}
 	};
 
-	public static final Comparator<BiomeGenBase> biomeComparator = new Comparator<BiomeGenBase>()
+	public static final Comparator<Biome> biomeComparator = new Comparator<Biome>()
 	{
 		@Override
-		public int compare(BiomeGenBase o1, BiomeGenBase o2)
+		public int compare(Biome o1, Biome o2)
 		{
 			int i = compareWithNull(o1, o2);
 
 			if (i == 0 && o1 != null && o2 != null)
 			{
-				i = Integer.compare(BiomeGenBase.getIdForBiome(o1), BiomeGenBase.getIdForBiome(o2));
+				i = Integer.compare(Biome.getIdForBiome(o1), Biome.getIdForBiome(o2));
 
 				if (i == 0)
 				{
@@ -295,6 +297,14 @@ public class CaveUtils
 			e.printStackTrace();
 
 			return false;
+		}
+	}
+
+	public static void setDimensionChange(EntityPlayerMP player)
+	{
+		if (!player.capabilities.isCreativeMode)
+		{
+			ObfuscationReflectionHelper.setPrivateValue(EntityPlayerMP.class, player, true, "invulnerableDimensionChange", "field_184851_cj");
 		}
 	}
 }

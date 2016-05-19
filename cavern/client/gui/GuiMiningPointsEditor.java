@@ -269,7 +269,7 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 							{
 								Block block = Block.getBlockFromName(blockField.getText());
 
-								if (block != null && block != Blocks.air)
+								if (block != null && block != Blocks.AIR)
 								{
 									int meta = BlockMeta.getMetaFromString(block, blockMetaField.getText());
 
@@ -718,7 +718,7 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 						BlockMeta blockMeta = new BlockMeta(str.substring(0, i), str.substring(i + 1));
 						Block block = blockMeta.getBlock();
 
-						if (block != null && block != Blocks.air)
+						if (block != null && block != Blocks.AIR)
 						{
 							PointEntry entry = new PointEntry(blockMeta, point);
 

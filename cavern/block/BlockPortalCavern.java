@@ -47,7 +47,7 @@ public class BlockPortalCavern extends BlockPortal
 	{
 		super();
 		this.setUnlocalizedName("portal.cavern");
-		this.setStepSound(SoundType.GLASS);
+		this.setSoundType(SoundType.GLASS);
 		this.setTickRandomly(false);
 		this.setBlockUnbreakable();
 		this.disableStats();
@@ -57,23 +57,23 @@ public class BlockPortalCavern extends BlockPortal
 	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {}
 
 	@Override
-	public boolean func_176548_d(World worldIn, BlockPos pos)
+	public boolean trySpawnPortal(World world, BlockPos pos)
 	{
-		Size size = new Size(worldIn, pos, EnumFacing.Axis.X);
+		Size size = new Size(world, pos, EnumFacing.Axis.X);
 
-		if (size.func_150860_b() && size.field_150864_e == 0)
+		if (size.isValid() && size.portalBlockCount == 0)
 		{
-			size.func_150859_c();
+			size.placePortalBlocks();
 
 			return true;
 		}
 		else
 		{
-			Size size1 = new Size(worldIn, pos, EnumFacing.Axis.Z);
+			Size size1 = new Size(world, pos, EnumFacing.Axis.Z);
 
-			if (size1.func_150860_b() && size1.field_150864_e == 0)
+			if (size1.isValid() && size1.portalBlockCount == 0)
 			{
-				size1.func_150859_c();
+				size1.placePortalBlocks();
 
 				return true;
 			}
@@ -82,7 +82,7 @@ public class BlockPortalCavern extends BlockPortal
 	}
 
 	@Override
-	public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
 	{
 		EnumFacing.Axis axis = state.getValue(AXIS);
 		Size size;
@@ -91,18 +91,18 @@ public class BlockPortalCavern extends BlockPortal
 		{
 			size = new Size(world, pos, EnumFacing.Axis.X);
 
-			if (!size.func_150860_b() || size.field_150864_e < size.field_150868_h * size.field_150862_g)
+			if (!size.isValid() || size.portalBlockCount < size.width * size.height)
 			{
-				world.setBlockState(pos, Blocks.air.getDefaultState());
+				world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			}
 		}
 		else if (axis == EnumFacing.Axis.Z)
 		{
 			size = new Size(world, pos, EnumFacing.Axis.Z);
 
-			if (!size.func_150860_b() || size.field_150864_e < size.field_150868_h * size.field_150862_g)
+			if (!size.isValid() || size.portalBlockCount < size.width * size.height)
 			{
-				world.setBlockState(pos, Blocks.air.getDefaultState());
+				world.setBlockState(pos, Blocks.AIR.getDefaultState());
 			}
 		}
 	}
@@ -168,7 +168,7 @@ public class BlockPortalCavern extends BlockPortal
 				{
 					EntityPlayerMP player = (EntityPlayerMP)entity;
 
-					if (!player.isSneaking() && !player.isPotionActive(MobEffects.blindness))
+					if (!player.isSneaking() && !player.isPotionActive(MobEffects.BLINDNESS))
 					{
 						double x = player.posX;
 						double y = player.posY + player.getEyeHeight();
@@ -242,39 +242,39 @@ public class BlockPortalCavern extends BlockPortal
 	}
 
 	@Override
-	public PatternHelper func_181089_f(World world, BlockPos pos)
+	public PatternHelper createPatternHelper(World world, BlockPos pos)
 	{
 		EnumFacing.Axis axis = EnumFacing.Axis.Z;
 		Size size = new Size(world, pos, EnumFacing.Axis.X);
-		LoadingCache<BlockPos, BlockWorldState> cache = BlockPattern.func_181627_a(world, true);
+		LoadingCache<BlockPos, BlockWorldState> cache = BlockPattern.createLoadingCache(world, true);
 
-		if (!size.func_150860_b())
+		if (!size.isValid())
 		{
 			axis = EnumFacing.Axis.X;
 			size = new Size(world, pos, EnumFacing.Axis.Z);
 		}
 
-		if (!size.func_150860_b())
+		if (!size.isValid())
 		{
 			return new PatternHelper(pos, EnumFacing.NORTH, EnumFacing.UP, cache, 1, 1, 1);
 		}
 		else
 		{
 			int[] values = new int[EnumFacing.AxisDirection.values().length];
-			EnumFacing facing = size.field_150866_c.rotateYCCW();
-			BlockPos blockpos = size.field_150861_f.up(size.func_181100_a() - 1);
+			EnumFacing facing = size.rightDir.rotateYCCW();
+			BlockPos blockpos = size.bottomLeft.up(size.getHeight() - 1);
 
 			for (EnumFacing.AxisDirection direction : EnumFacing.AxisDirection.values())
 			{
-				PatternHelper pattern = new PatternHelper(facing.getAxisDirection() == direction ? blockpos : blockpos.offset(size.field_150866_c, size.func_181101_b() - 1), EnumFacing.getFacingFromAxis(direction, axis), EnumFacing.UP, cache, size.func_181101_b(), size.func_181100_a(), 1);
+				PatternHelper pattern = new PatternHelper(facing.getAxisDirection() == direction ? blockpos : blockpos.offset(size.rightDir, size.getWidth() - 1), EnumFacing.getFacingFromAxis(direction, axis), EnumFacing.UP, cache, size.getWidth(), size.getHeight(), 1);
 
-				for (int i = 0; i < size.func_181101_b(); ++i)
+				for (int i = 0; i < size.getWidth(); ++i)
 				{
-					for (int j = 0; j < size.func_181100_a(); ++j)
+					for (int j = 0; j < size.getHeight(); ++j)
 					{
 						BlockWorldState blockworldstate = pattern.translateOffset(i, j, 1);
 
-						if (blockworldstate.getBlockState() != null && blockworldstate.getBlockState().getMaterial() != Material.air)
+						if (blockworldstate.getBlockState() != null && blockworldstate.getBlockState().getMaterial() != Material.AIR)
 						{
 							++values[direction.ordinal()];
 						}
@@ -292,7 +292,7 @@ public class BlockPortalCavern extends BlockPortal
 				}
 			}
 
-			return new PatternHelper(facing.getAxisDirection() == axis1 ? blockpos : blockpos.offset(size.field_150866_c, size.func_181101_b() - 1), EnumFacing.getFacingFromAxis(axis1, axis), EnumFacing.UP, cache, size.func_181101_b(), size.func_181100_a(), 1);
+			return new PatternHelper(facing.getAxisDirection() == axis1 ? blockpos : blockpos.offset(size.rightDir, size.getWidth() - 1), EnumFacing.getFacingFromAxis(axis1, axis), EnumFacing.UP, cache, size.getWidth(), size.getHeight(), 1);
 		}
 	}
 
@@ -310,55 +310,55 @@ public class BlockPortalCavern extends BlockPortal
 	{
 		private final World world;
 		private final EnumFacing.Axis axis;
-		private final EnumFacing field_150866_c;
-		private final EnumFacing field_150863_d;
-		private int field_150864_e = 0;
-		private BlockPos field_150861_f;
-		private int field_150862_g;
-		private int field_150868_h;
+		private final EnumFacing rightDir;
+		private final EnumFacing leftDir;
+		private int portalBlockCount = 0;
+		private BlockPos bottomLeft;
+		private int height;
+		private int width;
 
-		public Size(World worldIn, BlockPos pos, EnumFacing.Axis axis)
+		public Size(World world, BlockPos pos, EnumFacing.Axis axis)
 		{
-			this.world = worldIn;
+			this.world = world;
 			this.axis = axis;
 
 			if (axis == EnumFacing.Axis.X)
 			{
-				this.field_150863_d = EnumFacing.EAST;
-				this.field_150866_c = EnumFacing.WEST;
+				this.leftDir = EnumFacing.EAST;
+				this.rightDir = EnumFacing.WEST;
 			}
 			else
 			{
-				this.field_150863_d = EnumFacing.NORTH;
-				this.field_150866_c = EnumFacing.SOUTH;
+				this.leftDir = EnumFacing.NORTH;
+				this.rightDir = EnumFacing.SOUTH;
 			}
 
-			for (BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && func_150857_a(worldIn.getBlockState(pos.down())); pos = pos.down())
+			for (BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && isEmptyBlock(world.getBlockState(pos.down())); pos = pos.down())
 			{
 				;
 			}
 
-			int i = func_180120_a(pos, field_150863_d) - 1;
+			int i = getDistanceUntilEdge(pos, leftDir) - 1;
 
 			if (i >= 0)
 			{
-				this.field_150861_f = pos.offset(field_150863_d, i);
-				this.field_150868_h = func_180120_a(field_150861_f, field_150866_c);
+				this.bottomLeft = pos.offset(leftDir, i);
+				this.width = getDistanceUntilEdge(bottomLeft, rightDir);
 
-				if (field_150868_h < 2 || field_150868_h > 21)
+				if (width < 2 || width > 21)
 				{
-					this.field_150861_f = null;
-					this.field_150868_h = 0;
+					this.bottomLeft = null;
+					this.width = 0;
 				}
 			}
 
-			if (field_150861_f != null)
+			if (bottomLeft != null)
 			{
-				this.field_150862_g = func_150858_a();
+				this.height = calculatePortalHeight();
 			}
 		}
 
-		protected int func_180120_a(BlockPos pos, EnumFacing face)
+		protected int getDistanceUntilEdge(BlockPos pos, EnumFacing face)
 		{
 			int i;
 
@@ -366,7 +366,7 @@ public class BlockPortalCavern extends BlockPortal
 			{
 				BlockPos pos1 = pos.offset(face, i);
 
-				if (!func_150857_a(world.getBlockState(pos1)) || world.getBlockState(pos1.down()).getBlock() != Blocks.mossy_cobblestone)
+				if (!isEmptyBlock(world.getBlockState(pos1)) || world.getBlockState(pos1.down()).getBlock() != Blocks.MOSSY_COBBLESTONE)
 				{
 					break;
 				}
@@ -374,55 +374,55 @@ public class BlockPortalCavern extends BlockPortal
 
 			Block block = world.getBlockState(pos.offset(face, i)).getBlock();
 
-			return block == Blocks.mossy_cobblestone ? i : 0;
+			return block == Blocks.MOSSY_COBBLESTONE ? i : 0;
 		}
 
-		public int func_181100_a()
+		public int getHeight()
 		{
-			return field_150862_g;
+			return height;
 		}
 
-		public int func_181101_b()
+		public int getWidth()
 		{
-			return field_150868_h;
+			return width;
 		}
 
-		protected int func_150858_a()
+		protected int calculatePortalHeight()
 		{
 			int i;
 
-			outside: for (field_150862_g = 0; field_150862_g < 21; ++field_150862_g)
+			outside: for (height = 0; height < 21; ++height)
 			{
-				for (i = 0; i < field_150868_h; ++i)
+				for (i = 0; i < width; ++i)
 				{
-					BlockPos pos = field_150861_f.offset(field_150866_c, i).up(field_150862_g);
+					BlockPos pos = bottomLeft.offset(rightDir, i).up(height);
 					IBlockState state = world.getBlockState(pos);
 					Block block = state.getBlock();
 
-					if (!func_150857_a(state))
+					if (!isEmptyBlock(state))
 					{
 						break outside;
 					}
 
 					if (block == BlockPortalCavern.this)
 					{
-						++field_150864_e;
+						++portalBlockCount;
 					}
 
 					if (i == 0)
 					{
-						block = world.getBlockState(pos.offset(field_150863_d)).getBlock();
+						block = world.getBlockState(pos.offset(leftDir)).getBlock();
 
-						if (block != Blocks.mossy_cobblestone)
+						if (block != Blocks.MOSSY_COBBLESTONE)
 						{
 							break outside;
 						}
 					}
-					else if (i == field_150868_h - 1)
+					else if (i == width - 1)
 					{
-						block = world.getBlockState(pos.offset(field_150866_c)).getBlock();
+						block = world.getBlockState(pos.offset(rightDir)).getBlock();
 
-						if (block != Blocks.mossy_cobblestone)
+						if (block != Blocks.MOSSY_COBBLESTONE)
 						{
 							break outside;
 						}
@@ -430,46 +430,46 @@ public class BlockPortalCavern extends BlockPortal
 				}
 			}
 
-			for (i = 0; i < field_150868_h; ++i)
+			for (i = 0; i < width; ++i)
 			{
-				if (world.getBlockState(field_150861_f.offset(field_150866_c, i).up(field_150862_g)).getBlock() != Blocks.mossy_cobblestone)
+				if (world.getBlockState(bottomLeft.offset(rightDir, i).up(height)).getBlock() != Blocks.MOSSY_COBBLESTONE)
 				{
-					field_150862_g = 0;
+					height = 0;
 					break;
 				}
 			}
 
-			if (field_150862_g <= 21 && field_150862_g >= 3)
+			if (height <= 21 && height >= 3)
 			{
-				return field_150862_g;
+				return height;
 			}
 			else
 			{
-				field_150861_f = null;
-				field_150868_h = 0;
-				field_150862_g = 0;
+				bottomLeft = null;
+				width = 0;
+				height = 0;
 
 				return 0;
 			}
 		}
 
-		protected boolean func_150857_a(IBlockState state)
+		protected boolean isEmptyBlock(IBlockState state)
 		{
-			return state.getMaterial() == Material.air || state.getBlock() == BlockPortalCavern.this;
+			return state.getMaterial() == Material.AIR || state.getBlock() == BlockPortalCavern.this;
 		}
 
-		public boolean func_150860_b()
+		public boolean isValid()
 		{
-			return field_150861_f != null && field_150868_h >= 2 && field_150868_h <= 21 && field_150862_g >= 3 && field_150862_g <= 21;
+			return bottomLeft != null && width >= 2 && width <= 21 && height >= 3 && height <= 21;
 		}
 
-		public void func_150859_c()
+		public void placePortalBlocks()
 		{
-			for (int i = 0; i < field_150868_h; ++i)
+			for (int i = 0; i < width; ++i)
 			{
-				BlockPos pos = field_150861_f.offset(field_150866_c, i);
+				BlockPos pos = bottomLeft.offset(rightDir, i);
 
-				for (int j = 0; j < field_150862_g; ++j)
+				for (int j = 0; j < height; ++j)
 				{
 					world.setBlockState(pos.up(j), getDefaultState().withProperty(AXIS, axis), 2);
 				}

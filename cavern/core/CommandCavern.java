@@ -68,7 +68,7 @@ public class CommandCavern extends CommandBase
 		{
 			EntityPlayerMP player = (EntityPlayerMP)sender;
 
-			if (player.getServerForPlayer().getWorldInfo().areCommandsAllowed())
+			if (player.getServerWorld().getWorldInfo().areCommandsAllowed())
 			{
 				int value = parseInt(args[1]);
 

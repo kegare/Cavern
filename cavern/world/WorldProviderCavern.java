@@ -7,7 +7,6 @@ import cavern.config.property.ConfigBiomeType;
 import cavern.core.CaveSounds;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.CaveMusicMessage;
-import cavern.world.gen.BiomeProviderCavern;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -108,24 +107,24 @@ public class WorldProviderCavern extends WorldProviderSurface
 	}
 
 	@Override
-	protected void registerWorldChunkManager()
+	protected void createBiomeProvider()
 	{
 		CaveBiomeManager manager = getBiomeManager();
 
 		if (manager == null)
 		{
-			super.registerWorldChunkManager();
+			super.createBiomeProvider();
 		}
 		else switch (getBiomeType())
 		{
 			case NATURAL:
-				super.registerWorldChunkManager();
+				super.createBiomeProvider();
 				break;
 			case SQUARE:
-				worldChunkMgr = new BiomeProviderCavern(worldObj, 1, manager);
+				biomeProvider = new BiomeProviderCavern(worldObj, 1, manager);
 				break;
 			case LARGE_SQUARE:
-				worldChunkMgr = new BiomeProviderCavern(worldObj, 5, manager);
+				biomeProvider = new BiomeProviderCavern(worldObj, 5, manager);
 				break;
 		}
 	}

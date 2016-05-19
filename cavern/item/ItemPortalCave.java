@@ -26,9 +26,9 @@ public class ItemPortalCave extends ItemBlock
 	{
 		BlockPos blockpos = pos.offset(side);
 
-		if (((BlockPortal)block).func_176548_d(world, blockpos))
+		if (((BlockPortal)block).trySpawnPortal(world, blockpos))
 		{
-			world.playSound(null, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D, blockpos.getZ() + 0.5D, block.getStepSound().getPlaceSound(), SoundCategory.BLOCKS, 1.0F, 2.0F);
+			world.playSound(null, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D, blockpos.getZ() + 0.5D, block.getSoundType().getPlaceSound(), SoundCategory.BLOCKS, 1.0F, 2.0F);
 
 			if (!player.capabilities.isCreativeMode)
 			{

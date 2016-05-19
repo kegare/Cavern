@@ -13,8 +13,8 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkGenerator;
@@ -32,7 +32,7 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 	private final World worldObj;
 	private final Random rand;
 
-	private BiomeGenBase[] biomesForGeneration;
+	private Biome[] biomesForGeneration;
 
 	private final MapGenBase caveGenerator = new MapGenAquaCaves();
 	private final MapGenBase ravineGenerator = new MapGenAquaRavine();
@@ -63,7 +63,7 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 			{
 				for (int y = 255; y >= 0; --y)
 				{
-					primer.setBlockState(x, y, z, Blocks.stone.getDefaultState());
+					primer.setBlockState(x, y, z, Blocks.STONE.getDefaultState());
 				}
 			}
 		}
@@ -82,14 +82,14 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 		{
 			for (int z = 0; z < 16; ++z)
 			{
-				primer.setBlockState(x, 0, z, Blocks.bedrock.getDefaultState());
-				primer.setBlockState(x, blockHeight, z, Blocks.bedrock.getDefaultState());
+				primer.setBlockState(x, 0, z, Blocks.BEDROCK.getDefaultState());
+				primer.setBlockState(x, blockHeight, z, Blocks.BEDROCK.getDefaultState());
 
 				if (blockHeight < 255)
 				{
 					for (int y = blockHeight + 1; y < 256; ++y)
 					{
-						primer.setBlockState(x, y, z, Blocks.air.getDefaultState());
+						primer.setBlockState(x, y, z, Blocks.AIR.getDefaultState());
 					}
 				}
 			}
@@ -100,7 +100,7 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 
 		for (int i = 0; i < biomeArray.length; ++i)
 		{
-			biomeArray[i] = (byte)BiomeGenBase.getIdForBiome(biomesForGeneration[i]);
+			biomeArray[i] = (byte)Biome.getIdForBiome(biomesForGeneration[i]);
 		}
 
 		chunk.resetRelightChecks();
@@ -118,7 +118,7 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 		BlockPos blockPos = new BlockPos(worldX, 0, worldZ);
 		int worldHeight = worldObj.provider.getActualHeight();
 
-		ForgeEventFactory.onChunkPopulate(true, this, this.worldObj, chunkX, chunkZ, false);
+		ForgeEventFactory.onChunkPopulate(true, this, worldObj, rand, chunkX, chunkZ, false);
 
 		int x, y, z;
 
@@ -147,7 +147,7 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 
 		MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(worldObj, rand, blockPos));
 
-		ForgeEventFactory.onChunkPopulate(false, this, this.worldObj, chunkX, chunkZ, false);
+		ForgeEventFactory.onChunkPopulate(false, this, worldObj, rand, chunkX, chunkZ, false);
 
 		BlockFalling.fallInstantly = false;
 	}
@@ -161,7 +161,7 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 	@Override
 	public List<SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
 	{
-		BiomeGenBase biome = worldObj.getBiomeGenForCoords(pos);
+		Biome biome = worldObj.getBiomeGenForCoords(pos);
 
 		return biome.getSpawnableList(creatureType);
 	}

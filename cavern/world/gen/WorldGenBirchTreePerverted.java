@@ -59,7 +59,7 @@ public class WorldGenBirchTreePerverted extends WorldGenBirchTree
 					{
 						if (y >= 0 && y < world.getHeight())
 						{
-							if (!isReplaceable(world, blockpos.set(x, y, z)))
+							if (!isReplaceable(world, blockpos.setPos(x, y, z)))
 							{
 								flag = false;
 							}

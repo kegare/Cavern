@@ -11,13 +11,13 @@ import net.minecraft.world.gen.MapGenCaves;
 
 public class MapGenCavernCaves extends MapGenCaves
 {
-	protected static final IBlockState BLK_STONE = Blocks.stone.getDefaultState();
-	protected static final IBlockState BLK_DIRT = Blocks.dirt.getDefaultState();
-	protected static final IBlockState BLK_GRASS = Blocks.grass.getDefaultState();
-	protected static final IBlockState BLK_WATER = Blocks.water.getDefaultState();
+	protected static final IBlockState BLK_STONE = Blocks.STONE.getDefaultState();
+	protected static final IBlockState BLK_DIRT = Blocks.DIRT.getDefaultState();
+	protected static final IBlockState BLK_GRASS = Blocks.GRASS.getDefaultState();
+	protected static final IBlockState BLK_WATER = Blocks.WATER.getDefaultState();
 
 	@Override
-	protected void func_180702_a(long caveSeed, int chunkX, int chunkZ, ChunkPrimer primer, double blockX, double blockY, double blockZ, float scale, float leftRightRadian, float upDownRadian, int currentY, int targetY, double scaleHeight)
+	protected void addTunnel(long caveSeed, int chunkX, int chunkZ, ChunkPrimer primer, double blockX, double blockY, double blockZ, float scale, float leftRightRadian, float upDownRadian, int currentY, int targetY, double scaleHeight)
 	{
 		Random random = new Random(caveSeed);
 		int worldHeight = worldObj.getActualHeight();
@@ -70,8 +70,8 @@ public class MapGenCavernCaves extends MapGenCaves
 
 			if (!createFinalRoom && currentY == nextInterHeight && scale > 1.0F && targetY > 0)
 			{
-				func_180702_a(random.nextLong(), chunkX, chunkZ, primer, blockX, blockY, blockZ, random.nextFloat() * 0.5F + 0.5F, leftRightRadian - (float)Math.PI / 2F, upDownRadian / 3.0F, currentY, targetY, 1.0D);
-				func_180702_a(random.nextLong(), chunkX, chunkZ, primer, blockX, blockY, blockZ, random.nextFloat() * 0.5F + 0.5F, leftRightRadian + (float)Math.PI / 2F, upDownRadian / 3.0F, currentY, targetY, 1.0D);
+				addTunnel(random.nextLong(), chunkX, chunkZ, primer, blockX, blockY, blockZ, random.nextFloat() * 0.5F + 0.5F, leftRightRadian - (float)Math.PI / 2F, upDownRadian / 3.0F, currentY, targetY, 1.0D);
+				addTunnel(random.nextLong(), chunkX, chunkZ, primer, blockX, blockY, blockZ, random.nextFloat() * 0.5F + 0.5F, leftRightRadian + (float)Math.PI / 2F, upDownRadian / 3.0F, currentY, targetY, 1.0D);
 
 				return;
 			}
@@ -149,7 +149,7 @@ public class MapGenCavernCaves extends MapGenCaves
 
 			if (rand.nextInt(4) == 0)
 			{
-				func_180703_a(rand.nextLong(), x, z, primer, blockX, blockY, blockZ);
+				addRoom(rand.nextLong(), x, z, primer, blockX, blockY, blockZ);
 
 				count += rand.nextInt(4);
 			}
@@ -165,7 +165,7 @@ public class MapGenCavernCaves extends MapGenCaves
 					scale *= rand.nextFloat() * rand.nextFloat() * 3.5F + 1.0F;
 				}
 
-				func_180702_a(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 1.15D);
+				addTunnel(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 1.15D);
 			}
 		}
 	}

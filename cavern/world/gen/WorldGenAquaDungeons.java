@@ -34,7 +34,7 @@ public class WorldGenAquaDungeons extends WorldGenDungeons
 
 	public static boolean addDungeonMob(Class<? extends Entity> clazz)
 	{
-		String name = EntityList.func_188430_a(clazz);
+		String name = EntityList.getEntityStringFromClass(clazz);
 
 		return !Strings.isNullOrEmpty(name) && dungeonMobs.add(name);
 	}
@@ -59,7 +59,7 @@ public class WorldGenAquaDungeons extends WorldGenDungeons
 
 	public static boolean removeDungeonMob(Class<? extends Entity> clazz)
 	{
-		return removeDungeonMob(EntityList.func_188430_a(clazz));
+		return removeDungeonMob(EntityList.getEntityStringFromClass(clazz));
 	}
 
 	public static void clearDungeonMobs()
@@ -115,11 +115,11 @@ public class WorldGenAquaDungeons extends WorldGenDungeons
 			switch (type)
 			{
 				case 1:
-					state1 = Blocks.stonebrick.getDefaultState();
-					state2 = Blocks.stonebrick.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED);
+					state1 = Blocks.STONEBRICK.getDefaultState();
+					state2 = Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED);
 				default:
-					state1 = Blocks.cobblestone.getDefaultState();
-					state2 = Blocks.mossy_cobblestone.getDefaultState();
+					state1 = Blocks.COBBLESTONE.getDefaultState();
+					state2 = Blocks.MOSSY_COBBLESTONE.getDefaultState();
 			}
 
 			for (int x = j1; x <= k1; ++x)
@@ -132,7 +132,7 @@ public class WorldGenAquaDungeons extends WorldGenDungeons
 
 						if (x != j1 && y != -1 && z != j2 && x != k1 && y != 4 && z != k2)
 						{
-							if (world.getBlockState(blockpos).getBlock() != Blocks.chest)
+							if (world.getBlockState(blockpos).getBlock() != Blocks.CHEST)
 							{
 								world.setBlockToAir(blockpos);
 							}
@@ -141,7 +141,7 @@ public class WorldGenAquaDungeons extends WorldGenDungeons
 						{
 							world.setBlockToAir(blockpos);
 						}
-						else if (world.getBlockState(blockpos).getMaterial().isSolid() && world.getBlockState(blockpos).getBlock() != Blocks.chest)
+						else if (world.getBlockState(blockpos).getMaterial().isSolid() && world.getBlockState(blockpos).getBlock() != Blocks.CHEST)
 						{
 							if (y == -1 && rand.nextInt(4) != 0)
 							{
@@ -179,13 +179,13 @@ public class WorldGenAquaDungeons extends WorldGenDungeons
 
 						if (count == 1)
 						{
-							world.setBlockState(blockpos, Blocks.chest.correctFacing(world, blockpos, Blocks.chest.getDefaultState()), 2);
+							world.setBlockState(blockpos, Blocks.CHEST.correctFacing(world, blockpos, Blocks.CHEST.getDefaultState()), 2);
 
 							TileEntity tile = world.getTileEntity(blockpos);
 
 							if (tile != null && tile instanceof TileEntityChest)
 							{
-								((TileEntityChest)tile).setLoot(LootTableList.CHESTS_SIMPLE_DUNGEON, rand.nextLong());
+								((TileEntityChest)tile).setLootTable(LootTableList.CHESTS_SIMPLE_DUNGEON, rand.nextLong());
 							}
 
 							break;
@@ -194,7 +194,7 @@ public class WorldGenAquaDungeons extends WorldGenDungeons
 				}
 			}
 
-			world.setBlockState(pos, Blocks.mob_spawner.getDefaultState(), 2);
+			world.setBlockState(pos, Blocks.MOB_SPAWNER.getDefaultState(), 2);
 
 			TileEntity tile = world.getTileEntity(pos);
 

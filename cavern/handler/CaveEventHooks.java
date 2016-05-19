@@ -91,7 +91,7 @@ public class CaveEventHooks
 		if (event.player instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = (EntityPlayerMP)event.player;
-			WorldServer world = player.getServerForPlayer();
+			WorldServer world = player.getServerWorld();
 			String suffix = ".LastTeleportTime";
 
 			if (CavernAPI.dimension.isEntityInCavern(player))
@@ -166,7 +166,7 @@ public class CaveEventHooks
 		{
 			Item portal = null;
 
-			if (held.getItem() == Items.emerald)
+			if (held.getItem() == Items.EMERALD)
 			{
 				portal = Item.getItemFromBlock(CaveBlocks.cavern_portal);
 			}
@@ -246,7 +246,7 @@ public class CaveEventHooks
 		EntityPlayer player = event.getEntityPlayer();
 		ItemStack heldMain = player.getHeldItemMainhand();
 
-		if (heldMain != null && player.isInsideOfMaterial(Material.water))
+		if (heldMain != null && player.isInsideOfMaterial(Material.WATER))
 		{
 			if (CavernAPI.dimension.isEntityInCaves(player) && CaveUtils.isItemPickaxe(heldMain) && MinerStats.get(player).getRank() >= MinerRank.AQUA_MINER.getRank())
 			{
@@ -283,7 +283,7 @@ public class CaveEventHooks
 			{
 				EntityPlayer player = (EntityPlayer)entity;
 
-				if (player.isInsideOfMaterial(Material.water))
+				if (player.isInsideOfMaterial(Material.WATER))
 				{
 					IMinerStats stats = MinerStats.get(player);
 
@@ -352,7 +352,7 @@ public class CaveEventHooks
 					}
 					else if (itemstack.getItem() == Item.getItemFromBlock(CaveBlocks.perverted_log))
 					{
-						player.addStat(AchievementList.mineWood);
+						player.addStat(AchievementList.MINE_WOOD);
 					}
 				}
 			}

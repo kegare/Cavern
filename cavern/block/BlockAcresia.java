@@ -85,9 +85,9 @@ public class BlockAcresia extends BlockCrops
 	}
 
 	@Override
-	protected boolean func_185514_i(IBlockState state)
+	protected boolean canSustainBush(IBlockState state)
 	{
-		return state.getBlock() != Blocks.bedrock && (state.isNormalCube() || state.getBlock() instanceof BlockFarmland);
+		return state.getBlock() != Blocks.BEDROCK && (state.isNormalCube() || state.getBlock() instanceof BlockFarmland);
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class BlockAcresia extends BlockCrops
 	}
 
 	@Override
-	protected PropertyInteger getAge()
+	protected PropertyInteger getAgeProperty()
 	{
 		return AGE;
 	}
@@ -107,11 +107,11 @@ public class BlockAcresia extends BlockCrops
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {getAge()});
+		return new BlockStateContainer(this, new IProperty[] {getAgeProperty()});
 	}
 
 	@Override
-	public int func_185526_g()
+	public int getMaxAge()
 	{
 		return 4;
 	}
@@ -119,7 +119,7 @@ public class BlockAcresia extends BlockCrops
 	@Override
 	public int damageDropped(IBlockState state)
 	{
-		return func_185525_y(state) ? getCropDamage() : getSeedDamage();
+		return isMaxAge(state) ? getCropDamage() : getSeedDamage();
 	}
 
 	@Override
@@ -133,15 +133,15 @@ public class BlockAcresia extends BlockCrops
 	{
 		checkAndDropBlock(world, pos, state);
 
-		int i = func_185527_x(state);
+		int i = getAge(state);
 
-		if (i < func_185526_g())
+		if (i < getMaxAge())
 		{
 			float f = getGrowthChance(this, world, pos);
 
 			if (rand.nextInt((int)(25.0F / f) + 1) == 0)
 			{
-				world.setBlockState(pos, func_185528_e(i + 1), 2);
+				world.setBlockState(pos, withAge(i + 1), 2);
 			}
 		}
 	}
@@ -210,18 +210,18 @@ public class BlockAcresia extends BlockCrops
 			{
 				if (!world.isRemote)
 				{
-					int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, heldItem);
+					int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem);
 					ItemStack crop = getCropItem(4 + world.rand.nextInt(3) + fortune);
 					EntityItem drop = new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 0.25D, pos.getZ() + 0.5D, crop);
 
 					drop.setPickupDelay(10);
 
 					world.spawnEntityInWorld(drop);
-					world.setBlockState(pos, func_185528_e(2), 2);
+					world.setBlockState(pos, withAge(2), 2);
 
 					heldItem.damageItem(1, player);
 
-					drop.playSound(SoundEvents.entity_sheep_shear, 1.0F, 1.25F);
+					drop.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.25F);
 
 					player.addStat(CaveAchievements.acresia);
 				}
@@ -250,13 +250,13 @@ public class BlockAcresia extends BlockCrops
 			}
 		}
 
-		int age = func_185527_x(state);
+		int age = getAge(state);
 
-		if (age >= func_185526_g())
+		if (age >= getMaxAge())
 		{
 			for (int i = 0; i < 3 + fortune; ++i)
 			{
-				if (rand.nextInt(2 * func_185526_g()) <= age)
+				if (rand.nextInt(2 * getMaxAge()) <= age)
 				{
 					ret.add(getSeedItem());
 				}

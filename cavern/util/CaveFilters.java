@@ -6,7 +6,7 @@ import com.google.common.base.Strings;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
@@ -144,14 +144,14 @@ public class CaveFilters
 		return false;
 	}
 
-	public static boolean biomeFilter(BiomeGenBase biome, String filter)
+	public static boolean biomeFilter(Biome biome, String filter)
 	{
 		if (biome == null || Strings.isNullOrEmpty(filter))
 		{
 			return false;
 		}
 
-		if (BiomeGenBase.getIdForBiome(biome) == NumberUtils.toInt(filter, -1) || CaveUtils.containsIgnoreCase(biome.getBiomeName(), filter))
+		if (Biome.getIdForBiome(biome) == NumberUtils.toInt(filter, -1) || CaveUtils.containsIgnoreCase(biome.getBiomeName(), filter))
 		{
 			return true;
 		}
@@ -191,7 +191,7 @@ public class CaveFilters
 			{
 				for (BiomeEntry entry : BiomeManager.getBiomes(type))
 				{
-					if (BiomeGenBase.getIdForBiome(entry.biome) == BiomeGenBase.getIdForBiome(biome))
+					if (Biome.getIdForBiome(entry.biome) == Biome.getIdForBiome(biome))
 					{
 						return true;
 					}

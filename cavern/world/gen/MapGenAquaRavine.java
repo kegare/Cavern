@@ -20,7 +20,7 @@ public class MapGenAquaRavine extends MapGenCavernRavine
 				float upDownRadian = (rand.nextFloat() - 0.5F) * 2.0F / 8.0F;
 				float scale = (rand.nextFloat() * 2.0F + rand.nextFloat()) * 9.0F;
 
-				func_180707_a(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 20.0D);
+				addTunnel(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 20.0D);
 			}
 		}
 	}

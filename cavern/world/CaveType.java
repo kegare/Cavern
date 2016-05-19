@@ -38,12 +38,12 @@ public final class CaveType
 	{
 		if (CavernConfig.monsterSpawn > 0)
 		{
-			CAVERN_MONSTER = EnumHelper.addCreatureType("Cavern_Monster", IMob.class, CavernConfig.monsterSpawn, Material.air, false, false);
+			CAVERN_MONSTER = EnumHelper.addCreatureType("Cavern_Monster", IMob.class, CavernConfig.monsterSpawn, Material.AIR, false, false);
 		}
 
 		if (CavelandConfig.monsterSpawn > 0)
 		{
-			CAVELAND_MONSTER = EnumHelper.addCreatureType("Caveland_Monster", IMob.class, CavelandConfig.monsterSpawn, Material.air, false, false);
+			CAVELAND_MONSTER = EnumHelper.addCreatureType("Caveland_Monster", IMob.class, CavelandConfig.monsterSpawn, Material.AIR, false, false);
 		}
 	}
 }

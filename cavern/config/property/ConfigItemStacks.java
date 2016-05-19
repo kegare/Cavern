@@ -67,12 +67,12 @@ public class ConfigItemStacks
 				if (str.indexOf(':') != str.lastIndexOf(':'))
 				{
 					i = str.lastIndexOf(':');
-					item = Item.itemRegistry.getObject(new ResourceLocation(str.substring(0, i)));
+					item = Item.REGISTRY.getObject(new ResourceLocation(str.substring(0, i)));
 					meta = NumberUtils.toInt(str.substring(i + 1));
 				}
 				else
 				{
-					item = Item.itemRegistry.getObject(new ResourceLocation(str));
+					item = Item.REGISTRY.getObject(new ResourceLocation(str));
 					meta = 0;
 				}
 

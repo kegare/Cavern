@@ -10,7 +10,7 @@ import net.minecraft.world.chunk.ChunkPrimer;
 public class MapGenAquaCaves extends MapGenCavernCaves
 {
 	@Override
-	protected void func_180702_a(long caveSeed, int chunkX, int chunkZ, ChunkPrimer primer, double blockX, double blockY, double blockZ, float scale, float leftRightRadian, float upDownRadian, int currentY, int targetY, double scaleHeight)
+	protected void addTunnel(long caveSeed, int chunkX, int chunkZ, ChunkPrimer primer, double blockX, double blockY, double blockZ, float scale, float leftRightRadian, float upDownRadian, int currentY, int targetY, double scaleHeight)
 	{
 		Random random = new Random(caveSeed);
 		int worldHeight = worldObj.getActualHeight();
@@ -63,8 +63,8 @@ public class MapGenAquaCaves extends MapGenCavernCaves
 
 			if (!createFinalRoom && currentY == nextInterHeight && scale > 1.0F && targetY > 0)
 			{
-				func_180702_a(random.nextLong(), chunkX, chunkZ, primer, blockX, blockY, blockZ, random.nextFloat() * 0.5F + 0.5F, leftRightRadian - (float)Math.PI / 2F, upDownRadian / 3.0F, currentY, targetY, 1.0D);
-				func_180702_a(random.nextLong(), chunkX, chunkZ, primer, blockX, blockY, blockZ, random.nextFloat() * 0.5F + 0.5F, leftRightRadian + (float)Math.PI / 2F, upDownRadian / 3.0F, currentY, targetY, 1.0D);
+				addTunnel(random.nextLong(), chunkX, chunkZ, primer, blockX, blockY, blockZ, random.nextFloat() * 0.5F + 0.5F, leftRightRadian - (float)Math.PI / 2F, upDownRadian / 3.0F, currentY, targetY, 1.0D);
+				addTunnel(random.nextLong(), chunkX, chunkZ, primer, blockX, blockY, blockZ, random.nextFloat() * 0.5F + 0.5F, leftRightRadian + (float)Math.PI / 2F, upDownRadian / 3.0F, currentY, targetY, 1.0D);
 
 				return;
 			}
@@ -137,7 +137,7 @@ public class MapGenAquaCaves extends MapGenCavernCaves
 
 			if (rand.nextInt(5) == 0)
 			{
-				func_180703_a(rand.nextLong(), x, z, primer, blockX, blockY, blockZ);
+				addRoom(rand.nextLong(), x, z, primer, blockX, blockY, blockZ);
 
 				count += rand.nextInt(8);
 			}
@@ -153,7 +153,7 @@ public class MapGenAquaCaves extends MapGenCavernCaves
 					scale *= rand.nextFloat() * rand.nextFloat() * 3.5F + 1.0F;
 				}
 
-				func_180702_a(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale * 2.75F, leftRightRadian, upDownRadian, 0, 0, 1.2D);
+				addTunnel(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale * 2.75F, leftRightRadian, upDownRadian, 0, 0, 1.2D);
 			}
 		}
 	}

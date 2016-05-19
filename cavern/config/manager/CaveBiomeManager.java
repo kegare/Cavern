@@ -9,12 +9,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.config.Configuration;
 
 public class CaveBiomeManager
 {
-	private final Map<BiomeGenBase, CaveBiome> CAVE_BIOMES = Maps.newHashMap();
+	private final Map<Biome, CaveBiome> CAVE_BIOMES = Maps.newHashMap();
 
 	public Configuration config;
 
@@ -57,13 +57,13 @@ public class CaveBiomeManager
 		return removeCaveBiome(biome.getBiome());
 	}
 
-	public boolean removeCaveBiome(BiomeGenBase biome)
+	public boolean removeCaveBiome(Biome biome)
 	{
 		boolean ret = false;
 
-		for (Iterator<Entry<BiomeGenBase, CaveBiome>> iterator = getCaveBiomes().entrySet().iterator(); iterator.hasNext();)
+		for (Iterator<Entry<Biome, CaveBiome>> iterator = getCaveBiomes().entrySet().iterator(); iterator.hasNext();)
 		{
-			Entry<BiomeGenBase, CaveBiome> entry = iterator.next();
+			Entry<Biome, CaveBiome> entry = iterator.next();
 
 			if (entry.getKey() == biome)
 			{
@@ -76,12 +76,12 @@ public class CaveBiomeManager
 		return ret;
 	}
 
-	public CaveBiome getCaveBiome(BiomeGenBase biome)
+	public CaveBiome getCaveBiome(Biome biome)
 	{
 		return getCaveBiome(biome, false);
 	}
 
-	public CaveBiome getCaveBiome(BiomeGenBase biome, boolean identity)
+	public CaveBiome getCaveBiome(Biome biome, boolean identity)
 	{
 		CaveBiome ret = getCaveBiomes().get(biome);
 
@@ -98,7 +98,7 @@ public class CaveBiomeManager
 		return WeightedRandom.getRandomItem(random, Lists.newArrayList(getCaveBiomes().values()));
 	}
 
-	public Map<BiomeGenBase, CaveBiome> getCaveBiomes()
+	public Map<Biome, CaveBiome> getCaveBiomes()
 	{
 		return CAVE_BIOMES;
 	}

@@ -146,14 +146,14 @@ public class CavelandConfig
 		{
 			List<CaveVein> veins = Lists.newArrayList();
 
-			veins.add(new CaveVein(new BlockMeta(Blocks.coal_ore, 0), 30, 17, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.coal_ore, 0), 20, 15, 1, 10));
-			veins.add(new CaveVein(new BlockMeta(Blocks.iron_ore, 0), 30, 10, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.iron_ore, 0), 20, 8, 1, 10));
-			veins.add(new CaveVein(new BlockMeta(Blocks.gravel, 0), 30, 20, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.gravel, 0), 10, 10, 1, 10));
-			veins.add(new CaveVein(new BlockMeta(Blocks.sand, BlockSand.EnumType.SAND.getMetadata()), 20, 20, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.sand, BlockSand.EnumType.SAND.getMetadata()), 7, 10, 1, 10));
+			veins.add(new CaveVein(new BlockMeta(Blocks.COAL_ORE, 0), 30, 17, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.COAL_ORE, 0), 20, 15, 1, 10));
+			veins.add(new CaveVein(new BlockMeta(Blocks.IRON_ORE, 0), 30, 10, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.IRON_ORE, 0), 20, 8, 1, 10));
+			veins.add(new CaveVein(new BlockMeta(Blocks.GRAVEL, 0), 30, 20, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.GRAVEL, 0), 10, 10, 1, 10));
+			veins.add(new CaveVein(new BlockMeta(Blocks.SAND, BlockSand.EnumType.SAND.getMetadata()), 20, 20, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.SAND, BlockSand.EnumType.SAND.getMetadata()), 7, 10, 1, 10));
 
 			CavernConfig.generateVeinsConfig(veinManager, veins);
 		}

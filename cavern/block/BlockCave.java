@@ -36,7 +36,7 @@ public class BlockCave extends Block
 
 	public BlockCave()
 	{
-		super(Material.rock);
+		super(Material.ROCK);
 		this.setDefaultState(blockState.getBaseState().withProperty(VARIANT, EnumType.AQUAMARINE_ORE));
 		this.setUnlocalizedName("blockCave");
 		this.setCreativeTab(Cavern.tabCavern);
@@ -171,10 +171,10 @@ public class BlockCave extends Block
 
 	public enum EnumType implements IStringSerializable
 	{
-		AQUAMARINE_ORE(0, "aquamarine_ore", "oreAquamarine", MapColor.diamondColor, Material.rock, 3.0F, 1),
-		AQUAMARINE_BLOCK(1, "aquamarine_block", "blockAquamarine", MapColor.diamondColor, Material.iron, 3.5F, 1),
-		MAGNITE_ORE(2, "magnite_ore", "oreMagnite", MapColor.redColor, Material.rock, 3.0F, 2),
-		MAGNITE_BLOCK(3, "magnite_block", "blockMagnite", MapColor.redColor, Material.iron, 2.5F, 2);
+		AQUAMARINE_ORE(0, "aquamarine_ore", "oreAquamarine", MapColor.DIAMOND, Material.ROCK, 3.0F, 1),
+		AQUAMARINE_BLOCK(1, "aquamarine_block", "blockAquamarine", MapColor.DIAMOND, Material.IRON, 3.5F, 1),
+		MAGNITE_ORE(2, "magnite_ore", "oreMagnite", MapColor.RED, Material.ROCK, 3.0F, 2),
+		MAGNITE_BLOCK(3, "magnite_block", "blockMagnite", MapColor.RED, Material.IRON, 2.5F, 2);
 
 		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
 

@@ -22,7 +22,7 @@ public class MapGenCavelandCaves extends MapGenCavernCaves
 
 			if (rand.nextInt(5) == 0)
 			{
-				func_180703_a(rand.nextLong(), x, z, primer, blockX, blockY, blockZ);
+				addRoom(rand.nextLong(), x, z, primer, blockX, blockY, blockZ);
 
 				count += rand.nextInt(3);
 			}
@@ -38,7 +38,7 @@ public class MapGenCavelandCaves extends MapGenCavernCaves
 					scale *= rand.nextFloat() * rand.nextFloat() * 3.0F + 1.0F;
 				}
 
-				func_180702_a(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 1.25D);
+				addTunnel(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 1.25D);
 			}
 		}
 	}

@@ -75,10 +75,10 @@ public class CavebornEventHooks
 
 							player.forceSpawn = force;
 
-							WorldServer world = player.getServerForPlayer();
+							WorldServer world = player.getServerWorld();
 							BlockPos pos = player.getPosition();
 
-							for (BlockPos blockpos : BlockPos.getAllInBox(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
+							for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
 							{
 								if (world.getBlockState(blockpos).getBlock() == portal)
 								{
@@ -92,7 +92,7 @@ public class CavebornEventHooks
 							double y = player.posY + player.getEyeHeight();
 							double z = player.posZ;
 
-							world.playSound(null, x, y, z, SoundEvents.block_glass_break, SoundCategory.BLOCKS, 1.0F, 0.65F);
+							world.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0F, 0.65F);
 						}
 					}
 				});

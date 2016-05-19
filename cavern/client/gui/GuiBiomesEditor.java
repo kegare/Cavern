@@ -42,7 +42,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.HoverChecker;
@@ -307,7 +307,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 							{
 								Block block = Block.getBlockFromName(terrainBlockField.getText());
 
-								if (block != null && block != Blocks.air)
+								if (block != null && block != Blocks.AIR)
 								{
 									int meta = BlockMeta.getMetaFromString(block, terrainBlockMetaField.getText());
 
@@ -324,7 +324,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 							{
 								Block block = Block.getBlockFromName(topBlockField.getText());
 
-								if (block != null && block != Blocks.air)
+								if (block != null && block != Blocks.AIR)
 								{
 									int meta = BlockMeta.getMetaFromString(block, topBlockMetaField.getText());
 
@@ -448,7 +448,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 	}
 
 	@Override
-	public void onBiomeSelected(int id, Collection<BiomeGenBase> selected)
+	public void onBiomeSelected(int id, Collection<Biome> selected)
 	{
 		switch (id)
 		{
@@ -460,7 +460,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 
 				biomeList.selected.clear();
 
-				for (BiomeGenBase biome : selected)
+				for (Biome biome : selected)
 				{
 					CaveBiome caveBiome = new CaveBiome(biome, 10);
 
@@ -476,7 +476,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 	}
 
 	@Override
-	public boolean canSelectBiome(int id, BiomeGenBase biome)
+	public boolean canSelectBiome(int id, Biome biome)
 	{
 		return true;
 	}
@@ -861,7 +861,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 				return;
 			}
 
-			BiomeGenBase biome = caveBiome.getBiome();
+			Biome biome = caveBiome.getBiome();
 			String text;
 
 			switch (nameType)
@@ -894,7 +894,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 						GlStateManager.enableRescaleNormal();
 						RenderHelper.enableGUIStandardItemLighting();
 						itemRender.renderItemIntoGUI(itemstack, width / 2 - 100, par3 + 1);
-						itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 - 100, par3 + 1, Integer.toString(BiomeGenBase.getIdForBiome(biome)));
+						itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 - 100, par3 + 1, Integer.toString(Biome.getIdForBiome(biome)));
 						RenderHelper.disableStandardItemLighting();
 						GlStateManager.disableRescaleNormal();
 					}

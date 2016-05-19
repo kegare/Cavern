@@ -17,7 +17,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 
@@ -47,7 +47,7 @@ public class CaveVein
 
 	public CaveVein(BlockMeta block, int weight, int size, int min, int max, Object... biomes)
 	{
-		this(block, new BlockMeta(Blocks.stone.getDefaultState()), weight, 1.0D, size, min, max);
+		this(block, new BlockMeta(Blocks.STONE.getDefaultState()), weight, 1.0D, size, min, max);
 		this.biomes = getBiomes(biomes);
 	}
 
@@ -63,26 +63,26 @@ public class CaveVein
 
 		for (Object element : objects)
 		{
-			if (element instanceof BiomeGenBase)
+			if (element instanceof Biome)
 			{
-				biomes.add(BiomeGenBase.getIdForBiome((BiomeGenBase)element));
+				biomes.add(Biome.getIdForBiome((Biome)element));
 			}
 			else if (element instanceof Integer)
 			{
-				BiomeGenBase biome = BiomeGenBase.getBiome((Integer)element);
+				Biome biome = Biome.getBiome((Integer)element);
 
 				if (biome != null)
 				{
-					biomes.add(BiomeGenBase.getIdForBiome(biome));
+					biomes.add(Biome.getIdForBiome(biome));
 				}
 			}
 			else if (element instanceof Type)
 			{
 				Type type = (Type)element;
 
-				for (BiomeGenBase biome : BiomeDictionary.getBiomesForType(type))
+				for (Biome biome : BiomeDictionary.getBiomesForType(type))
 				{
-					biomes.add(BiomeGenBase.getIdForBiome(biome));
+					biomes.add(Biome.getIdForBiome(biome));
 				}
 			}
 		}
@@ -170,18 +170,18 @@ public class CaveVein
 		biomes = target;
 	}
 
-	public List<BiomeGenBase> getBiomeList()
+	public List<Biome> getBiomeList()
 	{
 		if (biomes == null || biomes.length <= 0)
 		{
 			return Collections.emptyList();
 		}
 
-		List<BiomeGenBase> ret = Lists.newArrayList();
+		List<Biome> ret = Lists.newArrayList();
 
 		for (int id : biomes)
 		{
-			BiomeGenBase biome = BiomeGenBase.getBiome(id);
+			Biome biome = Biome.getBiome(id);
 
 			if (biome != null)
 			{
@@ -255,7 +255,7 @@ public class CaveVein
 
 												if (state.getBlock() == target.getBlock() && state.getBlock().getMetaFromState(state) == target.getMeta())
 												{
-													if (biomes == null || biomes.length <= 0 || ArrayUtils.contains(biomes, BiomeGenBase.getIdForBiome(world.getBiomeGenForCoords(blockpos))))
+													if (biomes == null || biomes.length <= 0 || ArrayUtils.contains(biomes, Biome.getIdForBiome(world.getBiomeGenForCoords(blockpos))))
 													{
 														if (world.setBlockState(blockpos, blockMeta.getBlockState(), 2))
 														{

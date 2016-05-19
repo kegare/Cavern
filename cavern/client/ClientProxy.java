@@ -34,6 +34,6 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void registerRenderers()
 	{
-		renderBlockMap.put(Blocks.lit_redstone_ore, Blocks.redstone_ore);
+		renderBlockMap.put(Blocks.LIT_REDSTONE_ORE, Blocks.REDSTONE_ORE);
 	}
 }

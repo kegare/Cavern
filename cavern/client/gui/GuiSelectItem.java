@@ -50,7 +50,7 @@ public class GuiSelectItem extends GuiScreen
 	{
 		List<ItemStack> list = Lists.newArrayList();
 
-		for (Iterator<Item> iterator = Item.itemRegistry.iterator(); iterator.hasNext();)
+		for (Iterator<Item> iterator = Item.REGISTRY.iterator(); iterator.hasNext();)
 		{
 			Item item = iterator.next();
 

@@ -36,7 +36,7 @@ public class BlockMeta implements Comparable<BlockMeta>
 
 	public BlockMeta(String name, int meta)
 	{
-		this(Block.blockRegistry.getObject(new ResourceLocation(name)), meta);
+		this(Block.REGISTRY.getObject(new ResourceLocation(name)), meta);
 	}
 
 	public BlockMeta(String name, String meta)

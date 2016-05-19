@@ -74,13 +74,13 @@ public class CaveBlocks
 		GameRegistry.register(new ItemAcresia(acresia));
 
 		GameRegistry.register(perverted_log);
-		GameRegistry.register(new ItemBlockPerverted(perverted_log, Blocks.log));
+		GameRegistry.register(new ItemBlockPerverted(perverted_log, Blocks.LOG));
 
 		GameRegistry.register(perverted_leaves);
-		GameRegistry.register(new ItemBlockPerverted(perverted_leaves, Blocks.leaves));
+		GameRegistry.register(new ItemBlockPerverted(perverted_leaves, Blocks.LEAVES));
 
 		GameRegistry.register(perverted_sapling);
-		GameRegistry.register(new ItemBlockPerverted(perverted_sapling, Blocks.sapling));
+		GameRegistry.register(new ItemBlockPerverted(perverted_sapling, Blocks.SAPLING));
 
 		OreDictionary.registerOre("oreAquamarine", new ItemStack(cave_block, 1, BlockCave.EnumType.AQUAMARINE_ORE.getMetadata()));
 		OreDictionary.registerOre("oreMagnite", new ItemStack(cave_block, 1, BlockCave.EnumType.MAGNITE_ORE.getMetadata()));
@@ -181,18 +181,18 @@ public class CaveBlocks
 			'M', new ItemStack(CaveItems.cave_item, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage())
 		);
 
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.stick, 8), new ItemStack(perverted_log, 1, OreDictionary.WILDCARD_VALUE));
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.STICK, 8), new ItemStack(perverted_log, 1, OreDictionary.WILDCARD_VALUE));
 
 		for (BlockPlanks.EnumType type : BlockOldLog.VARIANT.getAllowedValues())
 		{
 			int meta = type.getMetadata();
 
-			GameRegistry.addShapedRecipe(new ItemStack(Blocks.planks, 4, meta),
+			GameRegistry.addShapedRecipe(new ItemStack(Blocks.PLANKS, 4, meta),
 				"LL", "LL",
 				'L', new ItemStack(perverted_log, 1, meta)
 			);
 
-			GameRegistry.addShapelessRecipe(new ItemStack(perverted_sapling, 1, meta), new ItemStack(Blocks.sapling, 1, meta), Items.fermented_spider_eye);
+			GameRegistry.addShapelessRecipe(new ItemStack(perverted_sapling, 1, meta), new ItemStack(Blocks.SAPLING, 1, meta), Items.FERMENTED_SPIDER_EYE);
 		}
 
 		GameRegistry.addSmelting(new ItemStack(cave_block, 1, BlockCave.EnumType.AQUAMARINE_ORE.getMetadata()),
@@ -201,6 +201,6 @@ public class CaveBlocks
 		GameRegistry.addSmelting(new ItemStack(cave_block, 1, BlockCave.EnumType.MAGNITE_ORE.getMetadata()),
 			new ItemStack(CaveItems.cave_item, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()), 0.7F);
 
-		GameRegistry.addSmelting(new ItemStack(perverted_log, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.coal, 1, 1), 0.0F);
+		GameRegistry.addSmelting(new ItemStack(perverted_log, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.COAL, 1, 1), 0.0F);
 	}
 }

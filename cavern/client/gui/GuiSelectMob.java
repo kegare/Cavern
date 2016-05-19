@@ -324,7 +324,7 @@ public class GuiSelectMob extends GuiScreen
 		{
 			super(GuiSelectMob.this.mc, 0, 0, 0, 0, 18);
 
-			for (Iterator<Entry<String, Class<? extends Entity>>> iterator = EntityList.stringToClassMapping.entrySet().iterator(); iterator.hasNext();)
+			for (Iterator<Entry<String, Class<? extends Entity>>> iterator = EntityList.NAME_TO_CLASS.entrySet().iterator(); iterator.hasNext();)
 			{
 				Entry<String, Class<? extends Entity>> entry = iterator.next();
 				String name = entry.getKey();

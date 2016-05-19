@@ -137,7 +137,7 @@ public class AquaCavernConfig
 
 		for (Class<? extends Entity> clazz : classes)
 		{
-			mobs.add(EntityList.classToStringMapping.get(clazz));
+			mobs.add(EntityList.CLASS_TO_NAME.get(clazz));
 		}
 
 		prop = config.get(category, "dungeonMobs", mobs.toArray(new String[mobs.size()]));
@@ -182,22 +182,22 @@ public class AquaCavernConfig
 		{
 			List<CaveVein> veins = Lists.newArrayList();
 
-			veins.add(new CaveVein(new BlockMeta(Blocks.stone, BlockStone.EnumType.GRANITE.getMetadata()), 30, 25, 1, 255));
-			veins.add(new CaveVein(new BlockMeta(Blocks.stone, BlockStone.EnumType.DIORITE.getMetadata()), 32, 25, 1, 255));
-			veins.add(new CaveVein(new BlockMeta(Blocks.stone, BlockStone.EnumType.ANDESITE.getMetadata()), 32, 25, 1, 255));
-			veins.add(new CaveVein(new BlockMeta(Blocks.coal_ore, 0), 40, 17, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.iron_ore, 0), 40, 10, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.gold_ore, 0), 8, 7, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.redstone_ore, 0), 12, 7, 1, 40));
-			veins.add(new CaveVein(new BlockMeta(Blocks.lapis_ore, 0), 8, 5, 1, 50));
-			veins.add(new CaveVein(new BlockMeta(Blocks.diamond_ore, 0), 3, 6, 1, 20));
-			veins.add(new CaveVein(new BlockMeta(Blocks.emerald_ore, 0), 8, 5, 50, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.STONE, BlockStone.EnumType.GRANITE.getMetadata()), 30, 25, 1, 255));
+			veins.add(new CaveVein(new BlockMeta(Blocks.STONE, BlockStone.EnumType.DIORITE.getMetadata()), 32, 25, 1, 255));
+			veins.add(new CaveVein(new BlockMeta(Blocks.STONE, BlockStone.EnumType.ANDESITE.getMetadata()), 32, 25, 1, 255));
+			veins.add(new CaveVein(new BlockMeta(Blocks.COAL_ORE, 0), 40, 17, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.IRON_ORE, 0), 40, 10, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.GOLD_ORE, 0), 8, 7, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.REDSTONE_ORE, 0), 12, 7, 1, 40));
+			veins.add(new CaveVein(new BlockMeta(Blocks.LAPIS_ORE, 0), 8, 5, 1, 50));
+			veins.add(new CaveVein(new BlockMeta(Blocks.DIAMOND_ORE, 0), 3, 6, 1, 20));
+			veins.add(new CaveVein(new BlockMeta(Blocks.EMERALD_ORE, 0), 8, 5, 50, 127));
 			veins.add(new CaveVein(new BlockMeta(CaveBlocks.cave_block, BlockCave.EnumType.AQUAMARINE_ORE.getMetadata()), 30, 8, 20, 127));
 			veins.add(new CaveVein(new BlockMeta(CaveBlocks.cave_block, BlockCave.EnumType.MAGNITE_ORE.getMetadata()), 35, 10, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.dirt, 0), 20, 25, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.gravel, 0), 10, 20, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.clay, 0), 30, 20, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.sand, BlockSand.EnumType.SAND.getMetadata()), 15, 20, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.DIRT, 0), 20, 25, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.GRAVEL, 0), 10, 20, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.CLAY, 0), 30, 20, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.SAND, BlockSand.EnumType.SAND.getMetadata()), 15, 20, 1, 127));
 
 			CavernConfig.generateVeinsConfig(veinManager, veins);
 		}

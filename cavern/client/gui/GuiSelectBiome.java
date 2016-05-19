@@ -36,7 +36,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -177,11 +177,11 @@ public class GuiSelectBiome extends GuiScreen
 					{
 						Set<Integer> ret = Sets.newTreeSet();
 
-						for (BiomeGenBase biome : biomeList.selected)
+						for (Biome biome : biomeList.selected)
 						{
 							if (biome != null)
 							{
-								ret.add(BiomeGenBase.getIdForBiome(biome));
+								ret.add(Biome.getIdForBiome(biome));
 							}
 						}
 
@@ -251,13 +251,13 @@ public class GuiSelectBiome extends GuiScreen
 		}
 		else if (biomeList.isMouseYWithinSlotBounds(mouseY) && isCtrlKeyDown())
 		{
-			BiomeGenBase biome = biomeList.contents.get(biomeList.getSlotIndexFromScreenCoords(mouseX, mouseY), null);
+			Biome biome = biomeList.contents.get(biomeList.getSlotIndexFromScreenCoords(mouseX, mouseY), null);
 
 			if (biome != null)
 			{
 				List<String> info = Lists.newArrayList();
 
-				info.add(TextFormatting.DARK_GRAY + Integer.toString(BiomeGenBase.getIdForBiome(biome)) + ": " + Strings.nullToEmpty(biome.getBiomeName()));
+				info.add(TextFormatting.DARK_GRAY + Integer.toString(Biome.getIdForBiome(biome)) + ": " + Strings.nullToEmpty(biome.getBiomeName()));
 
 				IBlockState state = biome.topBlock;
 				Block block = state.getBlock();
@@ -325,11 +325,11 @@ public class GuiSelectBiome extends GuiScreen
 			{
 				List<String> biomes = Lists.newArrayList();
 
-				for (BiomeGenBase biome : biomeList.selected)
+				for (Biome biome : biomeList.selected)
 				{
 					if (biome != null)
 					{
-						biomes.add(BiomeGenBase.getIdForBiome(biome) + ": " + biome.getBiomeName());
+						biomes.add(Biome.getIdForBiome(biome) + ": " + biome.getBiomeName());
 					}
 				}
 
@@ -437,10 +437,10 @@ public class GuiSelectBiome extends GuiScreen
 
 	protected class BiomeList extends GuiListSlot
 	{
-		protected final ArrayListExtended<BiomeGenBase> biomes = new ArrayListExtended<>();
-		protected final ArrayListExtended<BiomeGenBase> contents = new ArrayListExtended<>();
-		protected final Set<BiomeGenBase> selected = Sets.newTreeSet(CaveUtils.biomeComparator);
-		protected final Map<String, List<BiomeGenBase>> filterCache = Maps.newHashMap();
+		protected final ArrayListExtended<Biome> biomes = new ArrayListExtended<>();
+		protected final ArrayListExtended<Biome> contents = new ArrayListExtended<>();
+		protected final Set<Biome> selected = Sets.newTreeSet(CaveUtils.biomeComparator);
+		protected final Map<String, List<Biome>> filterCache = Maps.newHashMap();
 
 		protected boolean clickFlag;
 
@@ -448,9 +448,9 @@ public class GuiSelectBiome extends GuiScreen
 		{
 			super(GuiSelectBiome.this.mc, 0, 0, 0, 0, 18);
 
-			for (Iterator<BiomeGenBase> iterator = BiomeGenBase.biomeRegistry.iterator(); iterator.hasNext();)
+			for (Iterator<Biome> iterator = Biome.REGISTRY.iterator(); iterator.hasNext();)
 			{
-				BiomeGenBase biome = iterator.next();
+				Biome biome = iterator.next();
 
 				if (biome != null && (selector == null || selector.canSelectBiome(selectorId, biome)))
 				{
@@ -473,7 +473,7 @@ public class GuiSelectBiome extends GuiScreen
 
 							if (i >= 0 && i <= 255)
 							{
-								BiomeGenBase biome = BiomeGenBase.getBiome(i);
+								Biome biome = Biome.getBiome(i);
 
 								if (biome != null)
 								{
@@ -488,7 +488,7 @@ public class GuiSelectBiome extends GuiScreen
 
 						if (i >= 0 && i <= 255)
 						{
-							BiomeGenBase biome = BiomeGenBase.getBiome(i);
+							Biome biome = Biome.getBiome(i);
 
 							if (biome != null)
 							{
@@ -508,7 +508,7 @@ public class GuiSelectBiome extends GuiScreen
 
 					if (i >= 0 && i <= 255)
 					{
-						BiomeGenBase biome = BiomeGenBase.getBiome(i);
+						Biome biome = Biome.getBiome(i);
 
 						if (biome != null)
 						{
@@ -538,7 +538,7 @@ public class GuiSelectBiome extends GuiScreen
 			{
 				int amount = 0;
 
-				for (BiomeGenBase biome : selected)
+				for (Biome biome : selected)
 				{
 					amount = contents.indexOf(biome) * getSlotHeight();
 
@@ -568,7 +568,7 @@ public class GuiSelectBiome extends GuiScreen
 		@Override
 		protected void drawSlot(int slot, int par2, int par3, int par4, int mouseX, int mouseY)
 		{
-			BiomeGenBase biome = contents.get(slot, null);
+			Biome biome = contents.get(slot, null);
 
 			if (biome == null)
 			{
@@ -584,7 +584,7 @@ public class GuiSelectBiome extends GuiScreen
 
 			if (detailInfo.isChecked() || Keyboard.isKeyDown(Keyboard.KEY_TAB))
 			{
-				drawString(fontRendererObj, Integer.toString(BiomeGenBase.getIdForBiome(biome)), width / 2 - 100, par3 + 1, 0xE0E0E0);
+				drawString(fontRendererObj, Integer.toString(Biome.getIdForBiome(biome)), width / 2 - 100, par3 + 1, 0xE0E0E0);
 
 				if (Keyboard.isKeyDown(Keyboard.KEY_TAB))
 				{
@@ -632,7 +632,7 @@ public class GuiSelectBiome extends GuiScreen
 		@Override
 		protected void elementClicked(int slot, boolean flag, int mouseX, int mouseY)
 		{
-			BiomeGenBase biome = contents.get(slot, null);
+			Biome biome = contents.get(slot, null);
 
 			if (biome != null && (clickFlag = !clickFlag == true) && !selected.add(biome))
 			{
@@ -643,7 +643,7 @@ public class GuiSelectBiome extends GuiScreen
 		@Override
 		protected boolean isSelected(int slot)
 		{
-			BiomeGenBase biome = contents.get(slot, null);
+			Biome biome = contents.get(slot, null);
 
 			return biome != null && selected.contains(biome);
 		}
@@ -655,7 +655,7 @@ public class GuiSelectBiome extends GuiScreen
 				@Override
 				protected void compute()
 				{
-					List<BiomeGenBase> result;
+					List<Biome> result;
 
 					if (Strings.isNullOrEmpty(filter))
 					{
@@ -685,7 +685,7 @@ public class GuiSelectBiome extends GuiScreen
 		}
 	}
 
-	public static class BiomeFilter implements Predicate<BiomeGenBase>
+	public static class BiomeFilter implements Predicate<Biome>
 	{
 		private final String filter;
 
@@ -695,7 +695,7 @@ public class GuiSelectBiome extends GuiScreen
 		}
 
 		@Override
-		public boolean apply(BiomeGenBase biome)
+		public boolean apply(Biome biome)
 		{
 			return CaveFilters.biomeFilter(biome, filter);
 		}

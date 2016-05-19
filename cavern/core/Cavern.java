@@ -140,7 +140,7 @@ public class Cavern
 		MinerStats.setPointAmount("oreIron", 1);
 		MinerStats.setPointAmount("oreGold", 1);
 		MinerStats.setPointAmount("oreRedstone", 2);
-		MinerStats.setPointAmount(Blocks.lit_redstone_ore, 0, 2);
+		MinerStats.setPointAmount(Blocks.LIT_REDSTONE_ORE, 0, 2);
 		MinerStats.setPointAmount("oreLapis", 3);
 		MinerStats.setPointAmount("oreEmerald", 3);
 		MinerStats.setPointAmount("oreDiamond", 5);
@@ -188,7 +188,7 @@ public class Cavern
 		{
 			Set<String> entries = Sets.newTreeSet();
 
-			for (Iterator<Block> iterator = Block.blockRegistry.iterator(); iterator.hasNext();)
+			for (Iterator<Block> iterator = Block.REGISTRY.iterator(); iterator.hasNext();)
 			{
 				Block block = iterator.next();
 

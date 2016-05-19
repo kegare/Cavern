@@ -19,9 +19,9 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.biome.BiomeDecorator;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkGenerator;
@@ -46,15 +46,15 @@ public class ChunkProviderCaveland implements IChunkGenerator
 	private final World worldObj;
 	private final Random rand;
 
-	private BiomeGenBase[] biomesForGeneration;
+	private Biome[] biomesForGeneration;
 
 	private final MapGenBase caveGenerator = new MapGenCavelandCaves();
 	private final MapGenBase ravineGenerator = new MapGenCavelandRavine();
 
-	private WorldGenerator lakeWaterGen = new WorldGenLakes(Blocks.water);
-	private WorldGenerator lakeLavaGen = new WorldGenLakes(Blocks.lava);
-	private WorldGenerator liquidWaterGen = new WorldGenLiquids(Blocks.flowing_water);
-	private WorldGenerator liquidLavaGen = new WorldGenLiquids(Blocks.flowing_lava);
+	private WorldGenerator lakeWaterGen = new WorldGenLakes(Blocks.WATER);
+	private WorldGenerator lakeLavaGen = new WorldGenLakes(Blocks.LAVA);
+	private WorldGenerator liquidWaterGen = new WorldGenLiquids(Blocks.FLOWING_WATER);
+	private WorldGenerator liquidLavaGen = new WorldGenLiquids(Blocks.FLOWING_LAVA);
 	private WorldGenerator deadBushGen = new WorldGenDeadBush();
 	private WorldGenerator acresiaGen = new WorldGenAcresia();
 
@@ -82,7 +82,7 @@ public class ChunkProviderCaveland implements IChunkGenerator
 			{
 				for (int y = 255; y >= 0; --y)
 				{
-					primer.setBlockState(x, y, z, Blocks.dirt.getDefaultState());
+					primer.setBlockState(x, y, z, Blocks.DIRT.getDefaultState());
 				}
 			}
 		}
@@ -98,27 +98,27 @@ public class ChunkProviderCaveland implements IChunkGenerator
 		{
 			for (int z = 0; z < 16; ++z)
 			{
-				BiomeGenBase biome = biomesForGeneration[x * 16 + z];
+				Biome biome = biomesForGeneration[x * 16 + z];
 				IBlockState top = biome.topBlock;
 				IBlockState filter = biome.fillerBlock;
 
-				if (filter.getBlock() == Blocks.sand)
+				if (filter.getBlock() == Blocks.SAND)
 				{
-					filter = Blocks.sandstone.getDefaultState();
+					filter = Blocks.SANDSTONE.getDefaultState();
 				}
 
-				primer.setBlockState(x, 0, z, Blocks.bedrock.getDefaultState());
-				primer.setBlockState(x, blockHeight, z, Blocks.bedrock.getDefaultState());
+				primer.setBlockState(x, 0, z, Blocks.BEDROCK.getDefaultState());
+				primer.setBlockState(x, blockHeight, z, Blocks.BEDROCK.getDefaultState());
 				primer.setBlockState(x, 1, z, primer.getBlockState(x, 2, z));
 
 				for (int y = 1; y <= blockHeight - 1; ++y)
 				{
-					if (primer.getBlockState(x, y, z).getBlock() == Blocks.grass ||
-						primer.getBlockState(x, y, z).getMaterial().isSolid() && primer.getBlockState(x, y + 1, z).getBlock() == Blocks.air)
+					if (primer.getBlockState(x, y, z).getBlock() == Blocks.GRASS ||
+						primer.getBlockState(x, y, z).getMaterial().isSolid() && primer.getBlockState(x, y + 1, z).getBlock() == Blocks.AIR)
 					{
 						primer.setBlockState(x, y, z, top);
 					}
-					else if (primer.getBlockState(x, y, z).getBlock() == Blocks.dirt)
+					else if (primer.getBlockState(x, y, z).getBlock() == Blocks.DIRT)
 					{
 						primer.setBlockState(x, y, z, filter);
 					}
@@ -128,7 +128,7 @@ public class ChunkProviderCaveland implements IChunkGenerator
 				{
 					for (int y = blockHeight + 1; y < 256; ++y)
 					{
-						primer.setBlockState(x, y, z, Blocks.air.getDefaultState());
+						primer.setBlockState(x, y, z, Blocks.AIR.getDefaultState());
 					}
 				}
 			}
@@ -139,7 +139,7 @@ public class ChunkProviderCaveland implements IChunkGenerator
 
 		for (int i = 0; i < biomeArray.length; ++i)
 		{
-			biomeArray[i] = (byte)BiomeGenBase.getIdForBiome(biomesForGeneration[i]);
+			biomeArray[i] = (byte)Biome.getIdForBiome(biomesForGeneration[i]);
 		}
 
 		chunk.resetRelightChecks();
@@ -155,11 +155,11 @@ public class ChunkProviderCaveland implements IChunkGenerator
 		int worldX = chunkX * 16;
 		int worldZ = chunkZ * 16;
 		BlockPos blockPos = new BlockPos(worldX, 0, worldZ);
-		BiomeGenBase biome = worldObj.getBiomeGenForCoords(blockPos.add(16, 0, 16));
+		Biome biome = worldObj.getBiomeGenForCoords(blockPos.add(16, 0, 16));
 		BiomeDecorator decorator = biome.theBiomeDecorator;
 		int worldHeight = worldObj.provider.getActualHeight();
 
-		ForgeEventFactory.onChunkPopulate(true, this, this.worldObj, chunkX, chunkZ, false);
+		ForgeEventFactory.onChunkPopulate(true, this, worldObj, rand, chunkX, chunkZ, false);
 
 		int x, y, z;
 
@@ -319,7 +319,7 @@ public class ChunkProviderCaveland implements IChunkGenerator
 
 						if (treeGen.generate(worldObj, rand, pos))
 						{
-							treeGen.func_180711_a(worldObj, rand, pos);
+							treeGen.generateSaplings(worldObj, rand, pos);
 						}
 					}
 
@@ -333,7 +333,7 @@ public class ChunkProviderCaveland implements IChunkGenerator
 
 						if (treeGen.generate(worldObj, rand, pos))
 						{
-							treeGen.func_180711_a(worldObj, rand, pos);
+							treeGen.generateSaplings(worldObj, rand, pos);
 						}
 					}
 				}
@@ -386,7 +386,7 @@ public class ChunkProviderCaveland implements IChunkGenerator
 
 		MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(worldObj, rand, blockPos));
 
-		ForgeEventFactory.onChunkPopulate(false, this, this.worldObj, chunkX, chunkZ, false);
+		ForgeEventFactory.onChunkPopulate(false, this, worldObj, rand, chunkX, chunkZ, false);
 
 		BlockFalling.fallInstantly = false;
 	}
@@ -400,14 +400,16 @@ public class ChunkProviderCaveland implements IChunkGenerator
 	@Override
 	public List<SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
 	{
-		if (creatureType == EnumCreatureType.MONSTER)
+		boolean enabled = CavelandConfig.monsterSpawn > 0;
+
+		if (enabled && creatureType == EnumCreatureType.MONSTER)
 		{
 			return Collections.emptyList();
 		}
 
-		BiomeGenBase biome = worldObj.getBiomeGenForCoords(pos);
+		Biome biome = worldObj.getBiomeGenForCoords(pos);
 
-		if (creatureType == CaveType.CAVELAND_MONSTER)
+		if (enabled && creatureType == CaveType.CAVELAND_MONSTER)
 		{
 			return biome.getSpawnableList(EnumCreatureType.MONSTER);
 		}

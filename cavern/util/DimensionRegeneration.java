@@ -55,10 +55,10 @@ public class DimensionRegeneration
 		ITextComponent name, text;
 
 		name = new TextComponentString(type.getName());
-		name.getChatStyle().setBold(true);
+		name.getStyle().setBold(true);
 
 		text = new TextComponentTranslation("cavern.regeneration.regenerating", name);
-		text.getChatStyle().setColor(TextFormatting.GRAY);
+		text.getStyle().setColor(TextFormatting.GRAY);
 
 		server.getPlayerList().sendChatMsg(text);
 
@@ -121,7 +121,7 @@ public class DimensionRegeneration
 		}
 
 		text = new TextComponentTranslation("cavern.regeneration.regenerated", name);
-		text.getChatStyle().setColor(TextFormatting.GRAY);
+		text.getStyle().setColor(TextFormatting.GRAY);
 
 		server.getPlayerList().sendChatMsg(text);
 
@@ -199,10 +199,10 @@ public class DimensionRegeneration
 		ITextComponent name, text;
 
 		name = new TextComponentString(world.provider.getDimensionType().getName());
-		name.getChatStyle().setBold(true);
+		name.getStyle().setBold(true);
 
 		text = new TextComponentTranslation("cavern.regeneration.backup", name);
-		text.getChatStyle().setColor(TextFormatting.GRAY);
+		text.getStyle().setColor(TextFormatting.GRAY);
 
 		server.getPlayerList().sendChatMsg(text);
 
@@ -213,7 +213,7 @@ public class DimensionRegeneration
 			ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_FILE, FilenameUtils.normalize(bak.getParentFile().getPath()));
 
 			text = new TextComponentTranslation("cavern.regeneration.backup.success", name);
-			text.getChatStyle().setColor(TextFormatting.GRAY).setChatClickEvent(click);
+			text.getStyle().setColor(TextFormatting.GRAY).setClickEvent(click);
 
 			server.getPlayerList().sendChatMsg(text);
 
@@ -222,7 +222,7 @@ public class DimensionRegeneration
 		else
 		{
 			text = new TextComponentTranslation("cavern.regeneration.backup.failed", name);
-			text.getChatStyle().setColor(TextFormatting.RED);
+			text.getStyle().setColor(TextFormatting.RED);
 
 			server.getPlayerList().sendChatMsg(text);
 

@@ -37,7 +37,7 @@ import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.ConfigCategory;
@@ -227,7 +227,7 @@ public class CavernConfig
 
 		for (Class<? extends Entity> clazz : classes)
 		{
-			mobs.add(EntityList.classToStringMapping.get(clazz));
+			mobs.add(EntityList.CLASS_TO_NAME.get(clazz));
 		}
 
 		prop = config.get(category, "dungeonMobs", mobs.toArray(new String[mobs.size()]));
@@ -283,20 +283,20 @@ public class CavernConfig
 		{
 			List<CaveBiome> biomes = Lists.newArrayList();
 
-			biomes.add(new CaveBiome(Biomes.ocean, 15));
-			biomes.add(new CaveBiome(Biomes.plains, 100));
-			biomes.add(new CaveBiome(Biomes.desert, 70));
-			biomes.add(new CaveBiome(Biomes.desertHills, 10));
-			biomes.add(new CaveBiome(Biomes.forest, 80));
-			biomes.add(new CaveBiome(Biomes.forestHills, 10));
-			biomes.add(new CaveBiome(Biomes.taiga, 80));
-			biomes.add(new CaveBiome(Biomes.taigaHills, 10));
-			biomes.add(new CaveBiome(Biomes.jungle, 80));
-			biomes.add(new CaveBiome(Biomes.jungleHills, 10));
-			biomes.add(new CaveBiome(Biomes.swampland, 60));
-			biomes.add(new CaveBiome(Biomes.extremeHills, 50));
-			biomes.add(new CaveBiome(Biomes.savanna, 50));
-			biomes.add(new CaveBiome(Biomes.mesa, 50));
+			biomes.add(new CaveBiome(Biomes.OCEAN, 15));
+			biomes.add(new CaveBiome(Biomes.PLAINS, 100));
+			biomes.add(new CaveBiome(Biomes.DESERT, 70));
+			biomes.add(new CaveBiome(Biomes.DESERT_HILLS, 10));
+			biomes.add(new CaveBiome(Biomes.FOREST, 80));
+			biomes.add(new CaveBiome(Biomes.FOREST_HILLS, 10));
+			biomes.add(new CaveBiome(Biomes.TAIGA, 80));
+			biomes.add(new CaveBiome(Biomes.TAIGA_HILLS, 10));
+			biomes.add(new CaveBiome(Biomes.JUNGLE, 80));
+			biomes.add(new CaveBiome(Biomes.JUNGLE_HILLS, 10));
+			biomes.add(new CaveBiome(Biomes.SWAMPLAND, 60));
+			biomes.add(new CaveBiome(Biomes.EXTREME_HILLS, 50));
+			biomes.add(new CaveBiome(Biomes.SAVANNA, 50));
+			biomes.add(new CaveBiome(Biomes.MESA, 50));
 
 			generateBiomesConfig(biomeManager, biomes);
 		}
@@ -323,21 +323,21 @@ public class CavernConfig
 		{
 			List<CaveVein> veins = Lists.newArrayList();
 
-			veins.add(new CaveVein(new BlockMeta(Blocks.stone, BlockStone.EnumType.GRANITE.getMetadata()), 28, 25, 1, 255));
-			veins.add(new CaveVein(new BlockMeta(Blocks.stone, BlockStone.EnumType.DIORITE.getMetadata()), 28, 25, 1, 255));
-			veins.add(new CaveVein(new BlockMeta(Blocks.stone, BlockStone.EnumType.ANDESITE.getMetadata()), 30, 25, 1, 255));
-			veins.add(new CaveVein(new BlockMeta(Blocks.coal_ore, 0), 35, 17, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.iron_ore, 0), 30, 10, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.gold_ore, 0), 5, 7, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.redstone_ore, 0), 12, 7, 1, 40));
-			veins.add(new CaveVein(new BlockMeta(Blocks.lapis_ore, 0), 4, 5, 1, 50));
-			veins.add(new CaveVein(new BlockMeta(Blocks.diamond_ore, 0), 2, 6, 1, 20));
-			veins.add(new CaveVein(new BlockMeta(Blocks.emerald_ore, 0), 8, 5, 50, 127, Type.MOUNTAIN, Type.HILLS));
+			veins.add(new CaveVein(new BlockMeta(Blocks.STONE, BlockStone.EnumType.GRANITE.getMetadata()), 28, 25, 1, 255));
+			veins.add(new CaveVein(new BlockMeta(Blocks.STONE, BlockStone.EnumType.DIORITE.getMetadata()), 28, 25, 1, 255));
+			veins.add(new CaveVein(new BlockMeta(Blocks.STONE, BlockStone.EnumType.ANDESITE.getMetadata()), 30, 25, 1, 255));
+			veins.add(new CaveVein(new BlockMeta(Blocks.COAL_ORE, 0), 35, 17, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.IRON_ORE, 0), 30, 10, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.GOLD_ORE, 0), 5, 7, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.REDSTONE_ORE, 0), 12, 7, 1, 40));
+			veins.add(new CaveVein(new BlockMeta(Blocks.LAPIS_ORE, 0), 4, 5, 1, 50));
+			veins.add(new CaveVein(new BlockMeta(Blocks.DIAMOND_ORE, 0), 2, 6, 1, 20));
+			veins.add(new CaveVein(new BlockMeta(Blocks.EMERALD_ORE, 0), 8, 5, 50, 127, Type.MOUNTAIN, Type.HILLS));
 			veins.add(new CaveVein(new BlockMeta(CaveBlocks.cave_block, BlockCave.EnumType.AQUAMARINE_ORE.getMetadata()), 12, 8, 20, 127, Type.COLD, Type.WATER, Type.WET));
 			veins.add(new CaveVein(new BlockMeta(CaveBlocks.cave_block, BlockCave.EnumType.MAGNITE_ORE.getMetadata()), 30, 10, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.dirt, 0), 20, 25, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.gravel, 0), 10, 20, 1, 127));
-			veins.add(new CaveVein(new BlockMeta(Blocks.sand, BlockSand.EnumType.SAND.getMetadata()), 10, 20, 1, 127, Type.SANDY));
+			veins.add(new CaveVein(new BlockMeta(Blocks.DIRT, 0), 20, 25, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.GRAVEL, 0), 10, 20, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(Blocks.SAND, BlockSand.EnumType.SAND.getMetadata()), 10, 20, 1, 127, Type.SANDY));
 
 			generateVeinsConfig(veinManager, veins);
 		}
@@ -372,7 +372,7 @@ public class CavernConfig
 
 		for (CaveBiome caveBiome : biomes)
 		{
-			BiomeGenBase biome = caveBiome.getBiome();
+			Biome biome = caveBiome.getBiome();
 			String entry = biome.getRegistryName().toString();
 			List<String> propOrder = Lists.newArrayList();
 
@@ -425,9 +425,9 @@ public class CavernConfig
 		{
 			ResourceLocation entry = new ResourceLocation(name);
 
-			if (BiomeGenBase.biomeRegistry.containsKey(entry))
+			if (Biome.REGISTRY.containsKey(entry))
 			{
-				BiomeGenBase biome = BiomeGenBase.biomeRegistry.getObject(entry);
+				Biome biome = Biome.REGISTRY.getObject(entry);
 				ConfigCategory category = manager.config.getCategory(name);
 
 				int weight = category.get("weight").getInt();
@@ -451,7 +451,7 @@ public class CavernConfig
 		String category = "veins";
 		Property prop;
 		String comment;
-		String blockDefault = Blocks.stone.getRegistryName().toString();
+		String blockDefault = Blocks.STONE.getRegistryName().toString();
 		int index = 0;
 
 		for (CaveVein vein : veins)

@@ -25,7 +25,7 @@ public class ItemMeta
 
 	public ItemMeta(String name, int meta)
 	{
-		this(Item.itemRegistry.getObject(new ResourceLocation(name)), meta);
+		this(Item.REGISTRY.getObject(new ResourceLocation(name)), meta);
 	}
 
 	public Item getItem()
@@ -108,7 +108,7 @@ public class ItemMeta
 
 		return meta == itemMeta.meta;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -116,7 +116,7 @@ public class ItemMeta
 		{
 			return item.hashCode();
 		}
-		
+
 		return Objects.hashCode(item, meta);
 	}
 }

@@ -49,7 +49,7 @@ public class GuiSelectBlock extends GuiScreen
 	{
 		List<ItemStack> list = Lists.newArrayList();
 
-		for (Iterator<Block> iterator = Block.blockRegistry.iterator(); iterator.hasNext();)
+		for (Iterator<Block> iterator = Block.REGISTRY.iterator(); iterator.hasNext();)
 		{
 			Block block = iterator.next();
 
@@ -66,7 +66,7 @@ public class GuiSelectBlock extends GuiScreen
 
 				if (tab == null)
 				{
-					tab = CreativeTabs.tabAllSearch;
+					tab = CreativeTabs.SEARCH;
 				}
 
 				block.getSubBlocks(Item.getItemFromBlock(block), tab, list);
@@ -87,7 +87,7 @@ public class GuiSelectBlock extends GuiScreen
 						Block sub = Block.getBlockFromItem(itemstack.getItem());
 						int meta = itemstack.getItemDamage();
 
-						if (meta < 0 || meta > 15 || sub == Blocks.air || sub.hasTileEntity(sub.getStateFromMeta(meta)))
+						if (meta < 0 || meta > 15 || sub == Blocks.AIR || sub.hasTileEntity(sub.getStateFromMeta(meta)))
 						{
 							continue;
 						}

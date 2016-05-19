@@ -1,4 +1,4 @@
-package cavern.world.gen;
+package cavern.world;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,10 +9,10 @@ import com.google.common.collect.Lists;
 import cavern.config.manager.CaveBiomeManager;
 import net.minecraft.init.Biomes;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeCache;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeProvider;
 
 public class BiomeProviderCavern extends BiomeProvider
@@ -33,38 +33,38 @@ public class BiomeProviderCavern extends BiomeProvider
 	}
 
 	@Override
-	public List<BiomeGenBase> getBiomesToSpawnIn()
+	public List<Biome> getBiomesToSpawnIn()
 	{
 		return Lists.newArrayList(biomeManager.getCaveBiomes().keySet());
 	}
 
-	private BiomeGenBase getCaveBiomeGenAt(BlockPos pos)
+	private Biome getCaveBiomeGenAt(BlockPos pos)
 	{
 		int chunkX = pos.getX() >> 4;
 		int chunkZ = pos.getZ() >> 4;
 
 		if (biomeSize <= 0)
 		{
-			random.setSeed(ChunkCoordIntPair.chunkXZ2Int(chunkX, chunkZ) ^ worldObj.getSeed());
+			random.setSeed(ChunkPos.chunkXZ2Int(chunkX, chunkZ) ^ worldObj.getSeed());
 		}
 		else
 		{
-			random.setSeed(ChunkCoordIntPair.chunkXZ2Int((chunkX + 1) / biomeSize, (chunkZ + 1) / biomeSize) ^ worldObj.getSeed());
+			random.setSeed(ChunkPos.chunkXZ2Int((chunkX + 1) / biomeSize, (chunkZ + 1) / biomeSize) ^ worldObj.getSeed());
 		}
 
 		return biomeManager.getRandomCaveBiome(random).getBiome();
 	}
 
 	@Override
-	public BiomeGenBase getBiomeGenerator(BlockPos pos)
+	public Biome getBiomeGenerator(BlockPos pos)
 	{
-		return getBiomeGenerator(pos, Biomes.plains);
+		return getBiomeGenerator(pos, Biomes.PLAINS);
 	}
 
 	@Override
-	public BiomeGenBase getBiomeGenerator(BlockPos pos, BiomeGenBase biomeIn)
+	public Biome getBiomeGenerator(BlockPos pos, Biome biomeIn)
 	{
-		BiomeGenBase biome = biomeCache.func_180284_a(pos.getX(), pos.getZ(), null);
+		Biome biome = biomeCache.getBiome(pos.getX(), pos.getZ(), null);
 
 		if (biome == null)
 		{
@@ -75,11 +75,11 @@ public class BiomeProviderCavern extends BiomeProvider
 	}
 
 	@Override
-	public BiomeGenBase[] getBiomesForGeneration(BiomeGenBase[] biomes, int x, int z, int xSize, int zSize)
+	public Biome[] getBiomesForGeneration(Biome[] biomes, int x, int z, int xSize, int zSize)
 	{
 		if (biomes == null || biomes.length < xSize * zSize)
 		{
-			biomes = new BiomeGenBase[xSize * zSize];
+			biomes = new Biome[xSize * zSize];
 		}
 
 		Arrays.fill(biomes, getCaveBiomeGenAt(new BlockPos(x, 0, z)));
@@ -88,25 +88,25 @@ public class BiomeProviderCavern extends BiomeProvider
 	}
 
 	@Override
-	public BiomeGenBase[] loadBlockGeneratorData(BiomeGenBase[] biomes, int x, int z, int xSize, int zSize)
+	public Biome[] loadBlockGeneratorData(Biome[] biomes, int x, int z, int xSize, int zSize)
 	{
 		return getBiomesForGeneration(biomes, x, z, xSize, zSize);
 	}
 
 	@Override
-	public BiomeGenBase[] getBiomeGenAt(BiomeGenBase[] biomes, int x, int z, int xSize, int zSize, boolean cache)
+	public Biome[] getBiomeGenAt(Biome[] biomes, int x, int z, int xSize, int zSize, boolean cache)
 	{
 		return getBiomesForGeneration(biomes, x, z, xSize, zSize);
 	}
 
 	@Override
-	public boolean areBiomesViable(int x, int z, int range, List<BiomeGenBase> list)
+	public boolean areBiomesViable(int x, int z, int range, List<Biome> list)
 	{
 		return list.contains(getBiomeGenerator(new BlockPos(x, 0, z)));
 	}
 
 	@Override
-	public BlockPos findBiomePosition(int x, int z, int range, List<BiomeGenBase> list, Random random)
+	public BlockPos findBiomePosition(int x, int z, int range, List<Biome> list, Random random)
 	{
 		return new BlockPos(x - range + random.nextInt(range * 2 + 1), 0, z - range + random.nextInt(range * 2 + 1));
 	}

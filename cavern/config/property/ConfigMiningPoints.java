@@ -60,7 +60,7 @@ public class ConfigMiningPoints
 					BlockMeta blockMeta = new BlockMeta(str.substring(0, i), str.substring(i + 1));
 					Block block = blockMeta.getBlock();
 
-					if (block != null && block != Blocks.air)
+					if (block != null && block != Blocks.AIR)
 					{
 						MinerStats.setPointAmount(blockMeta, point);
 					}

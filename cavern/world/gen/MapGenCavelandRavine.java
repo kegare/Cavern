@@ -3,7 +3,7 @@ package cavern.world.gen;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -28,7 +28,7 @@ public class MapGenCavelandRavine extends MapGenCavernRavine
 				blockY = world.provider.getAverageGroundLevel() + rand.nextInt(10);
 			}
 
-			func_180707_a(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 2.0D);
+			addTunnel(rand.nextLong(), x, z, primer, blockX, blockY, blockZ, scale, leftRightRadian, upDownRadian, 0, 0, 2.0D);
 		}
 	}
 
@@ -45,7 +45,7 @@ public class MapGenCavelandRavine extends MapGenCavernRavine
 		}
 		else if (y < 10)
 		{
-			BiomeGenBase biome = worldObj.getBiomeGenForCoords(new BlockPos(x + chunkX * 16, 0, z + chunkZ * 16));
+			Biome biome = worldObj.getBiomeGenForCoords(new BlockPos(x + chunkX * 16, 0, z + chunkZ * 16));
 			IBlockState state = BLK_WATER;
 
 			if (BiomeDictionary.isBiomeOfType(biome, Type.COLD) && rand.nextInt(3) == 0)
@@ -57,7 +57,7 @@ public class MapGenCavelandRavine extends MapGenCavernRavine
 		}
 		else
 		{
-			data.setBlockState(x, y, z, field_186136_b);
+			data.setBlockState(x, y, z, AIR);
 		}
 	}
 }

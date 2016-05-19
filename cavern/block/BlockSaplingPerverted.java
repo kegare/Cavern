@@ -31,7 +31,7 @@ public class BlockSaplingPerverted extends BlockSapling
 		super();
 		this.setUnlocalizedName("pervertedSapling");
 		this.setHardness(0.0F);
-		this.setStepSound(SoundType.PLANT);
+		this.setSoundType(SoundType.PLANT);
 		this.setCreativeTab(Cavern.tabCavern);
 	}
 
@@ -72,7 +72,7 @@ public class BlockSaplingPerverted extends BlockSapling
 				break;
 		}
 
-		world.setBlockState(pos, Blocks.air.getDefaultState(), 4);
+		world.setBlockState(pos, Blocks.AIR.getDefaultState(), 4);
 
 		if (!treeGen.generate(world, rand, pos))
 		{
