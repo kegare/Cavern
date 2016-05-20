@@ -61,8 +61,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 public class CaveEventHooks
 {
-	public static final CaveEventHooks instance = new CaveEventHooks();
-
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)
 	{
@@ -192,7 +190,7 @@ public class CaveEventHooks
 
 			if (portal != null)
 			{
-				EnumActionResult result = portal.onItemUseFirst(held, player, world, pos, side, (float)hit.xCoord, (float)hit.yCoord, (float)hit.zCoord, hand);
+				EnumActionResult result = portal.onItemUse(held, player, world, pos, hand, side, (float)hit.xCoord, (float)hit.yCoord, (float)hit.zCoord);
 
 				if (result == EnumActionResult.SUCCESS)
 				{

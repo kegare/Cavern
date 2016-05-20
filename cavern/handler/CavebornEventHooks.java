@@ -22,8 +22,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
 public class CavebornEventHooks
 {
-	public static final CavebornEventHooks instance = new CavebornEventHooks();
-
 	public static final Set<String> firstJoinPlayers = Sets.newHashSet();
 
 	@SubscribeEvent

@@ -22,7 +22,7 @@ public class ItemPortalCave extends ItemBlock
 	}
 
 	@Override
-	public EnumActionResult onItemUseFirst(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand)
+	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		BlockPos blockpos = pos.offset(side);
 
@@ -30,20 +30,11 @@ public class ItemPortalCave extends ItemBlock
 		{
 			world.playSound(null, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D, blockpos.getZ() + 0.5D, block.getSoundType().getPlaceSound(), SoundCategory.BLOCKS, 1.0F, 2.0F);
 
-			if (!player.capabilities.isCreativeMode)
-			{
-				--stack.stackSize;
-			}
+			--stack.stackSize;
 
 			return EnumActionResult.SUCCESS;
 		}
 
-		return EnumActionResult.PASS;
-	}
-
-	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-	{
 		return EnumActionResult.PASS;
 	}
 }

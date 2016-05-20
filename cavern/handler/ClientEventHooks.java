@@ -55,13 +55,33 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.GuiModList;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ClientEventHooks
 {
-	public static final ClientEventHooks instance = new ClientEventHooks();
+	@SideOnly(Side.CLIENT)
+	public static GuiScreen displayGui;
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onTick(ClientTickEvent event)
+	{
+		if (event.phase != TickEvent.Phase.END)
+		{
+			return;
+		}
+
+		if (displayGui != null)
+		{
+			FMLClientHandler.instance().showGuiScreen(displayGui);
+
+			displayGui = null;
+		}
+	}
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent

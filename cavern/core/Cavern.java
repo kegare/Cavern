@@ -1,6 +1,5 @@
 package cavern.core;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -126,11 +125,11 @@ public class Cavern
 
 		if (event.getSide().isClient())
 		{
-			MinecraftForge.EVENT_BUS.register(ClientEventHooks.instance);
+			MinecraftForge.EVENT_BUS.register(new ClientEventHooks());
 		}
 
-		MinecraftForge.EVENT_BUS.register(CaveEventHooks.instance);
-		MinecraftForge.EVENT_BUS.register(CavebornEventHooks.instance);
+		MinecraftForge.EVENT_BUS.register(new CaveEventHooks());
+		MinecraftForge.EVENT_BUS.register(new CavebornEventHooks());
 	}
 
 	@EventHandler
@@ -188,15 +187,8 @@ public class Cavern
 		{
 			Set<String> entries = Sets.newTreeSet();
 
-			for (Iterator<Block> iterator = Block.REGISTRY.iterator(); iterator.hasNext();)
+			for (Block block : Block.REGISTRY)
 			{
-				Block block = iterator.next();
-
-				if (block == null)
-				{
-					continue;
-				}
-
 				for (int i = 0; i < 16; ++i)
 				{
 					int point = MinerStats.getPointAmount(block, i);

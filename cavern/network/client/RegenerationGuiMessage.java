@@ -1,6 +1,7 @@
 package cavern.network.client;
 
 import cavern.client.gui.GuiRegeneration;
+import cavern.handler.ClientEventHooks;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -42,7 +43,7 @@ public class RegenerationGuiMessage implements IMessage, IMessageHandler<Regener
 
 		if (type == EnumType.OPEN)
 		{
-			mc.displayGuiScreen(new GuiRegeneration());
+			ClientEventHooks.displayGui = new GuiRegeneration();
 		}
 		else if (mc.currentScreen != null && mc.currentScreen instanceof GuiRegeneration)
 		{

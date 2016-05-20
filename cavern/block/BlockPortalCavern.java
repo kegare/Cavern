@@ -8,6 +8,7 @@ import cavern.api.CavernAPI;
 import cavern.client.gui.GuiRegeneration;
 import cavern.config.CavernConfig;
 import cavern.core.CaveSounds;
+import cavern.core.Cavern;
 import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
 import cavern.world.CaveType;
@@ -51,6 +52,7 @@ public class BlockPortalCavern extends BlockPortal
 		this.setTickRandomly(false);
 		this.setBlockUnbreakable();
 		this.disableStats();
+		this.setCreativeTab(Cavern.tabCavern);
 	}
 
 	@Override
@@ -93,7 +95,7 @@ public class BlockPortalCavern extends BlockPortal
 
 			if (!size.isValid() || size.portalBlockCount < size.width * size.height)
 			{
-				world.setBlockState(pos, Blocks.AIR.getDefaultState());
+				world.setBlockToAir(pos);
 			}
 		}
 		else if (axis == EnumFacing.Axis.Z)
@@ -102,21 +104,26 @@ public class BlockPortalCavern extends BlockPortal
 
 			if (!size.isValid() || size.portalBlockCount < size.width * size.height)
 			{
-				world.setBlockState(pos, Blocks.AIR.getDefaultState());
+				world.setBlockToAir(pos);
 			}
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (world.isRemote)
 		{
-			FMLClientHandler.instance().showGuiScreen(new GuiRegeneration(true, false, false));
+			displayGui(world, pos, state, player, hand, heldItem, side);
 		}
 
 		return true;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void displayGui(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side)
+	{
+		FMLClientHandler.instance().showGuiScreen(new GuiRegeneration(true, false, false));
 	}
 
 	public int getType()

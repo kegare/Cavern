@@ -2,7 +2,6 @@ package cavern.client.gui;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -50,15 +49,8 @@ public class GuiSelectItem extends GuiScreen
 	{
 		List<ItemStack> list = Lists.newArrayList();
 
-		for (Iterator<Item> iterator = Item.REGISTRY.iterator(); iterator.hasNext();)
+		for (Item item : Item.REGISTRY)
 		{
-			Item item = iterator.next();
-
-			if (item == null)
-			{
-				continue;
-			}
-
 			list.clear();
 			item.getSubItems(item, item.getCreativeTab(), list);
 

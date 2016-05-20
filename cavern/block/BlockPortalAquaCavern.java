@@ -26,14 +26,9 @@ public class BlockPortalAquaCavern extends BlockPortalCavern
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public void displayGui(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side)
 	{
-		if (world.isRemote)
-		{
-			FMLClientHandler.instance().showGuiScreen(new GuiRegeneration(false, true, false));
-		}
-
-		return true;
+		FMLClientHandler.instance().showGuiScreen(new GuiRegeneration(false, true, false));
 	}
 
 	@Override

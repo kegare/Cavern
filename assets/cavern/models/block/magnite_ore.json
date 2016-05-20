@@ -1,6 +1,7 @@
 {
-    "parent": "block/cube_all",
+    "parent": "cavern:block/cube_ore",
     "textures": {
-        "all": "cavern:blocks/magnite_ore"
+        "base": "blocks/stone",
+        "ore": "cavern:blocks/magnite_ore"
     }
 }

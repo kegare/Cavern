@@ -11,6 +11,7 @@ public class ItemBlockCave extends ItemBlock
 	{
 		super(block);
 		this.setRegistryName(block.getRegistryName());
+		this.setMaxDamage(0);
 		this.setHasSubtypes(true);
 	}
 

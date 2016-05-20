@@ -1,4 +1,5 @@
 {
+    "parent": "block/thin_block",
     "textures": {
         "particle": "cavern:items/aqua_cavern_portal",
         "portal": "cavern:items/aqua_cavern_portal"
