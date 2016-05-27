@@ -83,7 +83,7 @@ cavern.config.dimension.generateRiver.tooltip=このディメンションに川�
 cavern.config.dimension.dungeonMobs=ダンジョンのモブ
 cavern.config.dimension.dungeonMobs.tooltip=スポナーダンジョンのスポナーブロックに設定されるモブを指定します。
 cavern.config.dimension.monsterSpawn=モンスターのスポーン量
-cavern.config.dimension.monsterSpawn.tooltip=このディメンションのモンスターのスポーン量を指定します。
+cavern.config.dimension.monsterSpawn.tooltip=このディメンションのモンスターのスポーン量を指定します。0を指定すると、モンスターのスポーンは通常になります。
 cavern.config.dimension.caveBrightness=洞窟の明るさ
 cavern.config.dimension.caveBrightness.tooltip=このディメンションの明るさを指定します。
 

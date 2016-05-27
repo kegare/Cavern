@@ -14,6 +14,7 @@ import cavern.block.CaveBlocks;
 import cavern.client.config.CaveConfigEntries;
 import cavern.config.manager.CaveVein;
 import cavern.config.manager.CaveVeinManager;
+import cavern.core.Cavern;
 import cavern.util.BlockMeta;
 import cavern.world.CaveType;
 import cavern.world.gen.WorldGenAquaDungeons;
@@ -25,7 +26,6 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -63,7 +63,7 @@ public class AquaCavernConfig
 		prop = config.get(category, "dimension", -52);
 		prop.setRequiresMcRestart(true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
@@ -79,7 +79,7 @@ public class AquaCavernConfig
 		prop = config.get(category, "worldHeight", 128);
 		prop.setMinValue(64).setMaxValue(256);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -89,7 +89,7 @@ public class AquaCavernConfig
 
 		prop = config.get(category, "randomSeed", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -99,7 +99,7 @@ public class AquaCavernConfig
 
 		prop = config.get(category, "generateCaves", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -109,7 +109,7 @@ public class AquaCavernConfig
 
 		prop = config.get(category, "generateRavine", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -119,7 +119,7 @@ public class AquaCavernConfig
 
 		prop = config.get(category, "generateDungeons", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -143,7 +143,7 @@ public class AquaCavernConfig
 		prop = config.get(category, "dungeonMobs", mobs.toArray(new String[mobs.size()]));
 		prop.setConfigEntryClass(CaveConfigEntries.selectMobsEntry);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
 		prop.setComment(comment);
@@ -153,7 +153,7 @@ public class AquaCavernConfig
 		prop = config.get(category, "caveBrightness", 0.075D);
 		prop.setMinValue(0.0D).setMaxValue(1.0D);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";

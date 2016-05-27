@@ -30,7 +30,10 @@ public class ItemPortalCave extends ItemBlock
 		{
 			world.playSound(null, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D, blockpos.getZ() + 0.5D, block.getSoundType().getPlaceSound(), SoundCategory.BLOCKS, 1.0F, 2.0F);
 
-			--stack.stackSize;
+			if (!player.capabilities.isCreativeMode)
+			{
+				--stack.stackSize;
+			}
 
 			return EnumActionResult.SUCCESS;
 		}

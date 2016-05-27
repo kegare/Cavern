@@ -11,6 +11,7 @@ import cavern.client.config.SelectMobsEntry;
 import cavern.client.config.general.MiningPointsEntry;
 import cavern.core.CommonProxy;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,5 +36,17 @@ public class ClientProxy extends CommonProxy
 	public void registerRenderers()
 	{
 		renderBlockMap.put(Blocks.LIT_REDSTONE_ORE, Blocks.REDSTONE_ORE);
+	}
+
+	@Override
+	public String translate(String key)
+	{
+		return I18n.format(key);
+	}
+
+	@Override
+	public String translateFormat(String key, Object... format)
+	{
+		return I18n.format(key, format);
 	}
 }

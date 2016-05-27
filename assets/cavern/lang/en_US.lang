@@ -89,7 +89,7 @@ cavern.config.dimension.generateRiver.tooltip=Whether to generate river in the d
 cavern.config.dimension.dungeonMobs=Dungeon Mobs
 cavern.config.dimension.dungeonMobs.tooltip=Specify the mobs for dungeons in the dimension.
 cavern.config.dimension.monsterSpawn=Monster Spawn Weight
-cavern.config.dimension.monsterSpawn.tooltip=Specify the spawn weight for monster in the dimension.
+cavern.config.dimension.monsterSpawn.tooltip=Specify the spawn weight for monster in the dimension. If specify to 0, monster spawning will be naturally.
 cavern.config.dimension.caveBrightness=Cave Brightness
 cavern.config.dimension.caveBrightness.tooltip=Specify the world brightness for the dimension.
 

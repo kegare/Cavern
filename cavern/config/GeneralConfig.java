@@ -9,10 +9,10 @@ import cavern.config.property.ConfigCaveborn;
 import cavern.config.property.ConfigDisplayPos;
 import cavern.config.property.ConfigItems;
 import cavern.config.property.ConfigMiningPoints;
+import cavern.core.Cavern;
 import cavern.util.CaveUtils;
 import cavern.util.ItemMeta;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
@@ -51,7 +51,7 @@ public class GeneralConfig
 
 		prop = config.get(category, "versionNotify", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, does not have to match client-side and server-side.";
@@ -64,7 +64,7 @@ public class GeneralConfig
 			prop = config.get(category, "caveMusicVolume", 0.35D);
 			prop.setMinValue(0.0D).setMaxValue(1.0D);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
@@ -73,7 +73,7 @@ public class GeneralConfig
 			prop = config.get(category, "miningPointPosition", ConfigDisplayPos.Type.BOTTOM_RIGHT.ordinal());
 			prop.setMinValue(0).setMaxValue(ConfigDisplayPos.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleIntegerEntry);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 
 			int min = Integer.parseInt(prop.getMinValue());
@@ -81,7 +81,7 @@ public class GeneralConfig
 
 			for (int i = min; i <= max; ++i)
 			{
-				comment += Configuration.NEW_LINE + i + ": " + I18n.translateToLocal(prop.getLanguageKey() + "." + i);
+				comment += Configuration.NEW_LINE + i + ": " + Cavern.proxy.translate(prop.getLanguageKey() + "." + i);
 
 				if (i < max)
 				{
@@ -96,7 +96,7 @@ public class GeneralConfig
 
 		prop = config.get(category, "showMinerRank", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, does not have to match client-side and server-side.";
@@ -107,7 +107,7 @@ public class GeneralConfig
 		prop = config.get(category, "miningPointItems", new String[0]);
 		prop.setConfigEntryClass(CaveConfigEntries.selectItemsEntry);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
 		prop.setComment(comment);
@@ -118,7 +118,7 @@ public class GeneralConfig
 		prop = config.get(category, "miningPoints", new String[0]);
 		prop.setConfigEntryClass(CaveConfigEntries.miningPointsEntry);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
 		prop.setComment(comment);
@@ -128,7 +128,7 @@ public class GeneralConfig
 		prop = config.get(category, "caveborn", ConfigCaveborn.Type.DISABLED.ordinal());
 		prop.setMinValue(0).setMaxValue(ConfigCaveborn.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleIntegerEntry);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 
 		int min = Integer.parseInt(prop.getMinValue());
@@ -136,7 +136,7 @@ public class GeneralConfig
 
 		for (int i = min; i <= max; ++i)
 		{
-			comment += Configuration.NEW_LINE + i + ": " + I18n.translateToLocal(prop.getLanguageKey() + "." + i);
+			comment += Configuration.NEW_LINE + i + ": " + Cavern.proxy.translate(prop.getLanguageKey() + "." + i);
 
 			if (i < max)
 			{
@@ -150,7 +150,7 @@ public class GeneralConfig
 
 		prop = config.get(category, "portalCache", false);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";

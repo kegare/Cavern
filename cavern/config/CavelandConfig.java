@@ -9,11 +9,11 @@ import com.google.common.collect.Lists;
 
 import cavern.config.manager.CaveVein;
 import cavern.config.manager.CaveVeinManager;
+import cavern.core.Cavern;
 import cavern.util.BlockMeta;
 import cavern.world.CaveType;
 import net.minecraft.block.BlockSand;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -49,7 +49,7 @@ public class CavelandConfig
 		prop = config.get(category, "dimension", -53);
 		prop.setRequiresMcRestart(true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
@@ -65,7 +65,7 @@ public class CavelandConfig
 		prop = config.get(category, "worldHeight", 128);
 		prop.setMinValue(64).setMaxValue(256);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -75,7 +75,7 @@ public class CavelandConfig
 
 		prop = config.get(category, "randomSeed", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -85,7 +85,7 @@ public class CavelandConfig
 
 		prop = config.get(category, "generateRiver", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -95,7 +95,7 @@ public class CavelandConfig
 
 		prop = config.get(category, "generateLakes", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -103,10 +103,10 @@ public class CavelandConfig
 		propOrder.add(prop.getName());
 		generateLakes = prop.getBoolean(generateLakes);
 
-		prop = config.get(category, "monsterSpawn", 70);
+		prop = config.get(category, "monsterSpawn", 0);
 		prop.setMinValue(0).setMaxValue(5000).setRequiresMcRestart(true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -117,7 +117,7 @@ public class CavelandConfig
 		prop = config.get(category, "caveBrightness", 0.075D);
 		prop.setMinValue(0.0D).setMaxValue(1.0D);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";

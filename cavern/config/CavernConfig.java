@@ -19,6 +19,7 @@ import cavern.config.manager.CaveBiomeManager;
 import cavern.config.manager.CaveVein;
 import cavern.config.manager.CaveVeinManager;
 import cavern.config.property.ConfigBiomeType;
+import cavern.core.Cavern;
 import cavern.util.BlockMeta;
 import cavern.world.CaveType;
 import cavern.world.gen.WorldGenCavernDungeons;
@@ -36,7 +37,6 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.DimensionManager;
@@ -84,7 +84,7 @@ public class CavernConfig
 		prop = config.get(category, "dimension", -50);
 		prop.setRequiresMcRestart(true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
@@ -100,7 +100,7 @@ public class CavernConfig
 		prop = config.get(category, "worldHeight", 128);
 		prop.setMinValue(64).setMaxValue(256);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -110,7 +110,7 @@ public class CavernConfig
 
 		prop = config.get(category, "randomSeed", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -121,7 +121,7 @@ public class CavernConfig
 		prop = config.get(category, "biomeType", ConfigBiomeType.Type.NATURAL.ordinal());
 		prop.setMinValue(0).setMaxValue(ConfigBiomeType.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleIntegerEntry);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 
 		int min = Integer.parseInt(prop.getMinValue());
@@ -129,7 +129,7 @@ public class CavernConfig
 
 		for (int i = min; i <= max; ++i)
 		{
-			comment += Configuration.NEW_LINE + i + ": " + I18n.translateToLocal(prop.getLanguageKey() + "." + i);
+			comment += Configuration.NEW_LINE + i + ": " + Cavern.proxy.translate(prop.getLanguageKey() + "." + i);
 
 			if (i < max)
 			{
@@ -145,7 +145,7 @@ public class CavernConfig
 
 		prop = config.get(category, "generateCaves", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -155,7 +155,7 @@ public class CavernConfig
 
 		prop = config.get(category, "generateRavine", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -165,7 +165,7 @@ public class CavernConfig
 
 		prop = config.get(category, "generateExtremeCaves", false);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -175,7 +175,7 @@ public class CavernConfig
 
 		prop = config.get(category, "generateExtremeRavine", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -185,7 +185,7 @@ public class CavernConfig
 
 		prop = config.get(category, "generateLakes", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -195,7 +195,7 @@ public class CavernConfig
 
 		prop = config.get(category, "generateDungeons", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -205,7 +205,7 @@ public class CavernConfig
 
 		prop = config.get(category, "generateMineshaft", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -233,17 +233,17 @@ public class CavernConfig
 		prop = config.get(category, "dungeonMobs", mobs.toArray(new String[mobs.size()]));
 		prop.setConfigEntryClass(CaveConfigEntries.selectMobsEntry);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		dungeonMobs = prop.getStringList();
 
-		prop = config.get(category, "monsterSpawn", 300);
+		prop = config.get(category, "monsterSpawn", 0);
 		prop.setMinValue(0).setMaxValue(5000).setRequiresMcRestart(true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -254,7 +254,7 @@ public class CavernConfig
 		prop = config.get(category, "caveBrightness", 0.035D);
 		prop.setMinValue(0.0D).setMaxValue(1.0D);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
 		comment += "Note: If multiplayer, server-side only.";
@@ -379,7 +379,7 @@ public class CavernConfig
 			prop = manager.config.get(entry, "weight", 0);
 			prop.setMinValue(0).setMaxValue(100);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + "]";
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
@@ -387,28 +387,28 @@ public class CavernConfig
 
 			prop = manager.config.get(entry, "terrainBlock", biome.fillerBlock.getBlock().getRegistryName().toString());
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
 			prop.set(caveBiome.getTerrainBlock().getBlockName());
 
 			prop = manager.config.get(entry, "terrainBlockMeta", Integer.toString(biome.fillerBlock.getBlock().getMetaFromState(biome.fillerBlock)));
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
 			prop.set(caveBiome.getTerrainBlock().getMetaString());
 
 			prop = manager.config.get(entry, "topBlock", biome.topBlock.getBlock().getRegistryName().toString());
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
 			prop.set(caveBiome.getTopBlock().getBlockName());
 
 			prop = manager.config.get(entry, "topBlockMeta", Integer.toString(biome.topBlock.getBlock().getMetaFromState(biome.topBlock)));
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
 			prop.set(caveBiome.getTopBlock().getMetaString());
@@ -461,28 +461,28 @@ public class CavernConfig
 
 			prop = manager.config.get(entry, "block", blockDefault);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
 			prop.set(vein.getBlockMeta().getBlockName());
 
 			prop = manager.config.get(entry, "blockMeta", Integer.toString(0));
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
 			prop.set(vein.getBlockMeta().getMetaString());
 
 			prop = manager.config.get(entry, "targetBlock", blockDefault);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
 			prop.set(vein.getTarget().getBlockName());
 
 			prop = manager.config.get(entry, "targetBlockMeta", Integer.toString(0));
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
 			prop.set(vein.getTarget().getMetaString());
@@ -490,7 +490,7 @@ public class CavernConfig
 			prop = manager.config.get(entry, "weight", 1);
 			prop.setMinValue(0).setMaxValue(100);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + "]";
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
@@ -499,7 +499,7 @@ public class CavernConfig
 			prop = manager.config.get(entry, "chance", 1.0D);
 			prop.setMinValue(0.0D).setMaxValue(1.0D);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
@@ -508,7 +508,7 @@ public class CavernConfig
 			prop = manager.config.get(entry, "size", 1);
 			prop.setMinValue(0).setMaxValue(100);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + "]";
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
@@ -517,7 +517,7 @@ public class CavernConfig
 			prop = manager.config.get(entry, "minHeight", 0);
 			prop.setMinValue(0).setMaxValue(255);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
@@ -526,7 +526,7 @@ public class CavernConfig
 			prop = manager.config.get(entry, "maxHeight", 255);
 			prop.setMinValue(0).setMaxValue(255);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
@@ -535,7 +535,7 @@ public class CavernConfig
 			prop = manager.config.get(entry, "biomes", new int[0]);
 			prop.setMaxListLength(256);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = I18n.translateToLocal(prop.getLanguageKey() + ".tooltip");
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			prop.setComment(comment);
 			propOrder.add(prop.getName());
 			prop.set(vein.getBiomes());

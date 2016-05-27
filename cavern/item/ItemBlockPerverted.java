@@ -1,10 +1,10 @@
 package cavern.item;
 
+import cavern.core.Cavern;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
 
 public class ItemBlockPerverted extends ItemBlock
 {
@@ -29,6 +29,6 @@ public class ItemBlockPerverted extends ItemBlock
 	{
 		String name = Item.getItemFromBlock(basedBlock).getItemStackDisplayName(stack);
 
-		return ("" + I18n.translateToLocal("tile.perverted.name")).trim() + " " + name;
+		return ("" + Cavern.proxy.translate("tile.perverted.name")).trim() + " " + name;
 	}
 }
