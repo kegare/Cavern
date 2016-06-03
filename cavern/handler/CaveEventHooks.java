@@ -194,11 +194,6 @@ public class CaveEventHooks
 
 				if (result == EnumActionResult.SUCCESS)
 				{
-					if (!player.capabilities.isCreativeMode && held.stackSize <= 0)
-					{
-						player.inventory.setInventorySlotContents(player.inventory.currentItem, null);
-					}
-
 					event.setCanceled(true);
 				}
 			}

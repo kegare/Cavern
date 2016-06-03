@@ -30,6 +30,9 @@ import net.minecraft.world.WorldServer;
 
 public class TeleporterCavern extends Teleporter
 {
+	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
+	protected static final IBlockState MOSSY_COBBLESTONE = Blocks.MOSSY_COBBLESTONE.getDefaultState();
+
 	private final WorldServer worldObj;
 	private final Random random;
 	private final BlockPortalCavern portal;
@@ -62,29 +65,33 @@ public class TeleporterCavern extends Teleporter
 			CaveUtils.setDimensionChange((EntityPlayerMP)entity);
 		}
 
+		boolean flag = false;
+
 		if (GeneralConfig.portalCache)
 		{
 			IPortalCache cache = PortalCache.get(entity);
+			double posX = entity.posX;
+			double posY = entity.posY;
+			double posZ = entity.posZ;
 
 			if (cache.hasLastPos(getType(), entity.dimension))
 			{
 				BlockPos pos = cache.getLastPos(getType(), entity.dimension);
 
-				if (worldObj.getBlockState(pos).getBlock() == portal)
+				setLocationAndAngles(entity, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+
+				if (placeInExistingPortal(entity, rotationYaw))
 				{
-					if (entity instanceof EntityPlayerMP)
-					{
-						((EntityPlayerMP)entity).connection.setPlayerLocation(pos.getX(), pos.getY() + 0.5D, pos.getZ(), entity.rotationYaw, entity.rotationPitch);
-					}
-					else
-					{
-						entity.setLocationAndAngles(pos.getX(), pos.getY() + 0.5D, pos.getZ(), entity.rotationYaw, entity.rotationPitch);
-					}
+					flag = true;
+				}
+				else
+				{
+					setLocationAndAngles(entity, posX, posY, posZ);
 				}
 			}
 		}
 
-		if (!placeInExistingPortal(entity, rotationYaw))
+		if (!flag && !placeInExistingPortal(entity, rotationYaw))
 		{
 			makePortal(entity);
 
@@ -266,14 +273,7 @@ public class TeleporterCavern extends Teleporter
 				entity.rotationYaw = par2 - face0.getHorizontalIndex() * 90 + face.getHorizontalIndex() * 90;
 			}
 
-			if (entity instanceof EntityPlayerMP)
-			{
-				((EntityPlayerMP)entity).connection.setPlayerLocation(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
-			}
-			else
-			{
-				entity.setLocationAndAngles(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
-			}
+			setLocationAndAngles(entity, posX, posY, posZ);
 
 			return true;
 		}
@@ -281,9 +281,21 @@ public class TeleporterCavern extends Teleporter
 		return false;
 	}
 
-	private boolean isNotAir(BlockPos pos)
+	protected boolean isNotAir(BlockPos pos)
 	{
 		return !worldObj.isAirBlock(pos) || !worldObj.isAirBlock(pos.up());
+	}
+
+	public void setLocationAndAngles(Entity entity, double posX, double posY, double posZ)
+	{
+		if (entity instanceof EntityPlayerMP)
+		{
+			((EntityPlayerMP)entity).connection.setPlayerLocation(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
+		}
+		else
+		{
+			entity.setLocationAndAngles(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
+		}
 	}
 
 	@Override
@@ -453,7 +465,7 @@ public class TeleporterCavern extends Teleporter
 						int blockZ = z2 + (j2 - 1) * j1 - i2 * i1;
 						boolean flag = k2 < 0;
 
-						worldObj.setBlockState(pos.setPos(blockX, blockY, blockZ), flag ? Blocks.MOSSY_COBBLESTONE.getDefaultState() : Blocks.AIR.getDefaultState());
+						worldObj.setBlockState(pos.setPos(blockX, blockY, blockZ), flag ? MOSSY_COBBLESTONE : AIR);
 					}
 				}
 			}
@@ -472,7 +484,7 @@ public class TeleporterCavern extends Teleporter
 					int blockZ = z2 + (j2 - 1) * j1;
 					boolean flag1 = j2 == 0 || j2 == 3 || k2 == -1 || k2 == 3;
 
-					worldObj.setBlockState(pos.setPos(blockX, blockY, blockZ), flag1 ? Blocks.MOSSY_COBBLESTONE.getDefaultState() : state, 2);
+					worldObj.setBlockState(pos.setPos(blockX, blockY, blockZ), flag1 ? MOSSY_COBBLESTONE : state, 2);
 				}
 			}
 

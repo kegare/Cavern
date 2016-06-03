@@ -43,6 +43,11 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 
 public class ChunkProviderCaveland implements IChunkGenerator
 {
+	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
+	protected static final IBlockState DIRT = Blocks.DIRT.getDefaultState();
+	protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
+	protected static final IBlockState SANDSTONE = Blocks.SANDSTONE.getDefaultState();
+
 	private final World worldObj;
 	private final Random rand;
 
@@ -64,35 +69,29 @@ public class ChunkProviderCaveland implements IChunkGenerator
 		this.rand = new Random(world.getSeed());
 	}
 
-	@Override
-	public Chunk provideChunk(int chunkX, int chunkZ)
+	public void setBlocksInChunk(ChunkPrimer primer)
 	{
-		rand.setSeed(chunkX * 341873128712L + chunkZ * 132897987541L);
-
-		int worldHeight = worldObj.provider.getActualHeight();
-		int blockHeight = worldHeight - 1;
-
-		biomesForGeneration = worldObj.getBiomeProvider().loadBlockGeneratorData(biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
-
-		ChunkPrimer primer = new ChunkPrimer();
-
 		for (int x = 0; x < 16; ++x)
 		{
 			for (int z = 0; z < 16; ++z)
 			{
 				for (int y = 255; y >= 0; --y)
 				{
-					primer.setBlockState(x, y, z, Blocks.DIRT.getDefaultState());
+					primer.setBlockState(x, y, z, DIRT);
 				}
 			}
 		}
+	}
 
-		caveGenerator.generate(worldObj, chunkX, chunkZ, primer);
-
-		if (CavelandConfig.generateRiver)
+	public void replaceBiomeBlocks(int chunkX, int chunkZ, ChunkPrimer primer)
+	{
+		if (!ForgeEventFactory.onReplaceBiomeBlocks(this, chunkX, chunkZ, primer, worldObj))
 		{
-			ravineGenerator.generate(worldObj, chunkX, chunkZ, primer);
+			return;
 		}
+
+		int worldHeight = worldObj.provider.getActualHeight();
+		int blockHeight = worldHeight - 1;
 
 		for (int x = 0; x < 16; ++x)
 		{
@@ -104,11 +103,11 @@ public class ChunkProviderCaveland implements IChunkGenerator
 
 				if (filter.getBlock() == Blocks.SAND)
 				{
-					filter = Blocks.SANDSTONE.getDefaultState();
+					filter = SANDSTONE;
 				}
 
-				primer.setBlockState(x, 0, z, Blocks.BEDROCK.getDefaultState());
-				primer.setBlockState(x, blockHeight, z, Blocks.BEDROCK.getDefaultState());
+				primer.setBlockState(x, 0, z, BEDROCK);
+				primer.setBlockState(x, blockHeight, z, BEDROCK);
 				primer.setBlockState(x, 1, z, primer.getBlockState(x, 2, z));
 
 				for (int y = 1; y <= blockHeight - 1; ++y)
@@ -128,11 +127,32 @@ public class ChunkProviderCaveland implements IChunkGenerator
 				{
 					for (int y = blockHeight + 1; y < 256; ++y)
 					{
-						primer.setBlockState(x, y, z, Blocks.AIR.getDefaultState());
+						primer.setBlockState(x, y, z, AIR);
 					}
 				}
 			}
 		}
+	}
+
+	@Override
+	public Chunk provideChunk(int chunkX, int chunkZ)
+	{
+		rand.setSeed(chunkX * 341873128712L + chunkZ * 132897987541L);
+
+		biomesForGeneration = worldObj.getBiomeProvider().loadBlockGeneratorData(biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
+
+		ChunkPrimer primer = new ChunkPrimer();
+
+		setBlocksInChunk(primer);
+
+		caveGenerator.generate(worldObj, chunkX, chunkZ, primer);
+
+		if (CavelandConfig.generateRiver)
+		{
+			ravineGenerator.generate(worldObj, chunkX, chunkZ, primer);
+		}
+
+		replaceBiomeBlocks(chunkX, chunkZ, primer);
 
 		Chunk chunk = new Chunk(worldObj, primer, chunkX, chunkZ);
 		byte[] biomeArray = chunk.getBiomeArray();

@@ -87,9 +87,6 @@ public class Cavern
 			CaveItems.registerModels();
 		}
 
-		CaveBlocks.registerRecipes();
-		CaveItems.registerRecipes();
-
 		CaveSounds.registerSounds();
 
 		GameRegistry.registerFuelHandler(new CaveFuelHandler());
@@ -107,6 +104,9 @@ public class Cavern
 			CaveBlocks.registerBlockColors();
 			CaveBlocks.registerItemBlockColors();
 		}
+
+		CaveBlocks.registerRecipes();
+		CaveItems.registerRecipes();
 
 		CavernConfig.syncConfig();
 		CavernConfig.syncBiomesConfig();

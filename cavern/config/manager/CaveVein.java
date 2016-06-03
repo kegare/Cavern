@@ -231,20 +231,26 @@ public class CaveVein
 						double var11 = random.nextDouble() * size / 16.0D;
 						double var12 = (MathHelper.sin(j * (float)Math.PI / size) + 1.0F) * var11 + 1.0D;
 						double var13 = (MathHelper.sin(j * (float)Math.PI / size) + 1.0F) * var11 + 1.0D;
+						int xMin = MathHelper.floor_double(var8 - var12 / 2.0D);
+						int xMax = MathHelper.floor_double(var8 + var12 / 2.0D);
+						int yMin = MathHelper.floor_double(var9 - var13 / 2.0D);
+						int yMax = MathHelper.floor_double(var9 + var13 / 2.0D);
+						int zMin = MathHelper.floor_double(var10 - var12 / 2.0D);
+						int zMax = MathHelper.floor_double(var10 + var12 / 2.0D);
 
-						for (x = MathHelper.floor_double(var8 - var12 / 2.0D); gen <= size && x <= MathHelper.floor_double(var8 + var12 / 2.0D); ++x)
+						for (x = xMin; gen <= size && x <= xMax; ++x)
 						{
 							double xScale = (x + 0.5D - var8) / (var12 / 2.0D);
 
 							if (xScale * xScale < 1.0D)
 							{
-								for (y = MathHelper.floor_double(var9 - var13 / 2.0D); gen <= size && y <= MathHelper.floor_double(var9 + var13 / 2.0D); ++y)
+								for (y = yMin; gen <= size && y <= yMax; ++y)
 								{
 									double yScale = (y + 0.5D - var9) / (var13 / 2.0D);
 
 									if (xScale * xScale + yScale * yScale < 1.0D)
 									{
-										for (z = MathHelper.floor_double(var10 - var12 / 2.0D); gen < size && z <= MathHelper.floor_double(var10 + var12 / 2.0D); ++z)
+										for (z = zMin; gen < size && z <= zMax; ++z)
 										{
 											double zScale = (z + 0.5D - var10) / (var12 / 2.0D);
 

@@ -168,6 +168,7 @@ public class BlockPortalCavern extends BlockPortal
 				}
 
 				Teleporter teleporter = new TeleporterCavern(worldNew, this);
+				BlockPos prevPos = entity.getPosition();
 
 				entity.timeUntilPortal = entity.getPortalCooldown();
 
@@ -192,7 +193,7 @@ public class BlockPortalCavern extends BlockPortal
 						worldNew.playSound(null, x, y, z, CaveSounds.cave_portal, SoundCategory.BLOCKS, 0.75F, 1.0F);
 
 						cache.setLastDim(getType(), dimOld);
-						cache.setLastPos(getType(), dimOld, pos);
+						cache.setLastPos(getType(), dimOld, prevPos);
 					}
 				}
 				else
@@ -232,7 +233,7 @@ public class BlockPortalCavern extends BlockPortal
 						target.forceSpawn = force;
 
 						cache.setLastDim(getType(), dimOld);
-						cache.setLastPos(getType(), dimOld, pos);
+						cache.setLastPos(getType(), dimOld, prevPos);
 					}
 
 					entity.setDead();
@@ -279,9 +280,9 @@ public class BlockPortalCavern extends BlockPortal
 				{
 					for (int j = 0; j < size.getHeight(); ++j)
 					{
-						BlockWorldState blockworldstate = pattern.translateOffset(i, j, 1);
+						BlockWorldState state = pattern.translateOffset(i, j, 1);
 
-						if (blockworldstate.getBlockState() != null && blockworldstate.getBlockState().getMaterial() != Material.AIR)
+						if (state.getBlockState() != null && state.getBlockState().getMaterial() != Material.AIR)
 						{
 							++values[direction.ordinal()];
 						}

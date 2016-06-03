@@ -96,7 +96,7 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 			}
 		}
 
-		return super.onItemUse(stack, player, world, pos, hand, facing, hitX, hitY, hitZ);
+		return EnumActionResult.PASS;
 	}
 
 	@Override

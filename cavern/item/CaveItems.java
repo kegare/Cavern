@@ -31,7 +31,7 @@ public class CaveItems
 	public static final ItemShovelAquamarine aquamarine_shovel = new ItemShovelAquamarine();
 	public static final ItemSwordCave magnite_sword = new ItemSwordCave(MAGNITE, "swordMagnite");
 	public static final ItemPickaxeCave magnite_pickaxe = new ItemPickaxeCave(MAGNITE, "pickaxeMagnite");
-	public static final ItemAxeCave magnite_axe = new ItemAxeCave(MAGNITE, 12.0F, -2.0F, "axeMagnite");
+	public static final ItemAxeCave magnite_axe = new ItemAxeCave(MAGNITE, 18.0F, -3.0F, "axeMagnite");
 	public static final ItemShovelCave magnite_shovel = new ItemShovelCave(MAGNITE, "shovelMagnite");
 
 	public static void registerItems()

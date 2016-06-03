@@ -1,6 +1,5 @@
 package cavern.core;
 
-import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -18,13 +17,6 @@ public class CreativeTabCavern extends CreativeTabs
 	@Override
 	public Item getTabIconItem()
 	{
-		return Item.getItemFromBlock(CaveBlocks.cave_block);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getIconItemDamage()
-	{
-		return BlockCave.EnumType.AQUAMARINE_ORE.getMetadata();
+		return Item.getItemFromBlock(CaveBlocks.cavern_portal);
 	}
 }

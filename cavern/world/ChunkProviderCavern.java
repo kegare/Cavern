@@ -42,6 +42,10 @@ import net.minecraftforge.event.terraingen.TerrainGen;
 
 public class ChunkProviderCavern implements IChunkGenerator
 {
+	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
+	protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
+	protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
+
 	private final World worldObj;
 	private final Random rand;
 
@@ -65,18 +69,8 @@ public class ChunkProviderCavern implements IChunkGenerator
 		this.rand = new Random(world.getSeed());
 	}
 
-	@Override
-	public Chunk provideChunk(int chunkX, int chunkZ)
+	public void setBlocksInChunk(ChunkPrimer primer)
 	{
-		rand.setSeed(chunkX * 341873128712L + chunkZ * 132897987541L);
-
-		int worldHeight = worldObj.provider.getActualHeight();
-		int blockHeight = worldHeight - 1;
-
-		biomesForGeneration = worldObj.getBiomeProvider().loadBlockGeneratorData(biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
-
-		ChunkPrimer primer = new ChunkPrimer();
-
 		for (int x = 0; x < 16; ++x)
 		{
 			for (int z = 0; z < 16; ++z)
@@ -87,6 +81,63 @@ public class ChunkProviderCavern implements IChunkGenerator
 				}
 			}
 		}
+	}
+
+	public void replaceBiomeBlocks(int chunkX, int chunkZ, ChunkPrimer primer)
+	{
+		if (!ForgeEventFactory.onReplaceBiomeBlocks(this, chunkX, chunkZ, primer, worldObj))
+		{
+			return;
+		}
+
+		int worldHeight = worldObj.provider.getActualHeight();
+		int blockHeight = worldHeight - 1;
+
+		for (int x = 0; x < 16; ++x)
+		{
+			for (int z = 0; z < 16; ++z)
+			{
+				Biome biome = biomesForGeneration[x * 16 + z];
+				CaveBiome caveBiome = CavernConfig.biomeManager.getCaveBiome(biome);
+				IBlockState top = caveBiome == null ? STONE : caveBiome.getTopBlock().getBlockState();
+				IBlockState filter = caveBiome == null ? top : caveBiome.getTerrainBlock().getBlockState();
+
+				primer.setBlockState(x, 0, z, BEDROCK);
+				primer.setBlockState(x, blockHeight, z, BEDROCK);
+
+				for (int y = 1; y <= blockHeight - 1; ++y)
+				{
+					if (primer.getBlockState(x, y, z).getMaterial().isSolid() && primer.getBlockState(x, y + 1, z).getBlock() == Blocks.AIR)
+					{
+						primer.setBlockState(x, y, z, top);
+					}
+					else if (primer.getBlockState(x, y, z).getBlock() == Blocks.STONE)
+					{
+						primer.setBlockState(x, y, z, filter);
+					}
+				}
+
+				if (blockHeight < 255)
+				{
+					for (int y = blockHeight + 1; y < 256; ++y)
+					{
+						primer.setBlockState(x, y, z, AIR);
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public Chunk provideChunk(int chunkX, int chunkZ)
+	{
+		rand.setSeed(chunkX * 341873128712L + chunkZ * 132897987541L);
+
+		biomesForGeneration = worldObj.getBiomeProvider().loadBlockGeneratorData(biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
+
+		ChunkPrimer primer = new ChunkPrimer();
+
+		setBlocksInChunk(primer);
 
 		if (CavernConfig.generateCaves)
 		{
@@ -113,39 +164,7 @@ public class ChunkProviderCavern implements IChunkGenerator
 			mineshaftGenerator.generate(worldObj, chunkX, chunkZ, primer);
 		}
 
-		for (int x = 0; x < 16; ++x)
-		{
-			for (int z = 0; z < 16; ++z)
-			{
-				Biome biome = biomesForGeneration[x * 16 + z];
-				CaveBiome caveBiome = CavernConfig.biomeManager.getCaveBiome(biome);
-				IBlockState top = caveBiome == null ? Blocks.STONE.getDefaultState() : caveBiome.getTopBlock().getBlockState();
-				IBlockState filter = caveBiome == null ? top : caveBiome.getTerrainBlock().getBlockState();
-
-				primer.setBlockState(x, 0, z, Blocks.BEDROCK.getDefaultState());
-				primer.setBlockState(x, blockHeight, z, Blocks.BEDROCK.getDefaultState());
-
-				for (int y = 1; y <= blockHeight - 1; ++y)
-				{
-					if (primer.getBlockState(x, y, z).getMaterial().isSolid() && primer.getBlockState(x, y + 1, z).getBlock() == Blocks.AIR)
-					{
-						primer.setBlockState(x, y, z, top);
-					}
-					else if (primer.getBlockState(x, y, z).getBlock() == Blocks.STONE)
-					{
-						primer.setBlockState(x, y, z, filter);
-					}
-				}
-
-				if (blockHeight < 255)
-				{
-					for (int y = blockHeight + 1; y < 256; ++y)
-					{
-						primer.setBlockState(x, y, z, Blocks.AIR.getDefaultState());
-					}
-				}
-			}
-		}
+		replaceBiomeBlocks(chunkX, chunkZ, primer);
 
 		Chunk chunk = new Chunk(worldObj, primer, chunkX, chunkZ);
 		byte[] biomeArray = chunk.getBiomeArray();
