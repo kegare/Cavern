@@ -26,7 +26,6 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -68,13 +67,6 @@ public class AquaCavernConfig
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		dimensionId = prop.getInt(dimensionId);
-
-		if (dimensionId == 0 || DimensionManager.isDimensionRegistered(dimensionId))
-		{
-			dimensionId = DimensionManager.getNextFreeDimId();
-
-			prop.set(dimensionId);
-		}
 
 		prop = config.get(category, "worldHeight", 128);
 		prop.setMinValue(64).setMaxValue(256);

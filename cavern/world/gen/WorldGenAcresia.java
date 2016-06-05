@@ -4,7 +4,6 @@ import java.util.Random;
 
 import cavern.block.BlockAcresia;
 import cavern.block.CaveBlocks;
-import cavern.util.SimpleBlockPos;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -15,11 +14,11 @@ public class WorldGenAcresia extends WorldGenerator
 	@Override
 	public boolean generate(World world, Random rand, BlockPos pos)
 	{
-		SimpleBlockPos blockpos = new SimpleBlockPos();
+		BlockPos blockpos;
 
 		for (int i = 0; i < 64; ++i)
 		{
-			blockpos.set(pos).add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
+			blockpos = pos.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
 
 			if (world.isAirBlock(blockpos) && blockpos.getY() < world.getActualHeight() - 1)
 			{

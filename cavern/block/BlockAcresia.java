@@ -93,9 +93,10 @@ public class BlockAcresia extends BlockCrops
 	@Override
 	public boolean canBlockStay(World world, BlockPos pos, IBlockState state)
 	{
-		IBlockState soil = world.getBlockState(pos.down());
+		BlockPos down = pos.down();
+		IBlockState soil = world.getBlockState(down);
 
-		return soil.getBlock().canSustainPlant(soil, world, pos.down(), EnumFacing.UP, this);
+		return soil.getBlock().canSustainPlant(soil, world, down, EnumFacing.UP, this);
 	}
 
 	@Override

@@ -125,22 +125,21 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	{
 		CaveBiomeManager manager = getBiomeManager();
 
-		if (manager == null)
+		if (manager != null)
 		{
-			super.createBiomeProvider();
+			switch (getBiomeType())
+			{
+				case SQUARE:
+					biomeProvider = new BiomeProviderCavern(worldObj, 1, manager);
+					return;
+				case LARGE_SQUARE:
+					biomeProvider = new BiomeProviderCavern(worldObj, 5, manager);
+					return;
+				default:
+			}
 		}
-		else switch (getBiomeType())
-		{
-			case NATURAL:
-				super.createBiomeProvider();
-				break;
-			case SQUARE:
-				biomeProvider = new BiomeProviderCavern(worldObj, 1, manager);
-				break;
-			case LARGE_SQUARE:
-				biomeProvider = new BiomeProviderCavern(worldObj, 5, manager);
-				break;
-		}
+
+		super.createBiomeProvider();
 	}
 
 	@Override
@@ -320,7 +319,7 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	@Override
 	public void onWorldUpdateEntities()
 	{
-		if (worldObj instanceof WorldServer)
+		if (getMonsterSpawn() > 0 && worldObj instanceof WorldServer)
 		{
 			WorldServer world = (WorldServer)worldObj;
 
