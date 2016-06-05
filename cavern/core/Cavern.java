@@ -119,7 +119,6 @@ public class Cavern
 		CavelandConfig.syncVeinsConfig();
 
 		CaveType.registerDimensions();
-		CaveType.registerCreatureTypes();
 
 		CaveAchievements.registerAchievements();
 

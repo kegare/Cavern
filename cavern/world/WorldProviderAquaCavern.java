@@ -66,6 +66,12 @@ public class WorldProviderAquaCavern extends WorldProviderCavern
 	}
 
 	@Override
+	public int getMonsterSpawn()
+	{
+		return 0;
+	}
+
+	@Override
 	public double getBrightness()
 	{
 		return AquaCavernConfig.caveBrightness;

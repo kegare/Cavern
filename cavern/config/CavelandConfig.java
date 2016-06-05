@@ -104,7 +104,7 @@ public class CavelandConfig
 		generateLakes = prop.getBoolean(generateLakes);
 
 		prop = config.get(category, "monsterSpawn", 0);
-		prop.setMinValue(0).setMaxValue(5000).setRequiresMcRestart(true);
+		prop.setMinValue(0).setMaxValue(5000);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";

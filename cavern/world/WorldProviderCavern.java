@@ -7,23 +7,32 @@ import cavern.config.property.ConfigBiomeType;
 import cavern.core.CaveSounds;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.CaveMusicMessage;
+import cavern.world.CaveEntitySpawner.IWorldEntitySpawner;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldProviderSurface;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class WorldProviderCavern extends WorldProviderSurface
+public class WorldProviderCavern extends WorldProviderSurface implements IWorldEntitySpawner
 {
 	public static final CaveSaveHandler saveHandler = new CaveSaveHandler("Cavern");
 
 	protected int musicTime = 0;
+
+	protected CaveEntitySpawner entitySpawner = new CaveEntitySpawner(this);
 
 	public WorldProviderCavern()
 	{
@@ -74,6 +83,11 @@ public class WorldProviderCavern extends WorldProviderSurface
 	public CaveBiomeManager getBiomeManager()
 	{
 		return CavernConfig.biomeManager;
+	}
+
+	public int getMonsterSpawn()
+	{
+		return CavernConfig.monsterSpawn;
 	}
 
 	public double getBrightness()
@@ -301,5 +315,44 @@ public class WorldProviderCavern extends WorldProviderSurface
 	public boolean canDoRainSnowIce(Chunk chunk)
 	{
 		return false;
+	}
+
+	@Override
+	public void onWorldUpdateEntities()
+	{
+		if (worldObj instanceof WorldServer)
+		{
+			WorldServer world = (WorldServer)worldObj;
+
+			if (world.getGameRules().getBoolean("doMobSpawning") && world.getWorldInfo().getTerrainType() != WorldType.DEBUG_WORLD)
+			{
+				MinecraftServer server = world.getMinecraftServer();
+				boolean spawnHostileMobs = world.getDifficulty() != EnumDifficulty.PEACEFUL;
+
+				if (server != null && !server.isSinglePlayer() && server.isDedicatedServer() && server instanceof DedicatedServer)
+				{
+					spawnHostileMobs = ((DedicatedServer)server).allowSpawnMonsters();
+				}
+
+				entitySpawner.findChunksForSpawning(world, spawnHostileMobs, false, world.getWorldInfo().getWorldTotalTime() % 400L == 0L);
+			}
+		}
+	}
+
+	@Override
+	public Boolean canSpawnCreature(WorldServer world, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate, EnumCreatureType type)
+	{
+		return null;
+	}
+
+	@Override
+	public Integer getMaxNumberOfCreature(WorldServer world, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate, EnumCreatureType type)
+	{
+		if (!type.getPeacefulCreature())
+		{
+			return getMonsterSpawn();
+		}
+
+		return null;
 	}
 }

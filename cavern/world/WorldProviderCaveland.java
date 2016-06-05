@@ -66,6 +66,12 @@ public class WorldProviderCaveland extends WorldProviderCavern
 	}
 
 	@Override
+	public int getMonsterSpawn()
+	{
+		return CavelandConfig.monsterSpawn;
+	}
+
+	@Override
 	public double getBrightness()
 	{
 		return CavelandConfig.caveBrightness;

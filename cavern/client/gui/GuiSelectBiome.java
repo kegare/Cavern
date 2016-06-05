@@ -1,7 +1,6 @@
 package cavern.client.gui;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -448,11 +447,9 @@ public class GuiSelectBiome extends GuiScreen
 		{
 			super(GuiSelectBiome.this.mc, 0, 0, 0, 0, 18);
 
-			for (Iterator<Biome> iterator = Biome.REGISTRY.iterator(); iterator.hasNext();)
+			for (Biome biome : Biome.REGISTRY)
 			{
-				Biome biome = iterator.next();
-
-				if (biome != null && (selector == null || selector.canSelectBiome(selectorId, biome)))
+				if (selector == null || selector.canSelectBiome(selectorId, biome))
 				{
 					biomes.add(biome);
 					contents.add(biome);

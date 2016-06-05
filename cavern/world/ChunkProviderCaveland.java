@@ -1,6 +1,5 @@
 package cavern.world;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -420,19 +419,7 @@ public class ChunkProviderCaveland implements IChunkGenerator
 	@Override
 	public List<SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
 	{
-		boolean enabled = CavelandConfig.monsterSpawn > 0;
-
-		if (enabled && creatureType == EnumCreatureType.MONSTER)
-		{
-			return Collections.emptyList();
-		}
-
 		Biome biome = worldObj.getBiomeGenForCoords(pos);
-
-		if (enabled && creatureType == CaveType.CAVELAND_MONSTER)
-		{
-			return biome.getSpawnableList(EnumCreatureType.MONSTER);
-		}
 
 		return biome.getSpawnableList(creatureType);
 	}
