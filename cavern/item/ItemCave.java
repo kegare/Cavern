@@ -16,7 +16,7 @@ public class ItemCave extends Item
 		super();
 		this.setUnlocalizedName("itemCave");
 		this.setHasSubtypes(true);
-		this.setCreativeTab(Cavern.tabCavern);
+		this.setCreativeTab(Cavern.TAB_CAVERN);
 	}
 
 	@Override

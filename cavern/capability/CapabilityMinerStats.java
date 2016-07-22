@@ -1,7 +1,5 @@
 package cavern.capability;
 
-import java.util.concurrent.Callable;
-
 import cavern.api.IMinerStats;
 import cavern.stats.MinerStats;
 import net.minecraft.entity.player.EntityPlayer;
@@ -79,14 +77,7 @@ public class CapabilityMinerStats implements ICapabilitySerializable<NBTTagCompo
 					instance.readFromNBT((NBTTagCompound)nbt);
 				}
 			},
-			new Callable<MinerStats>()
-			{
-				@Override
-				public MinerStats call() throws Exception
-				{
-					return new MinerStats(null);
-				}
-			}
+			() -> new MinerStats(null)
 		);
 	}
 }

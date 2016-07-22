@@ -18,13 +18,13 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class CaveNetworkRegistry
 {
-	public static final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(Cavern.MODID);
+	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(Cavern.MODID);
 
 	public static int messageId;
 
 	public static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side)
 	{
-		network.registerMessage(messageHandler, requestMessageType, messageId++, side);
+		NETWORK.registerMessage(messageHandler, requestMessageType, messageId++, side);
 	}
 
 	public static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)
@@ -35,12 +35,12 @@ public class CaveNetworkRegistry
 
 	public static Packet<?> getPacket(IMessage message)
 	{
-		return network.getPacketFrom(message);
+		return NETWORK.getPacketFrom(message);
 	}
 
 	public static void sendToAll(IMessage message)
 	{
-		network.sendToAll(message);
+		NETWORK.sendToAll(message);
 	}
 
 	public static void sendToOthers(IMessage message, EntityPlayerMP player)
@@ -61,17 +61,17 @@ public class CaveNetworkRegistry
 
 	public static void sendTo(IMessage message, EntityPlayerMP player)
 	{
-		network.sendTo(message, player);
+		NETWORK.sendTo(message, player);
 	}
 
 	public static void sendToDimension(IMessage message, int dimensionId)
 	{
-		network.sendToDimension(message, dimensionId);
+		NETWORK.sendToDimension(message, dimensionId);
 	}
 
 	public static void sendToServer(IMessage message)
 	{
-		network.sendToServer(message);
+		NETWORK.sendToServer(message);
 	}
 
 	public static void registerMessages()

@@ -451,7 +451,7 @@ public class GuiSelectMob extends GuiScreen
 			return i;
 		}
 
-		protected void setFilter(final String filter)
+		protected void setFilter(String filter)
 		{
 			CaveUtils.getPool().execute(new RecursiveAction()
 			{

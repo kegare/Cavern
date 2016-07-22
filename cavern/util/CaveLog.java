@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
 
 public class CaveLog
 {
-	public static final CaveLog log = new CaveLog();
+	public static final CaveLog LOG = new CaveLog();
 
 	private Logger myLog;
 
@@ -19,7 +19,7 @@ public class CaveLog
 
 	private static void configureLogging()
 	{
-		log.myLog = LogManager.getLogger("Caveworld");
+		LOG.myLog = LogManager.getLogger("Caveworld");
 		ThreadContext.put("side", FMLLaunchHandler.side().name().toLowerCase(Locale.ENGLISH));
 
 		configured = true;
@@ -37,7 +37,7 @@ public class CaveLog
 			configureLogging();
 		}
 
-		log.myLog.log(level, String.format(format, data));
+		LOG.myLog.log(level, String.format(format, data));
 	}
 
 	public static void log(String targetLog, Level level, Throwable ex, String format, Object... data)
@@ -52,7 +52,7 @@ public class CaveLog
 			configureLogging();
 		}
 
-		log.myLog.log(level, String.format(format, data), ex);
+		LOG.myLog.log(level, String.format(format, data), ex);
 	}
 
 	public static void severe(String format, Object... data)

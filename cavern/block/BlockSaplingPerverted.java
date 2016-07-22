@@ -32,7 +32,7 @@ public class BlockSaplingPerverted extends BlockSapling
 		this.setUnlocalizedName("pervertedSapling");
 		this.setHardness(0.0F);
 		this.setSoundType(SoundType.PLANT);
-		this.setCreativeTab(Cavern.tabCavern);
+		this.setCreativeTab(Cavern.TAB_CAVERN);
 	}
 
 	@Override

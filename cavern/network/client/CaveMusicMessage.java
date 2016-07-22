@@ -58,45 +58,41 @@ public class CaveMusicMessage implements IMessage, IMessageHandler<CaveMusicMess
 	@Override
 	public IMessage onMessage(CaveMusicMessage message, MessageContext ctx)
 	{
-		final Minecraft mc = FMLClientHandler.instance().getClient();
-		final boolean stop = message.stop;
-		final String name = message.name;
+		Minecraft mc = FMLClientHandler.instance().getClient();
+		boolean stop = message.stop;
+		String name = message.name;
 
-		mc.addScheduledTask(new Runnable()
+		mc.addScheduledTask(() ->
 		{
-			@Override
-			public void run()
+			SoundHandler handler = mc.getSoundHandler();
+
+			if (prevMusic != null)
 			{
-				SoundHandler handler = mc.getSoundHandler();
-
-				if (prevMusic != null)
+				if (stop)
 				{
-					if (stop)
-					{
-						handler.stopSound(prevMusic);
+					handler.stopSound(prevMusic);
 
-						prevMusic = null;
-					}
-					else if (handler.isSoundPlaying(prevMusic))
-					{
-						return;
-					}
+					prevMusic = null;
 				}
-
-				if (GeneralConfig.caveMusicVolume > 0.0D)
+				else if (handler.isSoundPlaying(prevMusic))
 				{
-					SoundEvent sound = SoundEvent.REGISTRY.getObject(new ResourceLocation(name));
+					return;
+				}
+			}
 
-					if (sound != null)
-					{
-						PositionedSound music = PositionedSoundRecord.getMasterRecord(sound, 1.0F);
+			if (GeneralConfig.caveMusicVolume > 0.0D)
+			{
+				SoundEvent sound = SoundEvent.REGISTRY.getObject(new ResourceLocation(name));
 
-						ObfuscationReflectionHelper.setPrivateValue(PositionedSound.class, music, (float)GeneralConfig.caveMusicVolume, "volume", "field_147662_b");
+				if (sound != null)
+				{
+					PositionedSound music = PositionedSoundRecord.getMasterRecord(sound, 1.0F);
 
-						handler.playSound(music);
+					ObfuscationReflectionHelper.setPrivateValue(PositionedSound.class, music, (float)GeneralConfig.caveMusicVolume, "volume", "field_147662_b");
 
-						prevMusic = music;
-					}
+					handler.playSound(music);
+
+					prevMusic = music;
 				}
 			}
 		});

@@ -80,7 +80,7 @@ public class WorldProviderAquaCavern extends WorldProviderCavern
 	@Override
 	public SoundEvent getMusicSound()
 	{
-		return CaveSounds.music_aqua;
+		return CaveSounds.MUSIC_AQUA;
 	}
 
 	@Override

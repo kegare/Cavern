@@ -24,12 +24,12 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void initConfigEntries()
 	{
-		CaveConfigEntries.cycleIntegerEntry = CycleIntegerEntry.class;
+		CaveConfigEntries.cycleInteger = CycleIntegerEntry.class;
 
-		CaveConfigEntries.selectItemsEntry = SelectItemsEntry.class;
-		CaveConfigEntries.selectMobsEntry = SelectMobsEntry.class;
+		CaveConfigEntries.selectItems = SelectItemsEntry.class;
+		CaveConfigEntries.selectMobs = SelectMobsEntry.class;
 
-		CaveConfigEntries.miningPointsEntry = MiningPointsEntry.class;
+		CaveConfigEntries.miningPoints = MiningPointsEntry.class;
 	}
 
 	@Override

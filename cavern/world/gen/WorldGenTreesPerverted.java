@@ -4,6 +4,7 @@ import java.util.Random;
 
 import cavern.block.CaveBlocks;
 import net.minecraft.block.BlockCocoa;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockOldLeaf;
 import net.minecraft.block.BlockOldLog;
@@ -38,8 +39,8 @@ public class WorldGenTreesPerverted extends WorldGenTrees
 	public WorldGenTreesPerverted(boolean flag, int min, BlockPlanks.EnumType type, boolean grow)
 	{
 		this(flag, min,
-			CaveBlocks.perverted_log.getDefaultState().withProperty(BlockOldLog.VARIANT, type),
-			CaveBlocks.perverted_leaves.getDefaultState().withProperty(BlockOldLeaf.VARIANT, type).withProperty(BlockLeaves.CHECK_DECAY, Boolean.valueOf(false)), grow);
+			CaveBlocks.PERVERTED_LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, type),
+			CaveBlocks.PERVERTED_LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, type).withProperty(BlockLeaves.CHECK_DECAY, Boolean.valueOf(false)), grow);
 	}
 
 	@Override
@@ -93,7 +94,7 @@ public class WorldGenTreesPerverted extends WorldGenTrees
 			{
 				IBlockState state = world.getBlockState(pos.down());
 
-				if (state.getBlock().canSustainPlant(state, world, pos.down(), EnumFacing.UP, CaveBlocks.perverted_sapling) && pos.getY() < world.getHeight() - treeHeight - 1)
+				if (state.getBlock().canSustainPlant(state, world, pos.down(), EnumFacing.UP, CaveBlocks.PERVERTED_SAPLING) && pos.getY() < world.getHeight() - treeHeight - 1)
 				{
 					setDirtAt(world, pos.down());
 
@@ -237,7 +238,7 @@ public class WorldGenTreesPerverted extends WorldGenTrees
 
 	private void setCocoa(World world, int age, BlockPos pos, EnumFacing side)
 	{
-		setBlockAndNotifyAdequately(world, pos, Blocks.COCOA.getDefaultState().withProperty(BlockCocoa.AGE, Integer.valueOf(age)).withProperty(BlockCocoa.FACING, side));
+		setBlockAndNotifyAdequately(world, pos, Blocks.COCOA.getDefaultState().withProperty(BlockCocoa.AGE, Integer.valueOf(age)).withProperty(BlockHorizontal.FACING, side));
 	}
 
 	private void setVine(World world, BlockPos pos, PropertyBool prop)

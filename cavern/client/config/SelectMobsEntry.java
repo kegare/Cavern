@@ -1,6 +1,7 @@
 package cavern.client.config;
 
 import cavern.client.gui.GuiSelectMob;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.ArrayEntry;
@@ -19,7 +20,7 @@ public class SelectMobsEntry extends ArrayEntry
 	@Override
 	public void valueButtonPressed(int index)
 	{
-		if (GuiConfig.isShiftKeyDown())
+		if (GuiScreen.isShiftKeyDown())
 		{
 			super.valueButtonPressed(index);
 		}

@@ -42,7 +42,7 @@ public class ConfigMiningPoints
 
 	public void refreshPoints()
 	{
-		MinerStats.pointAmounts.clear();
+		MinerStats.MINING_POINTS.clear();
 
 		for (String value : values)
 		{

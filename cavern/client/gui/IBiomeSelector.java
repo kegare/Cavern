@@ -8,5 +8,8 @@ public interface IBiomeSelector
 {
 	public void onBiomeSelected(int id, Collection<Biome> selected);
 
-	public boolean canSelectBiome(int id, Biome biome);
+	public default boolean canSelectBiome(int id, Biome biome)
+	{
+		return true;
+	}
 }

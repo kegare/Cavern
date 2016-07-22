@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
@@ -144,35 +143,24 @@ public class DimensionRegeneration
 		final Pattern pattern = Pattern.compile("^" + dir.getName() + "_bak-..*\\.zip$");
 
 		File parent = dir.getParentFile();
-		File[] files = parent.listFiles(new FilenameFilter()
-		{
-			@Override
-			public boolean accept(File dir, String name)
-			{
-				return pattern.matcher(name).matches();
-			}
-		});
+		File[] files = parent.listFiles((FilenameFilter) (dir1, name) -> pattern.matcher(name).matches());
 
 		if (files != null && files.length >= 5)
 		{
-			Arrays.sort(files, new Comparator<File>()
+			Arrays.sort(files, (o1, o2) ->
 			{
-				@Override
-				public int compare(File o1, File o2)
+				int i = CaveUtils.compareWithNull(o1, o2);
+
+				if (i == 0 && o1 != null && o2 != null)
 				{
-					int i = CaveUtils.compareWithNull(o1, o2);
-
-					if (i == 0 && o1 != null && o2 != null)
+					try
 					{
-						try
-						{
-							i = Files.getLastModifiedTime(o1.toPath()).compareTo(Files.getLastModifiedTime(o2.toPath()));
-						}
-						catch (IOException e) {}
+						i = Files.getLastModifiedTime(o1.toPath()).compareTo(Files.getLastModifiedTime(o2.toPath()));
 					}
-
-					return i;
+					catch (IOException e) {}
 				}
+
+				return i;
 			});
 
 			try

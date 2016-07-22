@@ -16,7 +16,7 @@ public class Config
 {
 	public static final String LANG_KEY = "cavern.config.";
 
-	protected static final Side side = FMLLaunchHandler.side();
+	protected static final Side SIDE = FMLLaunchHandler.side();
 
 	public static File getConfigDir()
 	{
@@ -99,7 +99,7 @@ public class Config
 		return config;
 	}
 
-	public static void saveConfig(final Configuration config)
+	public static void saveConfig(Configuration config)
 	{
 		if (config.hasChanged())
 		{

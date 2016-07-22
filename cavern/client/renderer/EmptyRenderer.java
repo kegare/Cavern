@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EmptyRenderer extends IRenderHandler
 {
-	public static final EmptyRenderer instance = new EmptyRenderer();
+	public static final EmptyRenderer INSTANCE = new EmptyRenderer();
 
     @SideOnly(Side.CLIENT)
 	@Override

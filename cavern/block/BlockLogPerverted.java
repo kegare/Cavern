@@ -10,6 +10,6 @@ public class BlockLogPerverted extends BlockOldLog
 		super();
 		this.setUnlocalizedName("pervertedLog");
 		this.setHardness(1.2F);
-		this.setCreativeTab(Cavern.tabCavern);
+		this.setCreativeTab(Cavern.TAB_CAVERN);
 	}
 }

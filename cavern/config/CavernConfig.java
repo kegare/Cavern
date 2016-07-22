@@ -111,7 +111,7 @@ public class CavernConfig
 		randomSeed = prop.getBoolean(randomSeed);
 
 		prop = config.get(category, "biomeType", ConfigBiomeType.Type.NATURAL.ordinal());
-		prop.setMinValue(0).setMaxValue(ConfigBiomeType.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleIntegerEntry);
+		prop.setMinValue(0).setMaxValue(ConfigBiomeType.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleInteger);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
@@ -223,7 +223,7 @@ public class CavernConfig
 		}
 
 		prop = config.get(category, "dungeonMobs", mobs.toArray(new String[mobs.size()]));
-		prop.setConfigEntryClass(CaveConfigEntries.selectMobsEntry);
+		prop.setConfigEntryClass(CaveConfigEntries.selectMobs);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += Configuration.NEW_LINE;
@@ -325,8 +325,8 @@ public class CavernConfig
 			veins.add(new CaveVein(new BlockMeta(Blocks.LAPIS_ORE, 0), 4, 5, 1, 50));
 			veins.add(new CaveVein(new BlockMeta(Blocks.DIAMOND_ORE, 0), 2, 6, 1, 20));
 			veins.add(new CaveVein(new BlockMeta(Blocks.EMERALD_ORE, 0), 8, 5, 50, 127, Type.MOUNTAIN, Type.HILLS));
-			veins.add(new CaveVein(new BlockMeta(CaveBlocks.cave_block, BlockCave.EnumType.AQUAMARINE_ORE.getMetadata()), 12, 8, 20, 127, Type.COLD, Type.WATER, Type.WET));
-			veins.add(new CaveVein(new BlockMeta(CaveBlocks.cave_block, BlockCave.EnumType.MAGNITE_ORE.getMetadata()), 30, 10, 1, 127));
+			veins.add(new CaveVein(new BlockMeta(CaveBlocks.CAVE_BLOCK, BlockCave.EnumType.AQUAMARINE_ORE.getMetadata()), 12, 8, 20, 127, Type.COLD, Type.WATER, Type.WET));
+			veins.add(new CaveVein(new BlockMeta(CaveBlocks.CAVE_BLOCK, BlockCave.EnumType.MAGNITE_ORE.getMetadata()), 30, 10, 1, 127));
 			veins.add(new CaveVein(new BlockMeta(Blocks.DIRT, 0), 20, 25, 1, 127));
 			veins.add(new CaveVein(new BlockMeta(Blocks.GRAVEL, 0), 10, 20, 1, 127));
 			veins.add(new CaveVein(new BlockMeta(Blocks.SAND, BlockSand.EnumType.SAND.getMetadata()), 10, 20, 1, 127, Type.SANDY));

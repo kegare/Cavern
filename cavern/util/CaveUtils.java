@@ -66,84 +66,76 @@ public class CaveUtils
 		return mod;
 	}
 
-	public static final Comparator<Block> blockComparator = new Comparator<Block>()
+	public static final Comparator<Block> blockComparator = (o1, o2) ->
 	{
-		@Override
-		public int compare(Block o1, Block o2)
+		int i = compareWithNull(o1, o2);
+
+		if (i == 0 && o1 != null && o2 != null)
 		{
-			int i = compareWithNull(o1, o2);
+			ResourceLocation name1 = o1.getRegistryName();
+			ResourceLocation name2 = o2.getRegistryName();
 
-			if (i == 0 && o1 != null && o2 != null)
+			i = compareWithNull(name1, name2);
+
+			if (i == 0 && name1 != null && name2 != null)
 			{
-				ResourceLocation name1 = o1.getRegistryName();
-				ResourceLocation name2 = o2.getRegistryName();
-
-				i = compareWithNull(name1, name2);
-
-				if (i == 0 && name1 != null && name2 != null)
-				{
-					i = (name1.getResourceDomain().equals("minecraft") ? 0 : 1) - (name2.getResourceDomain().equals("minecraft") ? 0 : 1);
-
-					if (i == 0)
-					{
-						i = name1.getResourceDomain().compareTo(name2.getResourceDomain());
-
-						if (i == 0)
-						{
-							i = name1.getResourcePath().compareTo(name2.getResourcePath());
-						}
-					}
-				}
-			}
-
-			return i;
-		}
-	};
-
-	public static final Comparator<Biome> biomeComparator = new Comparator<Biome>()
-	{
-		@Override
-		public int compare(Biome o1, Biome o2)
-		{
-			int i = compareWithNull(o1, o2);
-
-			if (i == 0 && o1 != null && o2 != null)
-			{
-				i = Integer.compare(Biome.getIdForBiome(o1), Biome.getIdForBiome(o2));
+				i = (name1.getResourceDomain().equals("minecraft") ? 0 : 1) - (name2.getResourceDomain().equals("minecraft") ? 0 : 1);
 
 				if (i == 0)
 				{
-					i = compareWithNull(o1.getBiomeName(), o2.getBiomeName());
+					i = name1.getResourceDomain().compareTo(name2.getResourceDomain());
 
-					if (i == 0 && o1.getBiomeName() != null && o2.getBiomeName() != null)
+					if (i == 0)
 					{
-						i = o1.getBiomeName().compareTo(o2.getBiomeName());
+						i = name1.getResourcePath().compareTo(name2.getResourcePath());
+					}
+				}
+			}
+		}
+
+		return i;
+	};
+
+	public static final Comparator<Biome> biomeComparator = (o1, o2) ->
+	{
+		int i = compareWithNull(o1, o2);
+
+		if (i == 0 && o1 != null && o2 != null)
+		{
+			i = Integer.compare(Biome.getIdForBiome(o1), Biome.getIdForBiome(o2));
+
+			if (i == 0)
+			{
+				i = compareWithNull(o1.getBiomeName(), o2.getBiomeName());
+
+				if (i == 0 && o1.getBiomeName() != null && o2.getBiomeName() != null)
+				{
+					i = o1.getBiomeName().compareTo(o2.getBiomeName());
+
+					if (i == 0)
+					{
+						i = Float.compare(o1.getTemperature(), o2.getTemperature());
 
 						if (i == 0)
 						{
-							i = Float.compare(o1.getTemperature(), o2.getTemperature());
+							i = Float.compare(o1.getRainfall(), o2.getRainfall());
 
 							if (i == 0)
 							{
-								i = Float.compare(o1.getRainfall(), o2.getRainfall());
+								i = new BlockMeta(o1.topBlock).compareTo(new BlockMeta(o2.topBlock));
 
 								if (i == 0)
 								{
-									i = new BlockMeta(o1.topBlock).compareTo(new BlockMeta(o2.topBlock));
-
-									if (i == 0)
-									{
-										i = new BlockMeta(o1.fillerBlock).compareTo(new BlockMeta(o2.fillerBlock));
-									}
+									i = new BlockMeta(o1.fillerBlock).compareTo(new BlockMeta(o2.fillerBlock));
 								}
 							}
 						}
 					}
 				}
 			}
-
-			return i;
 		}
+
+		return i;
 	};
 
 	public static final Set<Item>
@@ -240,10 +232,10 @@ public class CaveUtils
 		return Pattern.compile(Pattern.quote(s2), Pattern.CASE_INSENSITIVE).matcher(s1).find();
 	}
 
-	public static boolean archiveDirZip(final File dir, final File dest)
+	public static boolean archiveDirZip(File dir, File dest)
 	{
-		final Path dirPath = dir.toPath();
-		final String parent = dir.getName();
+		Path dirPath = dir.toPath();
+		String parent = dir.getName();
 		Map<String, String> env = Maps.newHashMap();
 		env.put("create", "true");
 		URI uri = dest.toURI();

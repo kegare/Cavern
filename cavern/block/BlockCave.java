@@ -32,14 +32,12 @@ public class BlockCave extends Block
 {
 	public static final PropertyEnum<EnumType> VARIANT = PropertyEnum.create("variant", EnumType.class);
 
-	protected static final Random rand = new Random();
-
 	public BlockCave()
 	{
 		super(Material.ROCK);
 		this.setDefaultState(blockState.getBaseState().withProperty(VARIANT, EnumType.AQUAMARINE_ORE));
 		this.setUnlocalizedName("blockCave");
-		this.setCreativeTab(Cavern.tabCavern);
+		this.setCreativeTab(Cavern.TAB_CAVERN);
 	}
 
 	@Override
@@ -112,7 +110,7 @@ public class BlockCave extends Block
 		switch (state.getValue(VARIANT))
 		{
 			case AQUAMARINE_ORE:
-				return CaveItems.cave_item;
+				return CaveItems.CAVE_ITEM;
 			default:
 		}
 
@@ -156,7 +154,7 @@ public class BlockCave extends Block
 		switch (state.getValue(VARIANT))
 		{
 			case AQUAMARINE_ORE:
-				return MathHelper.getRandomIntegerInRange(rand, 1, 3);
+				return MathHelper.getRandomIntegerInRange(RANDOM, 1, 3);
 			default:
 		}
 

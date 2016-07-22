@@ -40,16 +40,18 @@ public class RegenerationGuiMessage implements IMessage, IMessageHandler<Regener
 	{
 		Minecraft mc = FMLClientHandler.instance().getClient();
 		EnumType type = EnumType.values()[message.type];
+		boolean isOpen = mc.currentScreen != null && mc.currentScreen instanceof GuiRegeneration;
 
 		if (type == EnumType.OPEN)
 		{
-			ClientEventHooks.displayGui = new GuiRegeneration();
+			if (!isOpen)
+			{
+				ClientEventHooks.displayGui = new GuiRegeneration();
+			}
 		}
-		else if (mc.currentScreen != null && mc.currentScreen instanceof GuiRegeneration)
+		else if (isOpen)
 		{
-			GuiRegeneration gui = (GuiRegeneration)mc.currentScreen;
-
-			gui.updateProgress(type);
+			((GuiRegeneration)mc.currentScreen).updateProgress(type);
 		}
 
 		return null;

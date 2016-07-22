@@ -16,13 +16,13 @@ public class BlockLeavesPerverted extends BlockOldLeaf
 		super();
 		this.setUnlocalizedName("pervertedLeaves");
 		this.setHardness(0.05F);
-		this.setCreativeTab(Cavern.tabCavern);
+		this.setCreativeTab(Cavern.TAB_CAVERN);
 	}
 
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		return Item.getItemFromBlock(CaveBlocks.perverted_sapling);
+		return Item.getItemFromBlock(CaveBlocks.PERVERTED_SAPLING);
 	}
 
 	@Override

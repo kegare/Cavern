@@ -32,7 +32,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class MinerStats implements IMinerStats
 {
-	public static final Table<Block, Integer, Integer> pointAmounts = HashBasedTable.create();
+	public static final Table<Block, Integer, Integer> MINING_POINTS = HashBasedTable.create();
 
 	public static BlockMeta lastMine;
 	public static int lastMinePoint;
@@ -142,7 +142,7 @@ public class MinerStats implements IMinerStats
 				double y = player.posY + player.getEyeHeight();
 				double z = player.posZ;
 
-				player.getServerWorld().playSound(null, x, y, z, CaveSounds.rank_promote, SoundCategory.MASTER, 1.0F, 1.0F);
+				player.getServerWorld().playSound(null, x, y, z, CaveSounds.RANK_PROMOTE, SoundCategory.MASTER, 1.0F, 1.0F);
 			}
 
 			MinecraftForge.EVENT_BUS.post(new MinerStatsEvent.PromoteRank(entityPlayer, this));
@@ -211,7 +211,7 @@ public class MinerStats implements IMinerStats
 
 	public static int getPointAmount(Block block, int meta)
 	{
-		Integer ret = pointAmounts.get(block, meta);
+		Integer ret = MINING_POINTS.get(block, meta);
 
 		return ret == null ? 0 : ret.intValue();
 	}
@@ -227,12 +227,12 @@ public class MinerStats implements IMinerStats
 		{
 			for (int i = 0; i < 16; ++i)
 			{
-				pointAmounts.put(block, i, amount);
+				MINING_POINTS.put(block, i, amount);
 			}
 		}
 		else
 		{
-			pointAmounts.put(block, meta, amount);
+			MINING_POINTS.put(block, meta, amount);
 		}
 	}
 

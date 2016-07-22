@@ -1,7 +1,5 @@
 package cavern.capability;
 
-import java.util.concurrent.Callable;
-
 import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
 import net.minecraft.nbt.NBTBase;
@@ -78,14 +76,7 @@ public class CapabilityPortalCache implements ICapabilitySerializable<NBTTagComp
 					instance.readFromNBT((NBTTagCompound)nbt);
 				}
 			},
-			new Callable<PortalCache>()
-			{
-				@Override
-				public PortalCache call() throws Exception
-				{
-					return new PortalCache();
-				}
-			}
+			() -> new PortalCache()
 		);
 	}
 }

@@ -99,11 +99,11 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	{
 		if (worldObj.rand.nextInt(3) == 0)
 		{
-			return CaveSounds.music_cave;
+			return CaveSounds.MUSIC_CAVE;
 		}
 		else
 		{
-			return CaveSounds.music_unrest;
+			return CaveSounds.MUSIC_UNREST;
 		}
 	}
 
@@ -206,7 +206,7 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	{
 		if (super.getSkyRenderer() == null)
 		{
-			setSkyRenderer(EmptyRenderer.instance);
+			setSkyRenderer(EmptyRenderer.INSTANCE);
 		}
 
 		return super.getSkyRenderer();
@@ -218,7 +218,7 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	{
 		if (super.getCloudRenderer() == null)
 		{
-			setCloudRenderer(EmptyRenderer.instance);
+			setCloudRenderer(EmptyRenderer.INSTANCE);
 		}
 
 		return super.getCloudRenderer();
@@ -230,7 +230,7 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	{
 		if (super.getWeatherRenderer() == null)
 		{
-			setWeatherRenderer(EmptyRenderer.instance);
+			setWeatherRenderer(EmptyRenderer.INSTANCE);
 		}
 
 		return super.getWeatherRenderer();
@@ -339,17 +339,11 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	}
 
 	@Override
-	public Boolean canSpawnCreature(WorldServer world, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate, EnumCreatureType type)
-	{
-		return null;
-	}
-
-	@Override
 	public Integer getMaxNumberOfCreature(WorldServer world, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate, EnumCreatureType type)
 	{
 		if (!type.getPeacefulCreature())
 		{
-			return getMonsterSpawn();
+			return Integer.valueOf(getMonsterSpawn());
 		}
 
 		return null;

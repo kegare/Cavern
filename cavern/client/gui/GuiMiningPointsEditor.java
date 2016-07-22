@@ -409,12 +409,6 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 	}
 
 	@Override
-	public boolean canSelectBlock(int id, BlockMeta blockMeta)
-	{
-		return true;
-	}
-
-	@Override
 	public void updateScreen()
 	{
 		if (editMode)

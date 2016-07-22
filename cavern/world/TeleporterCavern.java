@@ -49,7 +49,7 @@ public class TeleporterCavern extends Teleporter
 
 	public TeleporterCavern(WorldServer worldServer)
 	{
-		this(worldServer, CaveBlocks.cavern_portal);
+		this(worldServer, CaveBlocks.CAVERN_PORTAL);
 	}
 
 	public int getType()

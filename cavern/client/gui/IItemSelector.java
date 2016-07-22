@@ -8,5 +8,8 @@ public interface IItemSelector
 {
 	public void onItemSelected(int id, Collection<ItemMeta> selected);
 
-	public boolean canSelectItem(int id, ItemMeta itemMeta);
+	public default boolean canSelectItem(int id, ItemMeta itemMeta)
+	{
+		return true;
+	}
 }

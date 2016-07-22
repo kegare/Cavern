@@ -39,7 +39,7 @@ public class BlockAcresia extends BlockCrops
 	{
 		super();
 		this.setUnlocalizedName("acresia");
-		this.setCreativeTab(Cavern.tabCavern);
+		this.setCreativeTab(Cavern.TAB_CAVERN);
 	}
 
 	@Override
@@ -224,7 +224,7 @@ public class BlockAcresia extends BlockCrops
 
 					drop.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.25F);
 
-					player.addStat(CaveAchievements.acresia);
+					player.addStat(CaveAchievements.ACRESIA);
 				}
 
 				return true;

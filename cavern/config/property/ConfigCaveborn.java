@@ -29,9 +29,9 @@ public class ConfigCaveborn
 	public enum Type
 	{
 		DISABLED(null),
-		CAVERN(CaveBlocks.cavern_portal),
-		AQUA_CAVERN(CaveBlocks.aqua_cavern_portal),
-		CAVELAND(CaveBlocks.caveland_portal);
+		CAVERN(CaveBlocks.CAVERN_PORTAL),
+		AQUA_CAVERN(CaveBlocks.AQUA_CAVERN_PORTAL),
+		CAVELAND(CaveBlocks.CAVELAND_PORTAL);
 
 		private final BlockPortalCavern portalBlock;
 

@@ -103,11 +103,11 @@ public class CaveEventHooks
 
 					if (world.rand.nextInt(2) == 0)
 					{
-						music = CaveSounds.music_cave;
+						music = CaveSounds.MUSIC_CAVE;
 					}
 					else
 					{
-						music = CaveSounds.music_unrest;
+						music = CaveSounds.MUSIC_UNREST;
 					}
 
 					CaveNetworkRegistry.sendTo(new CaveMusicMessage(music), player);
@@ -115,7 +115,7 @@ public class CaveEventHooks
 
 				data.setLong(key, world.getTotalWorldTime());
 
-				player.addStat(CaveAchievements.cavern);
+				player.addStat(CaveAchievements.CAVERN);
 			}
 			else if (CavernAPI.dimension.isEntityInAquaCavern(player))
 			{
@@ -124,12 +124,12 @@ public class CaveEventHooks
 
 				if (!data.hasKey(key, NBT.TAG_ANY_NUMERIC) || data.getLong(key) + 18000L < world.getTotalWorldTime())
 				{
-					CaveNetworkRegistry.sendTo(new CaveMusicMessage(CaveSounds.music_aqua), player);
+					CaveNetworkRegistry.sendTo(new CaveMusicMessage(CaveSounds.MUSIC_AQUA), player);
 				}
 
 				data.setLong(key, world.getTotalWorldTime());
 
-				player.addStat(CaveAchievements.aquaCavern);
+				player.addStat(CaveAchievements.AQUA_CAVERN);
 			}
 			else if (CavernAPI.dimension.isEntityInCaveland(player))
 			{
@@ -138,12 +138,12 @@ public class CaveEventHooks
 
 				if (!data.hasKey(key, NBT.TAG_ANY_NUMERIC) || data.getLong(key) + 18000L < world.getTotalWorldTime())
 				{
-					CaveNetworkRegistry.sendTo(new CaveMusicMessage(CaveSounds.music_hope), player);
+					CaveNetworkRegistry.sendTo(new CaveMusicMessage(CaveSounds.MUSIC_HOPE), player);
 				}
 
 				data.setLong(key, world.getTotalWorldTime());
 
-				player.addStat(CaveAchievements.caveland);
+				player.addStat(CaveAchievements.CAVELAND);
 			}
 		}
 	}
@@ -166,14 +166,14 @@ public class CaveEventHooks
 
 			if (held.getItem() == Items.EMERALD)
 			{
-				portal = Item.getItemFromBlock(CaveBlocks.cavern_portal);
+				portal = Item.getItemFromBlock(CaveBlocks.CAVERN_PORTAL);
 			}
-			else if (held.getItem() == CaveItems.cave_item)
+			else if (held.getItem() == CaveItems.CAVE_ITEM)
 			{
 				switch (ItemCave.EnumType.byItemStack(held))
 				{
 					case AQUAMARINE:
-						portal = Item.getItemFromBlock(CaveBlocks.aqua_cavern_portal);
+						portal = Item.getItemFromBlock(CaveBlocks.AQUA_CAVERN_PORTAL);
 						break;
 					default:
 				}
@@ -184,7 +184,7 @@ public class CaveEventHooks
 
 				if (block != null && block instanceof BlockSapling)
 				{
-					portal = Item.getItemFromBlock(CaveBlocks.caveland_portal);
+					portal = Item.getItemFromBlock(CaveBlocks.CAVELAND_PORTAL);
 				}
 			}
 
@@ -333,17 +333,17 @@ public class CaveEventHooks
 
 				if (itemstack != null)
 				{
-					if (itemstack.getItem() == CaveItems.cave_item)
+					if (itemstack.getItem() == CaveItems.CAVE_ITEM)
 					{
 						switch (ItemCave.EnumType.byItemStack(itemstack))
 						{
 							case AQUAMARINE:
-								player.addStat(CaveAchievements.aquamarine);
+								player.addStat(CaveAchievements.AQUAMARINE);
 								break;
 							default:
 						}
 					}
-					else if (itemstack.getItem() == Item.getItemFromBlock(CaveBlocks.perverted_log))
+					else if (itemstack.getItem() == Item.getItemFromBlock(CaveBlocks.PERVERTED_LOG))
 					{
 						player.addStat(AchievementList.MINE_WOOD);
 					}
@@ -363,12 +363,12 @@ public class CaveEventHooks
 		{
 			if (itemstack != null)
 			{
-				if (itemstack.getItem() == CaveItems.cave_item)
+				if (itemstack.getItem() == CaveItems.CAVE_ITEM)
 				{
 					switch (ItemCave.EnumType.byItemStack(itemstack))
 					{
 						case MAGNITE_INGOT:
-							player.addStat(CaveAchievements.magnite);
+							player.addStat(CaveAchievements.MAGNITE);
 							break;
 						default:
 					}

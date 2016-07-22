@@ -80,7 +80,7 @@ public class WorldProviderCaveland extends WorldProviderCavern
 	@Override
 	public SoundEvent getMusicSound()
 	{
-		return CaveSounds.music_hope;
+		return CaveSounds.MUSIC_HOPE;
 	}
 
 	@Override

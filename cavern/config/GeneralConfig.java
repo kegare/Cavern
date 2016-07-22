@@ -71,7 +71,7 @@ public class GeneralConfig
 			caveMusicVolume = prop.getDouble(caveMusicVolume);
 
 			prop = config.get(category, "miningPointPosition", ConfigDisplayPos.Type.BOTTOM_RIGHT.ordinal());
-			prop.setMinValue(0).setMaxValue(ConfigDisplayPos.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleIntegerEntry);
+			prop.setMinValue(0).setMaxValue(ConfigDisplayPos.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleInteger);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
@@ -105,7 +105,7 @@ public class GeneralConfig
 		showMinerRank = prop.getBoolean(showMinerRank);
 
 		prop = config.get(category, "miningPointItems", new String[0]);
-		prop.setConfigEntryClass(CaveConfigEntries.selectItemsEntry);
+		prop.setConfigEntryClass(CaveConfigEntries.selectItems);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += Configuration.NEW_LINE;
@@ -116,7 +116,7 @@ public class GeneralConfig
 
 		miningPoints.setInit(!config.getCategory(category).containsKey("miningPoints"));
 		prop = config.get(category, "miningPoints", new String[0]);
-		prop.setConfigEntryClass(CaveConfigEntries.miningPointsEntry);
+		prop.setConfigEntryClass(CaveConfigEntries.miningPoints);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += Configuration.NEW_LINE;
@@ -126,7 +126,7 @@ public class GeneralConfig
 		miningPoints.setValues(prop.getStringList());
 
 		prop = config.get(category, "caveborn", ConfigCaveborn.Type.DISABLED.ordinal());
-		prop.setMinValue(0).setMaxValue(ConfigCaveborn.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleIntegerEntry);
+		prop.setMinValue(0).setMaxValue(ConfigCaveborn.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleInteger);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";

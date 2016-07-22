@@ -645,7 +645,7 @@ public class GuiSelectBiome extends GuiScreen
 			return biome != null && selected.contains(biome);
 		}
 
-		protected void setFilter(final String filter)
+		protected void setFilter(String filter)
 		{
 			CaveUtils.getPool().execute(new RecursiveAction()
 			{

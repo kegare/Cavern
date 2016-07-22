@@ -9,6 +9,6 @@ public class ItemPickaxeCave extends ItemPickaxe
 	{
 		super(material);
 		this.setUnlocalizedName(name);
-		this.setCreativeTab(Cavern.tabCavern);
+		this.setCreativeTab(Cavern.TAB_CAVERN);
 	}
 }

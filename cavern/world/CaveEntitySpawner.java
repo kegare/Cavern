@@ -17,6 +17,7 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.management.PlayerChunkMapEntry;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -95,17 +96,19 @@ public class CaveEntitySpawner
 
 			for (EnumCreatureType type : EnumCreatureType.values())
 			{
-				if (canSpawnCreature(world, spawnHostileMobs, spawnPeacefulMobs, spawnOnSetTickRate, type))
+				int maxNumber = getMaxNumberOfCreature(world, spawnHostileMobs, spawnPeacefulMobs, spawnOnSetTickRate, type);
+
+				if (maxNumber > 0 && canSpawnCreature(world, spawnHostileMobs, spawnPeacefulMobs, spawnOnSetTickRate, type))
 				{
 					int j = world.countEntities(type, true);
-					int max = getMaxNumberOfCreature(world, spawnHostileMobs, spawnPeacefulMobs, spawnOnSetTickRate, type) * i / MOB_COUNT_DIV;
+					int max = maxNumber * i / MOB_COUNT_DIV;
 
 					if (j <= max)
 					{
 						List<ChunkPos> shuffled = Lists.newArrayList(eligibleChunksForSpawning);
 						Collections.shuffle(shuffled);
 
-						BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+						MutableBlockPos pos = new MutableBlockPos();
 
 						outside: for (ChunkPos chunkpos : shuffled)
 						{
@@ -173,9 +176,9 @@ public class CaveEntitySpawner
 
 												if (canSpawn == Result.ALLOW || canSpawn == Result.DEFAULT && entity.getCanSpawnHere() && entity.isNotColliding())
 												{
-													if (!ForgeEventFactory.doSpecialSpawn(entity, world, posX, f, posZ))
+													if (!ForgeEventFactory.doSpecialSpawn(entity, world, posX, y, posZ))
 													{
-														data = entity.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(entity)), data);
+														data = entity.onInitialSpawn(world.getDifficultyForLocation(entity.getPosition()), data);
 													}
 
 													if (entity.isNotColliding())
@@ -254,7 +257,10 @@ public class CaveEntitySpawner
 	public interface IWorldEntitySpawner
 	{
 		@Nullable
-		public Boolean canSpawnCreature(WorldServer world, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate, EnumCreatureType type);
+		public default Boolean canSpawnCreature(WorldServer world, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate, EnumCreatureType type)
+		{
+			return null;
+		}
 
 		@Nullable
 		public Integer getMaxNumberOfCreature(WorldServer world, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate, EnumCreatureType type);

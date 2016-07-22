@@ -24,8 +24,7 @@ public class GuiDownloadCaveTerrain extends GuiDownloadTerrain
 {
 	private final DynamicTexture viewportTexture;
 	private final ResourceLocation panoramaBackground;
-
-	private long prevTime;
+	private final long prevTime;
 
 	public PanoramaPaths currentPanoramaPaths;
 

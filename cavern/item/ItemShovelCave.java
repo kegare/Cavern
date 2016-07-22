@@ -9,6 +9,6 @@ public class ItemShovelCave extends ItemSpade
 	{
 		super(material);
 		this.setUnlocalizedName(name);
-		this.setCreativeTab(Cavern.tabCavern);
+		this.setCreativeTab(Cavern.TAB_CAVERN);
 	}
 }

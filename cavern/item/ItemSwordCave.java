@@ -12,7 +12,7 @@ public class ItemSwordCave extends ItemSword
 		super(material);
 		this.toolMaterial = material;
 		this.setUnlocalizedName(name);
-		this.setCreativeTab(Cavern.tabCavern);
+		this.setCreativeTab(Cavern.TAB_CAVERN);
 	}
 
 	public ToolMaterial getToolMaterial()

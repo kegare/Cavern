@@ -17,6 +17,6 @@ public class CreativeTabCavern extends CreativeTabs
 	@Override
 	public Item getTabIconItem()
 	{
-		return Item.getItemFromBlock(CaveBlocks.cavern_portal);
+		return Item.getItemFromBlock(CaveBlocks.CAVERN_PORTAL);
 	}
 }

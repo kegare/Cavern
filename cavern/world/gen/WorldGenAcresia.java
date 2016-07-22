@@ -2,7 +2,6 @@ package cavern.world.gen;
 
 import java.util.Random;
 
-import cavern.block.BlockAcresia;
 import cavern.block.CaveBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
@@ -33,9 +32,9 @@ public class WorldGenAcresia extends WorldGenerator
 					age = 2 + rand.nextInt(3);
 				}
 
-				IBlockState state = CaveBlocks.acresia.getDefaultState().withProperty(BlockAcresia.AGE, Integer.valueOf(age));
+				IBlockState state = CaveBlocks.ACRESIA.withAge(age);
 
-				if (CaveBlocks.acresia.canBlockStay(world, blockpos, state))
+				if (CaveBlocks.ACRESIA.canBlockStay(world, blockpos, state))
 				{
 					world.setBlockState(blockpos, state, 2);
 				}

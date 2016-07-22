@@ -3,6 +3,7 @@ package cavern.world.gen;
 import java.util.Random;
 
 import cavern.block.CaveBlocks;
+import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockOldLeaf;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
@@ -78,11 +79,11 @@ public class WorldGenBirchTreePerverted extends WorldGenBirchTree
 			}
 			else
 			{
-				IBlockState wood = CaveBlocks.perverted_log.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.BIRCH);
-				IBlockState leaves = CaveBlocks.perverted_leaves.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.BIRCH).withProperty(BlockOldLeaf.CHECK_DECAY, Boolean.valueOf(false));
+				IBlockState wood = CaveBlocks.PERVERTED_LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.BIRCH);
+				IBlockState leaves = CaveBlocks.PERVERTED_LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.BIRCH).withProperty(BlockLeaves.CHECK_DECAY, Boolean.valueOf(false));
 				BlockPos down = pos.down();
 				IBlockState state = world.getBlockState(down);
-				boolean isSoil = state.getBlock().canSustainPlant(state, world, down, EnumFacing.UP, CaveBlocks.perverted_sapling);
+				boolean isSoil = state.getBlock().canSustainPlant(state, world, down, EnumFacing.UP, CaveBlocks.PERVERTED_SAPLING);
 
 				if (isSoil && pos.getY() < world.getHeight() - treeHeight - 1)
 				{

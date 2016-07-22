@@ -76,7 +76,7 @@ public class ChunkProviderCavern implements IChunkGenerator
 			{
 				for (int y = 255; y >= 0; --y)
 				{
-					primer.setBlockState(x, y, z, Blocks.STONE.getDefaultState());
+					primer.setBlockState(x, y, z, STONE);
 				}
 			}
 		}

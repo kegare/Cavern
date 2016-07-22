@@ -8,5 +8,8 @@ public interface IBlockSelector
 {
 	public void onBlockSelected(int id, Collection<BlockMeta> selected);
 
-	public boolean canSelectBlock(int id, BlockMeta blockMeta);
+	public default boolean canSelectBlock(int id, BlockMeta blockMeta)
+	{
+		return true;
+	}
 }

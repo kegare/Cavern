@@ -13,7 +13,7 @@ public enum MinerRank
 	STONE_MINER(1, 50, "stoneMiner", Items.STONE_PICKAXE),
 	IRON_MINER(2, 100, "ironMiner", Items.IRON_PICKAXE),
 	GOLD_MINER(3, 1000, "goldMiner", Items.GOLDEN_PICKAXE),
-	AQUA_MINER(4, 3000, "aquaMiner", CaveItems.aquamarine_pickaxe),
+	AQUA_MINER(4, 3000, "aquaMiner", CaveItems.AQUAMARINE_PICKAXE),
 	DIAMOND_MINER(5, 10000, "diamondMiner", Items.DIAMOND_PICKAXE);
 
 	private int rank;

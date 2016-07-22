@@ -52,7 +52,7 @@ public class BlockPortalCavern extends BlockPortal
 		this.setTickRandomly(false);
 		this.setBlockUnbreakable();
 		this.disableStats();
-		this.setCreativeTab(Cavern.tabCavern);
+		this.setCreativeTab(Cavern.TAB_CAVERN);
 	}
 
 	@Override
@@ -182,7 +182,7 @@ public class BlockPortalCavern extends BlockPortal
 						double y = player.posY + player.getEyeHeight();
 						double z = player.posZ;
 
-						worldOld.playSound(player, x, y, z, CaveSounds.cave_portal, SoundCategory.BLOCKS, 0.5F, 1.0F);
+						worldOld.playSound(player, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.5F, 1.0F);
 
 						server.getPlayerList().transferPlayerToDimension(player, dimNew, teleporter);
 
@@ -190,7 +190,7 @@ public class BlockPortalCavern extends BlockPortal
 						y = player.posY + player.getEyeHeight();
 						z = player.posZ;
 
-						worldNew.playSound(null, x, y, z, CaveSounds.cave_portal, SoundCategory.BLOCKS, 0.75F, 1.0F);
+						worldNew.playSound(null, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.75F, 1.0F);
 
 						cache.setLastDim(getType(), dimOld);
 						cache.setLastPos(getType(), dimOld, prevPos);
@@ -202,7 +202,7 @@ public class BlockPortalCavern extends BlockPortal
 					double y = entity.posY + entity.getEyeHeight();
 					double z = entity.posZ;
 
-					worldOld.playSound(null, x, y, z, CaveSounds.cave_portal, SoundCategory.BLOCKS, 0.25F, 1.15F);
+					worldOld.playSound(null, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.25F, 1.15F);
 
 					server.getPlayerList().transferEntityToWorld(entity, dimOld, worldOld, worldNew, teleporter);
 
@@ -228,7 +228,7 @@ public class BlockPortalCavern extends BlockPortal
 						y = target.posY + target.getEyeHeight();
 						z = target.posZ;
 
-						worldNew.playSound(null, x, y, z, CaveSounds.cave_portal, SoundCategory.BLOCKS, 0.5F, 1.15F);
+						worldNew.playSound(null, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.5F, 1.15F);
 
 						target.forceSpawn = force;
 

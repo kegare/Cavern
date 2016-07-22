@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
 public class CavebornEventHooks
 {
-	public static final Set<String> firstJoinPlayers = Sets.newHashSet();
+	public static final Set<String> FIRST_PLAYERS = Sets.newHashSet();
 
 	@SubscribeEvent
 	public void onPlayerLoadFromFile(PlayerEvent.LoadFromFile event)
@@ -37,7 +37,7 @@ public class CavebornEventHooks
 			}
 		}
 
-		firstJoinPlayers.add(uuid);
+		FIRST_PLAYERS.add(uuid);
 	}
 
 	@SubscribeEvent
@@ -45,53 +45,49 @@ public class CavebornEventHooks
 	{
 		if (event.player instanceof EntityPlayerMP)
 		{
-			final EntityPlayerMP player = (EntityPlayerMP)event.player;
-			final ConfigCaveborn.Type caveborn = GeneralConfig.caveborn.getType();
+			EntityPlayerMP player = (EntityPlayerMP)event.player;
+			ConfigCaveborn.Type caveborn = GeneralConfig.caveborn.getType();
 
-			if (caveborn != ConfigCaveborn.Type.DISABLED && firstJoinPlayers.contains(player.getUniqueID().toString()))
+			if (caveborn != ConfigCaveborn.Type.DISABLED && FIRST_PLAYERS.contains(player.getUniqueID().toString()))
 			{
-				final MinecraftServer server = player.mcServer;
+				MinecraftServer server = player.mcServer;
 
-				server.addScheduledTask(new Runnable()
+				server.addScheduledTask(() ->
 				{
-					@Override
-					public void run()
+					BlockPortalCavern portal = caveborn.getPortalBlock();
+
+					if (portal != null)
 					{
-						BlockPortalCavern portal = caveborn.getPortalBlock();
+						int dim = portal.getDimension();
+						Teleporter teleporter = new TeleporterCavern(server.worldServerForDimension(dim), portal);
 
-						if (portal != null)
+						boolean force = player.forceSpawn;
+
+						player.forceSpawn = true;
+						player.timeUntilPortal = player.getPortalCooldown();
+
+						server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
+
+						player.forceSpawn = force;
+
+						WorldServer world = player.getServerWorld();
+						BlockPos pos = player.getPosition();
+
+						for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
 						{
-							int dim = portal.getDimension();
-							Teleporter teleporter = new TeleporterCavern(server.worldServerForDimension(dim), portal);
-
-							boolean force = player.forceSpawn;
-
-							player.forceSpawn = true;
-							player.timeUntilPortal = player.getPortalCooldown();
-
-							server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
-
-							player.forceSpawn = force;
-
-							WorldServer world = player.getServerWorld();
-							BlockPos pos = player.getPosition();
-
-							for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
+							if (world.getBlockState(blockpos).getBlock() == portal)
 							{
-								if (world.getBlockState(blockpos).getBlock() == portal)
-								{
-									world.setBlockToAir(blockpos);
+								world.setBlockToAir(blockpos);
 
-									break;
-								}
+								break;
 							}
-
-							double x = player.posX;
-							double y = player.posY + player.getEyeHeight();
-							double z = player.posZ;
-
-							world.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0F, 0.65F);
 						}
+
+						double x = player.posX;
+						double y = player.posY + player.getEyeHeight();
+						double z = player.posZ;
+
+						world.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0F, 0.65F);
 					}
 				});
 			}
@@ -101,6 +97,6 @@ public class CavebornEventHooks
 	@SubscribeEvent
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent event)
 	{
-		firstJoinPlayers.remove(event.player.getUniqueID().toString());
+		FIRST_PLAYERS.remove(event.player.getUniqueID().toString());
 	}
 }

@@ -31,6 +31,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -51,17 +52,30 @@ public class GuiSelectItem extends GuiScreen
 
 		for (Item item : Item.REGISTRY)
 		{
+			if (item == null)
+			{
+				continue;
+			}
+
 			list.clear();
-			item.getSubItems(item, item.getCreativeTab(), list);
+
+			CreativeTabs[] tabs = item.getCreativeTabs();
+
+			if (tabs == null)
+			{
+				item.getSubItems(item, item.getCreativeTab(), list);
+			}
+			else for (CreativeTabs tab : tabs)
+			{
+				item.getSubItems(item, tab, list);
+			}
 
 			if (list.isEmpty())
 			{
 				items.addIfAbsent(new ItemMeta(item, -1));
 			}
-			else for (Object obj : list)
+			else for (ItemStack itemstack : list)
 			{
-				ItemStack itemstack = (ItemStack)obj;
-
 				if (itemstack != null && itemstack.getItem() != null)
 				{
 					if (itemstack.getItemDamage() == 0 && itemstack.isItemStackDamageable())
@@ -699,7 +713,7 @@ public class GuiSelectItem extends GuiScreen
 			return itemMeta != null && selected.contains(itemMeta);
 		}
 
-		protected void setFilter(final String filter)
+		protected void setFilter(String filter)
 		{
 			CaveUtils.getPool().execute(new RecursiveAction()
 			{

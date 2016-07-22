@@ -29,7 +29,6 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -50,18 +49,16 @@ public class GuiSelectBlock extends GuiScreen
 
 		for (Block block : Block.REGISTRY)
 		{
+			if (block == null)
+			{
+				continue;
+			}
+
 			try
 			{
 				list.clear();
 
-				CreativeTabs tab = block.getCreativeTabToDisplayOn();
-
-				if (tab == null)
-				{
-					tab = CreativeTabs.SEARCH;
-				}
-
-				block.getSubBlocks(Item.getItemFromBlock(block), tab, list);
+				block.getSubBlocks(Item.getItemFromBlock(block), block.getCreativeTabToDisplayOn(), list);
 
 				if (list.isEmpty())
 				{
@@ -70,10 +67,8 @@ public class GuiSelectBlock extends GuiScreen
 						blocks.addIfAbsent(new BlockMeta(block, 0));
 					}
 				}
-				else for (Object obj : list)
+				else for (ItemStack itemstack : list)
 				{
-					ItemStack itemstack = (ItemStack)obj;
-
 					if (itemstack != null && itemstack.getItem() != null)
 					{
 						Block sub = Block.getBlockFromItem(itemstack.getItem());
@@ -642,7 +637,7 @@ public class GuiSelectBlock extends GuiScreen
 			return blockMeta != null && selected.contains(blockMeta);
 		}
 
-		protected void setFilter(final String filter)
+		protected void setFilter(String filter)
 		{
 			CaveUtils.getPool().execute(new RecursiveAction()
 			{

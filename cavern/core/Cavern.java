@@ -47,7 +47,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 (
 	modid = Cavern.MODID,
 	guiFactory = "cavern.client.config.CaveGuiFactory",
-	updateJSON = "https://dl.dropboxusercontent.com/u/51943112/versions/cavern.json"
+	updateJSON = "https://dl.dropboxusercontent.com/u/51943112/versions/cavern.json",
+	acceptedMinecraftVersions = "[1.9.4,)"
 )
 public class Cavern
 {
@@ -59,7 +60,7 @@ public class Cavern
 	@SidedProxy(modId = MODID, clientSide = "cavern.client.ClientProxy", serverSide = "cavern.core.CommonProxy")
 	public static CommonProxy proxy;
 
-	public static final CreativeTabCavern tabCavern = new CreativeTabCavern();
+	public static final CreativeTabCavern TAB_CAVERN = new CreativeTabCavern();
 
 	@EventHandler
 	public void construct(FMLConstructionEvent event)
@@ -188,6 +189,11 @@ public class Cavern
 
 			for (Block block : Block.REGISTRY)
 			{
+				if (block == null)
+				{
+					continue;
+				}
+
 				for (int i = 0; i < 16; ++i)
 				{
 					int point = MinerStats.getPointAmount(block, i);

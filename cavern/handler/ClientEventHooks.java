@@ -351,42 +351,38 @@ public class ClientEventHooks
 	@SubscribeEvent
 	public void onConnected(ClientConnectedToServerEvent event)
 	{
-		final Minecraft mc = FMLClientHandler.instance().getClient();
+		Minecraft mc = FMLClientHandler.instance().getClient();
 
-		mc.addScheduledTask(new Runnable()
+		mc.addScheduledTask(() ->
 		{
-			@Override
-			public void run()
+			if (Version.DEV_DEBUG || Version.getStatus() == Status.AHEAD || Version.getStatus() == Status.BETA || GeneralConfig.versionNotify && Version.isOutdated())
 			{
-				if (Version.DEV_DEBUG || Version.getStatus() == Status.AHEAD || Version.getStatus() == Status.BETA || GeneralConfig.versionNotify && Version.isOutdated())
+				ITextComponent name = new TextComponentString(Cavern.metadata.name);
+				name.getStyle().setColor(TextFormatting.AQUA);
+				ITextComponent latest = new TextComponentString(Version.getLatest().toString());
+				latest.getStyle().setColor(TextFormatting.YELLOW);
+
+				ITextComponent message;
+
+				message = new TextComponentTranslation("cavern.version.message", name);
+				message.appendText(" : ").appendSibling(latest);
+				message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Cavern.metadata.url));
+
+				mc.ingameGUI.getChatGUI().printChatMessage(message);
+				message = null;
+
+				if (Version.isBeta())
 				{
-					ITextComponent name = new TextComponentString(Cavern.metadata.name);
-					name.getStyle().setColor(TextFormatting.AQUA);
-					ITextComponent latest = new TextComponentString(Version.getLatest().toString());
-					latest.getStyle().setColor(TextFormatting.YELLOW);
+					message = new TextComponentTranslation("cavern.version.message.beta", name);
+				}
+				else if (Version.isAlpha())
+				{
+					message = new TextComponentTranslation("cavern.version.message.alpha", name);
+				}
 
-					ITextComponent message;
-
-					message = new TextComponentTranslation("cavern.version.message", name);
-					message.appendText(" : ").appendSibling(latest);
-					message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Cavern.metadata.url));
-
+				if (message != null)
+				{
 					mc.ingameGUI.getChatGUI().printChatMessage(message);
-					message = null;
-
-					if (Version.isBeta())
-					{
-						message = new TextComponentTranslation("cavern.version.message.beta", name);
-					}
-					else if (Version.isAlpha())
-					{
-						message = new TextComponentTranslation("cavern.version.message.alpha", name);
-					}
-
-					if (message != null)
-					{
-						mc.ingameGUI.getChatGUI().printChatMessage(message);
-					}
 				}
 			}
 		});

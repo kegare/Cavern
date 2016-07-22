@@ -59,10 +59,7 @@ public class CommandCavern extends CommandBase
 			{
 				CaveNetworkRegistry.sendTo(new RegenerationGuiMessage(EnumType.OPEN), player);
 			}
-			else
-			{
-				throw new CommandException("commands.generic.permission");
-			}
+			else throw new CommandException("commands.generic.permission");
 		}
 		else if (args[0].equalsIgnoreCase("mp") && isPlayer)
 		{

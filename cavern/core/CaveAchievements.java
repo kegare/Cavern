@@ -16,12 +16,12 @@ public class CaveAchievements
 {
 	private static final ArrayListExtended<Achievement> ACHIEVEMENTS = new ArrayListExtended<>();
 
-	public static final Achievement cavern = CaveAchievement.of("cavern", 0, 0, CaveBlocks.cavern_portal, null).initIndependentStat();
-	public static final Achievement aquaCavern = CaveAchievement.of("aquaCavern", -2, 0, CaveBlocks.aqua_cavern_portal, cavern);
-	public static final Achievement caveland = CaveAchievement.of("caveland", 2, 0, CaveBlocks.caveland_portal, cavern);
-	public static final Achievement aquamarine = CaveAchievement.of("aquamarine", -3, -3, new ItemStack(CaveItems.cave_item, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()), cavern);
-	public static final Achievement magnite = CaveAchievement.of("magnite", 0, -4, new ItemStack(CaveItems.cave_item, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()), cavern);
-	public static final Achievement acresia = CaveAchievement.of("acresia", 3, -3, new ItemStack(CaveBlocks.acresia, 1, ItemAcresia.EnumType.FRUITS.getItemDamage()), caveland);
+	public static final Achievement CAVERN = CaveAchievement.of("cavern", 0, 0, CaveBlocks.CAVERN_PORTAL, null).initIndependentStat();
+	public static final Achievement AQUA_CAVERN = CaveAchievement.of("aquaCavern", -2, 0, CaveBlocks.AQUA_CAVERN_PORTAL, CAVERN);
+	public static final Achievement CAVELAND = CaveAchievement.of("caveland", 2, 0, CaveBlocks.CAVELAND_PORTAL, CAVERN);
+	public static final Achievement AQUAMARINE = CaveAchievement.of("aquamarine", -3, -3, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()), CAVERN);
+	public static final Achievement MAGNITE = CaveAchievement.of("magnite", 0, -4, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()), CAVERN);
+	public static final Achievement ACRESIA = CaveAchievement.of("acresia", 3, -3, new ItemStack(CaveBlocks.ACRESIA, 1, ItemAcresia.EnumType.FRUITS.getItemDamage()), CAVELAND);
 
 	public static void registerAchievements()
 	{

@@ -7,5 +7,8 @@ import net.minecraft.util.math.BlockPos;
 
 public interface IAquaTool
 {
-	public float getAquaBreakSpeed(ItemStack itemstack, EntityPlayer player, BlockPos pos, IBlockState state, float originalSpeed);
+	public default float getAquaBreakSpeed(ItemStack itemstack, EntityPlayer player, BlockPos pos, IBlockState state, float originalSpeed)
+	{
+		return originalSpeed * 10.0F;
+	}
 }

@@ -476,12 +476,6 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 	}
 
 	@Override
-	public boolean canSelectBiome(int id, Biome biome)
-	{
-		return true;
-	}
-
-	@Override
 	public void updateScreen()
 	{
 		if (editMode)
@@ -965,7 +959,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 			return i;
 		}
 
-		protected void setFilter(final String filter)
+		protected void setFilter(String filter)
 		{
 			CaveUtils.getPool().execute(new RecursiveAction()
 			{

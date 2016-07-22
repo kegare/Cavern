@@ -619,12 +619,6 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 	}
 
 	@Override
-	public boolean canSelectBlock(int id, BlockMeta blockMeta)
-	{
-		return true;
-	}
-
-	@Override
 	public void updateScreen()
 	{
 		if (editMode)
@@ -1325,7 +1319,7 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 			return i;
 		}
 
-		protected void setFilter(final String filter)
+		protected void setFilter(String filter)
 		{
 			CaveUtils.getPool().execute(new RecursiveAction()
 			{

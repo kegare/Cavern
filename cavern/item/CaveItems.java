@@ -25,47 +25,38 @@ public class CaveItems
 	public static final ToolMaterial AQUAMARINE = EnumHelper.addToolMaterial("AQUAMARINE", 2, 200, 8.0F, 1.5F, 15);
 	public static final ToolMaterial MAGNITE = EnumHelper.addToolMaterial("MAGNITE", 3, 10, 100.0F, 11.0F, 50);
 
-	public static final Item cave_item = new ItemCave();
-	public static final ItemPickaxeAquamarine aquamarine_pickaxe = new ItemPickaxeAquamarine();
-	public static final ItemAxeAquamarine aquamarine_axe = new ItemAxeAquamarine();
-	public static final ItemShovelAquamarine aquamarine_shovel = new ItemShovelAquamarine();
-	public static final ItemSwordCave magnite_sword = new ItemSwordCave(MAGNITE, "swordMagnite");
-	public static final ItemPickaxeCave magnite_pickaxe = new ItemPickaxeCave(MAGNITE, "pickaxeMagnite");
-	public static final ItemAxeCave magnite_axe = new ItemAxeCave(MAGNITE, 18.0F, -3.0F, "axeMagnite");
-	public static final ItemShovelCave magnite_shovel = new ItemShovelCave(MAGNITE, "shovelMagnite");
+	public static final Item CAVE_ITEM = new ItemCave();
+	public static final ItemPickaxeAquamarine AQUAMARINE_PICKAXE = new ItemPickaxeAquamarine();
+	public static final ItemAxeAquamarine AQUAMARINE_AXE = new ItemAxeAquamarine();
+	public static final ItemShovelAquamarine AQUAMARINE_SHOVEL = new ItemShovelAquamarine();
+	public static final ItemSwordCave MAGNITE_SWORD = new ItemSwordCave(MAGNITE, "swordMagnite");
+	public static final ItemPickaxeCave MAGNITE_PICKAXE = new ItemPickaxeCave(MAGNITE, "pickaxeMagnite");
+	public static final ItemAxeCave MAGNITE_AXE = new ItemAxeCave(MAGNITE, 18.0F, -3.0F, "axeMagnite");
+	public static final ItemShovelCave MAGNITE_SHOVEL = new ItemShovelCave(MAGNITE, "shovelMagnite");
 
 	public static void registerItems()
 	{
-		cave_item.setRegistryName("cave_item");
-		aquamarine_pickaxe.setRegistryName("aquamarine_pickaxe");
-		aquamarine_axe.setRegistryName("aquamarine_axe");
-		aquamarine_shovel.setRegistryName("aquamarine_shovel");
-		magnite_sword.setRegistryName("magnite_sword");
-		magnite_pickaxe.setRegistryName("magnite_pickaxe");
-		magnite_axe.setRegistryName("magnite_axe");
-		magnite_shovel.setRegistryName("magnite_shovel");
-
-		GameRegistry.register(cave_item);
-		GameRegistry.register(aquamarine_pickaxe);
-		GameRegistry.register(aquamarine_axe);
-		GameRegistry.register(aquamarine_shovel);
-		GameRegistry.register(magnite_sword);
-		GameRegistry.register(magnite_pickaxe);
-		GameRegistry.register(magnite_axe);
-		GameRegistry.register(magnite_shovel);
+		GameRegistry.register(CAVE_ITEM.setRegistryName("cave_item"));
+		GameRegistry.register(AQUAMARINE_PICKAXE.setRegistryName("aquamarine_pickaxe"));
+		GameRegistry.register(AQUAMARINE_AXE.setRegistryName("aquamarine_axe"));
+		GameRegistry.register(AQUAMARINE_SHOVEL.setRegistryName("aquamarine_shovel"));
+		GameRegistry.register(MAGNITE_SWORD.setRegistryName("magnite_sword"));
+		GameRegistry.register(MAGNITE_PICKAXE.setRegistryName("magnite_pickaxe"));
+		GameRegistry.register(MAGNITE_AXE.setRegistryName("magnite_axe"));
+		GameRegistry.register(MAGNITE_SHOVEL.setRegistryName("magnite_shovel"));
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void registerModels()
 	{
-		registerModelWithMeta(cave_item, "aquamarine", "magnite_ingot");
-		registerModel(aquamarine_pickaxe, "aquamarine_pickaxe");
-		registerModel(aquamarine_axe, "aquamarine_axe");
-		registerModel(aquamarine_shovel, "aquamarine_shovel");
-		registerModel(magnite_sword, "magnite_sword");
-		registerModel(magnite_pickaxe, "magnite_pickaxe");
-		registerModel(magnite_axe, "magnite_axe");
-		registerModel(magnite_shovel, "magnite_shovel");
+		registerModelWithMeta(CAVE_ITEM, "aquamarine", "magnite_ingot");
+		registerModel(AQUAMARINE_PICKAXE, "aquamarine_pickaxe");
+		registerModel(AQUAMARINE_AXE, "aquamarine_axe");
+		registerModel(AQUAMARINE_SHOVEL, "aquamarine_shovel");
+		registerModel(MAGNITE_SWORD, "magnite_sword");
+		registerModel(MAGNITE_PICKAXE, "magnite_pickaxe");
+		registerModel(MAGNITE_AXE, "magnite_axe");
+		registerModel(MAGNITE_SHOVEL, "magnite_shovel");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -118,53 +109,53 @@ public class CaveItems
 
 	public static void registerRecipes()
 	{
-		GameRegistry.addShapelessRecipe(new ItemStack(cave_item, 9, ItemCave.EnumType.AQUAMARINE.getItemDamage()),
-			new ItemStack(CaveBlocks.cave_block, 1, BlockCave.EnumType.AQUAMARINE_BLOCK.getMetadata()));
+		GameRegistry.addShapelessRecipe(new ItemStack(CAVE_ITEM, 9, ItemCave.EnumType.AQUAMARINE.getItemDamage()),
+			new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.AQUAMARINE_BLOCK.getMetadata()));
 
-		GameRegistry.addShapelessRecipe(new ItemStack(cave_item, 9, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()),
-			new ItemStack(CaveBlocks.cave_block, 1, BlockCave.EnumType.MAGNITE_BLOCK.getMetadata()));
+		GameRegistry.addShapelessRecipe(new ItemStack(CAVE_ITEM, 9, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()),
+			new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.MAGNITE_BLOCK.getMetadata()));
 
-		ItemStack material = new ItemStack(cave_item, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage());
+		ItemStack material = new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage());
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(aquamarine_pickaxe,
+		GameRegistry.addRecipe(new ShapedOreRecipe(AQUAMARINE_PICKAXE,
 			"AAA", " S ", " S ",
 			'A', material.copy(),
 			'S', "stickWood"
 		));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(aquamarine_axe,
+		GameRegistry.addRecipe(new ShapedOreRecipe(AQUAMARINE_AXE,
 			"AA", "AS", " S",
 			'A', material.copy(),
 			'S', "stickWood"
 		));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(aquamarine_shovel,
+		GameRegistry.addRecipe(new ShapedOreRecipe(AQUAMARINE_SHOVEL,
 			"A", "S", "S",
 			'A', material.copy(),
 			'S', "stickWood"
 		));
 
-		material = new ItemStack(cave_item, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage());
+		material = new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage());
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(magnite_sword,
+		GameRegistry.addRecipe(new ShapedOreRecipe(MAGNITE_SWORD,
 			"M", "M", "S",
 			'M', material.copy(),
 			'S', "stickWood"
 		));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(magnite_pickaxe,
+		GameRegistry.addRecipe(new ShapedOreRecipe(MAGNITE_PICKAXE,
 			"MMM", " S ", " S ",
 			'M', material.copy(),
 			'S', "stickWood"
 		));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(magnite_axe,
+		GameRegistry.addRecipe(new ShapedOreRecipe(MAGNITE_AXE,
 			"MM", "MS", " S",
 			'M', material.copy(),
 			'S', "stickWood"
 		));
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(magnite_shovel,
+		GameRegistry.addRecipe(new ShapedOreRecipe(MAGNITE_SHOVEL,
 			"M", "S", "S",
 			'M', material.copy(),
 			'S', "stickWood"
