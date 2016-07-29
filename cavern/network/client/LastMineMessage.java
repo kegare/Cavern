@@ -1,9 +1,14 @@
 package cavern.network.client;
 
+import cavern.api.IMineBonus;
+import cavern.config.GeneralConfig;
+import cavern.network.server.MineBonusMessage;
 import cavern.stats.MinerStats;
 import cavern.util.BlockMeta;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -46,9 +51,43 @@ public class LastMineMessage implements IMessage, IMessageHandler<LastMineMessag
 	@Override
 	public IMessage onMessage(LastMineMessage message, MessageContext ctx)
 	{
-		MinerStats.lastMine = new BlockMeta(message.name, message.meta);
-		MinerStats.lastMinePoint = message.point;
-		MinerStats.lastMineDisplayTime = Minecraft.getSystemTime();
+		MinerStats.setLastMine(new BlockMeta(message.name, message.meta), message.point);
+
+		long time = Minecraft.getSystemTime();
+
+		if (GeneralConfig.miningCombo)
+		{
+			EntityPlayer player = FMLClientHandler.instance().getClientPlayerEntity();
+
+			if (time - MinerStats.lastMineTime <= 10000L)
+			{
+				++MinerStats.mineCombo;
+
+				int combo = MinerStats.mineCombo;
+				boolean flag = false;
+
+				for (IMineBonus bonus : MinerStats.MINE_BONUS)
+				{
+					if (bonus.canMineBonus(combo, player))
+					{
+						bonus.onMineBonus(true, combo, player);
+
+						flag = true;
+					}
+				}
+
+				if (flag)
+				{
+					return new MineBonusMessage(combo);
+				}
+			}
+			else
+			{
+				MinerStats.mineCombo = 0;
+			}
+		}
+
+		MinerStats.lastMineTime = time;
 
 		return null;
 	}

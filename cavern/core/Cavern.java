@@ -95,6 +95,8 @@ public class Cavern
 		CaveNetworkRegistry.registerMessages();
 
 		CaveCapabilities.registerCapabilities();
+
+		MinerStats.registerMineBonus();
 	}
 
 	@EventHandler

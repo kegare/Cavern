@@ -52,6 +52,11 @@ public enum MinerRank
 		return "cavern.minerrank." + name;
 	}
 
+	public Item getPickaxe()
+	{
+		return pickaxe;
+	}
+
 	@SideOnly(Side.CLIENT)
 	public ItemStack getRenderItemStack()
 	{

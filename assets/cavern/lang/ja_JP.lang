@@ -10,6 +10,7 @@ cavern.description=洞窟ディメンションを追加します。
 cavern.version.message=%s の新しいバージョンが利用可能です
 cavern.version.message.beta=あなたは %s のベータバージョンを利用しています
 cavern.version.message.alpha=あなたは %s のアルファバージョンを利用しています
+cavern.version.message.dev=あなたは %s の開発者向けバージョンを利用しています
 
 cavern.config.title=Cavernの設定
 cavern.config.detail=詳細情報
@@ -36,6 +37,8 @@ cavern.config.general.miningPointItems=採掘ポイントの有効なアイテ�
 cavern.config.general.miningPointItems.tooltip=採掘ポイントを得ることができるアイテムを指定します。何も指定しない場合、自動で判定されます。
 cavern.config.general.miningPoints=採掘ポイント
 cavern.config.general.miningPoints.tooltip=ブロックごとに得られる採掘ポイントを設定します。
+cavern.config.general.miningCombo=採掘コンボ
+cavern.config.general.miningCombo.tooltip=採掘コンボを有効にします。
 cavern.config.general.caveborn=ケイブボーン
 cavern.config.general.caveborn.tooltip=ケイブボーンタイプを指定します。初めてワールドに入った際に、洞窟ディメンションへ転送します。
 cavern.config.general.caveborn.0=無効

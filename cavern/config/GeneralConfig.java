@@ -30,6 +30,7 @@ public class GeneralConfig
 	public static boolean showMinerRank;
 	public static ConfigItems miningPointItems = new ConfigItems();
 	public static ConfigMiningPoints miningPoints = new ConfigMiningPoints();
+	public static boolean miningCombo;
 
 	public static ConfigCaveborn caveborn = new ConfigCaveborn();
 
@@ -124,6 +125,15 @@ public class GeneralConfig
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		miningPoints.setValues(prop.getStringList());
+
+		prop = config.get(category, "miningCombo", true);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, does not have to match client-side and server-side.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		miningCombo = prop.getBoolean(miningCombo);
 
 		prop = config.get(category, "caveborn", ConfigCaveborn.Type.DISABLED.ordinal());
 		prop.setMinValue(0).setMaxValue(ConfigCaveborn.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleInteger);

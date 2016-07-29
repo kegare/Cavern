@@ -222,8 +222,7 @@ public class CaveEventHooks
 
 						stats.addPoint(amount);
 
-						MinerStats.lastMine = new BlockMeta(state);
-						MinerStats.lastMinePoint = amount;
+						MinerStats.setLastMine(new BlockMeta(state), amount);
 
 						CaveNetworkRegistry.sendTo(new LastMineMessage(MinerStats.lastMine, MinerStats.lastMinePoint), thePlayer);
 					}

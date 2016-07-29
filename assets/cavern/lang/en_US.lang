@@ -10,6 +10,7 @@ cavern.description=Adds the cave dimensions. There's no surface there.
 cavern.version.message=A new %s version is available
 cavern.version.message.beta=You are using a Beta version of %s
 cavern.version.message.alpha=You are using an Alpha version of %s
+cavern.version.message.dev=You are using a Dev version of %s
 
 cavern.config.title=Cavern Configuration
 cavern.config.detail=Detail info
@@ -36,6 +37,8 @@ cavern.config.general.miningPointItems=Mining Point Items
 cavern.config.general.miningPointItems.tooltip=Specify the items that can getting mining point. If not specify, it will be decided automatically.
 cavern.config.general.miningPoints=Mining Points
 cavern.config.general.miningPoints.tooltip=Specify the mining point for each block.
+cavern.config.general.miningCombo=Mining Combo
+cavern.config.general.miningCombo.tooltip=Whether to enable the mining combo.
 cavern.config.general.caveborn=Caveborn
 cavern.config.general.caveborn.tooltip=Specify the caveborn type. Transfer to the cave dimension when join to world for the first time.
 cavern.config.general.caveborn.0=Disabled

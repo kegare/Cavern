@@ -1,16 +1,22 @@
 package cavern.stats;
 
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 
+import cavern.api.IMineBonus;
 import cavern.api.IMinerStats;
 import cavern.api.event.MinerStatsEvent;
 import cavern.capability.CaveCapabilities;
 import cavern.core.CaveSounds;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.MinerStatsAdjustMessage;
+import cavern.stats.bonus.MineBonusExperience;
+import cavern.stats.bonus.MineBonusHaste;
+import cavern.stats.bonus.MineBonusResistance;
 import cavern.util.BlockMeta;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -33,12 +39,15 @@ import net.minecraftforge.oredict.OreDictionary;
 public class MinerStats implements IMinerStats
 {
 	public static final Table<Block, Integer, Integer> MINING_POINTS = HashBasedTable.create();
+	public static final Set<IMineBonus> MINE_BONUS = Sets.newHashSet();
 
 	public static BlockMeta lastMine;
 	public static int lastMinePoint;
 
 	@SideOnly(Side.CLIENT)
-	public static long lastMineDisplayTime;
+	public static long lastMineTime;
+	@SideOnly(Side.CLIENT)
+	public static int mineCombo;
 
 	private final EntityPlayer entityPlayer;
 
@@ -262,5 +271,18 @@ public class MinerStats implements IMinerStats
 				}
 			}
 		}
+	}
+
+	public static void setLastMine(BlockMeta blockMeta, int point)
+	{
+		lastMine = blockMeta;
+		lastMinePoint = point;
+	}
+
+	public static void registerMineBonus()
+	{
+		MINE_BONUS.add(new MineBonusExperience());
+		MINE_BONUS.add(new MineBonusHaste());
+		MINE_BONUS.add(new MineBonusResistance());
 	}
 }

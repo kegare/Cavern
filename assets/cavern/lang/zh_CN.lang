@@ -10,6 +10,7 @@ cavern.description=添加洞穴维度
 cavern.version.message=%s 新版本可用
 cavern.version.message.beta=你用的测试版本为 %s
 cavern.version.message.alpha=你用的Alpha版本为 %s
+cavern.version.message.dev=你用的开发版本为 %s
 
 cavern.config.title=Cavern的设定
 cavern.config.detail=详细信息

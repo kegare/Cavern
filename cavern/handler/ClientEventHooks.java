@@ -49,7 +49,6 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.common.ForgeVersion.Status;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.GuiModList;
@@ -217,8 +216,9 @@ public class ClientEventHooks
 			int originX = x;
 			int originY = y;
 			boolean flag = false;
+			long timeDiff = Minecraft.getSystemTime() - MinerStats.lastMineTime;
 
-			if (MinerStats.lastMineDisplayTime > 0 && Minecraft.getSystemTime() - MinerStats.lastMineDisplayTime < 2000 && MinerStats.lastMine != null && MinerStats.lastMinePoint != 0)
+			if (MinerStats.lastMineTime > 0 && timeDiff < 2000L && MinerStats.lastMine != null && MinerStats.lastMinePoint != 0)
 			{
 				Block block = MinerStats.lastMine.getBlock();
 
@@ -257,6 +257,28 @@ public class ClientEventHooks
 				point = " " + point;
 			}
 
+			String combo = null;
+
+			if (timeDiff > 10000L)
+			{
+				MinerStats.mineCombo = 0;
+			}
+			else if (MinerStats.mineCombo > 0)
+			{
+				TextFormatting format = TextFormatting.WHITE;
+
+				if (timeDiff < 1500L)
+				{
+					format = TextFormatting.BOLD;
+				}
+				else if (timeDiff > 7500L)
+				{
+					format = TextFormatting.GRAY;
+				}
+
+				combo = format + String.format("%d COMBO!", MinerStats.mineCombo) + TextFormatting.RESET;
+			}
+
 			if (type.isLeft())
 			{
 				renderer.drawStringWithShadow(point, x + 5, y + 9, 0xCECECE);
@@ -268,10 +290,20 @@ public class ClientEventHooks
 
 					if (type.isTop())
 					{
+						if (combo != null)
+						{
+							renderer.drawStringWithShadow(combo, x + 5, y + 29, 0xFFFFFF);
+						}
+
 						renderer.drawStringWithShadow(rank, x + 5, y + 19, 0xCECECE);
 					}
 					else
 					{
+						if (combo != null)
+						{
+							renderer.drawStringWithShadow(combo, x + 5, y - 24, 0xFFFFFF);
+						}
+
 						renderer.drawStringWithShadow(rank, x + 5, y - 12, 0xCECECE);
 					}
 				}
@@ -287,10 +319,20 @@ public class ClientEventHooks
 
 					if (type.isTop())
 					{
+						if (combo != null)
+						{
+							renderer.drawStringWithShadow(combo, x + 17 - renderer.getStringWidth(combo), y + 29, 0xFFFFFF);
+						}
+
 						renderer.drawStringWithShadow(rank, x + 17 - renderer.getStringWidth(rank), y + 19, 0xCECECE);
 					}
 					else
 					{
+						if (combo != null)
+						{
+							renderer.drawStringWithShadow(combo, x + 17 - renderer.getStringWidth(combo), y - 24, 0xFFFFFF);
+						}
+
 						renderer.drawStringWithShadow(rank, x + 17 - renderer.getStringWidth(rank), y - 12, 0xCECECE);
 					}
 				}
@@ -353,39 +395,44 @@ public class ClientEventHooks
 	{
 		Minecraft mc = FMLClientHandler.instance().getClient();
 
-		mc.addScheduledTask(() ->
+		if (GeneralConfig.versionNotify)
 		{
-			if (Version.DEV_DEBUG || Version.getStatus() == Status.AHEAD || Version.getStatus() == Status.BETA || GeneralConfig.versionNotify && Version.isOutdated())
+			ITextComponent message;
+			ITextComponent name = new TextComponentString(Cavern.metadata.name);
+			name.getStyle().setColor(TextFormatting.AQUA);
+
+			if (Version.isOutdated())
 			{
-				ITextComponent name = new TextComponentString(Cavern.metadata.name);
-				name.getStyle().setColor(TextFormatting.AQUA);
 				ITextComponent latest = new TextComponentString(Version.getLatest().toString());
 				latest.getStyle().setColor(TextFormatting.YELLOW);
-
-				ITextComponent message;
 
 				message = new TextComponentTranslation("cavern.version.message", name);
 				message.appendText(" : ").appendSibling(latest);
 				message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, Cavern.metadata.url));
 
 				mc.ingameGUI.getChatGUI().printChatMessage(message);
-				message = null;
-
-				if (Version.isBeta())
-				{
-					message = new TextComponentTranslation("cavern.version.message.beta", name);
-				}
-				else if (Version.isAlpha())
-				{
-					message = new TextComponentTranslation("cavern.version.message.alpha", name);
-				}
-
-				if (message != null)
-				{
-					mc.ingameGUI.getChatGUI().printChatMessage(message);
-				}
 			}
-		});
+
+			message = null;
+
+			if (Version.DEV_DEBUG)
+			{
+				message = new TextComponentTranslation("cavern.version.message.dev", name);
+			}
+			else if (Version.isBeta())
+			{
+				message = new TextComponentTranslation("cavern.version.message.beta", name);
+			}
+			else if (Version.isAlpha())
+			{
+				message = new TextComponentTranslation("cavern.version.message.alpha", name);
+			}
+
+			if (message != null)
+			{
+				mc.ingameGUI.getChatGUI().printChatMessage(message);
+			}
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
