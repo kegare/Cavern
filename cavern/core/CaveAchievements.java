@@ -1,5 +1,6 @@
 package cavern.core;
 
+import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
 import cavern.item.CaveItems;
 import cavern.item.ItemAcresia;
@@ -22,6 +23,8 @@ public class CaveAchievements
 	public static final Achievement AQUAMARINE = CaveAchievement.of("aquamarine", -3, -3, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()), CAVERN);
 	public static final Achievement MAGNITE = CaveAchievement.of("magnite", 0, -4, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()), CAVERN);
 	public static final Achievement ACRESIA = CaveAchievement.of("acresia", 3, -3, new ItemStack(CaveBlocks.ACRESIA, 1, ItemAcresia.EnumType.FRUITS.getItemDamage()), CAVELAND);
+	public static final Achievement RANDOMITE = CaveAchievement.of("randomite", 3, 3, new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.RANDOMITE_ORE.getMetadata()), CAVERN);
+	public static final Achievement HEXCITE = CaveAchievement.of("hexcite", -3, 4, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()), CAVERN);
 
 	public static void registerAchievements()
 	{

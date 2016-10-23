@@ -38,7 +38,8 @@ public class ItemCave extends Item
 	public enum EnumType
 	{
 		AQUAMARINE(0, "aquamarine"),
-		MAGNITE_INGOT(1, "ingotMagnite");
+		MAGNITE_INGOT(1, "ingotMagnite"),
+		HEXCITE(2, "hexcite");
 
 		private static final EnumType[] DAMAGE_LOOKUP = new EnumType[values().length];
 

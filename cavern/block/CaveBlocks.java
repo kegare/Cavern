@@ -87,7 +87,7 @@ public class CaveBlocks
 		registerModel(CAVERN_PORTAL, "cavern_portal");
 		registerModel(AQUA_CAVERN_PORTAL, "aqua_cavern_portal");
 		registerModel(CAVELAND_PORTAL, "caveland_portal");
-		registerModelWithMeta(CAVE_BLOCK, "aquamarine_ore", "aquamarine_block", "magnite_ore", "magnite_block");
+		registerModelWithMeta(CAVE_BLOCK, "aquamarine_ore", "aquamarine_block", "magnite_ore", "magnite_block", "randomite_ore", "hexcite_ore", "hexcite_block");
 		registerModelWithMeta(ACRESIA, "acresia_seeds", "acresia_fruits");
 		registerVanillaModelWithMeta(PERVERTED_LOG, "oak_log", "spruce_log", "birch_log", "jungle_log");
 		registerVanillaModelWithMeta(PERVERTED_LEAVES, "oak_leaves", "spruce_leaves", "birch_leaves", "jungle_leaves");
@@ -161,6 +161,11 @@ public class CaveBlocks
 			'M', new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage())
 		);
 
+		GameRegistry.addShapedRecipe(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_BLOCK.getMetadata()),
+			"HHH", "HHH", "HHH",
+			'H', new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage())
+		);
+
 		GameRegistry.addShapelessRecipe(new ItemStack(Items.STICK, 8), new ItemStack(PERVERTED_LOG, 1, OreDictionary.WILDCARD_VALUE));
 
 		for (BlockPlanks.EnumType type : BlockOldLog.VARIANT.getAllowedValues())
@@ -180,6 +185,9 @@ public class CaveBlocks
 
 		GameRegistry.addSmelting(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.MAGNITE_ORE.getMetadata()),
 			new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()), 0.7F);
+
+		GameRegistry.addSmelting(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_ORE.getMetadata()),
+			new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()), 1.0F);
 
 		GameRegistry.addSmelting(new ItemStack(PERVERTED_LOG, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.COAL, 1, 1), 0.0F);
 	}

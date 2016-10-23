@@ -9,25 +9,31 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public enum MinerRank
 {
-	BEGINNER(0, 0, "beginner", Items.WOODEN_PICKAXE),
-	STONE_MINER(1, 50, "stoneMiner", Items.STONE_PICKAXE),
-	IRON_MINER(2, 100, "ironMiner", Items.IRON_PICKAXE),
-	GOLD_MINER(3, 1000, "goldMiner", Items.GOLDEN_PICKAXE),
-	AQUA_MINER(4, 3000, "aquaMiner", CaveItems.AQUAMARINE_PICKAXE),
-	DIAMOND_MINER(5, 10000, "diamondMiner", Items.DIAMOND_PICKAXE);
+	BEGINNER(0, 0, 1.0F, "beginner", Items.WOODEN_PICKAXE),
+	STONE_MINER(1, 50, 1.0F, "stoneMiner", Items.STONE_PICKAXE),
+	IRON_MINER(2, 100, 1.0F, "ironMiner", Items.IRON_PICKAXE),
+	MAGNITE_MINER(3, 300, 1.1F, "magniteMiner", CaveItems.MAGNITE_PICKAXE),
+	GOLD_MINER(4, 1000, 1.2F, "goldMiner", Items.GOLDEN_PICKAXE),
+	AQUA_MINER(5, 1500, 1.25F, "aquaMiner", CaveItems.AQUAMARINE_PICKAXE),
+	HEXCITE_MINER(6, 3000, 1.5F, "hexciteMiner", CaveItems.HEXCITE_PICKAXE),
+	DIAMOND_MINER(7, 5000, 1.75F, "diamondMiner", Items.DIAMOND_PICKAXE);
+
+	private static final MinerRank[] RANK_LOOKUP = new MinerRank[values().length];
 
 	private int rank;
 	private int phase;
+	private float boost;
 	private String name;
 	private Item pickaxe;
 
 	@SideOnly(Side.CLIENT)
 	private ItemStack renderItemStack;
 
-	private MinerRank(int rank, int phase, String name, Item pickaxe)
+	private MinerRank(int rank, int phase, float boost, String name, Item pickaxe)
 	{
 		this.rank = rank;
 		this.phase = phase;
+		this.boost = boost;
 		this.name = name;
 		this.pickaxe = pickaxe;
 	}
@@ -40,6 +46,11 @@ public enum MinerRank
 	public int getPhase()
 	{
 		return phase;
+	}
+
+	public float getBoost()
+	{
+		return boost;
 	}
 
 	public String getName()
@@ -75,13 +86,21 @@ public enum MinerRank
 			rank = 0;
 		}
 
-		int max = values().length - 1;
+		int max = RANK_LOOKUP.length - 1;
 
 		if (rank > max)
 		{
 			rank = max;
 		}
 
-		return values()[rank];
+		return RANK_LOOKUP[rank];
+	}
+
+	static
+	{
+		for (MinerRank rank : values())
+		{
+			RANK_LOOKUP[rank.getRank()] = rank;
+		}
 	}
 }

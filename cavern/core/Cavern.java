@@ -2,6 +2,8 @@ package cavern.core;
 
 import java.util.Set;
 
+import org.apache.logging.log4j.Level;
+
 import com.google.common.collect.Sets;
 
 import cavern.api.CavernAPI;
@@ -12,6 +14,7 @@ import cavern.config.CavelandConfig;
 import cavern.config.CavernConfig;
 import cavern.config.Config;
 import cavern.config.GeneralConfig;
+import cavern.entity.CaveEntityRegistry;
 import cavern.handler.CaveEventHooks;
 import cavern.handler.CaveFuelHandler;
 import cavern.handler.CavebornEventHooks;
@@ -20,18 +23,25 @@ import cavern.handler.api.CavernAPIHandler;
 import cavern.handler.api.DimensionHandler;
 import cavern.item.CaveItems;
 import cavern.network.CaveNetworkRegistry;
+import cavern.plugin.HaCPlugin;
 import cavern.stats.MinerStats;
 import cavern.util.BlockMeta;
+import cavern.util.CaveLog;
 import cavern.util.Version;
 import cavern.world.CaveType;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.Mod.Metadata;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -53,6 +63,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class Cavern
 {
 	public static final String MODID = "cavern";
+
+	@Instance(MODID)
+	public static Cavern instance;
 
 	@Metadata(MODID)
 	public static ModMetadata metadata;
@@ -111,6 +124,8 @@ public class Cavern
 		CaveBlocks.registerRecipes();
 		CaveItems.registerRecipes();
 
+		CaveEntityRegistry.registerEntities();
+
 		CavernConfig.syncConfig();
 		CavernConfig.syncBiomesConfig();
 		CavernConfig.syncVeinsConfig();
@@ -137,6 +152,8 @@ public class Cavern
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
+		CaveEntityRegistry.addSpawns();
+
 		MinerStats.setPointAmount("oreCoal", 1);
 		MinerStats.setPointAmount("oreIron", 1);
 		MinerStats.setPointAmount("oreGold", 1);
@@ -180,6 +197,55 @@ public class Cavern
 		MinerStats.setPointAmount("oreCavenium", 2);
 		MinerStats.setPointAmount("oreAquamarine", 2);
 		MinerStats.setPointAmount("oreMagnite", 1);
+
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.DIRT, 6), 15);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.SAND, 6), 12);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.OAK.getMetadata()), 20);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.SPRUCE.getMetadata()), 20);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.BIRCH.getMetadata()), 20);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.TORCH, 2), 50);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COAL, 5), 20);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.IRON_INGOT), 20);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.GOLD_INGOT), 10);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.EMERALD), 10);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.APPLE, 3), 30);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.BAKED_POTATO, 3), 30);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.BREAD, 2), 30);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COOKED_BEEF), 20);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COOKED_CHICKEN), 20);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COOKED_FISH), 20);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COOKED_MUTTON), 20);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COOKED_PORKCHOP), 20);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COOKED_RABBIT), 20);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.BONE, 5), 30);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.IRON_SWORD), 10);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.IRON_PICKAXE), 10);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.IRON_AXE), 10);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.IRON_SHOVEL), 10);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.IRON_HOE), 8);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND), 3);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND_SWORD), 2);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND_PICKAXE), 2);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND_AXE), 2);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND_SHOVEL), 2);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND_HOE), 1);
+
+		loadPlugins();
+	}
+
+	public void loadPlugins()
+	{
+		if (Loader.isModLoaded(HaCPlugin.LIB_MODID))
+		{
+			try
+			{
+				HaCPlugin.load();
+			}
+			catch (Exception e)
+			{
+				CaveLog.log(Level.WARN, e, "Failed to load the HaC mod plugin.");
+			}
+		}
 	}
 
 	@EventHandler

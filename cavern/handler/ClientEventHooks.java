@@ -173,7 +173,7 @@ public class ClientEventHooks
 		ScaledResolution resolution = event.getResolution();
 
 		if (CavernAPI.dimension.isEntityInCaves(player) && (mc.currentScreen == null || GuiChat.class.isInstance(mc.currentScreen)) &&
-			(mc.thePlayer.capabilities.isCreativeMode || mc.gameSettings.advancedItemTooltips ||
+			(GeneralConfig.alwaysShowMinerStatus || mc.thePlayer.capabilities.isCreativeMode || mc.gameSettings.advancedItemTooltips ||
 			GeneralConfig.isMiningPointItem(player.getHeldItemMainhand()) || GeneralConfig.isMiningPointItem(player.getHeldItemOffhand())))
 		{
 			ConfigDisplayPos.Type type = GeneralConfig.miningPointPosition.getType();
@@ -259,7 +259,7 @@ public class ClientEventHooks
 
 			String combo = null;
 
-			if (timeDiff > 10000L)
+			if (timeDiff > 15000L)
 			{
 				MinerStats.mineCombo = 0;
 			}
@@ -267,11 +267,11 @@ public class ClientEventHooks
 			{
 				TextFormatting format = TextFormatting.WHITE;
 
-				if (timeDiff < 1500L)
+				if (timeDiff < 3000L)
 				{
 					format = TextFormatting.BOLD;
 				}
-				else if (timeDiff > 7500L)
+				else if (timeDiff > 12000L)
 				{
 					format = TextFormatting.GRAY;
 				}

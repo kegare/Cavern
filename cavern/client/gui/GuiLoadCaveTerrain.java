@@ -24,7 +24,7 @@ public class GuiLoadCaveTerrain extends GuiDownloadCaveTerrain
 	@Override
 	public void updateScreen()
 	{
-		if (mc.thePlayer != null && (mc.thePlayer.onGround || mc.thePlayer.capabilities.isFlying))
+		if (mc.thePlayer != null && (mc.thePlayer.onGround || mc.thePlayer.capabilities.isFlying || mc.thePlayer.isInWater()))
 		{
 			mc.displayGuiScreen(null);
 			mc.setIngameFocus();

@@ -59,7 +59,7 @@ public class LastMineMessage implements IMessage, IMessageHandler<LastMineMessag
 		{
 			EntityPlayer player = FMLClientHandler.instance().getClientPlayerEntity();
 
-			if (time - MinerStats.lastMineTime <= 10000L)
+			if (time - MinerStats.lastMineTime <= 15000L)
 			{
 				++MinerStats.mineCombo;
 

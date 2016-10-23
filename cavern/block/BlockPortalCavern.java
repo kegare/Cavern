@@ -9,10 +9,13 @@ import cavern.client.gui.GuiRegeneration;
 import cavern.config.CavernConfig;
 import cavern.core.CaveSounds;
 import cavern.core.Cavern;
+import cavern.plugin.HaCPlugin;
 import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
 import cavern.world.CaveType;
 import cavern.world.TeleporterCavern;
+import defeatedcrow.hac.api.climate.DCHeatTier;
+import defeatedcrow.hac.api.climate.IHeatTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPortal;
 import net.minecraft.block.SoundType;
@@ -39,10 +42,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockPortalCavern extends BlockPortal
+@Interface(iface = "defeatedcrow.hac.api.climate.IHeatTile", modid = HaCPlugin.LIB_MODID, striprefs = true)
+public class BlockPortalCavern extends BlockPortal implements IHeatTile
 {
 	public BlockPortalCavern()
 	{
@@ -312,6 +317,17 @@ public class BlockPortalCavern extends BlockPortal
 	public ItemStack getItem(World world, BlockPos pos, IBlockState state)
 	{
 		return new ItemStack(this);
+	}
+
+	@Override
+	public DCHeatTier getHeatTier(World world, BlockPos to, BlockPos from)
+	{
+		if (world.provider.getHasNoSky())
+		{
+			return DCHeatTier.HOT;
+		}
+
+		return DCHeatTier.COLD;
 	}
 
 	public class Size

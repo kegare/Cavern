@@ -237,10 +237,11 @@ public class CaveEventHooks
 		float original = event.getOriginalSpeed();
 		EntityPlayer player = event.getEntityPlayer();
 		ItemStack heldMain = player.getHeldItemMainhand();
+		boolean miner = CavernAPI.dimension.isEntityInCaves(player) && CaveUtils.isItemPickaxe(heldMain);
 
 		if (heldMain != null && player.isInsideOfMaterial(Material.WATER))
 		{
-			if (CavernAPI.dimension.isEntityInCaves(player) && CaveUtils.isItemPickaxe(heldMain) && MinerStats.get(player).getRank() >= MinerRank.AQUA_MINER.getRank())
+			if (miner && MinerStats.get(player).getRank() >= MinerRank.AQUA_MINER.getRank())
 			{
 				if (player.onGround)
 				{
@@ -260,6 +261,17 @@ public class CaveEventHooks
 				{
 					event.setNewSpeed(speed);
 				}
+			}
+		}
+
+		if (miner)
+		{
+			int rank = MinerStats.get(player).getRank();
+			float boost = MinerRank.getRank(rank).getBoost();
+
+			if (boost != 1.0F)
+			{
+				event.setNewSpeed(event.getNewSpeed() * boost);
 			}
 		}
 	}
@@ -338,6 +350,9 @@ public class CaveEventHooks
 						{
 							case AQUAMARINE:
 								player.addStat(CaveAchievements.AQUAMARINE);
+								break;
+							case HEXCITE:
+								player.addStat(CaveAchievements.HEXCITE);
 								break;
 							default:
 						}

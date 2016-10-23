@@ -48,13 +48,13 @@ public class CaveCapabilities
 	}
 
 	@SubscribeEvent
-	public void onAttachEntityCapabilities(AttachCapabilitiesEvent.Entity event)
+	public void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event)
 	{
 		event.addCapability(PORTAL_CACHE_ID, new CapabilityPortalCache());
 
-		if (event.getEntity() instanceof EntityPlayer)
+		if (event.getObject() instanceof EntityPlayer)
 		{
-			EntityPlayer player = (EntityPlayer)event.getEntity();
+			EntityPlayer player = (EntityPlayer)event.getObject();
 
 			event.addCapability(MINER_STATS_ID, new CapabilityMinerStats(player));
 		}
