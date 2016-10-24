@@ -33,13 +33,17 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.Mod.Metadata;
@@ -51,6 +55,7 @@ import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod
@@ -58,8 +63,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 	modid = Cavern.MODID,
 	guiFactory = "cavern.client.config.CaveGuiFactory",
 	updateJSON = "https://dl.dropboxusercontent.com/u/51943112/versions/cavern.json",
-	acceptedMinecraftVersions = "[1.9.4,)"
+	acceptedMinecraftVersions = "[1.10.2,)",
+	dependencies = "required-after:Forge@[12.18.2.2099,)"
 )
+@EventBusSubscriber
 public class Cavern
 {
 	public static final String MODID = "cavern";
@@ -84,16 +91,29 @@ public class Cavern
 		CavernAPI.dimension = new DimensionHandler();
 	}
 
+	@SubscribeEvent
+	public static void registerBlocks(RegistryEvent.Register<Block> event)
+	{
+		CaveBlocks.registerBlocks();
+	}
+
+	@SubscribeEvent
+	public static void registerItems(RegistryEvent.Register<Item> event)
+	{
+		CaveItems.registerItems();
+	}
+
+	@SubscribeEvent
+	public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
+	{
+		CaveSounds.registerSounds();
+	}
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		Cavern.proxy.initConfigEntries();
 		Cavern.proxy.registerRenderers();
-
-		GeneralConfig.syncConfig();
-
-		CaveBlocks.registerBlocks();
-		CaveItems.registerItems();
 
 		if (event.getSide().isClient())
 		{
@@ -101,7 +121,7 @@ public class Cavern
 			CaveItems.registerModels();
 		}
 
-		CaveSounds.registerSounds();
+		GeneralConfig.syncConfig();
 
 		GameRegistry.registerFuelHandler(new CaveFuelHandler());
 

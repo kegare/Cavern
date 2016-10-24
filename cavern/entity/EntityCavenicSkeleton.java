@@ -35,7 +35,7 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 
 	protected void initCustomValues()
 	{
-		aiArrowAttack = new EntityAIAttackCavenicBow(this, 0.975D, 0, 5.0F);
+		aiArrowAttack = new EntityAIAttackCavenicBow(this, 0.975D, 5.0F);
 	}
 
 	protected void applyCustomValues()
@@ -92,7 +92,7 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 
 		if (i > 0)
 		{
-			arrow.setDamage(arrow.getDamage() + i * 0.4D + 0.5D);
+			arrow.setDamage(arrow.getDamage() + i * 0.45D + 0.5D);
 		}
 
 		if (j > 0)
@@ -115,7 +115,7 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float damage)
 	{
-		return !source.isFireDamage() && source != DamageSource.fall && super.attackEntityFrom(source, damage);
+		return !source.isFireDamage() && source != DamageSource.fall && source.getEntity() != this && super.attackEntityFrom(source, damage);
 	}
 
 	@Override

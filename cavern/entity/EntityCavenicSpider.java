@@ -8,11 +8,11 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
 public class EntityCavenicSpider extends EntitySpider
@@ -30,11 +30,14 @@ public class EntityCavenicSpider extends EntitySpider
 
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
 		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.5D);
-		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(2.0D);
+		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.60000001192092896D);
 	}
 
 	@Override
-	protected void playStepSound(BlockPos pos, Block block) {}
+	protected void playStepSound(BlockPos pos, Block block)
+	{
+		playSound(SoundEvents.ENTITY_SPIDER_STEP, 0.05F, 1.0F);
+	}
 
 	@Override
 	protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
@@ -54,20 +57,29 @@ public class EntityCavenicSpider extends EntitySpider
 		{
 			if (entity instanceof EntityLivingBase)
 			{
-				byte sec = 3;
+				int sec;
 
-				if (worldObj.getDifficulty() == EnumDifficulty.NORMAL)
+				switch (worldObj.getDifficulty())
 				{
-					sec = 7;
-				}
-				else if (worldObj.getDifficulty() == EnumDifficulty.HARD)
-				{
-					sec = 14;
+					case NORMAL:
+						sec = 5;
+						break;
+					case HARD:
+						sec = 10;
+						break;
+					default:
+						sec = 3;
+						break;
 				}
 
 				if (sec > 0)
 				{
-					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, sec * 20));
+					EntityLivingBase target = (EntityLivingBase)entity;
+
+					if (!target.isPotionActive(MobEffects.BLINDNESS))
+					{
+						target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, sec * 20));
+					}
 				}
 			}
 

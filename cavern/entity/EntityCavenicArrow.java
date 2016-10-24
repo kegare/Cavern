@@ -26,7 +26,7 @@ public class EntityCavenicArrow extends EntityTippedArrow
 	{
 		super.onUpdate();
 
-		if (inGround || timeInGround > 0)
+		if (timeInGround > 10)
 		{
 			setDead();
 		}

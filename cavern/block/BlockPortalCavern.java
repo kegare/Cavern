@@ -324,10 +324,10 @@ public class BlockPortalCavern extends BlockPortal implements IHeatTile
 	{
 		if (world.provider.getHasNoSky())
 		{
-			return DCHeatTier.HOT;
+			return DCHeatTier.WARM;
 		}
 
-		return DCHeatTier.COLD;
+		return DCHeatTier.COOL;
 	}
 
 	public class Size

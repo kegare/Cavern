@@ -11,6 +11,6 @@ public class HaCPlugin
 	@Method(modid = LIB_MODID)
 	public static void load()
 	{
-		DamageAPI.armorRegister.RegisterMaterial(CaveItems.HEXCITE_ARMOR, 0.75F);
+		DamageAPI.armorRegister.RegisterMaterial(CaveItems.HEXCITE_ARMOR, 0.5F);
 	}
 }
