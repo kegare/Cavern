@@ -2,6 +2,7 @@ package cavern.client.gui;
 
 import org.lwjgl.input.Keyboard;
 
+import cavern.api.CavernAPI;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.RegenerationGuiMessage.EnumType;
 import cavern.network.server.RegenerationMessage;
@@ -91,6 +92,28 @@ public class GuiRegeneration extends GuiScreen
 		if (backupHoverChecker == null)
 		{
 			backupHoverChecker = new HoverChecker(backupCheckBox, 800);
+		}
+
+		boolean flag = false;
+
+		if (CavernAPI.dimension.isAquaCavernDisabled())
+		{
+			aquaCavernCheckBox.enabled = false;
+			aquaCavernCheckBox.visible = false;
+			aquaCavernCheckBox.setIsChecked(false);
+
+			flag = true;
+		}
+
+		if (CavernAPI.dimension.isCavelandDisabled())
+		{
+			cavelandCheckBox.enabled = false;
+			cavelandCheckBox.visible = false;
+			cavelandCheckBox.setIsChecked(false);
+		}
+		else if (flag)
+		{
+			cavelandCheckBox.yPosition = cavernCheckBox.yPosition + cavernCheckBox.height + 5;
 		}
 	}
 

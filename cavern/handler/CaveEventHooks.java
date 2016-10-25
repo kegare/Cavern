@@ -5,9 +5,6 @@ import com.google.common.base.Strings;
 import cavern.api.CavernAPI;
 import cavern.api.IMinerStats;
 import cavern.block.CaveBlocks;
-import cavern.config.AquaCavernConfig;
-import cavern.config.CavelandConfig;
-import cavern.config.CavernConfig;
 import cavern.config.GeneralConfig;
 import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
@@ -399,15 +396,15 @@ public class CaveEventHooks
 
 		if (!world.isRemote)
 		{
-			if (dim == CavernConfig.dimensionId)
+			if (CavernAPI.dimension.isCavern(dim))
 			{
 				WorldProviderCavern.saveHandler.writeToFile();
 			}
-			else if (dim == AquaCavernConfig.dimensionId)
+			else if (CavernAPI.dimension.isAquaCavern(dim))
 			{
 				WorldProviderAquaCavern.saveHandler.writeToFile();
 			}
-			else if (dim == CavelandConfig.dimensionId)
+			else if (CavernAPI.dimension.isCaveland(dim))
 			{
 				WorldProviderCaveland.saveHandler.writeToFile();
 			}

@@ -1,5 +1,6 @@
 package cavern.world;
 
+import cavern.api.CavernAPI;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CavernConfig;
@@ -19,11 +20,21 @@ public final class CaveType
 	public static void registerDimensions()
 	{
 		DIM_CAVERN = DimensionType.register("Cavern", "_cavern", CavernConfig.dimensionId, WorldProviderCavern.class, true);
-		DIM_AQUA_CAVERN = DimensionType.register("Aqua Cavern", "_aqua_cavern", AquaCavernConfig.dimensionId, WorldProviderAquaCavern.class, false);
-		DIM_CAVELAND = DimensionType.register("Caveland", "_caveland", CavelandConfig.dimensionId, WorldProviderCaveland.class, true);
 
 		DimensionManager.registerDimension(DIM_CAVERN.getId(), DIM_CAVERN);
-		DimensionManager.registerDimension(DIM_AQUA_CAVERN.getId(), DIM_AQUA_CAVERN);
-		DimensionManager.registerDimension(DIM_CAVELAND.getId(), DIM_CAVELAND);
+
+		if (!CavernAPI.dimension.isAquaCavernDisabled())
+		{
+			DIM_AQUA_CAVERN = DimensionType.register("Aqua Cavern", "_aqua_cavern", AquaCavernConfig.dimensionId, WorldProviderAquaCavern.class, false);
+
+			DimensionManager.registerDimension(DIM_AQUA_CAVERN.getId(), DIM_AQUA_CAVERN);
+		}
+
+		if (!CavernAPI.dimension.isCavelandDisabled())
+		{
+			DIM_CAVELAND = DimensionType.register("Caveland", "_caveland", CavelandConfig.dimensionId, WorldProviderCaveland.class, true);
+
+			DimensionManager.registerDimension(DIM_CAVELAND.getId(), DIM_CAVELAND);
+		}
 	}
 }

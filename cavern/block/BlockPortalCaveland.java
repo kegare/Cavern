@@ -48,4 +48,10 @@ public class BlockPortalCaveland extends BlockPortalCavern
 	{
 		return CavernAPI.dimension.isEntityInCaveland(entity);
 	}
+
+	@Override
+	public boolean isDimensionDisabled()
+	{
+		return CavernAPI.dimension.isCavelandDisabled();
+	}
 }

@@ -1,5 +1,6 @@
 package cavern.network.server;
 
+import cavern.api.CavernAPI;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CavernConfig;
@@ -52,12 +53,12 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 			DimensionRegeneration.regenerate(CavernConfig.dimensionId, message.backup);
 		}
 
-		if (message.aquaCavern)
+		if (message.aquaCavern && !CavernAPI.dimension.isAquaCavernDisabled())
 		{
 			DimensionRegeneration.regenerate(AquaCavernConfig.dimensionId, message.backup);
 		}
 
-		if (message.caveland)
+		if (message.caveland && !CavernAPI.dimension.isCavelandDisabled())
 		{
 			DimensionRegeneration.regenerate(CavelandConfig.dimensionId, message.backup);
 		}

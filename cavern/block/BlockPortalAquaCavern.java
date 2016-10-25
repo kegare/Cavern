@@ -48,4 +48,10 @@ public class BlockPortalAquaCavern extends BlockPortalCavern
 	{
 		return CavernAPI.dimension.isEntityInAquaCavern(entity);
 	}
+
+	@Override
+	public boolean isDimensionDisabled()
+	{
+		return CavernAPI.dimension.isAquaCavernDisabled();
+	}
 }

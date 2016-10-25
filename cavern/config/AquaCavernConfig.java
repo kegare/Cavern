@@ -33,6 +33,7 @@ public class AquaCavernConfig
 {
 	public static Configuration config;
 
+	public static boolean dimensionDisabled;
 	public static int dimensionId;
 	public static int worldHeight;
 	public static boolean randomSeed;
@@ -58,6 +59,15 @@ public class AquaCavernConfig
 		{
 			config = Config.loadConfig("aquacavern", category);
 		}
+
+		prop = config.get(category, "dimensionDisabled", false);
+		prop.setRequiresMcRestart(true);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [default: " + prop.getDefault() + "]";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		dimensionDisabled = prop.getBoolean(dimensionDisabled);
 
 		prop = config.get(category, "dimension", -52);
 		prop.setRequiresMcRestart(true);

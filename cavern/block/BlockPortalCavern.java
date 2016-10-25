@@ -1,5 +1,6 @@
 package cavern.block;
 
+import java.util.List;
 import java.util.Random;
 
 import com.google.common.cache.LoadingCache;
@@ -24,12 +25,14 @@ import net.minecraft.block.state.BlockWorldState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.pattern.BlockPattern;
 import net.minecraft.block.state.pattern.BlockPattern.PatternHelper;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -146,10 +149,15 @@ public class BlockPortalCavern extends BlockPortal implements IHeatTile
 		return CavernAPI.dimension.isEntityInCavern(entity);
 	}
 
+	public boolean isDimensionDisabled()
+	{
+		return false;
+	}
+
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
 	{
-		if (!world.isRemote && entity.isEntityAlive())
+		if (!world.isRemote && entity.isEntityAlive() && !isDimensionDisabled())
 		{
 			if (entity.timeUntilPortal <= 0)
 			{
@@ -317,6 +325,16 @@ public class BlockPortalCavern extends BlockPortal implements IHeatTile
 	public ItemStack getItem(World world, BlockPos pos, IBlockState state)
 	{
 		return new ItemStack(this);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	{
+		if (!isDimensionDisabled())
+		{
+			super.getSubBlocks(itemIn, tab, list);
+		}
 	}
 
 	@Override

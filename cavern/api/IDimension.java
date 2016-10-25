@@ -10,6 +10,10 @@ public interface IDimension
 
 	public int getCavelandDimension();
 
+	public boolean isAquaCavernDisabled();
+
+	public boolean isCavelandDisabled();
+
 	public boolean isEntityInCavern(Entity entity);
 
 	public boolean isEntityInAquaCavern(Entity entity);
@@ -17,4 +21,12 @@ public interface IDimension
 	public boolean isEntityInCaveland(Entity entity);
 
 	public boolean isEntityInCaves(Entity entity);
+
+	public boolean isCavern(int dimension);
+
+	public boolean isAquaCavern(int dimension);
+
+	public boolean isCaveland(int dimension);
+
+	public boolean isCaves(int dimension);
 }
