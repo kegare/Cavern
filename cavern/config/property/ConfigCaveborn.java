@@ -31,7 +31,8 @@ public class ConfigCaveborn
 		DISABLED(null),
 		CAVERN(CaveBlocks.CAVERN_PORTAL),
 		AQUA_CAVERN(CaveBlocks.AQUA_CAVERN_PORTAL),
-		CAVELAND(CaveBlocks.CAVELAND_PORTAL);
+		CAVELAND(CaveBlocks.CAVELAND_PORTAL),
+		ICE_CAVERN(CaveBlocks.ICE_CAVERN_PORTAL);
 
 		private final BlockPortalCavern portalBlock;
 

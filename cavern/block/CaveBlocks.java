@@ -38,6 +38,7 @@ public class CaveBlocks
 	public static final BlockPortalCavern CAVERN_PORTAL = new BlockPortalCavern();
 	public static final BlockPortalAquaCavern AQUA_CAVERN_PORTAL = new BlockPortalAquaCavern();
 	public static final BlockPortalCaveland CAVELAND_PORTAL = new BlockPortalCaveland();
+	public static final BlockPortalIceCavern ICE_CAVERN_PORTAL = new BlockPortalIceCavern();
 	public static final BlockCave CAVE_BLOCK = new BlockCave();
 	public static final BlockAcresia ACRESIA = new BlockAcresia();
 	public static final BlockLogPerverted PERVERTED_LOG = new BlockLogPerverted();
@@ -54,6 +55,9 @@ public class CaveBlocks
 
 		GameRegistry.register(CAVELAND_PORTAL.setRegistryName("caveland_portal"));
 		GameRegistry.register(new ItemPortalCave(CAVELAND_PORTAL));
+
+		GameRegistry.register(ICE_CAVERN_PORTAL.setRegistryName("ice_cavern_portal"));
+		GameRegistry.register(new ItemPortalCave(ICE_CAVERN_PORTAL));
 
 		GameRegistry.register(CAVE_BLOCK.setRegistryName("cave_block"));
 		GameRegistry.register(new ItemBlockCave(CAVE_BLOCK));
@@ -87,7 +91,8 @@ public class CaveBlocks
 		registerModel(CAVERN_PORTAL, "cavern_portal");
 		registerModel(AQUA_CAVERN_PORTAL, "aqua_cavern_portal");
 		registerModel(CAVELAND_PORTAL, "caveland_portal");
-		registerModelWithMeta(CAVE_BLOCK, "aquamarine_ore", "aquamarine_block", "magnite_ore", "magnite_block", "randomite_ore", "hexcite_ore", "hexcite_block");
+		registerModel(ICE_CAVERN_PORTAL, "ice_cavern_portal");
+		registerModelWithMeta(CAVE_BLOCK, "aquamarine_ore", "aquamarine_block", "magnite_ore", "magnite_block", "randomite_ore", "hexcite_ore", "hexcite_block", "fissured_stone", "fissured_packed_ice");
 		registerModelWithMeta(ACRESIA, "acresia_seeds", "acresia_fruits");
 		registerVanillaModelWithMeta(PERVERTED_LOG, "oak_log", "spruce_log", "birch_log", "jungle_log");
 		registerVanillaModelWithMeta(PERVERTED_LEAVES, "oak_leaves", "spruce_leaves", "birch_leaves", "jungle_leaves");

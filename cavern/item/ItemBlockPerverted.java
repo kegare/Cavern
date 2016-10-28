@@ -29,6 +29,6 @@ public class ItemBlockPerverted extends ItemBlock
 	{
 		String name = Item.getItemFromBlock(basedBlock).getItemStackDisplayName(stack);
 
-		return ("" + Cavern.proxy.translate("tile.perverted.name")).trim() + " " + name;
+		return ("" + Cavern.proxy.translateFormat("tile.perverted.name", name)).trim();
 	}
 }

@@ -28,7 +28,7 @@ public class BlockPortalCaveland extends BlockPortalCavern
 	@Override
 	public void displayGui(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side)
 	{
-		FMLClientHandler.instance().showGuiScreen(new GuiRegeneration(false, false, true));
+		FMLClientHandler.instance().showGuiScreen(new GuiRegeneration().setCaveland());
 	}
 
 	@Override

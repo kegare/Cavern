@@ -43,6 +43,7 @@ public class CaveVein
 		this.veinSize = size;
 		this.minHeight = min;
 		this.maxHeight = max;
+		this.biomes = new int[0];
 	}
 
 	public CaveVein(BlockMeta block, int weight, int size, int min, int max, Object... biomes)

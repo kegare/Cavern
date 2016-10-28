@@ -7,6 +7,8 @@ import org.apache.commons.io.FileUtils;
 
 import com.google.common.collect.Lists;
 
+import cavern.block.BlockCave;
+import cavern.block.CaveBlocks;
 import cavern.config.manager.CaveVein;
 import cavern.config.manager.CaveVeinManager;
 import cavern.core.Cavern;
@@ -156,6 +158,7 @@ public class CavelandConfig
 			veins.add(new CaveVein(new BlockMeta(Blocks.GRAVEL, 0), 10, 10, 1, 10));
 			veins.add(new CaveVein(new BlockMeta(Blocks.SAND, BlockSand.EnumType.SAND.getMetadata()), 20, 20, 1, 127));
 			veins.add(new CaveVein(new BlockMeta(Blocks.SAND, BlockSand.EnumType.SAND.getMetadata()), 7, 10, 1, 10));
+			veins.add(new CaveVein(new BlockMeta(CaveBlocks.CAVE_BLOCK, BlockCave.EnumType.FISSURED_STONE.getMetadata()), 30, 2, 1, 10));
 
 			CavernConfig.generateVeinsConfig(veinManager, veins);
 		}

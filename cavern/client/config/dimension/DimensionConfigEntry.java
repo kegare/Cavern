@@ -44,6 +44,7 @@ public class DimensionConfigEntry extends CaveCategoryEntry
 		list.add(new DummyCategoryElement("cavern:cavernConfig", Config.LANG_KEY + "dimension.cavern", CavernConfigEntry.class));
 		list.add(new DummyCategoryElement("cavern:aquaCavernConfig", Config.LANG_KEY + "dimension.aquaCavern", AquaCavernConfigEntry.class));
 		list.add(new DummyCategoryElement("cavern:cavelandConfig", Config.LANG_KEY + "dimension.caveland", CavelandConfigEntry.class));
+		list.add(new DummyCategoryElement("cavern:iceCavernConfig", Config.LANG_KEY + "dimension.iceCavern", IceCavernConfigEntry.class));
 
 		return list;
 	}

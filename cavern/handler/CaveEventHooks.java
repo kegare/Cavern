@@ -1,10 +1,14 @@
 package cavern.handler;
 
+import java.util.Random;
+
 import com.google.common.base.Strings;
 
 import cavern.api.CavernAPI;
 import cavern.api.IMinerStats;
+import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
+import cavern.block.bonus.RandomiteItem;
 import cavern.config.GeneralConfig;
 import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
@@ -21,6 +25,7 @@ import cavern.util.CaveUtils;
 import cavern.world.WorldProviderAquaCavern;
 import cavern.world.WorldProviderCaveland;
 import cavern.world.WorldProviderCavern;
+import cavern.world.WorldProviderIceCavern;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.material.Material;
@@ -30,6 +35,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -39,6 +45,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -58,6 +65,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 public class CaveEventHooks
 {
+	protected static final Random RANDOM = new Random();
+
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)
 	{
@@ -142,6 +151,20 @@ public class CaveEventHooks
 
 				player.addStat(CaveAchievements.CAVELAND);
 			}
+			else if (CavernAPI.dimension.isEntityInIceCavern(player))
+			{
+				NBTTagCompound data = player.getEntityData();
+				String key = "IceCavern" + suffix;
+
+				if (!data.hasKey(key, NBT.TAG_ANY_NUMERIC) || data.getLong(key) + 18000L < world.getTotalWorldTime())
+				{
+					CaveNetworkRegistry.sendTo(new CaveMusicMessage(CaveSounds.MUSIC_UNREST), player);
+				}
+
+				data.setLong(key, world.getTotalWorldTime());
+
+				player.addStat(CaveAchievements.ICE_CAVERN);
+			}
 		}
 	}
 
@@ -183,6 +206,10 @@ public class CaveEventHooks
 				{
 					portal = Item.getItemFromBlock(CaveBlocks.CAVELAND_PORTAL);
 				}
+				else if (block == Blocks.PACKED_ICE)
+				{
+					portal = Item.getItemFromBlock(CaveBlocks.ICE_CAVERN_PORTAL);
+				}
 			}
 
 			if (portal != null)
@@ -222,6 +249,28 @@ public class CaveEventHooks
 						MinerStats.setLastMine(new BlockMeta(state), amount);
 
 						CaveNetworkRegistry.sendTo(new LastMineMessage(MinerStats.lastMine, MinerStats.lastMinePoint), thePlayer);
+					}
+				}
+
+				if (CavernAPI.dimension.isEntityInIceCavern(thePlayer))
+				{
+					IBlockState state = event.getState();
+
+					if (!thePlayer.capabilities.isCreativeMode && state != null && state.getBlock() == Blocks.PACKED_ICE)
+					{
+						World world = event.getWorld();
+						BlockPos pos = event.getPos();
+
+						if (RANDOM.nextDouble() < 0.05D)
+						{
+							Block.spawnAsEntity(world, pos, new ItemStack(Blocks.ICE));
+						}
+						else if (RANDOM.nextDouble() < 0.03D)
+						{
+							RandomiteItem randomItem = WeightedRandom.getRandomItem(RANDOM, BlockCave.RANDOMITE_ITEMS);
+
+							Block.spawnAsEntity(world, pos, randomItem.getItem());
+						}
 					}
 				}
 			}
@@ -407,6 +456,10 @@ public class CaveEventHooks
 			else if (CavernAPI.dimension.isCaveland(dim))
 			{
 				WorldProviderCaveland.saveHandler.writeToFile();
+			}
+			else if (CavernAPI.dimension.isIceCavern(dim))
+			{
+				WorldProviderIceCavern.saveHandler.writeToFile();
 			}
 		}
 	}

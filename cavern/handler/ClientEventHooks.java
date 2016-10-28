@@ -11,6 +11,7 @@ import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CavernConfig;
 import cavern.config.GeneralConfig;
+import cavern.config.IceCavernConfig;
 import cavern.config.property.ConfigDisplayPos;
 import cavern.core.Cavern;
 import cavern.stats.MinerRank;
@@ -131,6 +132,15 @@ public class ClientEventHooks
 				case "dimension.caveland":
 					CavelandConfig.syncConfig();
 					break;
+				case "dimension.iceCavern":
+					IceCavernConfig.syncConfig();
+
+					if (event.isWorldRunning())
+					{
+						IceCavernConfig.refreshDungeonMobs();
+					}
+
+					break;
 			}
 		}
 	}
@@ -155,6 +165,10 @@ public class ClientEventHooks
 			else if (CavernAPI.dimension.isEntityInCaveland(player))
 			{
 				event.getLeft().add("Dim: Caveland");
+			}
+			else if (CavernAPI.dimension.isEntityInIceCavern(player))
+			{
+				event.getLeft().add("Dim: Ice Cavern");
 			}
 		}
 	}
@@ -467,7 +481,7 @@ public class ClientEventHooks
 					}
 				}
 			}
-			else if (CavernAPI.dimension.isEntityInCaveland(entity))
+			else if (CavernAPI.dimension.isEntityInCaveland(entity) || CavernAPI.dimension.isEntityInIceCavern(entity))
 			{
 				GlStateManager.setFog(GlStateManager.FogMode.EXP);
 
@@ -487,6 +501,10 @@ public class ClientEventHooks
 		if (CavernAPI.dimension.isEntityInCaveland(entity))
 		{
 			var1 = 0.7F;
+		}
+		else if (CavernAPI.dimension.isEntityInIceCavern(entity))
+		{
+			var1 = 0.75F;
 		}
 
 		if (var1 > 0.0F)

@@ -46,7 +46,7 @@ public class MapGenCavelandRavine extends MapGenCavernRavine
 		else if (y < 10)
 		{
 			Biome biome = worldObj.getBiomeGenForCoords(new BlockPos(x + chunkX * 16, 0, z + chunkZ * 16));
-			IBlockState state = BLK_WATER;
+			IBlockState state = FLOWING_WATER;
 
 			if (BiomeDictionary.isBiomeOfType(biome, Type.COLD) && rand.nextInt(3) == 0)
 			{

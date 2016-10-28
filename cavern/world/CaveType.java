@@ -4,6 +4,7 @@ import cavern.api.CavernAPI;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CavernConfig;
+import cavern.config.IceCavernConfig;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 
@@ -12,10 +13,12 @@ public final class CaveType
 	public static final int CAVERN = 0;
 	public static final int AQUA_CAVERN = 2;
 	public static final int CAVELAND = 3;
+	public static final int ICE_CAVERN = 4;
 
 	public static DimensionType DIM_CAVERN;
 	public static DimensionType DIM_AQUA_CAVERN;
 	public static DimensionType DIM_CAVELAND;
+	public static DimensionType DIM_ICE_CAVERN;
 
 	public static void registerDimensions()
 	{
@@ -35,6 +38,13 @@ public final class CaveType
 			DIM_CAVELAND = DimensionType.register("Caveland", "_caveland", CavelandConfig.dimensionId, WorldProviderCaveland.class, true);
 
 			DimensionManager.registerDimension(DIM_CAVELAND.getId(), DIM_CAVELAND);
+		}
+
+		if (!CavernAPI.dimension.isIceCavernDisabled())
+		{
+			DIM_ICE_CAVERN = DimensionType.register("Ice Cavern", "_ice_cavern", IceCavernConfig.dimensionId, WorldProviderIceCavern.class, false);
+
+			DimensionManager.registerDimension(DIM_ICE_CAVERN.getId(), DIM_ICE_CAVERN);
 		}
 	}
 }

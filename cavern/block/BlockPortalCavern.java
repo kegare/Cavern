@@ -131,7 +131,7 @@ public class BlockPortalCavern extends BlockPortal implements IHeatTile
 	@SideOnly(Side.CLIENT)
 	public void displayGui(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side)
 	{
-		FMLClientHandler.instance().showGuiScreen(new GuiRegeneration(true, false, false));
+		FMLClientHandler.instance().showGuiScreen(new GuiRegeneration().setCavern());
 	}
 
 	public int getType()

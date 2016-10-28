@@ -1,4 +1,4 @@
-package cavern.block;
+package cavern.block.bonus;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandom;

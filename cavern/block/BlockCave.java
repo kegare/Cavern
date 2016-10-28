@@ -5,6 +5,8 @@ import java.util.Random;
 
 import com.google.common.collect.Lists;
 
+import cavern.block.bonus.FissureBreakEvent;
+import cavern.block.bonus.RandomiteItem;
 import cavern.core.CaveAchievements;
 import cavern.core.Cavern;
 import cavern.item.CaveItems;
@@ -40,6 +42,7 @@ public class BlockCave extends Block
 	public static final PropertyEnum<EnumType> VARIANT = PropertyEnum.create("variant", EnumType.class);
 
 	public static final List<RandomiteItem> RANDOMITE_ITEMS = Lists.newArrayList();
+	public static final List<FissureBreakEvent> FISSURE_EVENTS = Lists.newArrayList();
 
 	public BlockCave()
 	{
@@ -124,12 +127,18 @@ public class BlockCave extends Block
 	{
 		super.dropBlockAsItemWithChance(world, pos, state, chance, fortune);
 
-		if (!world.isRemote)
+		switch (state.getValue(VARIANT))
 		{
-			switch (state.getValue(VARIANT))
-			{
-				case RANDOMITE_ORE:
+			case RANDOMITE_ORE:
+				if (!world.isRemote)
+				{
 					RandomiteItem randomItem = WeightedRandom.getRandomItem(RANDOM, RANDOMITE_ITEMS);
+
+					if (randomItem == null)
+					{
+						break;
+					}
+
 					ItemStack item = randomItem.getItem();
 					EntityPlayer player = harvesters.get();
 
@@ -149,11 +158,24 @@ public class BlockCave extends Block
 					{
 						player.addStat(CaveAchievements.RANDOMITE);
 					}
+				}
 
-					break;
-				default:
-					return;
-			}
+				break;
+			case FISSURED_STONE:
+			case FISSURED_PACKED_ICE:
+				if (!world.isRemote)
+				{
+					FissureBreakEvent event = WeightedRandom.getRandomItem(RANDOM, FISSURE_EVENTS);
+
+					if (event != null)
+					{
+						event.get().onBreakBlock(world, pos, state, chance, fortune, harvesters.get(), RANDOM);
+					}
+				}
+
+				break;
+			default:
+				return;
 		}
 	}
 
@@ -189,7 +211,7 @@ public class BlockCave extends Block
 		int ret = quantityDropped(random);
 		EnumType type = state.getValue(VARIANT);
 
-		if (type == EnumType.RANDOMITE_ORE)
+		if (type == EnumType.RANDOMITE_ORE || type == EnumType.FISSURED_STONE || type == EnumType.FISSURED_PACKED_ICE)
 		{
 			return 0;
 		}
@@ -235,7 +257,9 @@ public class BlockCave extends Block
 		MAGNITE_BLOCK(3, "magnite_block", "blockMagnite", MapColor.RED, Material.IRON, SoundType.METAL, 2.5F, 2),
 		RANDOMITE_ORE(4, "randomite_ore", "oreRandomite", MapColor.PURPLE, Material.ROCK, SoundType.STONE, 4.0F, 1),
 		HEXCITE_ORE(5, "hexcite_ore", "oreHexcite", MapColor.SNOW, Material.ROCK, SoundType.STONE, 3.0F, 2),
-		HEXCITE_BLOCK(6, "hexcite_block", "blockHexcite", MapColor.SNOW, Material.IRON, SoundType.METAL, 3.5F, 2);
+		HEXCITE_BLOCK(6, "hexcite_block", "blockHexcite", MapColor.SNOW, Material.IRON, SoundType.METAL, 3.5F, 2),
+		FISSURED_STONE(7, "fissured_stone", "stone.stone", MapColor.STONE, Material.ROCK, SoundType.STONE, 1.0F, 0),
+		FISSURED_PACKED_ICE(8, "fissured_packed_ice", "icePacked", MapColor.ICE, Material.ICE, SoundType.GLASS, 1.0F, 0);
 
 		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
 

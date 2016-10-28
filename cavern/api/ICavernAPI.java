@@ -14,4 +14,6 @@ public interface ICavernAPI
 	public void addMineBonus(IMineBonus bonus);
 
 	public void addRandomiteItem(ItemStack item, int weight);
+
+	public void addFissureBreakEvent(IFissureBreakEvent event, int weight);
 }

@@ -20,24 +20,61 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiRegeneration extends GuiScreen
 {
-	protected boolean cavern = true;
-	protected boolean aquaCavern = true;
-	protected boolean caveland = true;
+	protected boolean cavern, aquaCavern, caveland, iceCavern;
 
 	protected GuiButton regenButton;
 	protected GuiButton cancelButton;
 
-	protected GuiCheckBox backupCheckBox, cavernCheckBox, aquaCavernCheckBox, cavelandCheckBox;
+	protected GuiCheckBox backupCheckBox, cavernCheckBox, aquaCavernCheckBox, cavelandCheckBox, iceCavernCheckBox;
 
 	private HoverChecker backupHoverChecker;
 
-	public GuiRegeneration() {}
-
-	public GuiRegeneration(boolean cavern, boolean aquaCavern, boolean caveland)
+	public GuiRegeneration setCavern()
 	{
-		this.cavern = cavern;
-		this.aquaCavern = aquaCavern;
-		this.caveland = caveland;
+		return setCavern(true);
+	}
+
+	public GuiRegeneration setCavern(boolean value)
+	{
+		cavern = value;
+
+		return this;
+	}
+
+	public GuiRegeneration setAquaCavern()
+	{
+		return setAquaCavern(true);
+	}
+
+	public GuiRegeneration setAquaCavern(boolean value)
+	{
+		aquaCavern = value;
+
+		return this;
+	}
+
+	public GuiRegeneration setCaveland()
+	{
+		return setCaveland(true);
+	}
+
+	public GuiRegeneration setCaveland(boolean value)
+	{
+		caveland = value;
+
+		return this;
+	}
+
+	public GuiRegeneration setIceCavern()
+	{
+		return setIceCavern(true);
+	}
+
+	public GuiRegeneration setIceCavern(boolean value)
+	{
+		iceCavern = value;
+
+		return this;
 	}
 
 	@Override
@@ -81,6 +118,11 @@ public class GuiRegeneration extends GuiScreen
 			cavelandCheckBox = new GuiCheckBox(5, 10, aquaCavernCheckBox.yPosition + aquaCavernCheckBox.height + 5, "Caveland", caveland);
 		}
 
+		if (iceCavernCheckBox == null)
+		{
+			iceCavernCheckBox = new GuiCheckBox(4, 10, cavelandCheckBox.yPosition + cavelandCheckBox.height + 5, "Ice Cavern", iceCavern);
+		}
+
 		buttonList.clear();
 		buttonList.add(regenButton);
 		buttonList.add(cancelButton);
@@ -88,13 +130,15 @@ public class GuiRegeneration extends GuiScreen
 		buttonList.add(cavernCheckBox);
 		buttonList.add(aquaCavernCheckBox);
 		buttonList.add(cavelandCheckBox);
+		buttonList.add(iceCavernCheckBox);
 
 		if (backupHoverChecker == null)
 		{
 			backupHoverChecker = new HoverChecker(backupCheckBox, 800);
 		}
 
-		boolean flag = false;
+		boolean aquaDisabled = false;
+		boolean cavelandDisabled = false;
 
 		if (CavernAPI.dimension.isAquaCavernDisabled())
 		{
@@ -102,7 +146,7 @@ public class GuiRegeneration extends GuiScreen
 			aquaCavernCheckBox.visible = false;
 			aquaCavernCheckBox.setIsChecked(false);
 
-			flag = true;
+			aquaDisabled = true;
 		}
 
 		if (CavernAPI.dimension.isCavelandDisabled())
@@ -110,10 +154,35 @@ public class GuiRegeneration extends GuiScreen
 			cavelandCheckBox.enabled = false;
 			cavelandCheckBox.visible = false;
 			cavelandCheckBox.setIsChecked(false);
+
+			cavelandDisabled = true;
 		}
-		else if (flag)
+		else if (aquaDisabled)
 		{
 			cavelandCheckBox.yPosition = cavernCheckBox.yPosition + cavernCheckBox.height + 5;
+		}
+
+		if (CavernAPI.dimension.isIceCavernDisabled())
+		{
+			iceCavernCheckBox.enabled = false;
+			iceCavernCheckBox.visible = false;
+			iceCavernCheckBox.setIsChecked(false);
+		}
+		else if (aquaDisabled && cavelandDisabled)
+		{
+			iceCavernCheckBox.yPosition = cavernCheckBox.yPosition + cavernCheckBox.height + 5;
+		}
+		else
+		{
+			if (aquaDisabled)
+			{
+				iceCavernCheckBox.yPosition = cavelandCheckBox.yPosition + cavelandCheckBox.height + 5;
+			}
+
+			if (cavelandDisabled)
+			{
+				iceCavernCheckBox.yPosition = aquaCavernCheckBox.yPosition + aquaCavernCheckBox.height + 5;
+			}
 		}
 	}
 
@@ -135,7 +204,8 @@ public class GuiRegeneration extends GuiScreen
 			switch (button.id)
 			{
 				case 0:
-					CaveNetworkRegistry.sendToServer(new RegenerationMessage(backupCheckBox.isChecked(), cavernCheckBox.isChecked(), aquaCavernCheckBox.isChecked(), cavelandCheckBox.isChecked()));
+					CaveNetworkRegistry.sendToServer(new RegenerationMessage(backupCheckBox.isChecked(),
+						cavernCheckBox.isChecked(), aquaCavernCheckBox.isChecked(), cavelandCheckBox.isChecked(), iceCavernCheckBox.isChecked()));
 
 					regenButton.enabled = false;
 					cancelButton.visible = false;

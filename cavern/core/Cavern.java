@@ -8,12 +8,16 @@ import com.google.common.collect.Sets;
 
 import cavern.api.CavernAPI;
 import cavern.block.CaveBlocks;
+import cavern.block.bonus.FissureEventBreathing;
+import cavern.block.bonus.FissureEventExplosion;
+import cavern.block.bonus.FissureEventPotion;
 import cavern.capability.CaveCapabilities;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CavernConfig;
 import cavern.config.Config;
 import cavern.config.GeneralConfig;
+import cavern.config.IceCavernConfig;
 import cavern.entity.CaveEntityRegistry;
 import cavern.handler.CaveEventHooks;
 import cavern.handler.CaveFuelHandler;
@@ -156,6 +160,9 @@ public class Cavern
 		CavelandConfig.syncConfig();
 		CavelandConfig.syncVeinsConfig();
 
+		IceCavernConfig.syncConfig();
+		IceCavernConfig.syncVeinsConfig();
+
 		CaveType.registerDimensions();
 
 		CaveAchievements.registerAchievements();
@@ -250,6 +257,10 @@ public class Cavern
 		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND_SHOVEL), 2);
 		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND_HOE), 1);
 
+		CavernAPI.apiHandler.addFissureBreakEvent(new FissureEventPotion(), 100);
+		CavernAPI.apiHandler.addFissureBreakEvent(new FissureEventExplosion(), 10);
+		CavernAPI.apiHandler.addFissureBreakEvent(new FissureEventBreathing(), 50);
+
 		loadPlugins();
 	}
 
@@ -318,5 +329,6 @@ public class Cavern
 
 		CavernConfig.refreshDungeonMobs();
 		AquaCavernConfig.refreshDungeonMobs();
+		IceCavernConfig.refreshDungeonMobs();
 	}
 }

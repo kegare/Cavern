@@ -28,7 +28,7 @@ public class BlockPortalAquaCavern extends BlockPortalCavern
 	@Override
 	public void displayGui(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side)
 	{
-		FMLClientHandler.instance().showGuiScreen(new GuiRegeneration(false, true, false));
+		FMLClientHandler.instance().showGuiScreen(new GuiRegeneration().setAquaCavern());
 	}
 
 	@Override

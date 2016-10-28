@@ -4,6 +4,7 @@ import cavern.api.IDimension;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CavernConfig;
+import cavern.config.IceCavernConfig;
 import net.minecraft.entity.Entity;
 
 public class DimensionHandler implements IDimension
@@ -27,6 +28,12 @@ public class DimensionHandler implements IDimension
 	}
 
 	@Override
+	public int getIceCavernDimension()
+	{
+		return IceCavernConfig.dimensionId;
+	}
+
+	@Override
 	public boolean isAquaCavernDisabled()
 	{
 		return AquaCavernConfig.dimensionDisabled;
@@ -36,6 +43,12 @@ public class DimensionHandler implements IDimension
 	public boolean isCavelandDisabled()
 	{
 		return CavelandConfig.dimensionDisabled;
+	}
+
+	@Override
+	public boolean isIceCavernDisabled()
+	{
+		return IceCavernConfig.dimensionDisabled;
 	}
 
 	@Override
@@ -57,9 +70,15 @@ public class DimensionHandler implements IDimension
 	}
 
 	@Override
+	public boolean isEntityInIceCavern(Entity entity)
+	{
+		return !isAquaCavernDisabled() && entity != null && entity.dimension == getIceCavernDimension();
+	}
+
+	@Override
 	public boolean isEntityInCaves(Entity entity)
 	{
-		return isEntityInCavern(entity) || isEntityInAquaCavern(entity) || isEntityInCaveland(entity);
+		return isEntityInCavern(entity) || isEntityInAquaCavern(entity) || isEntityInCaveland(entity) || isEntityInIceCavern(entity);
 	}
 
 	@Override
@@ -81,8 +100,14 @@ public class DimensionHandler implements IDimension
 	}
 
 	@Override
+	public boolean isIceCavern(int dimension)
+	{
+		return !isIceCavernDisabled() && getIceCavernDimension() == dimension;
+	}
+
+	@Override
 	public boolean isCaves(int dimension)
 	{
-		return isCavern(dimension) || isAquaCavern(dimension) || isCaveland(dimension);
+		return isCavern(dimension) || isAquaCavern(dimension) || isCaveland(dimension) || isIceCavern(dimension);
 	}
 }

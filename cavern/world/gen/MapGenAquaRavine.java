@@ -34,7 +34,7 @@ public class MapGenAquaRavine extends MapGenCavernRavine
 		}
 		else
 		{
-			data.setBlockState(x, y, z, BLK_WATER);
+			data.setBlockState(x, y, z, FLOWING_WATER);
 		}
 	}
 }
