@@ -19,8 +19,11 @@ import cavern.entity.EntityCavenicSkeleton;
 import cavern.entity.EntityCavenicSpider;
 import cavern.entity.EntityCavenicZombie;
 import net.minecraft.block.Block;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.stats.Achievement;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -62,5 +65,16 @@ public class ClientProxy extends CommonProxy
 	public String translateFormat(String key, Object... format)
 	{
 		return I18n.format(key, format);
+	}
+
+	@Override
+	public boolean hasAchievementUnlocked(EntityPlayer player, Achievement achievement)
+	{
+		if (player != null && player instanceof EntityPlayerSP)
+		{
+			return ((EntityPlayerSP)player).getStatFileWriter().hasAchievementUnlocked(achievement);
+		}
+
+		return false;
 	}
 }

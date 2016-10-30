@@ -9,7 +9,6 @@ import net.minecraft.world.chunk.ChunkPrimer;
 
 public class MapGenIceCaves extends MapGenCavernCaves
 {
-
 	@Override
 	protected void addTunnel(long caveSeed, int chunkX, int chunkZ, ChunkPrimer primer, double blockX, double blockY, double blockZ, float scale, float leftRightRadian, float upDownRadian, int currentY, int targetY, double scaleHeight)
 	{

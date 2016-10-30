@@ -14,6 +14,7 @@ import cavern.capability.CaveCapabilities;
 import cavern.core.CaveSounds;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.MinerStatsAdjustMessage;
+import cavern.stats.bonus.MineBonusAchievement;
 import cavern.stats.bonus.MineBonusExperience;
 import cavern.stats.bonus.MineBonusHaste;
 import cavern.stats.bonus.MineBonusResistance;
@@ -281,6 +282,7 @@ public class MinerStats implements IMinerStats
 
 	public static void registerMineBonus()
 	{
+		MINE_BONUS.add(new MineBonusAchievement());
 		MINE_BONUS.add(new MineBonusExperience());
 		MINE_BONUS.add(new MineBonusHaste());
 		MINE_BONUS.add(new MineBonusResistance());

@@ -61,6 +61,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
 
 @Mod
 (
@@ -98,19 +99,26 @@ public class Cavern
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event)
 	{
-		CaveBlocks.registerBlocks();
+		IForgeRegistry<Block> registry = event.getRegistry();
+
+		CaveBlocks.registerBlocks(registry);
 	}
 
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event)
 	{
-		CaveItems.registerItems();
+		IForgeRegistry<Item> registry = event.getRegistry();
+
+		CaveBlocks.registerItemBlocks(registry);
+		CaveItems.registerItems(registry);
 	}
 
 	@SubscribeEvent
 	public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
 	{
-		CaveSounds.registerSounds();
+		IForgeRegistry<SoundEvent> registry = event.getRegistry();
+
+		CaveSounds.registerSounds(registry);
 	}
 
 	@EventHandler
@@ -124,6 +132,9 @@ public class Cavern
 			CaveBlocks.registerModels();
 			CaveItems.registerModels();
 		}
+
+		CaveBlocks.registerOreDicts();
+		CaveItems.registerOreDicts();
 
 		GeneralConfig.syncConfig();
 
@@ -221,9 +232,10 @@ public class Cavern
 		MinerStats.setPointAmount("oreZinc", 1);
 		MinerStats.setPointAmount("oreCrocoite", 3);
 		MinerStats.setPointAmount("glowstone", 2);
-		MinerStats.setPointAmount("oreCavenium", 2);
 		MinerStats.setPointAmount("oreAquamarine", 2);
 		MinerStats.setPointAmount("oreMagnite", 1);
+		MinerStats.setPointAmount("oreRandomite", 2);
+		MinerStats.setPointAmount("oreHexcite", 4);
 
 		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.DIRT, 6), 15);
 		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.SAND, 6), 12);

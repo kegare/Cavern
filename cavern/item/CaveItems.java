@@ -19,8 +19,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class CaveItems
@@ -49,25 +51,25 @@ public class CaveItems
 	public static final ItemArmorCave HEXCITE_LEGGINGS = new ItemArmorCave(HEXCITE_ARMOR, "leggingsHexcite", "hexcite", EntityEquipmentSlot.LEGS);
 	public static final ItemArmorCave HEXCITE_BOOTS = new ItemArmorCave(HEXCITE_ARMOR, "bootsHexcite", "hexcite", EntityEquipmentSlot.FEET);
 
-	public static void registerItems()
+	public static void registerItems(IForgeRegistry<Item> registry)
 	{
-		GameRegistry.register(CAVE_ITEM.setRegistryName("cave_item"));
-		GameRegistry.register(AQUAMARINE_PICKAXE.setRegistryName("aquamarine_pickaxe"));
-		GameRegistry.register(AQUAMARINE_AXE.setRegistryName("aquamarine_axe"));
-		GameRegistry.register(AQUAMARINE_SHOVEL.setRegistryName("aquamarine_shovel"));
-		GameRegistry.register(MAGNITE_SWORD.setRegistryName("magnite_sword"));
-		GameRegistry.register(MAGNITE_PICKAXE.setRegistryName("magnite_pickaxe"));
-		GameRegistry.register(MAGNITE_AXE.setRegistryName("magnite_axe"));
-		GameRegistry.register(MAGNITE_SHOVEL.setRegistryName("magnite_shovel"));
-		GameRegistry.register(HEXCITE_SWORD.setRegistryName("hexcite_sword"));
-		GameRegistry.register(HEXCITE_PICKAXE.setRegistryName("hexcite_pickaxe"));
-		GameRegistry.register(HEXCITE_AXE.setRegistryName("hexcite_axe"));
-		GameRegistry.register(HEXCITE_SHOVEL.setRegistryName("hexcite_shovel"));
-		GameRegistry.register(HEXCITE_HOE.setRegistryName("hexcite_hoe"));
-		GameRegistry.register(HEXCITE_HELMET.setRegistryName("hexcite_helmet"));
-		GameRegistry.register(HEXCITE_CHESTPLATE.setRegistryName("hexcite_chestplate"));
-		GameRegistry.register(HEXCITE_LEGGINGS.setRegistryName("hexcite_leggings"));
-		GameRegistry.register(HEXCITE_BOOTS.setRegistryName("hexcite_boots"));
+		registry.register(CAVE_ITEM.setRegistryName("cave_item"));
+		registry.register(AQUAMARINE_PICKAXE.setRegistryName("aquamarine_pickaxe"));
+		registry.register(AQUAMARINE_AXE.setRegistryName("aquamarine_axe"));
+		registry.register(AQUAMARINE_SHOVEL.setRegistryName("aquamarine_shovel"));
+		registry.register(MAGNITE_SWORD.setRegistryName("magnite_sword"));
+		registry.register(MAGNITE_PICKAXE.setRegistryName("magnite_pickaxe"));
+		registry.register(MAGNITE_AXE.setRegistryName("magnite_axe"));
+		registry.register(MAGNITE_SHOVEL.setRegistryName("magnite_shovel"));
+		registry.register(HEXCITE_SWORD.setRegistryName("hexcite_sword"));
+		registry.register(HEXCITE_PICKAXE.setRegistryName("hexcite_pickaxe"));
+		registry.register(HEXCITE_AXE.setRegistryName("hexcite_axe"));
+		registry.register(HEXCITE_SHOVEL.setRegistryName("hexcite_shovel"));
+		registry.register(HEXCITE_HOE.setRegistryName("hexcite_hoe"));
+		registry.register(HEXCITE_HELMET.setRegistryName("hexcite_helmet"));
+		registry.register(HEXCITE_CHESTPLATE.setRegistryName("hexcite_chestplate"));
+		registry.register(HEXCITE_LEGGINGS.setRegistryName("hexcite_leggings"));
+		registry.register(HEXCITE_BOOTS.setRegistryName("hexcite_boots"));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -138,6 +140,13 @@ public class CaveItems
 		{
 			ModelLoader.setCustomModelResourceLocation(item, i, models.get(i));
 		}
+	}
+
+	public static void registerOreDicts()
+	{
+		OreDictionary.registerOre("gemAquamarine", new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()));
+		OreDictionary.registerOre("ingotMagnite", new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()));
+		OreDictionary.registerOre("gemHexcite", new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()));
 	}
 
 	public static void registerRecipes()

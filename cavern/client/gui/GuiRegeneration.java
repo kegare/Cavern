@@ -204,8 +204,17 @@ public class GuiRegeneration extends GuiScreen
 			switch (button.id)
 			{
 				case 0:
-					CaveNetworkRegistry.sendToServer(new RegenerationMessage(backupCheckBox.isChecked(),
-						cavernCheckBox.isChecked(), aquaCavernCheckBox.isChecked(), cavelandCheckBox.isChecked(), iceCavernCheckBox.isChecked()));
+					boolean b1 = cavernCheckBox.isChecked();
+					boolean b2 = aquaCavernCheckBox.isChecked();
+					boolean b3 = cavelandCheckBox.isChecked();
+					boolean b4 = iceCavernCheckBox.isChecked();
+
+					if (!b1 && !b2 && !b3 && !b4)
+					{
+						break;
+					}
+
+					CaveNetworkRegistry.sendToServer(new RegenerationMessage(backupCheckBox.isChecked(), b1, b2, b3, b4));
 
 					regenButton.enabled = false;
 					cancelButton.visible = false;

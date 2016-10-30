@@ -2,7 +2,7 @@ package cavern.core;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
 
 public class CaveSounds
 {
@@ -14,15 +14,15 @@ public class CaveSounds
 	public static final CaveSoundEvent MUSIC_AQUA = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.aqua"));
 	public static final CaveSoundEvent MUSIC_HOPE = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.hope"));
 
-	public static void registerSounds()
+	public static void registerSounds(IForgeRegistry<SoundEvent> registry)
 	{
-		GameRegistry.register(CAVE_PORTAL);
-		GameRegistry.register(RANK_PROMOTE);
+		registry.register(CAVE_PORTAL);
+		registry.register(RANK_PROMOTE);
 
-		GameRegistry.register(MUSIC_CAVE);
-		GameRegistry.register(MUSIC_UNREST);
-		GameRegistry.register(MUSIC_AQUA);
-		GameRegistry.register(MUSIC_HOPE);
+		registry.register(MUSIC_CAVE);
+		registry.register(MUSIC_UNREST);
+		registry.register(MUSIC_AQUA);
+		registry.register(MUSIC_HOPE);
 	}
 
 	public static class CaveSoundEvent extends SoundEvent
