@@ -1,5 +1,6 @@
 package cavern.block;
 
+import cavern.config.GeneralConfig;
 import cavern.item.CaveItems;
 import cavern.item.ItemAcresia;
 import cavern.item.ItemBlockCave;
@@ -45,6 +46,7 @@ public class CaveBlocks
 	public static final BlockLogPerverted PERVERTED_LOG = new BlockLogPerverted();
 	public static final BlockLeavesPerverted PERVERTED_LEAVES = new BlockLeavesPerverted();
 	public static final BlockSaplingPerverted PERVERTED_SAPLING = new BlockSaplingPerverted();
+	public static final BlockSlipperyIce SLIPPERY_ICE = new BlockSlipperyIce();
 
 	public static void registerBlocks(IForgeRegistry<Block> registry)
 	{
@@ -57,6 +59,7 @@ public class CaveBlocks
 		registry.register(PERVERTED_LOG.setRegistryName("perverted_log"));
 		registry.register(PERVERTED_LEAVES.setRegistryName("perverted_leaves"));
 		registry.register(PERVERTED_SAPLING.setRegistryName("perverted_sapling"));
+		registry.register(SLIPPERY_ICE.setRegistryName("slippery_ice"));
 	}
 
 	public static void registerItemBlocks(IForgeRegistry<Item> registry)
@@ -70,6 +73,7 @@ public class CaveBlocks
 		registry.register(new ItemBlockPerverted(PERVERTED_LOG, Blocks.LOG));
 		registry.register(new ItemBlockPerverted(PERVERTED_LEAVES, Blocks.LEAVES));
 		registry.register(new ItemBlockPerverted(PERVERTED_SAPLING, Blocks.SAPLING));
+		registry.register(new ItemBlock(SLIPPERY_ICE).setRegistryName(SLIPPERY_ICE.getRegistryName()));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -89,6 +93,7 @@ public class CaveBlocks
 		registerVanillaModelWithMeta(PERVERTED_LOG, "oak_log", "spruce_log", "birch_log", "jungle_log");
 		registerVanillaModelWithMeta(PERVERTED_LEAVES, "oak_leaves", "spruce_leaves", "birch_leaves", "jungle_leaves");
 		registerVanillaModelWithMeta(PERVERTED_SAPLING, "oak_sapling", "spruce_sapling", "birch_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling");
+		registerModel(SLIPPERY_ICE, "slippery_ice");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -129,6 +134,11 @@ public class CaveBlocks
 
 			return type == BlockPlanks.EnumType.SPRUCE ? ColorizerFoliage.getFoliageColorPine() : type == BlockPlanks.EnumType.BIRCH ? ColorizerFoliage.getFoliageColorBirch() : world != null && pos != null ? BiomeColorHelper.getFoliageColorAtPos(world, pos) : ColorizerFoliage.getFoliageColorBasic();
 		}, new Block[] {PERVERTED_LEAVES});
+
+		colors.registerBlockColorHandler((state, world, pos, tintIndex) ->
+		{
+			return GeneralConfig.slipperyIceCustomColor ? 0xEFFAFF : -1;
+		}, new Block[] {SLIPPERY_ICE});
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -143,7 +153,7 @@ public class CaveBlocks
 			IBlockState state = ((ItemBlock)stack.getItem()).getBlock().getStateFromMeta(stack.getMetadata());
 
 			return blockColors.colorMultiplier(state, null, null, tintIndex);
-		}, new Block[] {PERVERTED_LEAVES});
+		}, new Block[] {PERVERTED_LEAVES, SLIPPERY_ICE});
 	}
 
 	public static void registerOreDicts()
@@ -197,5 +207,13 @@ public class CaveBlocks
 			new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()), 1.0F);
 
 		GameRegistry.addSmelting(new ItemStack(PERVERTED_LOG, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.COAL, 1, 1), 0.0F);
+
+		GameRegistry.addShapelessRecipe(new ItemStack(SLIPPERY_ICE), Blocks.PACKED_ICE, Items.WATER_BUCKET);
+
+		GameRegistry.addRecipe(new ItemStack(SLIPPERY_ICE),
+			"III", "IWI", "III",
+			'I', Blocks.ICE,
+			'W', Items.WATER_BUCKET
+		);
 	}
 }

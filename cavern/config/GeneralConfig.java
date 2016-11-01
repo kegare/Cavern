@@ -36,6 +36,7 @@ public class GeneralConfig
 	public static ConfigCaveborn caveborn = new ConfigCaveborn();
 
 	public static boolean portalCache;
+	public static boolean slipperyIceCustomColor;
 
 	protected static final Side side = FMLLaunchHandler.side();
 
@@ -177,6 +178,20 @@ public class GeneralConfig
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		portalCache = prop.getBoolean(portalCache);
+
+		if (side.isClient())
+		{
+			prop = config.get(category, "slipperyIceCustomColor", true);
+			prop.setRequiresWorldRestart(true);
+			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+			comment += " [default: " + prop.getDefault() + "]";
+			comment += Configuration.NEW_LINE;
+			comment += "Note: If multiplayer, client-side only.";
+			prop.setComment(comment);
+			propOrder.add(prop.getName());
+			slipperyIceCustomColor = prop.getBoolean(slipperyIceCustomColor);
+		}
 
 		config.setCategoryPropertyOrder(category, propOrder);
 

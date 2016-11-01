@@ -46,6 +46,8 @@ cavern.config.general.caveborn.tooltip=ケイブボーンタイプを指定し�
 cavern.config.general.caveborn.0=無効
 cavern.config.general.portalCache=ポータルキャッシュ
 cavern.config.general.portalCache.tooltip=洞窟ポータルでの移動時の座標のキャッシュを有効にします。
+cavern.config.general.slipperyIceCustomColor=滑りやすい氷のカスタムカラー
+cavern.config.general.slipperyIceCustomColor.tooltip=滑りやすい氷のカスタムカラーを有効にします。
 
 cavern.config.points=採掘ポイントのカスタマイズ
 cavern.config.points.block=ブロック
@@ -197,6 +199,7 @@ tile.perverted.name=変質した %s
 tile.pervertedWood.name=変質した原木
 tile.pervertedLeaves.name=変質した葉
 tile.pervertedSapling.name=変質した苗木
+tile.slipperyIce.name=滑りやすい氷
 
 item.aquamarine.name=アクアマリン
 item.ingotMagnite.name=マグナイトインゴット
@@ -239,6 +242,8 @@ achievement.cavern.randomite.desc=ランダマイト鉱石を採掘する
 achievement.cavern.hexcite=ヘキサイト
 achievement.cavern.hexcite.desc=ヘキサイトを得る
 achievement.cavern.acresia=たくましい作物
-achievement.cavern.acresia.desc=アクレシアを収穫する
+achievement.cavern.acresia.desc=ハサミでアクレシアを収穫する
 achievement.cavern.goodMine=上手に掘れました！
 achievement.cavern.goodMine.desc=たくさんの鉱石を連続して採掘する
+achievement.cavern.slipIce=スリップ注意
+achievement.cavern.slipIce.desc=滑りやすい氷の上を歩く

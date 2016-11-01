@@ -50,6 +50,8 @@ cavern.config.general.caveborn.3=Caveland
 cavern.config.general.caveborn.4=Ice Cavern
 cavern.config.general.portalCache=Portal Cache
 cavern.config.general.portalCache.tooltip=Whether to enable cache for cave portal teleport.
+cavern.config.general.slipperyIceCustomColor=Slippery Ice Custom Color
+cavern.config.general.slipperyIceCustomColor.tooltip=Whether to enable custom color for Slippery Ice.
 
 cavern.config.points=Mining Points Customize
 cavern.config.points.block=Block
@@ -205,6 +207,7 @@ tile.perverted.name=Perverted %s
 tile.pervertedWood.name=Perverted Wood
 tile.pervertedLeaves.name=Perverted Leaves
 tile.pervertedSapling.name=Perverted Sapling
+tile.slipperyIce.name=Slippery Ice
 
 item.aquamarine.name=Aquamarine
 item.ingotMagnite.name=Magnite Ingot
@@ -253,6 +256,8 @@ achievement.cavern.randomite.desc=Mine a Randomite Ore
 achievement.cavern.hexcite=Hexcite
 achievement.cavern.hexcite.desc=Get a Hexcite
 achievement.cavern.acresia=Sturdy Crop
-achievement.cavern.acresia.desc=Harvest an Acresia
+achievement.cavern.acresia.desc=Harvest an Acresia with Shears
 achievement.cavern.goodMine=Good Mine!
 achievement.cavern.goodMine.desc=Mine many ores continuously
+achievement.cavern.slipIce=Beware of Slip
+achievement.cavern.slipIce.desc=Walk on a slippery ice
