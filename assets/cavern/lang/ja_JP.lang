@@ -201,9 +201,13 @@ tile.pervertedLeaves.name=変質した葉
 tile.pervertedSapling.name=変質した苗木
 tile.slipperyIce.name=滑りやすい氷
 
+item.acresia.name=アクレシア
+item.seedsAcresia.name=アクレシアの種
+item.fruitsAcresia.name=アクレシアの実
 item.aquamarine.name=アクアマリン
 item.ingotMagnite.name=マグナイトインゴット
 item.hexcite.name=ヘキサイト
+item.stickIce.name=氷柱
 item.pickaxeAquamarine.name=アクアマリンのツルハシ
 item.axeAquamarine.name=アクアマリンの斧
 item.shovelAquamarine.name=アクアマリンのシャベル
@@ -220,9 +224,11 @@ item.helmetHexcite.name=ヘキサイトのヘルメット
 item.chestplateHexcite.name=ヘキサイトのチェストプレート
 item.leggingsHexcite.name=ヘキサイトのレギンス
 item.bootsHexcite.name=ヘキサイトのブーツ
-item.acresia.name=アクレシア
-item.seedsAcresia.name=アクレシアの種
-item.fruitsAcresia.name=アクレシアの実
+item.swordIce.name=氷の剣
+item.pickaxeIce.name=氷のツルハシ
+item.axeIce.name=氷の斧
+item.shovelIce.name=氷のシャベル
+item.hoeIce.name=氷のクワ
 
 entity.cavern.CavenicSkeleton.name=ケイブニックスケルトン
 entity.cavern.CavenicCreeper.name=ケイブニッククリーパー
@@ -247,3 +253,5 @@ achievement.cavern.goodMine=上手に掘れました！
 achievement.cavern.goodMine.desc=たくさんの鉱石を連続して採掘する
 achievement.cavern.slipIce=スリップ注意
 achievement.cavern.slipIce.desc=滑りやすい氷の上を歩く
+
+tooltip.iceEquipment.charge=アイスチャージ : %s

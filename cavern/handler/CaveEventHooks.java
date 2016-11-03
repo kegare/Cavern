@@ -5,6 +5,7 @@ import java.util.Random;
 import com.google.common.base.Strings;
 
 import cavern.api.CavernAPI;
+import cavern.api.IIceEquipment;
 import cavern.api.IMinerStats;
 import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
@@ -12,8 +13,10 @@ import cavern.block.bonus.RandomiteItem;
 import cavern.config.GeneralConfig;
 import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
+import cavern.core.Cavern;
 import cavern.item.CaveItems;
 import cavern.item.IAquaTool;
+import cavern.item.IceEquipment;
 import cavern.item.ItemCave;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.CaveMusicMessage;
@@ -53,6 +56,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
@@ -271,6 +275,10 @@ public class CaveEventHooks
 
 							Block.spawnAsEntity(world, pos, randomItem.getItem());
 						}
+						else if (IceEquipment.isIceEquipment(thePlayer.getHeldItemMainhand()) && RANDOM.nextDouble() < 0.03D || RANDOM.nextDouble() < 0.01D)
+						{
+							Block.spawnAsEntity(world, pos, new ItemStack(Blocks.PACKED_ICE));
+						}
 					}
 				}
 			}
@@ -434,6 +442,19 @@ public class CaveEventHooks
 					}
 				}
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onItemTooltip(ItemTooltipEvent event)
+	{
+		ItemStack itemstack = event.getItemStack();
+
+		if (IceEquipment.isIceEquipment(itemstack))
+		{
+			IIceEquipment equip = IceEquipment.get(itemstack);
+
+			event.getToolTip().add(Cavern.proxy.translateFormat("tooltip.iceEquipment.charge", equip.getCharge()));
 		}
 	}
 

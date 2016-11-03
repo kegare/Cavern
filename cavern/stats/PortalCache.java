@@ -21,7 +21,7 @@ public class PortalCache implements IPortalCache
 
 	public static IPortalCache get(Entity entity)
 	{
-		IPortalCache cache = CaveCapabilities.getEntityCapability(entity, CaveCapabilities.PORTAL_CACHE);
+		IPortalCache cache = CaveCapabilities.getCapability(entity, CaveCapabilities.PORTAL_CACHE);
 
 		if (cache == null)
 		{

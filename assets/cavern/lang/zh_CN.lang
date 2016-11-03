@@ -194,8 +194,13 @@ tile.pervertedWood.name=变质的原木
 tile.pervertedLeaves.name=变质的树叶
 tile.pervertedSapling.name=变质的树苗
 
+item.acresia.name=黄奇粒实
+item.seedsAcresia.name=黄奇粒实种子
+item.fruitsAcresia.name=黄奇粒果实
 item.aquamarine.name=海蓝宝石
 item.ingotMagnite.name=超硝石锭
+item.hexcite.name=白钻石
+item.stickIce.name=冰柱
 item.pickaxeAquamarine.name=海蓝宝石镐
 item.axeAquamarine.name=海蓝宝石斧
 item.shovelAquamarine.name=海蓝宝石铲
@@ -208,9 +213,11 @@ item.pickaxeHexcite.name=白钻石镐
 item.axeHexcite.name=白钻石斧
 item.shovelHexcite.name=白钻石铲
 item.hoeHexcite.name=白钻石锄
-item.acresia.name=黄奇粒实
-item.seedsAcresia.name=黄奇粒实种子
-item.fruitsAcresia.name=黄奇粒果实
+item.swordIce.name=冰剑
+item.pickaxeIce.name=冰镐
+item.axeIce.name=冰斧
+item.shovelIce.name=冰铲
+item.hoeIce.name=冰锄
 
 achievement.cavern.cavern.desc=去Cavern
 achievement.cavern.aquaCavern.desc=去Aqua Cavern
@@ -224,3 +231,5 @@ achievement.cavern.hexcite=白钻石
 achievement.cavern.hexcite.desc=获得白钻石
 achievement.cavern.acresia=健壮的作物
 achievement.cavern.acresia.desc=黄奇粒实丰收
+
+tooltip.iceEquipment.charge=冰充 : %s

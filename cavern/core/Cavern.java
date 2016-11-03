@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Level;
 import com.google.common.collect.Sets;
 
 import cavern.api.CavernAPI;
+import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
 import cavern.block.bonus.FissureEventBreathing;
 import cavern.block.bonus.FissureEventExplosion;
@@ -136,6 +137,8 @@ public class Cavern
 		CaveBlocks.registerOreDicts();
 		CaveItems.registerOreDicts();
 
+		CaveItems.registerEquipments();
+
 		GeneralConfig.syncConfig();
 
 		GameRegistry.registerFuelHandler(new CaveFuelHandler());
@@ -232,10 +235,18 @@ public class Cavern
 		MinerStats.setPointAmount("oreZinc", 1);
 		MinerStats.setPointAmount("oreCrocoite", 3);
 		MinerStats.setPointAmount("glowstone", 2);
+		MinerStats.setPointAmount("oreGypsum", 1);
+		MinerStats.setPointAmount("oreChalcedonyB", 1);
+		MinerStats.setPointAmount("oreChalcedonyW", 1);
+		MinerStats.setPointAmount("oreMagnetite", 1);
+		MinerStats.setPointAmount("oreNiter", 1);
+		MinerStats.setPointAmount("oreSchorl", 1);
 		MinerStats.setPointAmount("oreAquamarine", 2);
 		MinerStats.setPointAmount("oreMagnite", 1);
 		MinerStats.setPointAmount("oreRandomite", 2);
 		MinerStats.setPointAmount("oreHexcite", 4);
+		MinerStats.setPointAmount(CaveBlocks.CAVE_BLOCK, BlockCave.EnumType.FISSURED_STONE.getMetadata(), 3);
+		MinerStats.setPointAmount(CaveBlocks.CAVE_BLOCK, BlockCave.EnumType.FISSURED_PACKED_ICE.getMetadata(), 3);
 
 		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.DIRT, 6), 15);
 		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.SAND, 6), 12);
@@ -324,7 +335,11 @@ public class Cavern
 
 			if (prop != null)
 			{
-				prop.set(entries.toArray(new String[entries.size()]));
+				String[] data = entries.toArray(new String[entries.size()]);
+
+				prop.set(data);
+
+				GeneralConfig.miningPoints.setValues(data);
 			}
 		}
 

@@ -7,8 +7,10 @@ import com.google.common.collect.Lists;
 import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
 import cavern.core.Cavern;
+import cavern.recipe.RecipeChargeIceEquipment;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -23,6 +25,7 @@ import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class CaveItems
@@ -30,6 +33,7 @@ public class CaveItems
 	public static final ToolMaterial AQUAMARINE = EnumHelper.addToolMaterial("AQUAMARINE", 2, 200, 8.0F, 1.5F, 15);
 	public static final ToolMaterial MAGNITE = EnumHelper.addToolMaterial("MAGNITE", 3, 10, 100.0F, 11.0F, 50);
 	public static final ToolMaterial HEXCITE = EnumHelper.addToolMaterial("HEXCITE", 3, 1041, 10.0F, 5.0F, 15);
+	public static final ToolMaterial ICE = EnumHelper.addToolMaterial("ice", 1, 120, 5.0F, 1.0F, 0);
 
 	public static final ArmorMaterial HEXCITE_ARMOR = EnumHelper.addArmorMaterial("HEXCITE", "hexcite", 22, new int[] {4, 7, 9, 4}, 15, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F);
 
@@ -50,6 +54,11 @@ public class CaveItems
 	public static final ItemArmorCave HEXCITE_CHESTPLATE = new ItemArmorCave(HEXCITE_ARMOR, "chestplateHexcite", "hexcite", EntityEquipmentSlot.CHEST);
 	public static final ItemArmorCave HEXCITE_LEGGINGS = new ItemArmorCave(HEXCITE_ARMOR, "leggingsHexcite", "hexcite", EntityEquipmentSlot.LEGS);
 	public static final ItemArmorCave HEXCITE_BOOTS = new ItemArmorCave(HEXCITE_ARMOR, "bootsHexcite", "hexcite", EntityEquipmentSlot.FEET);
+	public static final ItemSwordIce ICE_SWORD = new ItemSwordIce();
+	public static final ItemPickaxeIce ICE_PICKAXE = new ItemPickaxeIce();
+	public static final ItemAxeIce ICE_AXE = new ItemAxeIce();
+	public static final ItemShovelIce ICE_SHOVEL = new ItemShovelIce();
+	public static final ItemHoeIce ICE_HOE = new ItemHoeIce();
 
 	public static void registerItems(IForgeRegistry<Item> registry)
 	{
@@ -70,12 +79,17 @@ public class CaveItems
 		registry.register(HEXCITE_CHESTPLATE.setRegistryName("hexcite_chestplate"));
 		registry.register(HEXCITE_LEGGINGS.setRegistryName("hexcite_leggings"));
 		registry.register(HEXCITE_BOOTS.setRegistryName("hexcite_boots"));
+		registry.register(ICE_SWORD.setRegistryName("ice_sword"));
+		registry.register(ICE_PICKAXE.setRegistryName("ice_pickaxe"));
+		registry.register(ICE_AXE.setRegistryName("ice_axe"));
+		registry.register(ICE_SHOVEL.setRegistryName("ice_shovel"));
+		registry.register(ICE_HOE.setRegistryName("ice_hoe"));
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void registerModels()
 	{
-		registerModelWithMeta(CAVE_ITEM, "aquamarine", "magnite_ingot", "hexcite");
+		registerModelWithMeta(CAVE_ITEM, "aquamarine", "magnite_ingot", "hexcite", "ice_stick");
 		registerModel(AQUAMARINE_PICKAXE, "aquamarine_pickaxe");
 		registerModel(AQUAMARINE_AXE, "aquamarine_axe");
 		registerModel(AQUAMARINE_SHOVEL, "aquamarine_shovel");
@@ -92,6 +106,11 @@ public class CaveItems
 		registerModel(HEXCITE_CHESTPLATE, "hexcite_chestplate");
 		registerModel(HEXCITE_LEGGINGS, "hexcite_leggings");
 		registerModel(HEXCITE_BOOTS, "hexcite_boots");
+		registerModel(ICE_SWORD, "ice_sword");
+		registerModel(ICE_PICKAXE, "ice_pickaxe");
+		registerModel(ICE_AXE, "ice_axe");
+		registerModel(ICE_SHOVEL, "ice_shovel");
+		registerModel(ICE_HOE, "ice_hoe");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -149,6 +168,15 @@ public class CaveItems
 		OreDictionary.registerOre("gemHexcite", new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()));
 	}
 
+	public static void registerEquipments()
+	{
+		IceEquipment.register(ICE_SWORD);
+		IceEquipment.register(ICE_PICKAXE);
+		IceEquipment.register(ICE_AXE);
+		IceEquipment.register(ICE_SHOVEL);
+		IceEquipment.register(ICE_HOE);
+	}
+
 	public static void registerRecipes()
 	{
 		GameRegistry.addShapelessRecipe(new ItemStack(CAVE_ITEM, 9, ItemCave.EnumType.AQUAMARINE.getItemDamage()),
@@ -160,7 +188,17 @@ public class CaveItems
 		GameRegistry.addShapelessRecipe(new ItemStack(CAVE_ITEM, 9, ItemCave.EnumType.HEXCITE.getItemDamage()),
 				new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_BLOCK.getMetadata()));
 
+		GameRegistry.addRecipe(new ItemStack(CAVE_ITEM, 2, ItemCave.EnumType.ICE_STICK.getItemDamage()),
+			"I", "I",
+			'I', Blocks.ICE
+		);
+		GameRegistry.addRecipe(new ItemStack(CAVE_ITEM, 8, ItemCave.EnumType.ICE_STICK.getItemDamage()),
+			"I", "I",
+			'I', Blocks.PACKED_ICE
+		);
+
 		ItemStack material = new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage());
+		ItemStack subMaterial;
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(AQUAMARINE_PICKAXE,
 			"AAA", " S ", " S ",
@@ -257,5 +295,74 @@ public class CaveItems
 			"H H", "H H",
 			'H', material.copy()
 		);
+
+		material = new ItemStack(Blocks.ICE);
+		subMaterial = new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.ICE_STICK.getItemDamage());
+
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_SWORD, 3),
+			"I", "I", "S",
+			'I', material.copy(),
+			'S', subMaterial.copy()
+		);
+
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_PICKAXE, 4),
+			"III", " S ", " S ",
+			'I', material.copy(),
+			'S', subMaterial.copy()
+		);
+
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_AXE, 4),
+			"II", "IS", " S",
+			'I', material.copy(),
+			'S', subMaterial.copy()
+		);
+
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_SHOVEL, 2),
+			"I", "S", "S",
+			'I', material.copy(),
+			'S', subMaterial.copy()
+		);
+
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_HOE, 3),
+			"II", " S", " S",
+			'I', material.copy(),
+			'S', subMaterial.copy()
+		);
+
+		material = new ItemStack(Blocks.PACKED_ICE);
+
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_SWORD, 19),
+			"I", "I", "S",
+			'I', material.copy(),
+			'S', subMaterial.copy()
+		);
+
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_PICKAXE, 28),
+			"III", " S ", " S ",
+			'I', material.copy(),
+			'S', subMaterial.copy()
+		);
+
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_AXE, 28),
+			"II", "IS", " S",
+			'I', material.copy(),
+			'S', subMaterial.copy()
+		);
+
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_SHOVEL, 10),
+			"I", "S", "S",
+			'I', material.copy(),
+			'S', subMaterial.copy()
+		);
+
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_HOE, 19),
+			"II", " S", " S",
+			'I', material.copy(),
+			'S', subMaterial.copy()
+		);
+
+		GameRegistry.addRecipe(new RecipeChargeIceEquipment());
+
+		RecipeSorter.register(Cavern.MODID + ":charge_ice_equip", RecipeChargeIceEquipment.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
 	}
 }

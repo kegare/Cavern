@@ -209,9 +209,13 @@ tile.pervertedLeaves.name=Perverted Leaves
 tile.pervertedSapling.name=Perverted Sapling
 tile.slipperyIce.name=Slippery Ice
 
+item.acresia.name=Acresia
+item.seedsAcresia.name=Acresia Seeds
+item.fruitsAcresia.name=Acresia Fruits
 item.aquamarine.name=Aquamarine
 item.ingotMagnite.name=Magnite Ingot
 item.hexcite.name=Hexcite
+item.stickIce.name=Ice Stick
 item.pickaxeAquamarine.name=Aquamarine Pickaxe
 item.axeAquamarine.name=Aquamarine Axe
 item.shovelAquamarine.name=Aquamarine Shovel
@@ -228,9 +232,11 @@ item.helmetHexcite.name=Hexcite Helmet
 item.chestplateHexcite.name=Hexcite Chestplate
 item.leggingsHexcite.name=Hexcite Leggings
 item.bootsHexcite.name=Hexcite Boots
-item.acresia.name=Acresia
-item.seedsAcresia.name=Acresia Seeds
-item.fruitsAcresia.name=Acresia Fruits
+item.swordIce.name=Ice Sword
+item.pickaxeIce.name=Ice Pickaxe
+item.axeIce.name=Ice Axe
+item.shovelIce.name=Ice Shovel
+item.hoeIce.name=Ice Hoe
 
 entity.cavern.CavenicSkeleton.name=Cavenic Skeleton
 entity.cavern.CavenicCreeper.name=Cavenic Creeper
@@ -261,3 +267,5 @@ achievement.cavern.goodMine=Good Mine!
 achievement.cavern.goodMine.desc=Mine many ores continuously
 achievement.cavern.slipIce=Beware of Slip
 achievement.cavern.slipIce.desc=Walk on a slippery ice
+
+tooltip.iceEquipment.charge=Ice Charge : %s

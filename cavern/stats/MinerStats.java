@@ -209,7 +209,7 @@ public class MinerStats implements IMinerStats
 
 	public static IMinerStats get(EntityPlayer player)
 	{
-		IMinerStats stats = CaveCapabilities.getEntityCapability(player, CaveCapabilities.MINER_STATS);
+		IMinerStats stats = CaveCapabilities.getCapability(player, CaveCapabilities.MINER_STATS);
 
 		if (stats == null)
 		{
