@@ -9,7 +9,7 @@ import cavern.api.IIceEquipment;
 import cavern.api.IMinerStats;
 import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
-import cavern.block.bonus.RandomiteItem;
+import cavern.block.bonus.WeightedItem;
 import cavern.config.GeneralConfig;
 import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
@@ -269,9 +269,15 @@ public class CaveEventHooks
 						{
 							Block.spawnAsEntity(world, pos, new ItemStack(Blocks.ICE));
 						}
-						else if (RANDOM.nextDouble() < 0.03D)
+						else if (RANDOM.nextDouble() < 0.0325D)
 						{
-							RandomiteItem randomItem = WeightedRandom.getRandomItem(RANDOM, BlockCave.RANDOMITE_ITEMS);
+							WeightedItem randomItem = WeightedRandom.getRandomItem(RANDOM, WorldProviderIceCavern.HIBERNATE_ITEMS);
+
+							Block.spawnAsEntity(world, pos, randomItem.getItem());
+						}
+						else if (RANDOM.nextDouble() < 0.0085D)
+						{
+							WeightedItem randomItem = WeightedRandom.getRandomItem(RANDOM, BlockCave.RANDOMITE_ITEMS);
 
 							Block.spawnAsEntity(world, pos, randomItem.getItem());
 						}

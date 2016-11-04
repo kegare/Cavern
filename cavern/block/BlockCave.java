@@ -6,7 +6,7 @@ import java.util.Random;
 import com.google.common.collect.Lists;
 
 import cavern.block.bonus.FissureBreakEvent;
-import cavern.block.bonus.RandomiteItem;
+import cavern.block.bonus.WeightedItem;
 import cavern.core.CaveAchievements;
 import cavern.core.Cavern;
 import cavern.item.CaveItems;
@@ -41,7 +41,7 @@ public class BlockCave extends Block
 {
 	public static final PropertyEnum<EnumType> VARIANT = PropertyEnum.create("variant", EnumType.class);
 
-	public static final List<RandomiteItem> RANDOMITE_ITEMS = Lists.newArrayList();
+	public static final List<WeightedItem> RANDOMITE_ITEMS = Lists.newArrayList();
 	public static final List<FissureBreakEvent> FISSURE_EVENTS = Lists.newArrayList();
 
 	public BlockCave()
@@ -132,7 +132,7 @@ public class BlockCave extends Block
 			case RANDOMITE_ORE:
 				if (!world.isRemote)
 				{
-					RandomiteItem randomItem = WeightedRandom.getRandomItem(RANDOM, RANDOMITE_ITEMS);
+					WeightedItem randomItem = WeightedRandom.getRandomItem(RANDOM, RANDOMITE_ITEMS);
 
 					if (randomItem == null)
 					{

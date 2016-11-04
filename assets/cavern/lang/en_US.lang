@@ -237,6 +237,7 @@ item.pickaxeIce.name=Ice Pickaxe
 item.axeIce.name=Ice Axe
 item.shovelIce.name=Ice Shovel
 item.hoeIce.name=Ice Hoe
+item.bowIce.name=Ice Bow
 
 entity.cavern.CavenicSkeleton.name=Cavenic Skeleton
 entity.cavern.CavenicCreeper.name=Cavenic Creeper

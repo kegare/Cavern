@@ -14,6 +14,7 @@ import cavern.config.GeneralConfig;
 import cavern.config.IceCavernConfig;
 import cavern.config.property.ConfigDisplayPos;
 import cavern.core.Cavern;
+import cavern.item.ItemBowIce;
 import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
 import cavern.util.Version;
@@ -46,6 +47,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
+import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -527,6 +529,30 @@ public class ClientEventHooks
 			event.setRed(red * (1.0F - var1) + red * var2 * var1);
 			event.setGreen(green * (1.0F - var1) + green * var2 * var1);
 			event.setBlue(blue * (1.0F - var1) + blue * var2 * var1);
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onFOVUpdate(FOVUpdateEvent event)
+	{
+		EntityPlayer player = event.getEntity();
+		ItemStack using = player.getActiveItemStack();
+
+		if (using != null && using.getItem() instanceof ItemBowIce)
+		{
+			float f = using.getMaxItemUseDuration() / 20.0F;
+
+			if (f > 1.0F)
+			{
+				f = 1.0F;
+			}
+			else
+			{
+				f *= f;
+			}
+
+			event.setNewfov(event.getFov() * (1.0F - f * 0.15F));
 		}
 	}
 }

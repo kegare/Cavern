@@ -1,13 +1,20 @@
 package cavern.config.property;
 
+import java.util.Set;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 
+import cavern.config.GeneralConfig;
 import cavern.stats.MinerStats;
 import cavern.util.BlockMeta;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 public class ConfigMiningPoints
 {
@@ -38,6 +45,44 @@ public class ConfigMiningPoints
 	public void setInit(boolean flag)
 	{
 		init = flag;
+	}
+
+	public void init()
+	{
+		Set<String> entries = Sets.newTreeSet();
+
+		for (Block block : Block.REGISTRY)
+		{
+			if (block == null)
+			{
+				continue;
+			}
+
+			for (int i = 0; i < 16; ++i)
+			{
+				int point = MinerStats.getPointAmount(block, i);
+
+				if (point > 0)
+				{
+					String name = block.getRegistryName().toString();
+					String meta = BlockMeta.getMetaString(block, i);
+
+					entries.add(name + ":" + meta + "," + point);
+				}
+			}
+		}
+
+		ConfigCategory category = GeneralConfig.config.getCategory(Configuration.CATEGORY_GENERAL);
+		Property prop = category.get("miningPoints");
+
+		if (prop != null)
+		{
+			String[] data = entries.toArray(new String[entries.size()]);
+
+			prop.set(data);
+
+			setValues(data);
+		}
 	}
 
 	public void refreshPoints()

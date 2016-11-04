@@ -218,6 +218,7 @@ item.pickaxeIce.name=冰镐
 item.axeIce.name=冰斧
 item.shovelIce.name=冰铲
 item.hoeIce.name=冰锄
+item.bowIce.name=冰弓
 
 achievement.cavern.cavern.desc=去Cavern
 achievement.cavern.aquaCavern.desc=去Aqua Cavern

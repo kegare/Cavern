@@ -3,11 +3,11 @@ package cavern.block.bonus;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandom;
 
-public class RandomiteItem extends WeightedRandom.Item
+public class WeightedItem extends WeightedRandom.Item
 {
 	private final ItemStack item;
 
-	public RandomiteItem(ItemStack item, int weight)
+	public WeightedItem(ItemStack item, int weight)
 	{
 		super(weight);
 		this.item = item;

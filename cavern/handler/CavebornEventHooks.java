@@ -56,7 +56,7 @@ public class CavebornEventHooks
 				{
 					BlockPortalCavern portal = caveborn.getPortalBlock();
 
-					if (portal != null)
+					if (portal != null && !portal.isDimensionDisabled())
 					{
 						int dim = portal.getDimension();
 						Teleporter teleporter = new TeleporterCavern(server.worldServerForDimension(dim), portal);

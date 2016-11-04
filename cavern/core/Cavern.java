@@ -1,17 +1,9 @@
 package cavern.core;
 
-import java.util.Set;
-
 import org.apache.logging.log4j.Level;
 
-import com.google.common.collect.Sets;
-
 import cavern.api.CavernAPI;
-import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
-import cavern.block.bonus.FissureEventBreathing;
-import cavern.block.bonus.FissureEventExplosion;
-import cavern.block.bonus.FissureEventPotion;
 import cavern.capability.CaveCapabilities;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
@@ -30,21 +22,13 @@ import cavern.item.CaveItems;
 import cavern.network.CaveNetworkRegistry;
 import cavern.plugin.HaCPlugin;
 import cavern.stats.MinerStats;
-import cavern.util.BlockMeta;
 import cavern.util.CaveLog;
 import cavern.util.Version;
 import cavern.world.CaveType;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPlanks;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -195,94 +179,10 @@ public class Cavern
 	{
 		CaveEntityRegistry.addSpawns();
 
-		MinerStats.setPointAmount("oreCoal", 1);
-		MinerStats.setPointAmount("oreIron", 1);
-		MinerStats.setPointAmount("oreGold", 1);
-		MinerStats.setPointAmount("oreRedstone", 2);
-		MinerStats.setPointAmount(Blocks.LIT_REDSTONE_ORE, 0, 2);
-		MinerStats.setPointAmount("oreLapis", 3);
-		MinerStats.setPointAmount("oreEmerald", 3);
-		MinerStats.setPointAmount("oreDiamond", 5);
-		MinerStats.setPointAmount("oreQuartz", 2);
-		MinerStats.setPointAmount("oreCopper", 1);
-		MinerStats.setPointAmount("oreTin", 1);
-		MinerStats.setPointAmount("oreLead", 1);
-		MinerStats.setPointAmount("oreSilver", 1);
-		MinerStats.setPointAmount("oreAdamantium", 1);
-		MinerStats.setPointAmount("oreAluminum", 1);
-		MinerStats.setPointAmount("oreApatite", 1);
-		MinerStats.setPointAmount("oreMythril", 1);
-		MinerStats.setPointAmount("oreOnyx", 1);
-		MinerStats.setPointAmount("oreUranium", 2);
-		MinerStats.setPointAmount("oreSapphire", 3);
-		MinerStats.setPointAmount("oreRuby", 3);
-		MinerStats.setPointAmount("oreTopaz", 2);
-		MinerStats.setPointAmount("oreChrome", 1);
-		MinerStats.setPointAmount("orePlatinum", 1);
-		MinerStats.setPointAmount("oreTitanium", 1);
-		MinerStats.setPointAmount("oreTofu", 1);
-		MinerStats.setPointAmount("oreTofuDiamond", 4);
-		MinerStats.setPointAmount("oreSulfur", 1);
-		MinerStats.setPointAmount("oreSaltpeter", 1);
-		MinerStats.setPointAmount("oreFirestone", 2);
-		MinerStats.setPointAmount("oreSalt", 1);
-		MinerStats.setPointAmount("oreJade", 1);
-		MinerStats.setPointAmount("oreManganese", 1);
-		MinerStats.setPointAmount("oreLanite", 1);
-		MinerStats.setPointAmount("oreMeurodite", 1);
-		MinerStats.setPointAmount("oreSoul", 1);
-		MinerStats.setPointAmount("oreSunstone", 1);
-		MinerStats.setPointAmount("oreZinc", 1);
-		MinerStats.setPointAmount("oreCrocoite", 3);
-		MinerStats.setPointAmount("glowstone", 2);
-		MinerStats.setPointAmount("oreGypsum", 1);
-		MinerStats.setPointAmount("oreChalcedonyB", 1);
-		MinerStats.setPointAmount("oreChalcedonyW", 1);
-		MinerStats.setPointAmount("oreMagnetite", 1);
-		MinerStats.setPointAmount("oreNiter", 1);
-		MinerStats.setPointAmount("oreSchorl", 1);
-		MinerStats.setPointAmount("oreAquamarine", 2);
-		MinerStats.setPointAmount("oreMagnite", 1);
-		MinerStats.setPointAmount("oreRandomite", 2);
-		MinerStats.setPointAmount("oreHexcite", 4);
-		MinerStats.setPointAmount(CaveBlocks.CAVE_BLOCK, BlockCave.EnumType.FISSURED_STONE.getMetadata(), 3);
-		MinerStats.setPointAmount(CaveBlocks.CAVE_BLOCK, BlockCave.EnumType.FISSURED_PACKED_ICE.getMetadata(), 3);
+		MinerStats.registerPointAmounts();
 
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.DIRT, 6), 15);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.SAND, 6), 12);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.OAK.getMetadata()), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.SPRUCE.getMetadata()), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.BIRCH.getMetadata()), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.TORCH, 2), 50);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COAL, 5), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.IRON_INGOT), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.GOLD_INGOT), 10);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.EMERALD), 10);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.APPLE, 3), 30);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.BAKED_POTATO, 3), 30);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.BREAD, 2), 30);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COOKED_BEEF), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COOKED_CHICKEN), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COOKED_FISH), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COOKED_MUTTON), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COOKED_PORKCHOP), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.COOKED_RABBIT), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.BONE, 5), 30);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.IRON_SWORD), 10);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.IRON_PICKAXE), 10);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.IRON_AXE), 10);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.IRON_SHOVEL), 10);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.IRON_HOE), 8);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND), 3);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND_SWORD), 2);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND_PICKAXE), 2);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND_AXE), 2);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND_SHOVEL), 2);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Items.DIAMOND_HOE), 1);
-
-		CavernAPI.apiHandler.addFissureBreakEvent(new FissureEventPotion(), 100);
-		CavernAPI.apiHandler.addFissureBreakEvent(new FissureEventExplosion(), 10);
-		CavernAPI.apiHandler.addFissureBreakEvent(new FissureEventBreathing(), 50);
+		CavernAPIHandler.registerItems();
+		CavernAPIHandler.registerEvents();
 
 		loadPlugins();
 	}
@@ -297,7 +197,7 @@ public class Cavern
 			}
 			catch (Exception e)
 			{
-				CaveLog.log(Level.WARN, e, "Failed to load the HaC mod plugin.");
+				CaveLog.log(Level.WARN, e, "Failed to load the Heat&Climate mod plugin.");
 			}
 		}
 	}
@@ -307,40 +207,7 @@ public class Cavern
 	{
 		if (GeneralConfig.miningPoints.hasInit())
 		{
-			Set<String> entries = Sets.newTreeSet();
-
-			for (Block block : Block.REGISTRY)
-			{
-				if (block == null)
-				{
-					continue;
-				}
-
-				for (int i = 0; i < 16; ++i)
-				{
-					int point = MinerStats.getPointAmount(block, i);
-
-					if (point > 0)
-					{
-						String name = block.getRegistryName().toString();
-						String meta = BlockMeta.getMetaString(block, i);
-
-						entries.add(name + ":" + meta + "," + point);
-					}
-				}
-			}
-
-			ConfigCategory category = GeneralConfig.config.getCategory(Configuration.CATEGORY_GENERAL);
-			Property prop = category.get("miningPoints");
-
-			if (prop != null)
-			{
-				String[] data = entries.toArray(new String[entries.size()]);
-
-				prop.set(data);
-
-				GeneralConfig.miningPoints.setValues(data);
-			}
+			GeneralConfig.miningPoints.init();
 		}
 
 		Config.saveConfig(GeneralConfig.config);

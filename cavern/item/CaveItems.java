@@ -11,6 +11,7 @@ import cavern.recipe.RecipeChargeIceEquipment;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -59,6 +60,7 @@ public class CaveItems
 	public static final ItemAxeIce ICE_AXE = new ItemAxeIce();
 	public static final ItemShovelIce ICE_SHOVEL = new ItemShovelIce();
 	public static final ItemHoeIce ICE_HOE = new ItemHoeIce();
+	public static final ItemBowIce ICE_BOW = new ItemBowIce();
 
 	public static void registerItems(IForgeRegistry<Item> registry)
 	{
@@ -84,6 +86,7 @@ public class CaveItems
 		registry.register(ICE_AXE.setRegistryName("ice_axe"));
 		registry.register(ICE_SHOVEL.setRegistryName("ice_shovel"));
 		registry.register(ICE_HOE.setRegistryName("ice_hoe"));
+		registry.register(ICE_BOW.setRegistryName("ice_bow"));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -111,6 +114,7 @@ public class CaveItems
 		registerModel(ICE_AXE, "ice_axe");
 		registerModel(ICE_SHOVEL, "ice_shovel");
 		registerModel(ICE_HOE, "ice_hoe");
+		registerModel(ICE_BOW, "ice_bow");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -175,6 +179,7 @@ public class CaveItems
 		IceEquipment.register(ICE_AXE);
 		IceEquipment.register(ICE_SHOVEL);
 		IceEquipment.register(ICE_HOE);
+		IceEquipment.register(ICE_BOW);
 	}
 
 	public static void registerRecipes()
@@ -359,6 +364,25 @@ public class CaveItems
 			"II", " S", " S",
 			'I', material.copy(),
 			'S', subMaterial.copy()
+		);
+
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_BOW, 1),
+			"SI ", "S I", "SI ",
+			'I', subMaterial.copy(),
+			'S', Items.STRING
+		);
+
+		material = new ItemStack(Items.BOW, 1, OreDictionary.WILDCARD_VALUE);
+
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_BOW, 4),
+			" I ", "IBI", " I ",
+			'I', Blocks.ICE,
+			'B', material.copy()
+		);
+		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_BOW, 36),
+			" I ", "IBI", " I ",
+			'I', Blocks.PACKED_ICE,
+			'B', material.copy()
 		);
 
 		GameRegistry.addRecipe(new RecipeChargeIceEquipment());

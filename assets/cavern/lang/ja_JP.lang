@@ -229,6 +229,7 @@ item.pickaxeIce.name=氷のツルハシ
 item.axeIce.name=氷の斧
 item.shovelIce.name=氷のシャベル
 item.hoeIce.name=氷のクワ
+item.bowIce.name=氷の弓
 
 entity.cavern.CavenicSkeleton.name=ケイブニックスケルトン
 entity.cavern.CavenicCreeper.name=ケイブニッククリーパー
