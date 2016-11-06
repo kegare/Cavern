@@ -17,7 +17,7 @@ public class WorldProviderCaveland extends WorldProviderCavern
 		this.hasNoSky = true;
 		this.setDimension(CavelandConfig.dimensionId);
 
-		saveHandler.setDimension(getDimension()).setWorldHeight(CavelandConfig.dimensionId);
+		saveHandler.setDimension(getDimension()).setWorldHeight(CavelandConfig.worldHeight);
 	}
 
 	@Override

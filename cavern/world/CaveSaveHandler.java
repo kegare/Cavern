@@ -181,7 +181,7 @@ public class CaveSaveHandler
 			nbt.setLong("Seed", rand.nextLong());
 		}
 
-		if (!nbt.hasKey("Height", NBT.TAG_ANY_NUMERIC))
+		if (!nbt.hasKey("Height", NBT.TAG_ANY_NUMERIC) || nbt.getInteger("Height") <= 0)
 		{
 			if (worldHeight <= 0)
 			{

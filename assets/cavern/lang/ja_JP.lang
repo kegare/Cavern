@@ -97,6 +97,10 @@ cavern.config.dimension.monsterSpawn=モンスターのスポーン量
 cavern.config.dimension.monsterSpawn.tooltip=このディメンションのモンスターのスポーン量を指定します。0を指定すると、モンスターのスポーンは通常になります。
 cavern.config.dimension.caveBrightness=洞窟の明るさ
 cavern.config.dimension.caveBrightness.tooltip=このディメンションの明るさを指定します。
+cavern.config.dimension.decorateTorches=松明の設置
+cavern.config.dimension.decorateTorches.tooltip=このディメンションの生成時に松明を設置します。
+cavern.config.dimension.bonusChest=ボーナスチェスト
+cavern.config.dimension.bonusChest.tooltip=このディメンションの生成時に設置されるチェストにボーナスアイテムを入れる確率を指定します。
 
 cavern.config.biomes=バイオームのカスタマイズ
 cavern.config.biomes.tooltip=ディメンションのバイオームの生成設定を変更できます。

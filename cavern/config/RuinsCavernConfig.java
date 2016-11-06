@@ -18,6 +18,9 @@ public class RuinsCavernConfig
 
 	public static double caveBrightness;
 
+	public static boolean decorateTorches;
+	public static double bonusChest;
+
 	public static void syncConfig()
 	{
 		String category = "dimension";
@@ -69,6 +72,27 @@ public class RuinsCavernConfig
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		caveBrightness = prop.getDouble(caveBrightness);
+
+		prop = config.get(category, "decorateTorches", true);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [default: " + prop.getDefault() + "]";
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		decorateTorches = prop.getBoolean(decorateTorches);
+
+		prop = config.get(category, "bonusChest", 0.2D);
+		prop.setMinValue(0.0D).setMaxValue(1.0D);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		bonusChest = prop.getDouble(bonusChest);
 
 		config.setCategoryPropertyOrder(category, propOrder);
 		config.setCategoryLanguageKey(category, Config.LANG_KEY + category + ".cavern");

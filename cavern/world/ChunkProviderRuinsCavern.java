@@ -7,6 +7,7 @@ import java.util.Random;
 import org.apache.commons.lang3.tuple.Pair;
 
 import cavern.block.BlockCave;
+import cavern.config.RuinsCavernConfig;
 import cavern.util.WeightedItem;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
@@ -117,13 +118,16 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 	{
 		if (chunkX == 0 && chunkZ == 0)
 		{
-			for (Pair<BlockPos, IBlockState> data : RuinsBlockData.Torch.BLOCKS)
+			if (RuinsCavernConfig.decorateTorches)
 			{
-				BlockPos pos = data.getLeft();
-				IBlockState state = data.getRight();
+				for (Pair<BlockPos, IBlockState> data : RuinsBlockData.Torch.BLOCKS)
+				{
+					BlockPos pos = data.getLeft();
+					IBlockState state = data.getRight();
 
-				worldObj.setBlockState(pos, state, 3);
-				worldObj.checkLightFor(EnumSkyBlock.BLOCK, pos);
+					worldObj.setBlockState(pos, state, 3);
+					worldObj.checkLightFor(EnumSkyBlock.BLOCK, pos);
+				}
 			}
 
 			for (Pair<BlockPos, IBlockState> data : RuinsBlockData.TileEntity.BLOCKS)
@@ -135,7 +139,7 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 
 				TileEntity tile = worldObj.getTileEntity(pos);
 
-				if (tile != null && rand.nextDouble() < 0.15D && tile instanceof TileEntityChest)
+				if (tile != null && rand.nextDouble() <= RuinsCavernConfig.bonusChest && tile instanceof TileEntityChest)
 				{
 					TileEntityChest chest = (TileEntityChest)tile;
 

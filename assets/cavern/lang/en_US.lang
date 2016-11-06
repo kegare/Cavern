@@ -107,6 +107,10 @@ cavern.config.dimension.monsterSpawn=Monster Spawn Weight
 cavern.config.dimension.monsterSpawn.tooltip=Specify the spawn weight for monster in the dimension. If specify to 0, monster spawning will be naturally.
 cavern.config.dimension.caveBrightness=Cave Brightness
 cavern.config.dimension.caveBrightness.tooltip=Specify the world brightness for the dimension.
+cavern.config.dimension.decorateTorches=Decorate Torches
+cavern.config.dimension.decorateTorches.tooltip=Whether to decorate torches in the dimension.
+cavern.config.dimension.bonusChest=Bonus Chest
+cavern.config.dimension.bonusChest.tooltip=Specify the chances of include bonus in chest.
 
 cavern.config.biomes=Biomes Customize
 cavern.config.biomes.tooltip=Change the biome generation settings of the dimension.
@@ -276,7 +280,7 @@ achievement.cavern.magniteMiner.desc=Become a Magnite Miner
 achievement.cavern.goldMiner=Gold Miner
 achievement.cavern.goldMiner.desc=Become a Gold Miner
 achievement.cavern.aquaMiner=Aqua Miner
-achievement.cavern.aquaMiner.desc=Become a Aqua Miner
+achievement.cavern.aquaMiner.desc=Become an Aqua Miner
 achievement.cavern.diamondMiner=Diamond Miner
 achievement.cavern.diamondMiner.desc=Become a Diamond Miner
 
