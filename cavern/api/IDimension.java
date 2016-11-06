@@ -12,11 +12,15 @@ public interface IDimension
 
 	public int getIceCavernDimension();
 
+	public int getRuinsCavernDimension();
+
 	public boolean isAquaCavernDisabled();
 
 	public boolean isCavelandDisabled();
 
 	public boolean isIceCavernDisabled();
+
+	public boolean isRuinsCavernDisabled();
 
 	public boolean isEntityInCavern(Entity entity);
 
@@ -25,6 +29,8 @@ public interface IDimension
 	public boolean isEntityInCaveland(Entity entity);
 
 	public boolean isEntityInIceCavern(Entity entity);
+
+	public boolean isEntityInRuinsCavern(Entity entity);
 
 	public boolean isEntityInCaves(Entity entity);
 
@@ -35,6 +41,8 @@ public interface IDimension
 	public boolean isCaveland(int dimension);
 
 	public boolean isIceCavern(int dimension);
+
+	public boolean isRuinsCavern(int dimension);
 
 	public boolean isCaves(int dimension);
 }

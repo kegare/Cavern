@@ -1,29 +1,29 @@
 package cavern.world;
 
-import cavern.config.CavelandConfig;
+import cavern.config.RuinsCavernConfig;
 import cavern.config.manager.CaveBiomeManager;
 import cavern.config.property.ConfigBiomeType;
-import cavern.core.CaveSounds;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.init.Biomes;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.chunk.IChunkGenerator;
 
-public class WorldProviderCaveland extends WorldProviderCavern
+public class WorldProviderRuinsCavern extends WorldProviderCavern
 {
-	public static final CaveSaveHandler saveHandler = new CaveSaveHandler("Caveland");
+	public static final CaveSaveHandler saveHandler = new CaveSaveHandler("Ruins Cavern");
 
-	public WorldProviderCaveland()
+	public WorldProviderRuinsCavern()
 	{
 		this.hasNoSky = true;
-		this.setDimension(CavelandConfig.dimensionId);
+		this.setDimension(RuinsCavernConfig.dimensionId);
 
-		saveHandler.setDimension(getDimension()).setWorldHeight(CavelandConfig.dimensionId);
+		saveHandler.setDimension(getDimension()).setWorldHeight(RuinsCavernConfig.worldHeight);
 	}
 
 	@Override
 	public DimensionType getDimensionType()
 	{
-		return CaveType.DIM_CAVELAND;
+		return CaveType.DIM_RUINS_CAVERN;
 	}
 
 	@Override
@@ -35,17 +35,7 @@ public class WorldProviderCaveland extends WorldProviderCavern
 	@Override
 	public long getSeed()
 	{
-		if (!CavelandConfig.randomSeed)
-		{
-			return worldObj.getWorldInfo().getSeed();
-		}
-
-		if (!worldObj.isRemote && saveHandler.getRawData() == null)
-		{
-			saveHandler.getData();
-		}
-
-		return saveHandler.getWorldSeed();
+		return worldObj.getWorldInfo().getSeed();
 	}
 
 	@Override
@@ -68,24 +58,24 @@ public class WorldProviderCaveland extends WorldProviderCavern
 	@Override
 	public int getMonsterSpawn()
 	{
-		return CavelandConfig.monsterSpawn;
+		return 0;
 	}
 
 	@Override
 	public double getBrightness()
 	{
-		return CavelandConfig.caveBrightness;
+		return RuinsCavernConfig.caveBrightness;
 	}
 
 	@Override
-	public SoundEvent getMusicSound()
+	protected void createBiomeProvider()
 	{
-		return CaveSounds.MUSIC_HOPE;
+		biomeProvider = new BiomeProviderSingle(Biomes.PLAINS);
 	}
 
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkProviderCaveland(worldObj);
+		return new ChunkProviderRuinsCavern(worldObj);
 	}
 }

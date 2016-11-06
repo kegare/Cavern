@@ -5,6 +5,7 @@ import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CavernConfig;
 import cavern.config.IceCavernConfig;
+import cavern.config.RuinsCavernConfig;
 import cavern.util.DimensionRegeneration;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -19,6 +20,7 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 	protected boolean aquaCavern;
 	protected boolean caveland;
 	protected boolean iceCavern;
+	protected boolean ruinsCavern;
 
 	public RegenerationMessage() {}
 
@@ -27,7 +29,7 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		this.backup = backup;
 	}
 
-	public RegenerationMessage(boolean backup, boolean cavern, boolean aquaCavern, boolean caveland, boolean iceCavern)
+	public RegenerationMessage(boolean backup, boolean cavern, boolean aquaCavern, boolean caveland, boolean iceCavern, boolean ruinsCavern)
 	{
 		this(backup);
 		this.cavern = cavern;
@@ -84,6 +86,18 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		return this;
 	}
 
+	public RegenerationMessage setRuinsCavern()
+	{
+		return setRuinsCavern(true);
+	}
+
+	public RegenerationMessage setRuinsCavern(boolean value)
+	{
+		ruinsCavern = value;
+
+		return this;
+	}
+
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
@@ -92,6 +106,7 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		aquaCavern = buf.readBoolean();
 		caveland = buf.readBoolean();
 		iceCavern = buf.readBoolean();
+		ruinsCavern = buf.readBoolean();
 	}
 
 	@Override
@@ -102,6 +117,7 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		buf.writeBoolean(aquaCavern);
 		buf.writeBoolean(caveland);
 		buf.writeBoolean(iceCavern);
+		buf.writeBoolean(ruinsCavern);
 	}
 
 	@Override
@@ -125,6 +141,11 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		if (message.iceCavern && !CavernAPI.dimension.isIceCavernDisabled())
 		{
 			DimensionRegeneration.regenerate(IceCavernConfig.dimensionId, message.backup);
+		}
+
+		if (message.ruinsCavern && !CavernAPI.dimension.isRuinsCavernDisabled())
+		{
+			DimensionRegeneration.regenerate(RuinsCavernConfig.dimensionId, message.backup);
 		}
 
 		return null;

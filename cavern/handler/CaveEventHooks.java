@@ -29,6 +29,7 @@ import cavern.world.WorldProviderAquaCavern;
 import cavern.world.WorldProviderCaveland;
 import cavern.world.WorldProviderCavern;
 import cavern.world.WorldProviderIceCavern;
+import cavern.world.WorldProviderRuinsCavern;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.material.Material;
@@ -487,6 +488,10 @@ public class CaveEventHooks
 			else if (CavernAPI.dimension.isIceCavern(dim))
 			{
 				WorldProviderIceCavern.saveHandler.writeToFile();
+			}
+			else if (CavernAPI.dimension.isRuinsCavern(dim))
+			{
+				WorldProviderRuinsCavern.saveHandler.writeToFile();
 			}
 		}
 	}

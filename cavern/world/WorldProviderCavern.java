@@ -39,7 +39,7 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 		this.hasNoSky = true;
 		this.setDimension(CavernConfig.dimensionId);
 
-		saveHandler.setDimension(getDimension());
+		saveHandler.setDimension(getDimension()).setWorldHeight(CavernConfig.worldHeight);
 	}
 
 	@Override

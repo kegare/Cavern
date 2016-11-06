@@ -61,6 +61,7 @@ cavern.config.dimension.cavern.tooltip=cavern-dimension.cfgに含まれる設定
 cavern.config.dimension.aquaCavern.tooltip=aquacavern-dimension.cfgに含まれる設定を変更できます。
 cavern.config.dimension.caveland.tooltip=caveland-dimension.cfgに含まれる設定を変更できます。
 cavern.config.dimension.iceCavern.tooltip=icecavern-dimension.cfgに含まれる設定を変更できます。
+cavern.config.dimension.ruinsCavern.tooltip=ruinscavern-dimension.cfgに含まれる設定を変更できます。
 cavern.config.dimension.dimensionDisabled=ディメンションの無効化
 cavern.config.dimension.dimensionDisabled.tooltip=このディメンションを無効にします。
 cavern.config.dimension.dimension=ディメンション

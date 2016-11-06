@@ -58,6 +58,7 @@ cavern.config.dimension.cavern.tooltip=在cavern-dimension.cfg中更改设置
 cavern.config.dimension.aquaCavern.tooltip=在aquacavern-dimension.cfg中更改设置
 cavern.config.dimension.caveland.tooltip=在caveland-dimension.cfg中更改设置
 cavern.config.dimension.iceCavern.tooltip=在icecavern-dimension.cfg中更改设置
+cavern.config.dimension.ruinsCavern.tooltip=在ruinscavern-dimension.cfg中更改设置
 cavern.config.dimension.dimension=维度ID
 cavern.config.dimension.dimension.tooltip=设置维度ID
 cavern.config.dimension.worldHeight=世界高度

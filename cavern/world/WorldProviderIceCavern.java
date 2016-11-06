@@ -24,7 +24,7 @@ public class WorldProviderIceCavern extends WorldProviderCavern
 		this.hasNoSky = true;
 		this.setDimension(IceCavernConfig.dimensionId);
 
-		saveHandler.setDimension(getDimension());
+		saveHandler.setDimension(getDimension()).setWorldHeight(IceCavernConfig.worldHeight);
 	}
 
 	@Override

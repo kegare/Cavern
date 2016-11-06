@@ -5,6 +5,7 @@ import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CavernConfig;
 import cavern.config.IceCavernConfig;
+import cavern.config.RuinsCavernConfig;
 import net.minecraft.entity.Entity;
 
 public class DimensionHandler implements IDimension
@@ -34,6 +35,12 @@ public class DimensionHandler implements IDimension
 	}
 
 	@Override
+	public int getRuinsCavernDimension()
+	{
+		return RuinsCavernConfig.dimensionId;
+	}
+
+	@Override
 	public boolean isAquaCavernDisabled()
 	{
 		return AquaCavernConfig.dimensionDisabled;
@@ -49,6 +56,12 @@ public class DimensionHandler implements IDimension
 	public boolean isIceCavernDisabled()
 	{
 		return IceCavernConfig.dimensionDisabled;
+	}
+
+	@Override
+	public boolean isRuinsCavernDisabled()
+	{
+		return RuinsCavernConfig.dimensionDisabled;
 	}
 
 	@Override
@@ -72,13 +85,19 @@ public class DimensionHandler implements IDimension
 	@Override
 	public boolean isEntityInIceCavern(Entity entity)
 	{
-		return !isAquaCavernDisabled() && entity != null && entity.dimension == getIceCavernDimension();
+		return !isIceCavernDisabled() && entity != null && entity.dimension == getIceCavernDimension();
+	}
+
+	@Override
+	public boolean isEntityInRuinsCavern(Entity entity)
+	{
+		return !isRuinsCavernDisabled() && entity != null && entity.dimension == getRuinsCavernDimension();
 	}
 
 	@Override
 	public boolean isEntityInCaves(Entity entity)
 	{
-		return isEntityInCavern(entity) || isEntityInAquaCavern(entity) || isEntityInCaveland(entity) || isEntityInIceCavern(entity);
+		return isEntityInCavern(entity) || isEntityInAquaCavern(entity) || isEntityInCaveland(entity) || isEntityInIceCavern(entity) || isEntityInRuinsCavern(entity);
 	}
 
 	@Override
@@ -106,8 +125,14 @@ public class DimensionHandler implements IDimension
 	}
 
 	@Override
+	public boolean isRuinsCavern(int dimension)
+	{
+		return !isRuinsCavernDisabled() && getRuinsCavernDimension() == dimension;
+	}
+
+	@Override
 	public boolean isCaves(int dimension)
 	{
-		return isCavern(dimension) || isAquaCavern(dimension) || isCaveland(dimension) || isIceCavern(dimension);
+		return isCavern(dimension) || isAquaCavern(dimension) || isCaveland(dimension) || isIceCavern(dimension) || isRuinsCavern(dimension);
 	}
 }

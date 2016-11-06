@@ -20,7 +20,7 @@ public class WorldProviderAquaCavern extends WorldProviderCavern
 		this.hasNoSky = true;
 		this.setDimension(AquaCavernConfig.dimensionId);
 
-		saveHandler.setDimension(getDimension());
+		saveHandler.setDimension(getDimension()).setWorldHeight(AquaCavernConfig.worldHeight);
 	}
 
 	@Override

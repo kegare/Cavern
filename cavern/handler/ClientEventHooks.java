@@ -12,6 +12,7 @@ import cavern.config.CavelandConfig;
 import cavern.config.CavernConfig;
 import cavern.config.GeneralConfig;
 import cavern.config.IceCavernConfig;
+import cavern.config.RuinsCavernConfig;
 import cavern.config.property.ConfigDisplayPos;
 import cavern.core.Cavern;
 import cavern.item.ItemBowIce;
@@ -143,6 +144,9 @@ public class ClientEventHooks
 					}
 
 					break;
+				case "dimension.ruinsCavern":
+					RuinsCavernConfig.syncConfig();
+					break;
 			}
 		}
 	}
@@ -171,6 +175,10 @@ public class ClientEventHooks
 			else if (CavernAPI.dimension.isEntityInIceCavern(player))
 			{
 				event.getLeft().add("Dim: Ice Cavern");
+			}
+			else if (CavernAPI.dimension.isEntityInRuinsCavern(player))
+			{
+				event.getLeft().add("Dim: Ruins Cavern");
 			}
 		}
 	}

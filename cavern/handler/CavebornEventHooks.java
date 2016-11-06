@@ -4,10 +4,13 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import cavern.api.CavernAPI;
 import cavern.block.BlockPortalCavern;
 import cavern.config.GeneralConfig;
+import cavern.config.RuinsCavernConfig;
 import cavern.config.property.ConfigCaveborn;
 import cavern.world.TeleporterCavern;
+import cavern.world.TeleporterRuinsCavern;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.server.MinecraftServer;
@@ -52,44 +55,61 @@ public class CavebornEventHooks
 			{
 				MinecraftServer server = player.mcServer;
 
-				server.addScheduledTask(() ->
+				if (caveborn == ConfigCaveborn.Type.RUINS_CAVERN && !CavernAPI.dimension.isRuinsCavernDisabled())
 				{
-					BlockPortalCavern portal = caveborn.getPortalBlock();
-
-					if (portal != null && !portal.isDimensionDisabled())
+					server.addScheduledTask(() ->
 					{
-						int dim = portal.getDimension();
-						Teleporter teleporter = new TeleporterCavern(server.worldServerForDimension(dim), portal);
-
-						boolean force = player.forceSpawn;
-
-						player.forceSpawn = true;
-						player.timeUntilPortal = player.getPortalCooldown();
+						int dim = RuinsCavernConfig.dimensionId;
+						Teleporter teleporter = new TeleporterRuinsCavern(server.worldServerForDimension(dim));
 
 						server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
 
-						player.forceSpawn = force;
-
 						WorldServer world = player.getServerWorld();
-						BlockPos pos = player.getPosition();
 
-						for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
+						world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_STONE_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+					});
+				}
+				else
+				{
+					server.addScheduledTask(() ->
+					{
+						BlockPortalCavern portal = caveborn.getPortalBlock();
+
+						if (portal != null && !portal.isDimensionDisabled())
 						{
-							if (world.getBlockState(blockpos).getBlock() == portal)
+							int dim = portal.getDimension();
+							Teleporter teleporter = new TeleporterCavern(server.worldServerForDimension(dim), portal);
+
+							boolean force = player.forceSpawn;
+
+							player.forceSpawn = true;
+							player.timeUntilPortal = player.getPortalCooldown();
+
+							server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
+
+							player.forceSpawn = force;
+
+							WorldServer world = player.getServerWorld();
+							BlockPos pos = player.getPosition();
+
+							for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
 							{
-								world.setBlockToAir(blockpos);
+								if (world.getBlockState(blockpos).getBlock() == portal)
+								{
+									world.setBlockToAir(blockpos);
 
-								break;
+									break;
+								}
 							}
+
+							double x = player.posX;
+							double y = player.posY + player.getEyeHeight();
+							double z = player.posZ;
+
+							world.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0F, 0.65F);
 						}
-
-						double x = player.posX;
-						double y = player.posY + player.getEyeHeight();
-						double z = player.posZ;
-
-						world.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0F, 0.65F);
-					}
-				});
+					});
+				}
 			}
 		}
 	}

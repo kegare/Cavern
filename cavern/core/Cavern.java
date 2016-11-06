@@ -11,6 +11,7 @@ import cavern.config.CavernConfig;
 import cavern.config.Config;
 import cavern.config.GeneralConfig;
 import cavern.config.IceCavernConfig;
+import cavern.config.RuinsCavernConfig;
 import cavern.entity.CaveEntityRegistry;
 import cavern.handler.CaveEventHooks;
 import cavern.handler.CaveFuelHandler;
@@ -25,6 +26,7 @@ import cavern.stats.MinerStats;
 import cavern.util.CaveLog;
 import cavern.util.Version;
 import cavern.world.CaveType;
+import cavern.world.RuinsBlockData;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.SoundEvent;
@@ -161,6 +163,8 @@ public class Cavern
 		IceCavernConfig.syncConfig();
 		IceCavernConfig.syncVeinsConfig();
 
+		RuinsCavernConfig.syncConfig();
+
 		CaveType.registerDimensions();
 
 		CaveAchievements.registerAchievements();
@@ -185,6 +189,8 @@ public class Cavern
 		CavernAPIHandler.registerEvents();
 
 		loadPlugins();
+
+		RuinsBlockData.init();
 	}
 
 	public void loadPlugins()
