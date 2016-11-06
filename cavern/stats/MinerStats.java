@@ -13,6 +13,7 @@ import cavern.api.event.MinerStatsEvent;
 import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
 import cavern.capability.CaveCapabilities;
+import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.MinerStatsAdjustMessage;
@@ -155,6 +156,23 @@ public class MinerStats implements IMinerStats
 				double z = player.posZ;
 
 				player.getServerWorld().playSound(null, x, y, z, CaveSounds.RANK_PROMOTE, SoundCategory.MASTER, 1.0F, 1.0F);
+
+				switch (current)
+				{
+					case MAGNITE_MINER:
+						player.addStat(CaveAchievements.MAGNITE_MINER);
+						break;
+					case GOLD_MINER:
+						player.addStat(CaveAchievements.GOLD_MINER);
+						break;
+					case AQUA_MINER:
+						player.addStat(CaveAchievements.AQUA_MINER);
+						break;
+					case DIAMOND_MINER:
+						player.addStat(CaveAchievements.DIAMOND_MINER);
+						break;
+					default:
+				}
 			}
 
 			MinecraftForge.EVENT_BUS.post(new MinerStatsEvent.PromoteRank(entityPlayer, this));

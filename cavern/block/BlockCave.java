@@ -6,11 +6,11 @@ import java.util.Random;
 import com.google.common.collect.Lists;
 
 import cavern.block.bonus.FissureBreakEvent;
-import cavern.block.bonus.WeightedItem;
 import cavern.core.CaveAchievements;
 import cavern.core.Cavern;
 import cavern.item.CaveItems;
 import cavern.item.ItemCave;
+import cavern.util.WeightedItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;

@@ -5,6 +5,7 @@ import cavern.block.CaveBlocks;
 import cavern.item.CaveItems;
 import cavern.item.ItemAcresia;
 import cavern.item.ItemCave;
+import cavern.stats.MinerRank;
 import cavern.util.ArrayListExtended;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -29,6 +30,10 @@ public class CaveAchievements
 	public static final Achievement HEXCITE = CaveAchievement.of("hexcite", -3, 4, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()), CAVERN);
 	public static final Achievement GOOD_MINE = CaveAchievement.of("goodMine", 0, 2, Items.IRON_PICKAXE, CAVERN);
 	public static final Achievement SLIP_ICE = CaveAchievement.of("slipIce", -4, -2, CaveBlocks.SLIPPERY_ICE, ICE_CAVERN);
+	public static final Achievement MAGNITE_MINER = CaveAchievement.of("magniteMiner", -2, 2, MinerRank.MAGNITE_MINER.getPickaxe(), CAVERN);
+	public static final Achievement GOLD_MINER = CaveAchievement.of("goldMiner", -4, 2, MinerRank.GOLD_MINER.getPickaxe(), MAGNITE_MINER);
+	public static final Achievement AQUA_MINER = CaveAchievement.of("aquaMiner", -6, 2, MinerRank.AQUA_MINER.getPickaxe(), GOLD_MINER);
+	public static final Achievement DIAMOND_MINER = CaveAchievement.of("diamondMiner", -8, 2, MinerRank.DIAMOND_MINER.getPickaxe(), AQUA_MINER).setSpecial();
 
 	public static void registerAchievements()
 	{

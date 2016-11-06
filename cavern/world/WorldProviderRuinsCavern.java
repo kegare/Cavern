@@ -4,6 +4,7 @@ import cavern.config.RuinsCavernConfig;
 import cavern.config.manager.CaveBiomeManager;
 import cavern.config.property.ConfigBiomeType;
 import net.minecraft.init.Biomes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.chunk.IChunkGenerator;
@@ -77,5 +78,11 @@ public class WorldProviderRuinsCavern extends WorldProviderCavern
 	public IChunkGenerator createChunkGenerator()
 	{
 		return new ChunkProviderRuinsCavern(worldObj);
+	}
+
+	@Override
+	public BlockPos getSpawnPoint()
+	{
+		return BlockPos.ORIGIN.up(80);
 	}
 }

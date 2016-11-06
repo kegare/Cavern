@@ -67,6 +67,8 @@ public class CavebornEventHooks
 						WorldServer world = player.getServerWorld();
 
 						world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_STONE_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+
+						player.setSpawnPoint(BlockPos.ORIGIN.up(80), true);
 					});
 				}
 				else

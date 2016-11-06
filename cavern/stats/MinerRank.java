@@ -20,11 +20,11 @@ public enum MinerRank
 
 	private static final MinerRank[] RANK_LOOKUP = new MinerRank[values().length];
 
-	private int rank;
-	private int phase;
-	private float boost;
-	private String name;
-	private Item pickaxe;
+	private final int rank;
+	private final int phase;
+	private final float boost;
+	private final String name;
+	private final Item pickaxe;
 
 	@SideOnly(Side.CLIENT)
 	private ItemStack renderItemStack;

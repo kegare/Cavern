@@ -255,5 +255,13 @@ achievement.cavern.goodMine=上手に掘れました！
 achievement.cavern.goodMine.desc=たくさんの鉱石を連続して採掘する
 achievement.cavern.slipIce=スリップ注意
 achievement.cavern.slipIce.desc=滑りやすい氷の上を歩く
+achievement.cavern.magniteMiner=マグナイト掘り
+achievement.cavern.magniteMiner.desc=炭鉱夫ランクがマグナイト掘りになる
+achievement.cavern.goldMiner=金掘り
+achievement.cavern.goldMiner.desc=炭鉱夫ランクが金掘りになる
+achievement.cavern.aquaMiner=アクアマリン掘り
+achievement.cavern.aquaMiner.desc=炭鉱夫ランクがアクアマリン掘りになる
+achievement.cavern.diamondMiner=ダイヤモンド掘り
+achievement.cavern.diamondMiner.desc=炭鉱夫ランクがダイヤモンド掘りになる
 
 tooltip.iceEquipment.charge=アイスチャージ : %s

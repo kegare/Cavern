@@ -271,5 +271,13 @@ achievement.cavern.goodMine=Good Mine!
 achievement.cavern.goodMine.desc=Mine many ores continuously
 achievement.cavern.slipIce=Beware of Slip
 achievement.cavern.slipIce.desc=Walk on a slippery ice
+achievement.cavern.magniteMiner=Magnite Miner
+achievement.cavern.magniteMiner.desc=Become a Magnite Miner
+achievement.cavern.goldMiner=Gold Miner
+achievement.cavern.goldMiner.desc=Become a Gold Miner
+achievement.cavern.aquaMiner=Aqua Miner
+achievement.cavern.aquaMiner.desc=Become a Aqua Miner
+achievement.cavern.diamondMiner=Diamond Miner
+achievement.cavern.diamondMiner.desc=Become a Diamond Miner
 
 tooltip.iceEquipment.charge=Ice Charge : %s

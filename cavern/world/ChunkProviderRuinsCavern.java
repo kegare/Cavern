@@ -7,7 +7,7 @@ import java.util.Random;
 import org.apache.commons.lang3.tuple.Pair;
 
 import cavern.block.BlockCave;
-import cavern.block.bonus.WeightedItem;
+import cavern.util.WeightedItem;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;
@@ -16,6 +16,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -55,6 +56,19 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 
 	public void replaceBiomeBlocks(int chunkX, int chunkZ, ChunkPrimer primer)
 	{
+		ChunkPos chunkPos = new ChunkPos(chunkX, chunkZ);
+		List<Pair<BlockPos, IBlockState>> list = RuinsBlockData.BLOCKS_MAP.get(chunkPos);
+
+		if (list != null && !list.isEmpty())
+		{
+			for (Pair<BlockPos, IBlockState> data : list)
+			{
+				BlockPos pos = data.getLeft();
+
+				primer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), data.getRight());
+			}
+		}
+
 		int worldHeight = worldObj.provider.getActualHeight();
 		int blockHeight = worldHeight - 1;
 
@@ -103,17 +117,21 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 	{
 		if (chunkX == 0 && chunkZ == 0)
 		{
-			for (Pair<BlockPos, IBlockState> data : RuinsBlockData.BLOCKS)
+			for (Pair<BlockPos, IBlockState> data : RuinsBlockData.Torch.BLOCKS)
+			{
+				BlockPos pos = data.getLeft();
+				IBlockState state = data.getRight();
+
+				worldObj.setBlockState(pos, state, 3);
+				worldObj.checkLightFor(EnumSkyBlock.BLOCK, pos);
+			}
+
+			for (Pair<BlockPos, IBlockState> data : RuinsBlockData.TileEntity.BLOCKS)
 			{
 				BlockPos pos = data.getLeft();
 				IBlockState state = data.getRight();
 
 				worldObj.setBlockState(pos, state, 2);
-
-				if (state.getLightValue(worldObj, pos) > 0)
-				{
-					worldObj.checkLightFor(EnumSkyBlock.BLOCK, pos);
-				}
 
 				TileEntity tile = worldObj.getTileEntity(pos);
 
