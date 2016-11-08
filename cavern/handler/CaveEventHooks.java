@@ -25,6 +25,7 @@ import cavern.stats.MinerStats;
 import cavern.util.BlockMeta;
 import cavern.util.CaveUtils;
 import cavern.util.WeightedItem;
+import cavern.world.TeleporterRepatriation;
 import cavern.world.WorldProviderAquaCavern;
 import cavern.world.WorldProviderCaveland;
 import cavern.world.WorldProviderCavern;
@@ -44,6 +45,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.stats.Achievement;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -56,6 +59,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
@@ -100,6 +104,29 @@ public class CaveEventHooks
 		if (event.player instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = (EntityPlayerMP)event.player;
+
+			if (GeneralConfig.cavernEscapeMission)
+			{
+				if (CavernAPI.dimension.isCaves(event.toDim))
+				{
+					player.inventory.addItemStackToInventory(CaveItems.getBookEscapeMission());
+				}
+				else if (CavernAPI.dimension.isCaves(event.fromDim))
+				{
+					MinecraftServer server = player.mcServer;
+					WorldServer worldNew = server.worldServerForDimension(event.fromDim);
+
+					if (worldNew != null)
+					{
+						player.timeUntilPortal = player.getPortalCooldown();
+
+						server.getPlayerList().transferPlayerToDimension(player, event.fromDim, new TeleporterRepatriation(worldNew));
+
+						return;
+					}
+				}
+			}
+
 			WorldServer world = player.getServerWorld();
 			String suffix = ".LastTeleportTime";
 
@@ -170,6 +197,47 @@ public class CaveEventHooks
 
 				player.addStat(CaveAchievements.ICE_CAVERN);
 			}
+			else if (CavernAPI.dimension.isEntityInRuinsCavern(player))
+			{
+				NBTTagCompound data = player.getEntityData();
+				String key = "RuinsCavern" + suffix;
+
+				if (!data.hasKey(key, NBT.TAG_ANY_NUMERIC) || data.getLong(key) + 18000L < world.getTotalWorldTime())
+				{
+					CaveNetworkRegistry.sendTo(new CaveMusicMessage(CaveSounds.MUSIC_CAVE), player);
+				}
+
+				data.setLong(key, world.getTotalWorldTime());
+
+				player.addStat(CaveAchievements.RUINS_CAVERN);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onEntityTravelToDimension(EntityTravelToDimensionEvent event)
+	{
+		if (GeneralConfig.cavernEscapeMission && event.getEntity() instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer)event.getEntity();
+
+			if (CavernAPI.dimension.isEntityInCaves(player) && !CavernAPI.dimension.isCaves(event.getDimension()))
+			{
+				boolean flag = true;
+
+				for (Achievement achievement : CaveAchievements.ESCAPE_ACHIEVEMENTS)
+				{
+					if (!Cavern.proxy.hasAchievementUnlocked(player, achievement))
+					{
+						flag = false;
+					}
+				}
+
+				if (!flag)
+				{
+					event.setCanceled(true);
+				}
+			}
 		}
 	}
 
@@ -199,6 +267,9 @@ public class CaveEventHooks
 				{
 					case AQUAMARINE:
 						portal = Item.getItemFromBlock(CaveBlocks.AQUA_CAVERN_PORTAL);
+						break;
+					case MINER_ORB:
+						portal = Item.getItemFromBlock(CaveBlocks.RUINS_CAVERN_PORTAL);
 						break;
 					default:
 				}
@@ -248,6 +319,14 @@ public class CaveEventHooks
 					if (amount != 0)
 					{
 						IMinerStats stats = MinerStats.get(thePlayer);
+
+						if (player.inventory.hasItemStack(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MINER_ORB.getItemDamage())))
+						{
+							if (RANDOM.nextDouble() < 0.3D)
+							{
+								amount += Math.max(amount / 2, 1);
+							}
+						}
 
 						stats.addPoint(amount);
 
@@ -414,6 +493,9 @@ public class CaveEventHooks
 								break;
 							case HEXCITE:
 								player.addStat(CaveAchievements.HEXCITE);
+								break;
+							case MINER_ORB:
+								player.addStat(CaveAchievements.MINER_ORB);
 								break;
 							default:
 						}

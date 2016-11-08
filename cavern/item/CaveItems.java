@@ -2,6 +2,7 @@ package cavern.item;
 
 import java.util.List;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 import cavern.block.BlockCave;
@@ -18,7 +19,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -92,7 +98,7 @@ public class CaveItems
 	@SideOnly(Side.CLIENT)
 	public static void registerModels()
 	{
-		registerModelWithMeta(CAVE_ITEM, "aquamarine", "magnite_ingot", "hexcite", "ice_stick");
+		registerModelWithMeta(CAVE_ITEM, "aquamarine", "magnite_ingot", "hexcite", "ice_stick", "miner_orb");
 		registerModel(AQUAMARINE_PICKAXE, "aquamarine_pickaxe");
 		registerModel(AQUAMARINE_AXE, "aquamarine_axe");
 		registerModel(AQUAMARINE_SHOVEL, "aquamarine_shovel");
@@ -388,5 +394,42 @@ public class CaveItems
 		GameRegistry.addRecipe(new RecipeChargeIceEquipment());
 
 		RecipeSorter.register(Cavern.MODID + ":charge_ice_equip", RecipeChargeIceEquipment.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
+	}
+
+	public static ItemStack getBookEscapeMission()
+	{
+		ItemStack item = new ItemStack(Items.WRITTEN_BOOK);
+
+		String title = Cavern.proxy.translate("book.cavebornEscapeMission.title");
+		StringBuilder text = new StringBuilder(128);
+		text.append(title).append("\n\n");
+
+		for (int i = 1; i < 15; ++i)
+		{
+			String key = "book.cavebornEscapeMission.text" + i;
+			String t = Cavern.proxy.translate(key);
+
+			if (!Strings.isNullOrEmpty(t) && !t.equals(key))
+			{
+				if (t.equals("#LF"))
+				{
+					text.append("\n");
+				}
+				else
+				{
+					text.append(t).append("\n");
+				}
+			}
+		}
+
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setString("title", title);
+		tag.setString("author", "???");
+		NBTTagList pages = new NBTTagList();
+		pages.appendTag(new NBTTagString(ITextComponent.Serializer.componentToJson(new TextComponentString(text.toString()))));
+		tag.setTag("pages", pages);
+		item.setTagCompound(tag);
+
+		return item;
 	}
 }

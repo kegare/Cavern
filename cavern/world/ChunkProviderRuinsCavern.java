@@ -8,11 +8,14 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import cavern.block.BlockCave;
 import cavern.config.RuinsCavernConfig;
+import cavern.item.CaveItems;
+import cavern.item.ItemCave;
 import cavern.util.WeightedItem;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.WeightedRandom;
@@ -118,15 +121,19 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 	{
 		if (chunkX == 0 && chunkZ == 0)
 		{
-			if (RuinsCavernConfig.decorateTorches)
+			for (Pair<BlockPos, IBlockState> data : RuinsBlockData.Torch.BLOCKS)
 			{
-				for (Pair<BlockPos, IBlockState> data : RuinsBlockData.Torch.BLOCKS)
-				{
-					BlockPos pos = data.getLeft();
-					IBlockState state = data.getRight();
+				BlockPos pos = data.getLeft();
+				IBlockState state = data.getRight();
 
+				if (RuinsCavernConfig.decorateTorches)
+				{
 					worldObj.setBlockState(pos, state, 3);
 					worldObj.checkLightFor(EnumSkyBlock.BLOCK, pos);
+				}
+				else
+				{
+					worldObj.setBlockState(pos, AIR, 2);
 				}
 			}
 
@@ -149,7 +156,15 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 
 						if (randomItem != null)
 						{
-							chest.setInventorySlotContents(i, randomItem.getItem());
+							ItemStack item = randomItem.getItem();
+
+							if (item != null)
+							{
+								if (item.getItem() != CaveItems.CAVE_ITEM || item.getItemDamage() != ItemCave.EnumType.MINER_ORB.getItemDamage())
+								{
+									chest.setInventorySlotContents(i, item);
+								}
+							}
 						}
 					}
 				}

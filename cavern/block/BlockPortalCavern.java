@@ -8,6 +8,8 @@ import com.google.common.cache.LoadingCache;
 import cavern.api.CavernAPI;
 import cavern.client.gui.GuiRegeneration;
 import cavern.config.CavernConfig;
+import cavern.config.GeneralConfig;
+import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
 import cavern.core.Cavern;
 import cavern.plugin.HaCPlugin;
@@ -36,6 +38,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
@@ -191,6 +194,24 @@ public class BlockPortalCavern extends BlockPortal implements IHeatTile
 
 					if (!player.isSneaking() && !player.isPotionActive(MobEffects.BLINDNESS))
 					{
+						if (GeneralConfig.cavernEscapeMission && CavernAPI.dimension.isCaves(dimOld) && !CavernAPI.dimension.isCaves(dimNew))
+						{
+							boolean flag = true;
+
+							for (Achievement achievement : CaveAchievements.ESCAPE_ACHIEVEMENTS)
+							{
+								if (!Cavern.proxy.hasAchievementUnlocked(player, achievement))
+								{
+									flag = false;
+								}
+							}
+
+							if (!flag)
+							{
+								return;
+							}
+						}
+
 						double x = player.posX;
 						double y = player.posY + player.getEyeHeight();
 						double z = player.posZ;

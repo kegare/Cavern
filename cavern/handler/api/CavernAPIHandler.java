@@ -1,5 +1,6 @@
 package cavern.handler.api;
 
+import java.util.List;
 import java.util.Set;
 
 import cavern.api.CavernAPI;
@@ -13,6 +14,7 @@ import cavern.block.bonus.FissureBreakEvent;
 import cavern.block.bonus.FissureEventBreathing;
 import cavern.block.bonus.FissureEventExplosion;
 import cavern.block.bonus.FissureEventPotion;
+import cavern.core.CaveAchievements;
 import cavern.item.CaveItems;
 import cavern.item.IceEquipment;
 import cavern.item.ItemCave;
@@ -26,6 +28,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Achievement;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CavernAPIHandler implements ICavernAPI
 {
@@ -33,6 +38,13 @@ public class CavernAPIHandler implements ICavernAPI
 	public IMinerStats getMinerStats(EntityPlayer player)
 	{
 		return MinerStats.get(player);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getMineCombo()
+	{
+		return MinerStats.mineCombo;
 	}
 
 	@Override
@@ -143,6 +155,18 @@ public class CavernAPIHandler implements ICavernAPI
 		return IceEquipment.getChargedItem(item, charge);
 	}
 
+	@Override
+	public void addEscapeMissionAchievement(Achievement achievement)
+	{
+		getEscapeMissionAchievements().add(achievement);
+	}
+
+	@Override
+	public List<Achievement> getEscapeMissionAchievements()
+	{
+		return CaveAchievements.ESCAPE_ACHIEVEMENTS;
+	}
+
 	public static void registerItems()
 	{
 		CavernAPI.apiHandler.addRandomiteItem(Blocks.DIRT, 6, 15);
@@ -176,6 +200,7 @@ public class CavernAPIHandler implements ICavernAPI
 		CavernAPI.apiHandler.addRandomiteItem(Items.DIAMOND_AXE, 2);
 		CavernAPI.apiHandler.addRandomiteItem(Items.DIAMOND_SHOVEL, 2);
 		CavernAPI.apiHandler.addRandomiteItem(Items.DIAMOND_HOE, 1);
+		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MINER_ORB.getItemDamage()), 1);
 
 		CavernAPI.apiHandler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 8, ItemCave.EnumType.ICE_STICK.getItemDamage()), 30);
 		CavernAPI.apiHandler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_SWORD, 20), 10);

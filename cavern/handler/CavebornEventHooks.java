@@ -11,8 +11,11 @@ import cavern.config.RuinsCavernConfig;
 import cavern.config.property.ConfigCaveborn;
 import cavern.world.TeleporterCavern;
 import cavern.world.TeleporterRuinsCavern;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -69,6 +72,18 @@ public class CavebornEventHooks
 						world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_STONE_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
 						player.setSpawnPoint(BlockPos.ORIGIN.up(80), true);
+
+						if (!RuinsCavernConfig.decorateTorches)
+						{
+							BlockPos pos = player.getPosition();
+							double d0 = world.rand.nextFloat() * 0.5F + 0.25D;
+							double d1 = world.rand.nextFloat() * 0.5F + 0.25D;
+							double d2 = world.rand.nextFloat() * 0.5F + 0.25D;
+							EntityItem entityItem = new EntityItem(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, new ItemStack(Blocks.TORCH, 64));
+
+							entityItem.setPickupDelay(85);
+							world.spawnEntityInWorld(entityItem);
+						}
 					});
 				}
 				else

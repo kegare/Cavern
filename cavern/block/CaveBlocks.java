@@ -41,6 +41,7 @@ public class CaveBlocks
 	public static final BlockPortalAquaCavern AQUA_CAVERN_PORTAL = new BlockPortalAquaCavern();
 	public static final BlockPortalCaveland CAVELAND_PORTAL = new BlockPortalCaveland();
 	public static final BlockPortalIceCavern ICE_CAVERN_PORTAL = new BlockPortalIceCavern();
+	public static final BlockPortalRuinsCavern RUINS_CAVERN_PORTAL = new BlockPortalRuinsCavern();
 	public static final BlockCave CAVE_BLOCK = new BlockCave();
 	public static final BlockAcresia ACRESIA = new BlockAcresia();
 	public static final BlockLogPerverted PERVERTED_LOG = new BlockLogPerverted();
@@ -54,6 +55,7 @@ public class CaveBlocks
 		registry.register(AQUA_CAVERN_PORTAL.setRegistryName("aqua_cavern_portal"));
 		registry.register(CAVELAND_PORTAL.setRegistryName("caveland_portal"));
 		registry.register(ICE_CAVERN_PORTAL.setRegistryName("ice_cavern_portal"));
+		registry.register(RUINS_CAVERN_PORTAL.setRegistryName("ruins_cavern_portal"));
 		registry.register(CAVE_BLOCK.setRegistryName("cave_block"));
 		registry.register(ACRESIA.setRegistryName("acresia"));
 		registry.register(PERVERTED_LOG.setRegistryName("perverted_log"));
@@ -68,6 +70,7 @@ public class CaveBlocks
 		registry.register(new ItemPortalCave(AQUA_CAVERN_PORTAL));
 		registry.register(new ItemPortalCave(CAVELAND_PORTAL));
 		registry.register(new ItemPortalCave(ICE_CAVERN_PORTAL));
+		registry.register(new ItemPortalCave(RUINS_CAVERN_PORTAL));
 		registry.register(new ItemBlockCave(CAVE_BLOCK));
 		registry.register(new ItemAcresia(ACRESIA));
 		registry.register(new ItemBlockPerverted(PERVERTED_LOG, Blocks.LOG));
@@ -88,6 +91,7 @@ public class CaveBlocks
 		registerModel(AQUA_CAVERN_PORTAL, "aqua_cavern_portal");
 		registerModel(CAVELAND_PORTAL, "caveland_portal");
 		registerModel(ICE_CAVERN_PORTAL, "ice_cavern_portal");
+		registerModel(RUINS_CAVERN_PORTAL, "ruins_cavern_portal");
 		registerModelWithMeta(CAVE_BLOCK, "aquamarine_ore", "aquamarine_block", "magnite_ore", "magnite_block", "randomite_ore", "hexcite_ore", "hexcite_block", "fissured_stone", "fissured_packed_ice");
 		registerModelWithMeta(ACRESIA, "acresia_seeds", "acresia_fruits");
 		registerVanillaModelWithMeta(PERVERTED_LOG, "oak_log", "spruce_log", "birch_log", "jungle_log");

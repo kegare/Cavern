@@ -93,12 +93,21 @@ public class TeleporterCavern extends Teleporter
 
 		if (!flag && !placeInExistingPortal(entity, rotationYaw))
 		{
-			makePortal(entity);
+			if (portal.getType() == CaveType.RUINS_CAVERN && portal.isEntityInCave(entity))
+			{
+				new TeleporterRuinsCavern(worldObj).placeInPortal(entity, rotationYaw);
 
-			placeInExistingPortal(entity, rotationYaw);
+				flag = true;
+			}
+			else
+			{
+				makePortal(entity);
+
+				placeInExistingPortal(entity, rotationYaw);
+			}
 		}
 
-		if (entity instanceof EntityLivingBase)
+		if (!flag && entity instanceof EntityLivingBase)
 		{
 			((EntityLivingBase)entity).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 25, 0, false, false));
 		}
@@ -148,9 +157,9 @@ public class TeleporterCavern extends Teleporter
 					{
 						current = blockpos.down();
 
-						if (worldObj.getBlockState(blockpos).getBlock() == portal)
+						if (isPortalBlock(worldObj.getBlockState(blockpos)))
 						{
-							while (worldObj.getBlockState(current = blockpos.down()).getBlock() == portal)
+							while (isPortalBlock(worldObj.getBlockState(current = blockpos.down())))
 							{
 								blockpos = current;
 							}
@@ -180,22 +189,22 @@ public class TeleporterCavern extends Teleporter
 			double posZ = pos.getZ() + 0.5D;
 			EnumFacing face = null;
 
-			if (worldObj.getBlockState(pos.west()).getBlock() == portal)
+			if (isPortalBlock(worldObj.getBlockState(pos.west())))
 			{
 				face = EnumFacing.NORTH;
 			}
 
-			if (worldObj.getBlockState(pos.east()).getBlock() == portal)
+			if (isPortalBlock(worldObj.getBlockState(pos.east())))
 			{
 				face = EnumFacing.SOUTH;
 			}
 
-			if (worldObj.getBlockState(pos.north()).getBlock() == portal)
+			if (isPortalBlock(worldObj.getBlockState(pos.north())))
 			{
 				face = EnumFacing.EAST;
 			}
 
-			if (worldObj.getBlockState(pos.south()).getBlock() == portal)
+			if (isPortalBlock(worldObj.getBlockState(pos.south())))
 			{
 				face = EnumFacing.WEST;
 			}
@@ -284,6 +293,11 @@ public class TeleporterCavern extends Teleporter
 	protected boolean isNotAir(BlockPos pos)
 	{
 		return !worldObj.isAirBlock(pos) || !worldObj.isAirBlock(pos.up());
+	}
+
+	protected boolean isPortalBlock(IBlockState state)
+	{
+		return state != null && state.getBlock() == portal;
 	}
 
 	public void setLocationAndAngles(Entity entity, double posX, double posY, double posZ)

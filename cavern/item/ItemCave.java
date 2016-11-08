@@ -40,7 +40,8 @@ public class ItemCave extends Item
 		AQUAMARINE(0, "aquamarine"),
 		MAGNITE_INGOT(1, "ingotMagnite"),
 		HEXCITE(2, "hexcite"),
-		ICE_STICK(3, "stickIce");
+		ICE_STICK(3, "stickIce"),
+		MINER_ORB(4, "orbMiner");
 
 		private static final EnumType[] DAMAGE_LOOKUP = new EnumType[values().length];
 

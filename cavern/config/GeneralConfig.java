@@ -34,6 +34,7 @@ public class GeneralConfig
 	public static boolean alwaysShowMinerStatus;
 
 	public static ConfigCaveborn caveborn = new ConfigCaveborn();
+	public static boolean cavernEscapeMission;
 
 	public static boolean portalCache;
 	public static boolean slipperyIceCustomColor;
@@ -165,9 +166,21 @@ public class GeneralConfig
 			}
 		}
 
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		caveborn.setValue(prop.getInt(caveborn.getValue()));
+
+		prop = config.get(category, "cavernEscapeMission", false);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [default: " + prop.getDefault() + "]";
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		cavernEscapeMission = prop.getBoolean(cavernEscapeMission);
 
 		prop = config.get(category, "portalCache", false);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());

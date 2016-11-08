@@ -1,5 +1,9 @@
 package cavern.core;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
 import cavern.item.CaveItems;
@@ -20,9 +24,10 @@ public class CaveAchievements
 	private static final ArrayListExtended<Achievement> ACHIEVEMENTS = new ArrayListExtended<>();
 
 	public static final Achievement CAVERN = CaveAchievement.of("cavern", 0, 0, CaveBlocks.CAVERN_PORTAL, null).initIndependentStat();
-	public static final Achievement AQUA_CAVERN = CaveAchievement.of("aquaCavern", -2, 0, CaveBlocks.AQUA_CAVERN_PORTAL, CAVERN);
-	public static final Achievement CAVELAND = CaveAchievement.of("caveland", 2, 0, CaveBlocks.CAVELAND_PORTAL, CAVERN);
-	public static final Achievement ICE_CAVERN = CaveAchievement.of("iceCavern", -4, 0, CaveBlocks.ICE_CAVERN_PORTAL, CAVERN);
+	public static final Achievement AQUA_CAVERN = CaveAchievement.of("aquaCavern", -2, 0, CaveBlocks.AQUA_CAVERN_PORTAL, null);
+	public static final Achievement CAVELAND = CaveAchievement.of("caveland", 2, 0, CaveBlocks.CAVELAND_PORTAL, null);
+	public static final Achievement ICE_CAVERN = CaveAchievement.of("iceCavern", -4, 0, CaveBlocks.ICE_CAVERN_PORTAL, null);
+	public static final Achievement RUINS_CAVERN = CaveAchievement.of("ruinsCavern", 4, 0, CaveBlocks.RUINS_CAVERN_PORTAL, null);
 	public static final Achievement AQUAMARINE = CaveAchievement.of("aquamarine", -2, -2, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()), CAVERN);
 	public static final Achievement MAGNITE = CaveAchievement.of("magnite", 0, -4, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()), CAVERN);
 	public static final Achievement ACRESIA = CaveAchievement.of("acresia", 2, -2, new ItemStack(CaveBlocks.ACRESIA, 1, ItemAcresia.EnumType.FRUITS.getItemDamage()), CAVELAND);
@@ -34,6 +39,9 @@ public class CaveAchievements
 	public static final Achievement GOLD_MINER = CaveAchievement.of("goldMiner", -4, 2, MinerRank.GOLD_MINER.getPickaxe(), MAGNITE_MINER);
 	public static final Achievement AQUA_MINER = CaveAchievement.of("aquaMiner", -6, 2, MinerRank.AQUA_MINER.getPickaxe(), GOLD_MINER);
 	public static final Achievement DIAMOND_MINER = CaveAchievement.of("diamondMiner", -8, 2, MinerRank.DIAMOND_MINER.getPickaxe(), AQUA_MINER).setSpecial();
+	public static final Achievement MINER_ORB = CaveAchievement.of("orbMiner", 0, 6, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MINER_ORB.getItemDamage()), CAVERN);
+
+	public static final List<Achievement> ESCAPE_ACHIEVEMENTS = Lists.newArrayList();
 
 	public static void registerAchievements()
 	{
@@ -41,6 +49,14 @@ public class CaveAchievements
 		page.getAchievements().addAll(ACHIEVEMENTS);
 
 		AchievementPage.registerAchievementPage(page);
+
+		ESCAPE_ACHIEVEMENTS.add(CAVERN);
+		ESCAPE_ACHIEVEMENTS.add(AQUA_CAVERN);
+		ESCAPE_ACHIEVEMENTS.add(CAVELAND);
+		ESCAPE_ACHIEVEMENTS.add(ICE_CAVERN);
+		ESCAPE_ACHIEVEMENTS.add(RUINS_CAVERN);
+		ESCAPE_ACHIEVEMENTS.add(DIAMOND_MINER);
+		ESCAPE_ACHIEVEMENTS.add(MINER_ORB);
 	}
 
 	public static int getAchievementIndex(Achievement achievement)

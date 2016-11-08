@@ -1,15 +1,22 @@
 package cavern.api;
 
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Achievement;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface ICavernAPI
 {
 	public IMinerStats getMinerStats(EntityPlayer player);
+
+	@SideOnly(Side.CLIENT)
+	public int getMineCombo();
 
 	public Set<IMineBonus> getMineBonus();
 
@@ -46,4 +53,8 @@ public interface ICavernAPI
 	public IIceEquipment getIceEquipment(ItemStack item);
 
 	public ItemStack getChargedIceItem(Item item, int charge);
+
+	public void addEscapeMissionAchievement(Achievement achievement);
+
+	public List<Achievement> getEscapeMissionAchievements();
 }
