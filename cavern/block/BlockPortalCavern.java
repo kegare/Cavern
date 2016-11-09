@@ -13,8 +13,10 @@ import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
 import cavern.core.Cavern;
 import cavern.plugin.HaCPlugin;
+import cavern.plugin.MCEPlugin;
 import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
+import cavern.util.CaveUtils;
 import cavern.world.CaveType;
 import cavern.world.TeleporterCavern;
 import defeatedcrow.hac.api.climate.DCHeatTier;
@@ -48,9 +50,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import shift.mceconomy3.api.MCEconomyAPI;
 
 @Interface(iface = "defeatedcrow.hac.api.climate.IHeatTile", modid = HaCPlugin.LIB_MODID, striprefs = true)
 public class BlockPortalCavern extends BlockPortal implements IHeatTile
@@ -123,6 +127,11 @@ public class BlockPortalCavern extends BlockPortal implements IHeatTile
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
+		if (Loader.isModLoaded(MCEPlugin.MODID) && openShop(world, pos, state, player, hand, heldItem, side))
+		{
+			return true;
+		}
+
 		if (world.isRemote)
 		{
 			displayGui(world, pos, state, player, hand, heldItem, side);
@@ -135,6 +144,18 @@ public class BlockPortalCavern extends BlockPortal implements IHeatTile
 	public void displayGui(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side)
 	{
 		FMLClientHandler.instance().showGuiScreen(new GuiRegeneration().setCavern());
+	}
+
+	public boolean openShop(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side)
+	{
+		if (CaveUtils.isItemPickaxe(heldItem) && MCEPlugin.PORTAL_SHOP >= 0)
+		{
+			MCEconomyAPI.openShopGui(MCEPlugin.PORTAL_SHOP, player, world, pos.getX(), pos.getY(), pos.getZ());
+
+			return true;
+		}
+
+		return false;
 	}
 
 	public int getType()

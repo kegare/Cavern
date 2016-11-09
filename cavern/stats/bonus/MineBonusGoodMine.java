@@ -5,7 +5,7 @@ import cavern.core.CaveAchievements;
 import cavern.core.Cavern;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class MineBonusAchievement implements IMineBonus
+public class MineBonusGoodMine implements IMineBonus
 {
 	@Override
 	public boolean canMineBonus(int combo, EntityPlayer player)

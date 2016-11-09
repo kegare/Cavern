@@ -22,6 +22,7 @@ import cavern.handler.api.DimensionHandler;
 import cavern.item.CaveItems;
 import cavern.network.CaveNetworkRegistry;
 import cavern.plugin.HaCPlugin;
+import cavern.plugin.MCEPlugin;
 import cavern.stats.MinerStats;
 import cavern.util.CaveLog;
 import cavern.util.Version;
@@ -185,8 +186,8 @@ public class Cavern
 
 		MinerStats.registerPointAmounts();
 
-		CavernAPIHandler.registerItems();
-		CavernAPIHandler.registerEvents();
+		CavernAPIHandler.registerItems(CavernAPI.apiHandler);
+		CavernAPIHandler.registerEvents(CavernAPI.apiHandler);
 
 		loadPlugins();
 
@@ -204,6 +205,18 @@ public class Cavern
 			catch (Exception e)
 			{
 				CaveLog.log(Level.WARN, e, "Failed to load the Heat&Climate mod plugin.");
+			}
+		}
+
+		if (Loader.isModLoaded(MCEPlugin.MODID))
+		{
+			try
+			{
+				MCEPlugin.load();
+			}
+			catch (Exception e)
+			{
+				CaveLog.log(Level.WARN, e, "Failed to load the MCEconomy mod plugin.");
 			}
 		}
 	}

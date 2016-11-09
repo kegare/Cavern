@@ -6,10 +6,7 @@ import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import cavern.block.BlockCave;
 import cavern.config.RuinsCavernConfig;
-import cavern.item.CaveItems;
-import cavern.item.ItemCave;
 import cavern.util.WeightedItem;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
@@ -152,7 +149,7 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 
 					for (int i = 0; i < 18; ++i)
 					{
-						WeightedItem randomItem = WeightedRandom.getRandomItem(rand, BlockCave.RANDOMITE_ITEMS);
+						WeightedItem randomItem = WeightedRandom.getRandomItem(rand, WorldProviderRuinsCavern.RUINS_CHEST_ITEMS);
 
 						if (randomItem != null)
 						{
@@ -160,10 +157,14 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 
 							if (item != null)
 							{
-								if (item.getItem() != CaveItems.CAVE_ITEM || item.getItemDamage() != ItemCave.EnumType.MINER_ORB.getItemDamage())
+								if (item.stackSize > 1)
 								{
-									chest.setInventorySlotContents(i, item);
+									int min = item.stackSize / 2;
+
+									item.stackSize = Math.max(rand.nextInt(item.stackSize) + 1, min);
 								}
+
+								chest.setInventorySlotContents(i, item);
 							}
 						}
 					}

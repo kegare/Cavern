@@ -40,9 +40,6 @@ cavern.config.general.miningPoints.tooltip=指定方块的矿点
 cavern.config.general.caveborn=出生洞穴
 cavern.config.general.caveborn.tooltip=设定出生洞穴，在创建世界时将直接进入该维度
 cavern.config.general.caveborn.0=禁用
-cavern.config.general.caveborn.1=Cavern
-cavern.config.general.caveborn.2=Aqua Cavern
-cavern.config.general.caveborn.3=Caveland
 cavern.config.general.portalCache=传送门的高速缓存
 cavern.config.general.portalCache.tooltip=是否有可能传送门的高速缓存
 
@@ -237,3 +234,5 @@ achievement.cavern.acresia=健壮的作物
 achievement.cavern.acresia.desc=黄奇粒实丰收
 
 tooltip.iceEquipment.charge=冰充 : %s
+
+shop.cavern.portal.name=传送门商店

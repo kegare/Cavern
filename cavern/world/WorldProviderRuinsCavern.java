@@ -1,8 +1,13 @@
 package cavern.world;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 import cavern.config.RuinsCavernConfig;
 import cavern.config.manager.CaveBiomeManager;
 import cavern.config.property.ConfigBiomeType;
+import cavern.util.WeightedItem;
 import net.minecraft.init.Biomes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
@@ -12,6 +17,8 @@ import net.minecraft.world.chunk.IChunkGenerator;
 public class WorldProviderRuinsCavern extends WorldProviderCavern
 {
 	public static final CaveSaveHandler saveHandler = new CaveSaveHandler("Ruins Cavern");
+
+	public static final List<WeightedItem> RUINS_CHEST_ITEMS = Lists.newArrayList();
 
 	public WorldProviderRuinsCavern()
 	{

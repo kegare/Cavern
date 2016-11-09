@@ -54,6 +54,16 @@ public interface ICavernAPI
 
 	public ItemStack getChargedIceItem(Item item, int charge);
 
+	public void addRuinsChestItem(ItemStack item, int weight);
+
+	public void addRuinsChestItem(Item item, int weight);
+
+	public void addRuinsChestItem(Item item, int amount, int weight);
+
+	public void addRuinsChestItem(Block block, int weight);
+
+	public void addRuinsChestItem(Block block, int amount, int weight);
+
 	public void addEscapeMissionAchievement(Achievement achievement);
 
 	public List<Achievement> getEscapeMissionAchievements();

@@ -3,7 +3,6 @@ package cavern.handler.api;
 import java.util.List;
 import java.util.Set;
 
-import cavern.api.CavernAPI;
 import cavern.api.ICavernAPI;
 import cavern.api.IFissureBreakEvent;
 import cavern.api.IIceEquipment;
@@ -21,6 +20,7 @@ import cavern.item.ItemCave;
 import cavern.stats.MinerStats;
 import cavern.util.WeightedItem;
 import cavern.world.WorldProviderIceCavern;
+import cavern.world.WorldProviderRuinsCavern;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.entity.player.EntityPlayer;
@@ -156,6 +156,36 @@ public class CavernAPIHandler implements ICavernAPI
 	}
 
 	@Override
+	public void addRuinsChestItem(ItemStack item, int weight)
+	{
+		WorldProviderRuinsCavern.RUINS_CHEST_ITEMS.add(new WeightedItem(item, weight));
+	}
+
+	@Override
+	public void addRuinsChestItem(Item item, int weight)
+	{
+		addRuinsChestItem(new ItemStack(item), weight);
+	}
+
+	@Override
+	public void addRuinsChestItem(Item item, int amount, int weight)
+	{
+		addRuinsChestItem(new ItemStack(item, amount), weight);
+	}
+
+	@Override
+	public void addRuinsChestItem(Block block, int weight)
+	{
+		addRuinsChestItem(new ItemStack(block), weight);
+	}
+
+	@Override
+	public void addRuinsChestItem(Block block, int amount, int weight)
+	{
+		addRuinsChestItem(new ItemStack(block, amount), weight);
+	}
+
+	@Override
 	public void addEscapeMissionAchievement(Achievement achievement)
 	{
 		getEscapeMissionAchievements().add(achievement);
@@ -167,68 +197,86 @@ public class CavernAPIHandler implements ICavernAPI
 		return CaveAchievements.ESCAPE_ACHIEVEMENTS;
 	}
 
-	public static void registerItems()
+	public static void registerItems(ICavernAPI handler)
 	{
-		CavernAPI.apiHandler.addRandomiteItem(Blocks.DIRT, 6, 15);
-		CavernAPI.apiHandler.addRandomiteItem(Blocks.SAND, 6, 12);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.OAK.getMetadata()), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.SPRUCE.getMetadata()), 20);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.BIRCH.getMetadata()), 20);
-		CavernAPI.apiHandler.addRandomiteItem(Blocks.TORCH, 5, 35);
-		CavernAPI.apiHandler.addRandomiteItem(Items.COAL, 5, 20);
-		CavernAPI.apiHandler.addRandomiteItem(Items.IRON_INGOT, 20);
-		CavernAPI.apiHandler.addRandomiteItem(Items.GOLD_INGOT, 10);
-		CavernAPI.apiHandler.addRandomiteItem(Items.EMERALD, 10);
-		CavernAPI.apiHandler.addRandomiteItem(Items.APPLE, 3, 30);
-		CavernAPI.apiHandler.addRandomiteItem(Items.BAKED_POTATO, 3, 30);
-		CavernAPI.apiHandler.addRandomiteItem(Items.BREAD, 2, 30);
-		CavernAPI.apiHandler.addRandomiteItem(Items.COOKED_BEEF, 20);
-		CavernAPI.apiHandler.addRandomiteItem(Items.COOKED_CHICKEN, 20);
-		CavernAPI.apiHandler.addRandomiteItem(Items.COOKED_FISH, 20);
-		CavernAPI.apiHandler.addRandomiteItem(Items.COOKED_MUTTON, 20);
-		CavernAPI.apiHandler.addRandomiteItem(Items.COOKED_PORKCHOP, 20);
-		CavernAPI.apiHandler.addRandomiteItem(Items.COOKED_RABBIT, 20);
-		CavernAPI.apiHandler.addRandomiteItem(Items.BONE, 5, 30);
-		CavernAPI.apiHandler.addRandomiteItem(Items.IRON_SWORD, 10);
-		CavernAPI.apiHandler.addRandomiteItem(Items.IRON_PICKAXE, 10);
-		CavernAPI.apiHandler.addRandomiteItem(Items.IRON_AXE, 10);
-		CavernAPI.apiHandler.addRandomiteItem(Items.IRON_SHOVEL, 10);
-		CavernAPI.apiHandler.addRandomiteItem(Items.IRON_HOE, 8);
-		CavernAPI.apiHandler.addRandomiteItem(Items.DIAMOND, 3);
-		CavernAPI.apiHandler.addRandomiteItem(Items.DIAMOND_SWORD, 2);
-		CavernAPI.apiHandler.addRandomiteItem(Items.DIAMOND_PICKAXE, 2);
-		CavernAPI.apiHandler.addRandomiteItem(Items.DIAMOND_AXE, 2);
-		CavernAPI.apiHandler.addRandomiteItem(Items.DIAMOND_SHOVEL, 2);
-		CavernAPI.apiHandler.addRandomiteItem(Items.DIAMOND_HOE, 1);
-		CavernAPI.apiHandler.addRandomiteItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MINER_ORB.getItemDamage()), 1);
+		handler.addRandomiteItem(Blocks.DIRT, 6, 15);
+		handler.addRandomiteItem(Blocks.SAND, 6, 12);
+		handler.addRandomiteItem(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.OAK.getMetadata()), 20);
+		handler.addRandomiteItem(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.SPRUCE.getMetadata()), 20);
+		handler.addRandomiteItem(new ItemStack(Blocks.LOG, 1, BlockPlanks.EnumType.BIRCH.getMetadata()), 20);
+		handler.addRandomiteItem(Blocks.TORCH, 5, 35);
+		handler.addRandomiteItem(Items.COAL, 5, 20);
+		handler.addRandomiteItem(Items.IRON_INGOT, 20);
+		handler.addRandomiteItem(Items.GOLD_INGOT, 10);
+		handler.addRandomiteItem(Items.EMERALD, 10);
+		handler.addRandomiteItem(Items.APPLE, 3, 30);
+		handler.addRandomiteItem(Items.BAKED_POTATO, 3, 30);
+		handler.addRandomiteItem(Items.BREAD, 2, 30);
+		handler.addRandomiteItem(Items.COOKED_BEEF, 20);
+		handler.addRandomiteItem(Items.COOKED_CHICKEN, 20);
+		handler.addRandomiteItem(Items.COOKED_FISH, 20);
+		handler.addRandomiteItem(Items.COOKED_MUTTON, 20);
+		handler.addRandomiteItem(Items.COOKED_PORKCHOP, 20);
+		handler.addRandomiteItem(Items.COOKED_RABBIT, 20);
+		handler.addRandomiteItem(Items.BONE, 5, 30);
+		handler.addRandomiteItem(Items.IRON_SWORD, 10);
+		handler.addRandomiteItem(Items.IRON_PICKAXE, 10);
+		handler.addRandomiteItem(Items.IRON_AXE, 10);
+		handler.addRandomiteItem(Items.IRON_SHOVEL, 10);
+		handler.addRandomiteItem(Items.IRON_HOE, 8);
+		handler.addRandomiteItem(Items.DIAMOND, 2);
+		handler.addRandomiteItem(Items.DIAMOND_SWORD, 1);
+		handler.addRandomiteItem(Items.DIAMOND_PICKAXE, 1);
+		handler.addRandomiteItem(Items.DIAMOND_AXE, 1);
+		handler.addRandomiteItem(Items.DIAMOND_SHOVEL, 1);
+		handler.addRandomiteItem(Items.DIAMOND_HOE, 1);
+		handler.addRandomiteItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MINER_ORB.getItemDamage()), 1);
 
-		CavernAPI.apiHandler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 8, ItemCave.EnumType.ICE_STICK.getItemDamage()), 30);
-		CavernAPI.apiHandler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_SWORD, 20), 10);
-		CavernAPI.apiHandler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_PICKAXE, 30), 10);
-		CavernAPI.apiHandler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_AXE, 30), 10);
-		CavernAPI.apiHandler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_SHOVEL, 10), 10);
-		CavernAPI.apiHandler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_HOE, 20), 10);
-		CavernAPI.apiHandler.addHibernateItem(Items.BONE, 6, 30);
-		CavernAPI.apiHandler.addHibernateItem(Items.FISH, 4, 30);
-		CavernAPI.apiHandler.addHibernateItem(Items.BEEF, 2, 15);
-		CavernAPI.apiHandler.addHibernateItem(Items.CHICKEN, 2, 15);
-		CavernAPI.apiHandler.addHibernateItem(Items.MUTTON, 2, 15);
-		CavernAPI.apiHandler.addHibernateItem(Items.PORKCHOP, 2, 15);
-		CavernAPI.apiHandler.addHibernateItem(Items.RABBIT, 2, 15);
-		CavernAPI.apiHandler.addHibernateItem(Items.APPLE, 15);
-		CavernAPI.apiHandler.addHibernateItem(Items.GOLDEN_APPLE, 5);
-		CavernAPI.apiHandler.addHibernateItem(Items.PUMPKIN_PIE, 15);
-		CavernAPI.apiHandler.addHibernateItem(Blocks.REEDS, 4, 12);
-		CavernAPI.apiHandler.addHibernateItem(Items.STICK, 4, 15);
-		CavernAPI.apiHandler.addHibernateItem(Items.COAL, 4, 15);
-		CavernAPI.apiHandler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()), 10);
-		CavernAPI.apiHandler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()), 3);
+		handler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 8, ItemCave.EnumType.ICE_STICK.getItemDamage()), 30);
+		handler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_SWORD, 20), 10);
+		handler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_PICKAXE, 30), 10);
+		handler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_AXE, 30), 10);
+		handler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_SHOVEL, 10), 10);
+		handler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_HOE, 20), 10);
+		handler.addHibernateItem(Items.BONE, 6, 30);
+		handler.addHibernateItem(Items.FISH, 4, 30);
+		handler.addHibernateItem(Items.BEEF, 2, 15);
+		handler.addHibernateItem(Items.CHICKEN, 2, 15);
+		handler.addHibernateItem(Items.MUTTON, 2, 15);
+		handler.addHibernateItem(Items.PORKCHOP, 2, 15);
+		handler.addHibernateItem(Items.RABBIT, 2, 15);
+		handler.addHibernateItem(Items.APPLE, 15);
+		handler.addHibernateItem(Items.GOLDEN_APPLE, 5);
+		handler.addHibernateItem(Items.PUMPKIN_PIE, 15);
+		handler.addHibernateItem(Blocks.REEDS, 4, 12);
+		handler.addHibernateItem(Items.STICK, 4, 15);
+		handler.addHibernateItem(Items.COAL, 4, 15);
+		handler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()), 10);
+		handler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()), 3);
+
+		handler.addRuinsChestItem(Blocks.DIRT, 64, 15);
+		handler.addRuinsChestItem(Blocks.SAND, 32, 10);
+		handler.addRuinsChestItem(Blocks.GRAVEL, 32, 10);
+		handler.addRuinsChestItem(Blocks.COBBLESTONE, 64, 20);
+		handler.addRuinsChestItem(new ItemStack(Blocks.LOG, 16, BlockPlanks.EnumType.OAK.getMetadata()), 5);
+		handler.addRuinsChestItem(new ItemStack(Blocks.LOG, 16, BlockPlanks.EnumType.SPRUCE.getMetadata()), 5);
+		handler.addRuinsChestItem(Blocks.TORCH, 32, 25);
+		handler.addRuinsChestItem(Items.BREAD, 10, 10);
+		handler.addRuinsChestItem(Items.IRON_SWORD, 10);
+		handler.addRuinsChestItem(Items.IRON_PICKAXE, 10);
+		handler.addRuinsChestItem(Items.IRON_SHOVEL, 10);
+		handler.addRuinsChestItem(Items.IRON_AXE, 10);
+		handler.addRuinsChestItem(Items.COAL, 16, 15);
+		handler.addRuinsChestItem(Items.IRON_INGOT, 3, 13);
+		handler.addRuinsChestItem(Items.GOLD_INGOT, 3, 5);
+		handler.addRuinsChestItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()), 10);
+		handler.addRuinsChestItem(new ItemStack(CaveItems.CAVE_ITEM, 3, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()), 12);
 	}
 
-	public static void registerEvents()
+	public static void registerEvents(ICavernAPI handler)
 	{
-		CavernAPI.apiHandler.addFissureBreakEvent(new FissureEventPotion(), 100);
-		CavernAPI.apiHandler.addFissureBreakEvent(new FissureEventExplosion(), 10);
-		CavernAPI.apiHandler.addFissureBreakEvent(new FissureEventBreathing(), 50);
+		handler.addFissureBreakEvent(new FissureEventPotion(), 100);
+		handler.addFissureBreakEvent(new FissureEventExplosion(), 10);
+		handler.addFissureBreakEvent(new FissureEventBreathing(), 50);
 	}
 }

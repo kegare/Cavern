@@ -26,12 +26,12 @@ public class CaveEntityRegistry
 
 	public static void registerMob(Class<? extends Entity> entityClass, String entityName)
 	{
-		registerEntity(entityClass, entityName, 128, 1, true);
+		registerEntity(entityClass, entityName, 128, 3, true);
 	}
 
 	public static void registerMob(Class<? extends Entity> entityClass, String entityName, int primaryColor, int secondaryColor)
 	{
-		registerEntity(entityClass, entityName, 128, 1, true, primaryColor, secondaryColor);
+		registerEntity(entityClass, entityName, 128, 3, true, primaryColor, secondaryColor);
 	}
 
 	public static void registerEntities()
@@ -40,7 +40,7 @@ public class CaveEntityRegistry
 		registerMob(EntityCavenicCreeper.class, "CavenicCreeper", 0xAAAAAA, 0x2E8B57);
 		registerMob(EntityCavenicZombie.class, "CavenicZombie", 0xAAAAAA, 0x00A0A0);
 		registerMob(EntityCavenicSpider.class, "CavenicSpider", 0xAAAAAA, 0x811F1F);
-		registerMob(EntityAquaSquid.class, "Squid");
+		registerEntity(EntityAquaSquid.class, "Squid", 64, 3, true);
 	}
 
 	public static void addSpawns()

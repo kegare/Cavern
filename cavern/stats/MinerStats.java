@@ -17,8 +17,9 @@ import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.MinerStatsAdjustMessage;
-import cavern.stats.bonus.MineBonusAchievement;
+import cavern.plugin.MCEPlugin;
 import cavern.stats.bonus.MineBonusExperience;
+import cavern.stats.bonus.MineBonusGoodMine;
 import cavern.stats.bonus.MineBonusHaste;
 import cavern.stats.bonus.MineBonusResistance;
 import cavern.util.BlockMeta;
@@ -36,9 +37,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import shift.mceconomy3.api.MCEconomyAPI;
 
 public class MinerStats implements IMinerStats
 {
@@ -155,7 +158,7 @@ public class MinerStats implements IMinerStats
 				double y = player.posY + player.getEyeHeight();
 				double z = player.posZ;
 
-				player.getServerWorld().playSound(null, x, y, z, CaveSounds.RANK_PROMOTE, SoundCategory.MASTER, 1.0F, 1.0F);
+				player.getServerWorld().playSound(null, x, y, z, CaveSounds.RANK_PROMOTE, SoundCategory.MASTER, 0.85F, 1.0F);
 
 				switch (current)
 				{
@@ -172,6 +175,11 @@ public class MinerStats implements IMinerStats
 						player.addStat(CaveAchievements.DIAMOND_MINER);
 						break;
 					default:
+				}
+
+				if (Loader.isModLoaded(MCEPlugin.MODID))
+				{
+					MCEconomyAPI.addPlayerMP(player, 100 * current.getRank(), false);
 				}
 			}
 
@@ -358,7 +366,7 @@ public class MinerStats implements IMinerStats
 
 	public static void registerMineBonus()
 	{
-		MINE_BONUS.add(new MineBonusAchievement());
+		MINE_BONUS.add(new MineBonusGoodMine());
 		MINE_BONUS.add(new MineBonusExperience());
 		MINE_BONUS.add(new MineBonusHaste());
 		MINE_BONUS.add(new MineBonusResistance());
