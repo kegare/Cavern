@@ -1,6 +1,6 @@
-package cavern.client.config.general;
+package cavern.client.config;
 
-import cavern.client.gui.GuiMiningPointsEditor;
+import cavern.client.gui.GuiSelectBlock;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
@@ -10,9 +10,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class MiningPointsEntry extends ArrayEntry
+public class SelectBlocksEntry extends ArrayEntry
 {
-	public MiningPointsEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement)
+	public SelectBlocksEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement)
 	{
 		super(owningScreen, owningEntryList, configElement);
 	}
@@ -28,7 +28,7 @@ public class MiningPointsEntry extends ArrayEntry
 		{
 			btnValue.playPressSound(mc.getSoundHandler());
 
-			mc.displayGuiScreen(new GuiMiningPointsEditor(owningScreen, this));
+			mc.displayGuiScreen(new GuiSelectBlock(owningScreen, this));
 		}
 	}
 }

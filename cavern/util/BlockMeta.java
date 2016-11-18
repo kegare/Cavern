@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -134,6 +135,22 @@ public class BlockMeta implements Comparable<BlockMeta>
 		}
 
 		return meta == blockMeta.meta;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		if (block == null)
+		{
+			return super.hashCode();
+		}
+
+		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE)
+		{
+			return block.hashCode();
+		}
+
+		return Objects.hashCode(block, meta);
 	}
 
 	@Override

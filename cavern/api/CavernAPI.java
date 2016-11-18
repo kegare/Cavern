@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public final class CavernAPI
 {
-	public static final String API_VERSION = "1.5.1";
+	public static final String API_VERSION = "1.5.2";
 
 	public static ICavernAPI apiHandler;
 	public static IDimension dimension;

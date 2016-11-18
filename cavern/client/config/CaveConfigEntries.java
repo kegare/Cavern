@@ -6,6 +6,7 @@ public class CaveConfigEntries
 {
 	public static Class<? extends IConfigEntry> cycleInteger;
 
+	public static Class<? extends IConfigEntry> selectBlocks;
 	public static Class<? extends IConfigEntry> selectItems;
 	public static Class<? extends IConfigEntry> selectMobs;
 

@@ -12,10 +12,12 @@ import cavern.config.CavelandConfig;
 import cavern.config.CavernConfig;
 import cavern.config.GeneralConfig;
 import cavern.config.IceCavernConfig;
+import cavern.config.MiningAssistConfig;
 import cavern.config.RuinsCavernConfig;
 import cavern.config.property.ConfigDisplayPos;
 import cavern.core.Cavern;
 import cavern.item.ItemBowIce;
+import cavern.miningassist.MiningAssist;
 import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
 import cavern.util.Version;
@@ -58,6 +60,7 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.GuiModList;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
@@ -111,6 +114,15 @@ public class ClientEventHooks
 					{
 						GeneralConfig.refreshMiningPointItems();
 						GeneralConfig.refreshMiningPoints();
+					}
+
+					break;
+				case "miningassist":
+					MiningAssistConfig.syncConfig();
+
+					if (event.isWorldRunning())
+					{
+						MiningAssistConfig.refreshTargetBlocks();
 					}
 
 					break;
@@ -208,7 +220,8 @@ public class ClientEventHooks
 			}
 
 			IMinerStats stats = MinerStats.get(player);
-			MinerRank minerRank = MinerRank.getRank(stats.getRank());
+			MinerRank minerRank = MinerRank.get(stats.getRank());
+			MiningAssist miningAssist = MiningAssist.get(stats.getMiningAssist());
 			String point = Integer.toString(stats.getPoint());
 			String rank = I18n.format(minerRank.getUnlocalizedName());
 			int x, y;
@@ -235,6 +248,11 @@ public class ClientEventHooks
 					return;
 			}
 
+			if (miningAssist != MiningAssist.DISABLED && stats.getRank() >= MiningAssistConfig.minerRank.getValue())
+			{
+				rank += " / " + I18n.format(miningAssist.getUnlocalizedName());
+			}
+
 			RenderItem renderItem = mc.getRenderItem();
 			FontRenderer renderer = mc.fontRendererObj;
 			int originX = x;
@@ -246,9 +264,9 @@ public class ClientEventHooks
 			{
 				Block block = MinerStats.lastMine.getBlock();
 
-				if (ClientProxy.renderBlockMap.containsKey(block))
+				if (ClientProxy.RENDER_BLOCK_MAP.containsKey(block))
 				{
-					block = ClientProxy.renderBlockMap.get(block);
+					block = ClientProxy.RENDER_BLOCK_MAP.get(block);
 				}
 
 				ItemStack item = new ItemStack(block, 1, MinerStats.lastMine.getMeta());
@@ -455,6 +473,27 @@ public class ClientEventHooks
 			if (message != null)
 			{
 				mc.ingameGUI.getChatGUI().printChatMessage(message);
+			}
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onPlayerLoggedIn(PlayerLoggedInEvent event)
+	{
+		EntityPlayer player = event.player;
+
+		if (MiningAssistConfig.miningAssistNotify)
+		{
+			MiningAssist assist = MiningAssist.get(MinerStats.get(player).getMiningAssist());
+
+			if (assist != MiningAssist.DISABLED)
+			{
+				ITextComponent message = new TextComponentTranslation(assist.getUnlocalizedName());
+				message.getStyle().setColor(TextFormatting.GRAY).setItalic(Boolean.valueOf(true));
+				message = new TextComponentTranslation("cavern.miningassist.notify.message", message);
+
+				player.addChatMessage(message);
 			}
 		}
 	}

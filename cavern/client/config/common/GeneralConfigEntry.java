@@ -1,4 +1,4 @@
-package cavern.client.config.general;
+package cavern.client.config.common;
 
 import cavern.client.config.CaveCategoryEntry;
 import cavern.config.GeneralConfig;

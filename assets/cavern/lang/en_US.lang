@@ -62,6 +62,36 @@ cavern.config.points.block.tooltip=Specify the block name.
 cavern.config.points.point=Mining Point
 cavern.config.points.point.tooltip=Specify the mining point of the block.
 
+cavern.config.miningassist=Mining Assist Settings
+cavern.config.miningassist.minerRank=Miner Rank
+cavern.config.miningassist.minerRank.tooltip=Specify the miner rank required for Mining Assist.
+cavern.config.miningassist.minerRank.0=Beginner
+cavern.config.miningassist.minerRank.1=Stone Miner
+cavern.config.miningassist.minerRank.2=Iron Miner
+cavern.config.miningassist.minerRank.3=Magnite Miner
+cavern.config.miningassist.minerRank.4=Gold Miner
+cavern.config.miningassist.minerRank.5=Aqua Miner
+cavern.config.miningassist.minerRank.6=Hexcite Miner
+cavern.config.miningassist.minerRank.7=Diamond Miner
+cavern.config.miningassist.collectDrops=Collect Drops
+cavern.config.miningassist.collectDrops.tooltip=Whether to collect the drops.
+cavern.config.miningassist.collectExps=Collect Experiences
+cavern.config.miningassist.collectExps.tooltip=Whether to collect the experiences.
+cavern.config.miningassist.quickTargetBlocks=Quick Target Blocks
+cavern.config.miningassist.quickTargetBlocks.tooltip=Specify the target blocks for Quick Mining.
+cavern.config.miningassist.rangedTargetBlocks=Ranged Target Blocks
+cavern.config.miningassist.rangedTargetBlocks.tooltip=Specify the target blocks for Ranged Mining.
+cavern.config.miningassist.aditTargetBlocks=Adit Target Blocks
+cavern.config.miningassist.aditTargetBlocks.tooltip=Specify the target blocks for Adit Mining.
+cavern.config.miningassist.quickMiningLimit=Quick Mining Limit
+cavern.config.miningassist.quickMiningLimit.tooltip=Specify the upper limit of Quick Mining.
+cavern.config.miningassist.rangedMining=Ranged Mining
+cavern.config.miningassist.rangedMining.tooltip=Specify the range of Ranged Mining.
+cavern.config.miningassist.modifiedHardness=Modified Hardness
+cavern.config.miningassist.modifiedHardness.tooltip=Whether to enable the modified block hardness for Mining Assist.
+cavern.config.miningassist.miningAssistNotify=Mining Assist Notify
+cavern.config.miningassist.miningAssistNotify.tooltip=Whether to notify the state of Mining Assist when logging in to the world.
+
 cavern.config.dimension=Dimension Settings
 cavern.config.dimension.tooltip=Change the settings for cave dimensions
 cavern.config.dimension.cavern=Cavern
@@ -291,6 +321,18 @@ achievement.cavern.diamondMiner=Diamond Miner
 achievement.cavern.diamondMiner.desc=Become a Diamond Miner
 achievement.cavern.orbMiner=Miner's Thought Orb
 achievement.cavern.orbMiner.desc=Get a Miner's Thought Orb
+
+key.cavern.miningAssist=Toggle Mining Assist
+
+key.categories.cavern=Cavern
+
+cavern.miningassist.disabled=Disabled
+cavern.miningassist.quick=QUICK
+cavern.miningassist.ranged=RANGED
+cavern.miningassist.adit=ADIT
+cavern.miningassist.toggle.message=Mining Assist has been changed to %s
+cavern.miningassist.toggle.failed.message=Mining Assist cannot be changed until become the %s
+cavern.miningassist.notify.message=Mining Assist is set to %s
 
 tooltip.iceEquipment.charge=Ice Charge : %s
 

@@ -17,12 +17,15 @@ import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import cavern.core.Cavern;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -298,5 +301,20 @@ public class CaveUtils
 		{
 			ObfuscationReflectionHelper.setPrivateValue(EntityPlayerMP.class, player, true, "invulnerableDimensionChange", "field_184851_cj");
 		}
+	}
+
+	public static boolean areBlockStatesEqual(@Nullable IBlockState stateA, @Nullable IBlockState stateB)
+	{
+		if (stateA == stateB)
+		{
+			return true;
+		}
+
+		if (stateA == null || stateB == null)
+		{
+			return false;
+		}
+
+		return stateA.getBlock() == stateB.getBlock() && stateA.getBlock().getMetaFromState(stateA) == stateB.getBlock().getMetaFromState(stateB);
 	}
 }

@@ -146,7 +146,7 @@ public class BlockCave extends Block
 					{
 						if (player != null)
 						{
-							player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 20 * 10, 1, false, false));
+							player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 20 * 30, 1, false, false));
 						}
 					}
 					else if (!world.restoringBlockSnapshots)

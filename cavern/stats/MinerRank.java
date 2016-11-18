@@ -79,7 +79,7 @@ public enum MinerRank
 		return renderItemStack;
 	}
 
-	public static MinerRank getRank(int rank)
+	public static MinerRank get(int rank)
 	{
 		if (rank < 0)
 		{

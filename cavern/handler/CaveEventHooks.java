@@ -107,11 +107,10 @@ public class CaveEventHooks
 
 			if (GeneralConfig.cavernEscapeMission)
 			{
-				if (CavernAPI.dimension.isCaves(event.toDim))
-				{
-					player.inventory.addItemStackToInventory(CaveItems.getBookEscapeMission());
-				}
-				else if (CavernAPI.dimension.isCaves(event.fromDim))
+				boolean fromCave = CavernAPI.dimension.isCaves(event.fromDim);
+				boolean toCave = CavernAPI.dimension.isCaves(event.toDim);
+
+				if (fromCave && !toCave)
 				{
 					MinecraftServer server = player.mcServer;
 					WorldServer worldNew = server.worldServerForDimension(event.fromDim);
@@ -124,6 +123,11 @@ public class CaveEventHooks
 
 						return;
 					}
+				}
+
+				if (!fromCave && toCave)
+				{
+					player.inventory.addItemStackToInventory(CaveItems.getBookEscapeMission());
 				}
 			}
 
@@ -407,7 +411,7 @@ public class CaveEventHooks
 		if (miner)
 		{
 			int rank = MinerStats.get(player).getRank();
-			float boost = MinerRank.getRank(rank).getBoost();
+			float boost = MinerRank.get(rank).getBoost();
 
 			if (boost != 1.0F)
 			{
@@ -438,7 +442,7 @@ public class CaveEventHooks
 							player.setAir(300);
 						}
 
-						if (!player.capabilities.isFlying || EnchantmentHelper.getDepthStriderModifier(player) <= 1)
+						if (!player.capabilities.isFlying && EnchantmentHelper.getDepthStriderModifier(player) <= 1)
 						{
 							double posY = player.posY;
 							float motion = 1.165F;

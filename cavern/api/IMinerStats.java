@@ -20,7 +20,17 @@ public interface IMinerStats
 
 	public void setRank(int value, boolean adjust);
 
+	public int getMiningAssist();
+
+	public void setMiningAssist(int type);
+
+	public void setMiningAssist(int type, boolean adjust);
+
+	public void toggleMiningAssist();
+
 	public void adjustData();
+
+	public void adjustClientData();
 
 	public void writeToNBT(NBTTagCompound nbt);
 

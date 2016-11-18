@@ -57,6 +57,36 @@ cavern.config.points.block.tooltip=採掘ポイントを設定するブロック
 cavern.config.points.point=採掘ポイント
 cavern.config.points.point.tooltip=得られる採掘ポイントを指定します。
 
+cavern.config.miningassist=採掘アシストの設定
+cavern.config.miningassist.minerRank=炭鉱夫ランク
+cavern.config.miningassist.minerRank.tooltip=採掘アシストが有効になる炭鉱夫ランクを指定します。
+cavern.config.miningassist.minerRank.0=初心者
+cavern.config.miningassist.minerRank.1=石掘り
+cavern.config.miningassist.minerRank.2=鉄掘り
+cavern.config.miningassist.minerRank.3=マグナイト掘り
+cavern.config.miningassist.minerRank.4=金掘り
+cavern.config.miningassist.minerRank.5=アクアマリン掘り
+cavern.config.miningassist.minerRank.6=ヘキサイト掘り
+cavern.config.miningassist.minerRank.7=ダイヤモンド掘り
+cavern.config.miningassist.collectDrops=ドロップの収集
+cavern.config.miningassist.collectDrops.tooltip=一括破壊したときにドロップするアイテムを一箇所に収集します。
+cavern.config.miningassist.collectExps=経験値の収集
+cavern.config.miningassist.collectExps.tooltip=一括破壊したときにドロップする経験値を一箇所に収集します。
+cavern.config.miningassist.quickTargetBlocks=一括破壊の対象ブロック
+cavern.config.miningassist.quickTargetBlocks.tooltip=一括破壊の対象となるブロックを指定します。何も指定されていない場合は自動判別されます。
+cavern.config.miningassist.rangedTargetBlocks=範囲破壊の対象ブロック
+cavern.config.miningassist.rangedTargetBlocks.tooltip=範囲破壊の対象となるブロックを指定します。何も指定されていない場合は自動判別されます。
+cavern.config.miningassist.aditTargetBlocks=坑道掘りの対象ブロック
+cavern.config.miningassist.aditTargetBlocks.tooltip=坑道掘りの対象となるブロックを指定します。何も指定されていない場合は自動判別されます。
+cavern.config.miningassist.quickMiningLimit=一括破壊の上限
+cavern.config.miningassist.quickMiningLimit.tooltip=一括破壊で破壊できるブロックの数の上限を指定します。
+cavern.config.miningassist.rangedMining=範囲破壊のサイズ
+cavern.config.miningassist.rangedMining.tooltip=範囲破壊で破壊できるサイズを指定します。
+cavern.config.miningassist.modifiedHardness=ブロック硬度の補正
+cavern.config.miningassist.modifiedHardness.tooltip=採掘アシストで対象ブロック数に応じて起点ブロックの硬度を補正します。
+cavern.config.miningassist.miningAssistNotify=採掘アシストの通知
+cavern.config.miningassist.miningAssistNotify.tooltip=ワールドにログインしたときに採掘アシストの状態を通知します。
+
 cavern.config.dimension=ディメンションの設定
 cavern.config.dimension.tooltip=洞窟ディメンションの設定を変更できます。
 cavern.config.dimension.cavern.tooltip=cavern-dimension.cfgに含まれる設定を変更できます。
@@ -274,6 +304,16 @@ achievement.cavern.diamondMiner=ダイヤモンド掘り
 achievement.cavern.diamondMiner.desc=炭鉱夫ランクがダイヤモンド掘りになる
 achievement.cavern.orbMiner=炭鉱夫の思念体
 achievement.cavern.orbMiner.desc=炭鉱夫の思念体を得る
+
+key.cavern.miningAssist=採掘アシストの切り替え
+
+cavern.miningassist.disabled=無効
+cavern.miningassist.quick=一括破壊
+cavern.miningassist.ranged=範囲破壊
+cavern.miningassist.adit=坑道掘り
+cavern.miningassist.toggle.message=採掘アシストが %s に変更されました
+cavern.miningassist.toggle.failed.message=採掘アシストは %s になるまで使用できません
+cavern.miningassist.notify.message=採掘アシストは %s に設定されています
 
 tooltip.iceEquipment.charge=アイスチャージ : %s
 

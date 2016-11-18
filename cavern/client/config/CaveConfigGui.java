@@ -4,8 +4,9 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import cavern.client.config.common.GeneralConfigEntry;
+import cavern.client.config.common.MiningAssistConfigEntry;
 import cavern.client.config.dimension.DimensionConfigEntry;
-import cavern.client.config.general.GeneralConfigEntry;
 import cavern.config.Config;
 import cavern.core.Cavern;
 import net.minecraft.client.gui.GuiScreen;
@@ -33,6 +34,7 @@ public class CaveConfigGui extends GuiConfig
 		List<IConfigElement> list = Lists.newArrayList();
 
 		list.add(new DummyCategoryElement("cavern:generalConfig", Config.LANG_KEY + Configuration.CATEGORY_GENERAL, GeneralConfigEntry.class));
+		list.add(new DummyCategoryElement("cavern:miningAssistConfig", Config.LANG_KEY + "miningassist", MiningAssistConfigEntry.class));
 		list.add(new DummyCategoryElement("cavern:dimensionConfig", Config.LANG_KEY + "dimension", DimensionConfigEntry.class));
 
 		return list;

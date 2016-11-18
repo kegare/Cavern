@@ -3,6 +3,7 @@ package cavern.client.gui;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.RecursiveAction;
 
@@ -34,6 +35,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
+import net.minecraftforge.fml.client.config.GuiConfigEntries.ArrayEntry;
 import net.minecraftforge.fml.client.config.HoverChecker;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,7 +43,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiSelectBlock extends GuiScreen
 {
-	private static final ArrayListExtended<BlockMeta> blocks = new ArrayListExtended<>();
+	private static final ArrayListExtended<BlockMeta> BLOCKS = new ArrayListExtended<>();
 
 	static
 	{
@@ -64,7 +66,7 @@ public class GuiSelectBlock extends GuiScreen
 				{
 					if (!block.hasTileEntity(block.getDefaultState()))
 					{
-						blocks.addIfAbsent(new BlockMeta(block, 0));
+						BLOCKS.addIfAbsent(new BlockMeta(block, 0));
 					}
 				}
 				else for (ItemStack itemstack : list)
@@ -79,7 +81,7 @@ public class GuiSelectBlock extends GuiScreen
 							continue;
 						}
 
-						blocks.addIfAbsent(new BlockMeta(sub, meta));
+						BLOCKS.addIfAbsent(new BlockMeta(sub, meta));
 					}
 				}
 			}
@@ -93,6 +95,8 @@ public class GuiSelectBlock extends GuiScreen
 	protected int selectorId;
 
 	protected GuiTextField nameField, metaField;
+
+	protected ArrayEntry arrayEntry;
 
 	protected BlockList blockList;
 
@@ -129,6 +133,19 @@ public class GuiSelectBlock extends GuiScreen
 	public GuiSelectBlock(GuiScreen parent, GuiTextField nameField, GuiTextField metaField, IBlockSelector selector, int id)
 	{
 		this(parent, nameField, metaField);
+		this.selector = selector;
+		this.selectorId = id;
+	}
+
+	public GuiSelectBlock(GuiScreen parent, ArrayEntry arrayEntry)
+	{
+		this(parent);
+		this.arrayEntry = arrayEntry;
+	}
+
+	public GuiSelectBlock(GuiScreen parent, ArrayEntry arrayEntry, IBlockSelector selector, int id)
+	{
+		this(parent, arrayEntry);
 		this.selector = selector;
 		this.selectorId = id;
 	}
@@ -197,6 +214,32 @@ public class GuiSelectBlock extends GuiScreen
 					if (selector != null)
 					{
 						selector.onBlockSelected(selectorId, blockList.selected);
+					}
+
+					if (arrayEntry != null)
+					{
+						if (blockList.selected.isEmpty())
+						{
+							arrayEntry.setListFromChildScreen(new String[0]);
+						}
+						else
+						{
+							Set<String> values = Sets.newLinkedHashSet();
+
+							for (BlockMeta blockMeta : blockList.selected)
+							{
+								if (blockMeta.getMeta() <= 0)
+								{
+									values.add(blockMeta.getBlockName());
+								}
+								else
+								{
+									values.add(blockMeta.getName());
+								}
+							}
+
+							arrayEntry.setListFromChildScreen(values.toArray());
+						}
 					}
 
 					if (blockList.selected.isEmpty())
@@ -441,7 +484,7 @@ public class GuiSelectBlock extends GuiScreen
 		{
 			super(GuiSelectBlock.this.mc, 0, 0, 0, 0, 18);
 
-			BlockMeta select = null;
+			Set<BlockMeta> select = Sets.newHashSet();
 
 			if (nameField != null)
 			{
@@ -455,18 +498,54 @@ public class GuiSelectBlock extends GuiScreen
 
 				if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(meta))
 				{
-					select = new BlockMeta(name, meta);
+					select.add(new BlockMeta(name, meta));
 				}
 			}
 
-			for (BlockMeta blockMeta : blocks)
+			if (arrayEntry != null)
+			{
+				for (Object obj : arrayEntry.getCurrentValues())
+				{
+					String value = Objects.toString(obj, "");
+
+					if (!Strings.isNullOrEmpty(value))
+					{
+						value = value.trim();
+
+						if (!value.contains(":"))
+						{
+							value = "minecraft:" + value;
+						}
+
+						BlockMeta blockMeta;
+
+						if (value.indexOf(':') != value.lastIndexOf(':'))
+						{
+							int i = value.lastIndexOf(':');
+
+							blockMeta = new BlockMeta(value.substring(0, i), value.substring(i + 1));
+						}
+						else
+						{
+							blockMeta = new BlockMeta(value, 0);
+						}
+
+						if (blockMeta.getBlock() != null)
+						{
+							select.add(blockMeta);
+						}
+					}
+				}
+			}
+
+			for (BlockMeta blockMeta : BLOCKS)
 			{
 				if (selector == null || selector.canSelectBlock(selectorId, blockMeta))
 				{
 					entries.addIfAbsent(blockMeta);
 					contents.addIfAbsent(blockMeta);
 
-					if (select != null && blockMeta.equals(select))
+					if (select.contains(blockMeta))
 					{
 						selected.add(blockMeta);
 					}

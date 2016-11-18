@@ -44,7 +44,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiSelectItem extends GuiScreen
 {
-	private static final ArrayListExtended<ItemMeta> items = new ArrayListExtended<>();
+	private static final ArrayListExtended<ItemMeta> ITEMS = new ArrayListExtended<>();
 
 	static
 	{
@@ -72,7 +72,7 @@ public class GuiSelectItem extends GuiScreen
 
 			if (list.isEmpty())
 			{
-				items.addIfAbsent(new ItemMeta(item, -1));
+				ITEMS.addIfAbsent(new ItemMeta(item, -1));
 			}
 			else for (ItemStack itemstack : list)
 			{
@@ -80,11 +80,11 @@ public class GuiSelectItem extends GuiScreen
 				{
 					if (itemstack.getItemDamage() == 0 && itemstack.isItemStackDamageable())
 					{
-						items.addIfAbsent(new ItemMeta(itemstack.getItem(), -1));
+						ITEMS.addIfAbsent(new ItemMeta(itemstack.getItem(), -1));
 					}
 					else
 					{
-						items.addIfAbsent(new ItemMeta(itemstack));
+						ITEMS.addIfAbsent(new ItemMeta(itemstack));
 					}
 				}
 			}
@@ -497,7 +497,7 @@ public class GuiSelectItem extends GuiScreen
 		{
 			super(GuiSelectItem.this.mc, 0, 0, 0, 0, 18);
 
-			ItemMeta select = null;
+			Set<ItemMeta> select = Sets.newHashSet();
 
 			if (nameField != null)
 			{
@@ -511,21 +511,7 @@ public class GuiSelectItem extends GuiScreen
 
 				if (!Strings.isNullOrEmpty(name))
 				{
-					select = new ItemMeta(name, meta);
-				}
-			}
-
-			for (ItemMeta itemMeta : items)
-			{
-				if (selector == null || selector.canSelectItem(selectorId, itemMeta))
-				{
-					entries.addIfAbsent(itemMeta);
-					contents.addIfAbsent(itemMeta);
-
-					if (select != null && itemMeta.equals(select))
-					{
-						selected.add(itemMeta);
-					}
+					select.add(new ItemMeta(name, meta));
 				}
 			}
 
@@ -557,10 +543,24 @@ public class GuiSelectItem extends GuiScreen
 							itemMeta = new ItemMeta(value, -1);
 						}
 
-						if (itemMeta.getItem() != null && entries.contains(itemMeta))
+						if (itemMeta.getItem() != null)
 						{
-							selected.add(itemMeta);
+							select.add(itemMeta);
 						}
+					}
+				}
+			}
+
+			for (ItemMeta itemMeta : ITEMS)
+			{
+				if (selector == null || selector.canSelectItem(selectorId, itemMeta))
+				{
+					entries.addIfAbsent(itemMeta);
+					contents.addIfAbsent(itemMeta);
+
+					if (select.contains(itemMeta))
+					{
+						selected.add(itemMeta);
 					}
 				}
 			}

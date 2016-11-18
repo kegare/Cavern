@@ -15,8 +15,9 @@ import cavern.block.CaveBlocks;
 import cavern.capability.CaveCapabilities;
 import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
+import cavern.miningassist.MiningAssist;
 import cavern.network.CaveNetworkRegistry;
-import cavern.network.client.MinerStatsAdjustMessage;
+import cavern.network.MinerStatsAdjustMessage;
 import cavern.plugin.MCEPlugin;
 import cavern.stats.bonus.MineBonusExperience;
 import cavern.stats.bonus.MineBonusGoodMine;
@@ -60,6 +61,7 @@ public class MinerStats implements IMinerStats
 
 	private int point;
 	private int rank;
+	private int miningAssist;
 
 	public MinerStats(EntityPlayer player)
 	{
@@ -114,13 +116,13 @@ public class MinerStats implements IMinerStats
 			entityPlayer.addExperience(entityPlayer.xpBarCap() / 2);
 		}
 
-		MinerRank current = MinerRank.getRank(rank);
+		MinerRank current = MinerRank.get(rank);
 		int max = MinerRank.values().length - 1;
 		boolean promoted = false;
 
 		while (current.getRank() < max)
 		{
-			MinerRank next = MinerRank.getRank(rank + 1);
+			MinerRank next = MinerRank.get(rank + 1);
 
 			if (point >= next.getPhase())
 			{
@@ -213,6 +215,44 @@ public class MinerStats implements IMinerStats
 	}
 
 	@Override
+	public int getMiningAssist()
+	{
+		return miningAssist;
+	}
+
+	@Override
+	public void setMiningAssist(int type)
+	{
+		setMiningAssist(type, true);
+	}
+
+	@Override
+	public void setMiningAssist(int type, boolean adjust)
+	{
+		int prev = miningAssist;
+
+		miningAssist = MathHelper.clamp_int(type, 0, MiningAssist.values().length - 1);
+
+		if (adjust && miningAssist != prev)
+		{
+			adjustData();
+		}
+	}
+
+	@Override
+	public void toggleMiningAssist()
+	{
+		int type = ++miningAssist;
+
+		if (type > MiningAssist.values().length - 1)
+		{
+			type = 0;
+		}
+
+		setMiningAssist(type);
+	}
+
+	@Override
 	public void adjustData()
 	{
 		if (entityPlayer != null && entityPlayer instanceof EntityPlayerMP)
@@ -222,10 +262,20 @@ public class MinerStats implements IMinerStats
 	}
 
 	@Override
+	public void adjustClientData()
+	{
+		if (entityPlayer != null)
+		{
+			CaveNetworkRegistry.sendToServer(new MinerStatsAdjustMessage(this));
+		}
+	}
+
+	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
 		nbt.setInteger("Point", getPoint());
 		nbt.setInteger("Rank", getRank());
+		nbt.setInteger("MiningAssist", getMiningAssist());
 	}
 
 	@Override
@@ -233,6 +283,7 @@ public class MinerStats implements IMinerStats
 	{
 		setPoint(nbt.getInteger("Point"), false);
 		setRank(nbt.getInteger("Rank"), false);
+		setMiningAssist(nbt.getInteger("MiningAssist"), false);
 	}
 
 	public static IMinerStats get(EntityPlayer player)

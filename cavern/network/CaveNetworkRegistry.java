@@ -3,9 +3,9 @@ package cavern.network;
 import cavern.core.Cavern;
 import cavern.network.client.CaveMusicMessage;
 import cavern.network.client.LastMineMessage;
-import cavern.network.client.MinerStatsAdjustMessage;
 import cavern.network.client.RegenerationGuiMessage;
 import cavern.network.server.MineBonusMessage;
+import cavern.network.server.MiningAssistMessage;
 import cavern.network.server.RegenerationMessage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
@@ -77,11 +77,12 @@ public class CaveNetworkRegistry
 
 	public static void registerMessages()
 	{
-		registerMessage(MinerStatsAdjustMessage.class, MinerStatsAdjustMessage.class, Side.CLIENT);
+		registerMessage(MinerStatsAdjustMessage.class, MinerStatsAdjustMessage.class);
 		registerMessage(LastMineMessage.class, LastMineMessage.class, Side.CLIENT);
 		registerMessage(MineBonusMessage.class, MineBonusMessage.class, Side.SERVER);
 		registerMessage(CaveMusicMessage.class, CaveMusicMessage.class, Side.CLIENT);
 		registerMessage(RegenerationGuiMessage.class, RegenerationGuiMessage.class, Side.CLIENT);
 		registerMessage(RegenerationMessage.class, RegenerationMessage.class, Side.SERVER);
+		registerMessage(MiningAssistMessage.class, MiningAssistMessage.class, Side.SERVER);
 	}
 }

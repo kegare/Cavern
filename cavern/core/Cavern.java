@@ -11,12 +11,14 @@ import cavern.config.CavernConfig;
 import cavern.config.Config;
 import cavern.config.GeneralConfig;
 import cavern.config.IceCavernConfig;
+import cavern.config.MiningAssistConfig;
 import cavern.config.RuinsCavernConfig;
 import cavern.entity.CaveEntityRegistry;
 import cavern.handler.CaveEventHooks;
 import cavern.handler.CaveFuelHandler;
 import cavern.handler.CavebornEventHooks;
 import cavern.handler.ClientEventHooks;
+import cavern.handler.MiningAssistEventHooks;
 import cavern.handler.api.CavernAPIHandler;
 import cavern.handler.api.DimensionHandler;
 import cavern.item.CaveItems;
@@ -56,8 +58,7 @@ import net.minecraftforge.fml.common.registry.IForgeRegistry;
 	modid = Cavern.MODID,
 	guiFactory = "cavern.client.config.CaveGuiFactory",
 	updateJSON = "https://dl.dropboxusercontent.com/u/51943112/versions/cavern.json",
-	acceptedMinecraftVersions = "[1.10.2,)",
-	dependencies = "required-after:Forge@[12.18.2.2099,)"
+	acceptedMinecraftVersions = "[1.10.2]"
 )
 @EventBusSubscriber
 public class Cavern
@@ -114,6 +115,7 @@ public class Cavern
 	{
 		Cavern.proxy.initConfigEntries();
 		Cavern.proxy.registerRenderers();
+		Cavern.proxy.registerKeyBindings();
 
 		if (event.getSide().isClient())
 		{
@@ -127,6 +129,8 @@ public class Cavern
 		CaveItems.registerEquipments();
 
 		GeneralConfig.syncConfig();
+
+		MiningAssistConfig.syncConfig();
 
 		GameRegistry.registerFuelHandler(new CaveFuelHandler());
 
@@ -177,6 +181,7 @@ public class Cavern
 
 		MinecraftForge.EVENT_BUS.register(new CaveEventHooks());
 		MinecraftForge.EVENT_BUS.register(new CavebornEventHooks());
+		MinecraftForge.EVENT_BUS.register(new MiningAssistEventHooks());
 	}
 
 	@EventHandler
@@ -239,6 +244,8 @@ public class Cavern
 
 		GeneralConfig.refreshMiningPointItems();
 		GeneralConfig.refreshMiningPoints();
+
+		MiningAssistConfig.refreshTargetBlocks();
 
 		CavernConfig.refreshDungeonMobs();
 		AquaCavernConfig.refreshDungeonMobs();

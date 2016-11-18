@@ -1,20 +1,19 @@
-package cavern.network.client;
+package cavern.network;
 
 import cavern.api.IMinerStats;
+import cavern.core.Cavern;
 import cavern.stats.MinerStats;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MinerStatsAdjustMessage implements IMessage, IMessageHandler<MinerStatsAdjustMessage, IMessage>
 {
 	private int point;
 	private int rank;
+	private int miningAssist;
 
 	public MinerStatsAdjustMessage() {}
 
@@ -22,6 +21,7 @@ public class MinerStatsAdjustMessage implements IMessage, IMessageHandler<MinerS
 	{
 		this.point = stats.getPoint();
 		this.rank = stats.getRank();
+		this.miningAssist = stats.getMiningAssist();
 	}
 
 	@Override
@@ -29,6 +29,7 @@ public class MinerStatsAdjustMessage implements IMessage, IMessageHandler<MinerS
 	{
 		point = buf.readInt();
 		rank = buf.readInt();
+		miningAssist = buf.readInt();
 	}
 
 	@Override
@@ -36,17 +37,31 @@ public class MinerStatsAdjustMessage implements IMessage, IMessageHandler<MinerS
 	{
 		buf.writeInt(point);
 		buf.writeInt(rank);
+		buf.writeInt(miningAssist);
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public IMessage onMessage(MinerStatsAdjustMessage message, MessageContext ctx)
 	{
-		EntityPlayer player = FMLClientHandler.instance().getClientPlayerEntity();
-		IMinerStats stats = MinerStats.get(player);
+		EntityPlayer player;
 
-		stats.setPoint(message.point);
-		stats.setRank(message.rank);
+		if (ctx.side.isClient())
+		{
+			player = Cavern.proxy.getClientPlayer();
+		}
+		else
+		{
+			player = ctx.getServerHandler().playerEntity;
+		}
+
+		if (player != null)
+		{
+			IMinerStats stats = MinerStats.get(player);
+
+			stats.setPoint(message.point);
+			stats.setRank(message.rank);
+			stats.setMiningAssist(message.miningAssist);
+		}
 
 		return null;
 	}
