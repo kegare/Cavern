@@ -17,7 +17,7 @@ public class EntityCavenicCreeper extends EntityCreeper
 	public EntityCavenicCreeper(World world)
 	{
 		super(world);
-		this.experienceValue = 10;
+		this.experienceValue = 13;
 		this.applyCustomValues();
 	}
 
@@ -51,7 +51,12 @@ public class EntityCavenicCreeper extends EntityCreeper
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float damage)
 	{
-		return !source.isFireDamage() && source != DamageSource.fall && super.attackEntityFrom(source, damage);
+		if (source == DamageSource.fall)
+		{
+			damage *= 0.35F;
+		}
+
+		return !source.isFireDamage() && source.getEntity() != this && super.attackEntityFrom(source, damage);
 	}
 
 	@Override

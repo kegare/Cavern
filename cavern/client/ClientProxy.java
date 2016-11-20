@@ -2,8 +2,6 @@ package cavern.client;
 
 import java.util.Map;
 
-import org.lwjgl.input.Keyboard;
-
 import com.google.common.collect.Maps;
 
 import cavern.client.config.CaveConfigEntries;
@@ -24,13 +22,10 @@ import cavern.entity.EntityCavenicZombie;
 import net.minecraft.block.Block;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.stats.Achievement;
-import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,8 +33,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
 {
-	public static final KeyBinding KEY_MINING_ASSIST = new KeyBinding("key.cavern.miningAssist", KeyConflictContext.IN_GAME, Keyboard.KEY_V, "key.categories.cavern");
-
 	public static final Map<Block, Block> RENDER_BLOCK_MAP = Maps.newHashMap();
 
 	@Override
@@ -63,12 +56,6 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(EntityCavenicCreeper.class, RenderCavenicCreeper::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityCavenicZombie.class, RenderCavenicZombie::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityCavenicSpider.class, RenderCavenicSpider::new);
-	}
-
-	@Override
-	public void registerKeyBindings()
-	{
-		ClientRegistry.registerKeyBinding(KEY_MINING_ASSIST);
 	}
 
 	@Override

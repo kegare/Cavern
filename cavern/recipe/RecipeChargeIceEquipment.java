@@ -8,6 +8,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 
 public class RecipeChargeIceEquipment implements IRecipe
 {
@@ -119,16 +120,7 @@ public class RecipeChargeIceEquipment implements IRecipe
 	@Override
 	public ItemStack[] getRemainingItems(InventoryCrafting inv)
 	{
-		ItemStack[] items = new ItemStack[inv.getSizeInventory()];
-
-		for (int i = 0; i < items.length; ++i)
-		{
-			ItemStack itemstack = inv.getStackInSlot(i);
-
-			items[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
-		}
-
-		return items;
+		return ForgeHooks.defaultRecipeGetRemainingItems(inv);
 	}
 
 	@Override

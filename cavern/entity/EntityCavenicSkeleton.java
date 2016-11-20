@@ -27,7 +27,7 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 	public EntityCavenicSkeleton(World world)
 	{
 		super(world);
-		this.experienceValue = 10;
+		this.experienceValue = 13;
 		this.setSize(0.68F, 2.0F);
 		this.initCustomValues();
 		this.applyCustomValues();
@@ -109,13 +109,19 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 		}
 
 		playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (getRNG().nextFloat() * 0.4F + 0.8F));
+
 		worldObj.spawnEntityInWorld(arrow);
 	}
 
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float damage)
 	{
-		return !source.isFireDamage() && source != DamageSource.fall && source.getEntity() != this && super.attackEntityFrom(source, damage);
+		if (source == DamageSource.fall)
+		{
+			damage *= 0.35F;
+		}
+
+		return !source.isFireDamage() && source.getEntity() != this && super.attackEntityFrom(source, damage);
 	}
 
 	@Override

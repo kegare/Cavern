@@ -1,7 +1,7 @@
 package cavern.network.client;
 
 import cavern.client.gui.GuiRegeneration;
-import cavern.handler.ClientEventHooks;
+import cavern.client.handler.ClientEventHooks;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.client.FMLClientHandler;

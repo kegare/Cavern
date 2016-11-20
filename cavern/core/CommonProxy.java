@@ -12,8 +12,6 @@ public class CommonProxy
 
 	public void registerRenderers() {}
 
-	public void registerKeyBindings() {}
-
 	public String translate(String key)
 	{
 		return I18n.translateToLocal(key);

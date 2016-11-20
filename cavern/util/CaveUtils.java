@@ -26,7 +26,6 @@ import com.google.common.collect.Sets;
 import cavern.core.Cavern;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
@@ -213,11 +212,6 @@ public class CaveUtils
 		}
 
 		return false;
-	}
-
-	public static boolean isItemPickaxe(EntityLivingBase entity)
-	{
-		return isItemPickaxe(entity.getActiveItemStack());
 	}
 
 	public static int compareWithNull(Object o1, Object o2)

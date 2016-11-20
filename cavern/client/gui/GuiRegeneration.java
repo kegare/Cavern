@@ -253,11 +253,11 @@ public class GuiRegeneration extends GuiScreen
 		drawGradientRect(0, 0, width, height, 0, Integer.MAX_VALUE);
 
 		GlStateManager.pushMatrix();
-		GlStateManager.scale(1.5F, 1.5F, 1.0F);
-		drawCenteredString(fontRendererObj, I18n.format("cavern.regeneration.gui.title"), width / 3, 30, 0xFFFFFF);
+		GlStateManager.scale(2.0F, 2.0F, 2.0F);
+		drawCenteredString(fontRendererObj, I18n.format("cavern.regeneration.gui.title"), width / 4, 30, 0xFFFFFF);
 		GlStateManager.popMatrix();
 
-		drawCenteredString(fontRendererObj, I18n.format("cavern.regeneration.gui.info"), width / 2, 90, 0xEEEEEE);
+		drawCenteredString(fontRendererObj, I18n.format("cavern.regeneration.gui.info"), width / 2, 100, 0xEEEEEE);
 
 		super.drawScreen(mouseX, mouseY, ticks);
 

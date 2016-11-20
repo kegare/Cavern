@@ -6,14 +6,13 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import cavern.api.IMinerStats;
-import cavern.client.ClientProxy;
+import cavern.client.CaveKeyBindings;
 import cavern.config.GeneralConfig;
 import cavern.config.MiningAssistConfig;
 import cavern.core.Cavern;
@@ -24,8 +23,11 @@ import cavern.miningassist.QuickMiningExecutor;
 import cavern.miningassist.RangedMiningExecutor;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.server.MiningAssistMessage;
+import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
 import cavern.util.BlockMeta;
+import cavern.util.BreakSpeedCache;
+import cavern.util.CaveUtils;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockRedstoneOre;
 import net.minecraft.block.state.IBlockState;
@@ -194,7 +196,7 @@ public class MiningAssistEventHooks
 		return null;
 	}
 
-	private static final Map<Pair<BlockPos, IBlockState>, Pair<Long, Float>> SPEED_CACHES = Maps.newHashMap();
+	private static final Map<BlockPos, BreakSpeedCache> SPEED_CACHES = Maps.newHashMap();
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onHarvestDrops(HarvestDropsEvent event)
@@ -261,20 +263,19 @@ public class MiningAssistEventHooks
 		if (MiningAssistConfig.modifiedHardness && Cavern.proxy.isSinglePlayer() && canMiningAssist(player, state))
 		{
 			BlockPos pos = event.getPos();
-			Pair<BlockPos, IBlockState> key = Pair.of(pos, state);
-			Pair<Long, Float> value = SPEED_CACHES.get(key);
+			BreakSpeedCache cache = SPEED_CACHES.get(pos);
 			long time = System.currentTimeMillis();
 			float cachedSpeed = 0.0F;
 
-			if (value != null)
+			if (cache != null)
 			{
-				if (time - value.getLeft().longValue() <= 3000L)
+				if (CaveUtils.areBlockStatesEqual(state, cache.getBlockState()) && time - cache.getCachedTime() <= 3000L)
 				{
-					cachedSpeed = value.getRight().floatValue();
+					cachedSpeed = cache.getBreakSpeed();
 				}
 				else
 				{
-					SPEED_CACHES.remove(key);
+					SPEED_CACHES.remove(pos);
 
 					return;
 				}
@@ -288,13 +289,14 @@ public class MiningAssistEventHooks
 			}
 
 			IMiningAssistExecutor executor = createExecutor(null, player.worldObj, player, pos, state);
-			int calc = executor.calc();
-			int power = 1;
+			MinerRank rank = MinerRank.get(MinerStats.get(player).getRank());
 			float speed = event.getNewSpeed();
+			float power = rank.getBoost() * 1.7145F;
+			float newSpeed = Math.min(speed / (executor.calc() * (0.5F - power * 0.1245F)), speed);
 
-			event.setNewSpeed(Math.min(speed / (calc * (0.5F - power * 0.1245F)), speed));
+			event.setNewSpeed(newSpeed);
 
-			SPEED_CACHES.put(key, Pair.of(Long.valueOf(time), Float.valueOf(event.getNewSpeed())));
+			SPEED_CACHES.put(pos, new BreakSpeedCache(state, newSpeed, time));
 		}
 	}
 
@@ -310,7 +312,7 @@ public class MiningAssistEventHooks
 		int key = Keyboard.getEventKey();
 		Minecraft mc = FMLClientHandler.instance().getClient();
 
-		if (ClientProxy.KEY_MINING_ASSIST.getKeyCode() == key)
+		if (CaveKeyBindings.KEY_MINING_ASSIST.isActiveAndMatches(key))
 		{
 			if (mc.thePlayer != null)
 			{

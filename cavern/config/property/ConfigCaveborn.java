@@ -13,9 +13,9 @@ public class ConfigCaveborn
 		return value;
 	}
 
-	public void setValue(int pos)
+	public void setValue(int type)
 	{
-		value = pos;
+		value = type;
 	}
 
 	public Type getType()

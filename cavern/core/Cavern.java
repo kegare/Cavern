@@ -5,6 +5,9 @@ import org.apache.logging.log4j.Level;
 import cavern.api.CavernAPI;
 import cavern.block.CaveBlocks;
 import cavern.capability.CaveCapabilities;
+import cavern.client.CaveKeyBindings;
+import cavern.client.handler.ClientEventHooks;
+import cavern.client.handler.MinerStatsHUDEventHooks;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CavernConfig;
@@ -17,7 +20,6 @@ import cavern.entity.CaveEntityRegistry;
 import cavern.handler.CaveEventHooks;
 import cavern.handler.CaveFuelHandler;
 import cavern.handler.CavebornEventHooks;
-import cavern.handler.ClientEventHooks;
 import cavern.handler.MiningAssistEventHooks;
 import cavern.handler.api.CavernAPIHandler;
 import cavern.handler.api.DimensionHandler;
@@ -115,12 +117,13 @@ public class Cavern
 	{
 		Cavern.proxy.initConfigEntries();
 		Cavern.proxy.registerRenderers();
-		Cavern.proxy.registerKeyBindings();
 
 		if (event.getSide().isClient())
 		{
 			CaveBlocks.registerModels();
 			CaveItems.registerModels();
+
+			CaveKeyBindings.registerKeyBindings();
 		}
 
 		CaveBlocks.registerOreDicts();
@@ -177,6 +180,7 @@ public class Cavern
 		if (event.getSide().isClient())
 		{
 			MinecraftForge.EVENT_BUS.register(new ClientEventHooks());
+			MinecraftForge.EVENT_BUS.register(new MinerStatsHUDEventHooks());
 		}
 
 		MinecraftForge.EVENT_BUS.register(new CaveEventHooks());

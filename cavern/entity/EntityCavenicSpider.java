@@ -20,7 +20,7 @@ public class EntityCavenicSpider extends EntitySpider
 	public EntityCavenicSpider(World world)
 	{
 		super(world);
-		this.experienceValue = 10;
+		this.experienceValue = 12;
 	}
 
 	@Override
@@ -92,7 +92,12 @@ public class EntityCavenicSpider extends EntitySpider
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float damage)
 	{
-		return !source.isFireDamage() && source != DamageSource.fall && super.attackEntityFrom(source, damage);
+		if (source == DamageSource.fall)
+		{
+			damage *= 0.35F;
+		}
+
+		return !source.isFireDamage() && source.getEntity() != this && super.attackEntityFrom(source, damage);
 	}
 
 	@Override

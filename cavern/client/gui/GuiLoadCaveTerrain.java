@@ -10,6 +10,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiLoadCaveTerrain extends GuiDownloadCaveTerrain
 {
+	private int loadTime;
+
 	public GuiLoadCaveTerrain(NetHandlerPlayClient handler)
 	{
 		super(handler);
@@ -24,7 +26,7 @@ public class GuiLoadCaveTerrain extends GuiDownloadCaveTerrain
 	@Override
 	public void updateScreen()
 	{
-		if (mc.thePlayer != null && (mc.thePlayer.onGround || mc.thePlayer.capabilities.isFlying || mc.thePlayer.isInWater()))
+		if (++loadTime > 200 || mc.thePlayer != null && (mc.thePlayer.onGround || mc.thePlayer.capabilities.isFlying || mc.thePlayer.isInWater()))
 		{
 			mc.displayGuiScreen(null);
 			mc.setIngameFocus();

@@ -54,14 +54,18 @@ public class PanoramaPaths
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (obj != null && obj instanceof PanoramaPaths)
+		if (this == obj)
 		{
-			PanoramaPaths paths = (PanoramaPaths)obj;
-
-			return north.equals(paths.north) && east.equals(paths.east) && south.equals(paths.south) && west.equals(paths.west) && top.equals(paths.top) && bottom.equals(paths.bottom);
+			return true;
+		}
+		else if (obj == null || !(obj instanceof PanoramaPaths))
+		{
+			return false;
 		}
 
-		return false;
+		PanoramaPaths paths = (PanoramaPaths)obj;
+
+		return north.equals(paths.north) && east.equals(paths.east) && south.equals(paths.south) && west.equals(paths.west) && top.equals(paths.top) && bottom.equals(paths.bottom);
 	}
 
 	@Override
