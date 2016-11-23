@@ -31,9 +31,9 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.DummyModContainer;
@@ -319,7 +319,13 @@ public class CaveUtils
 	public static ItemStack getSpawnEgg(String entityName)
 	{
 		ItemStack item = new ItemStack(Items.SPAWN_EGG);
-		ItemMonsterPlacer.applyEntityIdToItemStack(item, entityName);
+		NBTTagCompound nbt = new NBTTagCompound();
+		NBTTagCompound tag = new NBTTagCompound();
+
+		tag.setString("id", entityName);
+		nbt.setTag("EntityTag", tag);
+
+		item.setTagCompound(nbt);
 
 		return item;
 	}
