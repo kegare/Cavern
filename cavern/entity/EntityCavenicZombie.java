@@ -1,6 +1,8 @@
 package cavern.entity;
 
 import cavern.api.CavernAPI;
+import cavern.core.CaveAchievements;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
@@ -68,6 +70,24 @@ public class EntityCavenicZombie extends EntityZombie
 		if (rand.nextInt(10) == 0)
 		{
 			entityDropItem(new ItemStack(Items.DIAMOND), 0.5F);
+		}
+	}
+
+	@Override
+	public void onDeath(DamageSource cause)
+	{
+		super.onDeath(cause);
+
+		Entity entity = cause.getEntity();
+
+		if (entity == null)
+		{
+			entity = cause.getSourceOfDamage();
+		}
+
+		if (entity != null && entity instanceof EntityPlayer)
+		{
+			((EntityPlayer)entity).addStat(CaveAchievements.CAVENIC_ZOMBIE);
 		}
 	}
 

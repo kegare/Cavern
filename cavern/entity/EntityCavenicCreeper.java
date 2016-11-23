@@ -1,8 +1,11 @@
 package cavern.entity;
 
 import cavern.api.CavernAPI;
+import cavern.core.CaveAchievements;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -45,6 +48,24 @@ public class EntityCavenicCreeper extends EntityCreeper
 		if (rand.nextInt(10) == 0)
 		{
 			entityDropItem(new ItemStack(Items.DIAMOND), 0.5F);
+		}
+	}
+
+	@Override
+	public void onDeath(DamageSource cause)
+	{
+		super.onDeath(cause);
+
+		Entity entity = cause.getEntity();
+
+		if (entity == null)
+		{
+			entity = cause.getSourceOfDamage();
+		}
+
+		if (entity != null && entity instanceof EntityPlayer)
+		{
+			((EntityPlayer)entity).addStat(CaveAchievements.CAVENIC_CREEPER);
 		}
 	}
 

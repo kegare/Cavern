@@ -311,6 +311,8 @@ achievement.cavern.goodMine=Good Mine!
 achievement.cavern.goodMine.desc=Mine many ores continuously
 achievement.cavern.slipIce=Beware of Slip
 achievement.cavern.slipIce.desc=Walk on a slippery ice
+achievement.cavern.iceCharge=Ice Charge
+achievement.cavern.iceCharge.desc=Charge an ice equipment with ice
 achievement.cavern.magniteMiner=Magnite Miner
 achievement.cavern.magniteMiner.desc=Become a Magnite Miner
 achievement.cavern.goldMiner=Gold Miner
@@ -321,6 +323,14 @@ achievement.cavern.diamondMiner=Diamond Miner
 achievement.cavern.diamondMiner.desc=Become a Diamond Miner
 achievement.cavern.orbMiner=Miner's Thought Orb
 achievement.cavern.orbMiner.desc=Get a Miner's Thought Orb
+achievement.cavern.cavenicSkeleton=Hideous Skeleton
+achievement.cavern.cavenicSkeleton.desc=Kill a Cavenic Skeleton
+achievement.cavern.cavenicCreeper=Hideous Creeper
+achievement.cavern.cavenicCreeper.desc=Kill a Cavenic Creeper
+achievement.cavern.cavenicZombie=Hideous Zombie
+achievement.cavern.cavenicZombie.desc=Kill a Cavenic Zombie
+achievement.cavern.cavenicSpider=Hideous Spider
+achievement.cavern.cavenicSpider.desc=Kill a Cavenic Spider
 
 key.cavern.miningAssist=Toggle Mining Assist
 

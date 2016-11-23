@@ -1,13 +1,16 @@
 package cavern.entity;
 
 import cavern.api.CavernAPI;
+import cavern.core.CaveAchievements;
 import cavern.entity.ai.EntityAIAttackCavenicBow;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackRangedBow;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.SkeletonType;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
@@ -111,6 +114,24 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 		playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (getRNG().nextFloat() * 0.4F + 0.8F));
 
 		worldObj.spawnEntityInWorld(arrow);
+	}
+
+	@Override
+	public void onDeath(DamageSource cause)
+	{
+		super.onDeath(cause);
+
+		Entity entity = cause.getEntity();
+
+		if (entity == null)
+		{
+			entity = cause.getSourceOfDamage();
+		}
+
+		if (entity != null && entity instanceof EntityPlayer)
+		{
+			((EntityPlayer)entity).addStat(CaveAchievements.CAVENIC_SKELETON);
+		}
 	}
 
 	@Override

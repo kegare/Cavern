@@ -67,6 +67,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemSmeltedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
@@ -514,25 +515,43 @@ public class CaveEventHooks
 	}
 
 	@SubscribeEvent
+	public void onItemCrafted(ItemCraftedEvent event)
+	{
+		EntityPlayer player = event.player;
+		ItemStack itemstack = event.crafting;
+		World world = player.worldObj;
+
+		if (!world.isRemote && itemstack != null)
+		{
+			if (IceEquipment.isIceEquipment(itemstack))
+			{
+				int charge = IceEquipment.get(itemstack).getCharge();
+
+				if (charge > 0)
+				{
+					player.addStat(CaveAchievements.ICE_CHARGE);
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
 	public void onItemSmelted(ItemSmeltedEvent event)
 	{
 		EntityPlayer player = event.player;
 		ItemStack itemstack = event.smelting;
 		World world = player.worldObj;
 
-		if (!world.isRemote)
+		if (!world.isRemote && itemstack != null)
 		{
-			if (itemstack != null)
+			if (itemstack.getItem() == CaveItems.CAVE_ITEM)
 			{
-				if (itemstack.getItem() == CaveItems.CAVE_ITEM)
+				switch (ItemCave.EnumType.byItemStack(itemstack))
 				{
-					switch (ItemCave.EnumType.byItemStack(itemstack))
-					{
-						case MAGNITE_INGOT:
-							player.addStat(CaveAchievements.MAGNITE);
-							break;
-						default:
-					}
+					case MAGNITE_INGOT:
+						player.addStat(CaveAchievements.MAGNITE);
+						break;
+					default:
 				}
 			}
 		}

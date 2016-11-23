@@ -1,11 +1,13 @@
 package cavern.entity;
 
 import cavern.api.CavernAPI;
+import cavern.core.CaveAchievements;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntitySpider;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
@@ -87,6 +89,24 @@ public class EntityCavenicSpider extends EntitySpider
 		}
 
 		return false;
+	}
+
+	@Override
+	public void onDeath(DamageSource cause)
+	{
+		super.onDeath(cause);
+
+		Entity entity = cause.getEntity();
+
+		if (entity == null)
+		{
+			entity = cause.getSourceOfDamage();
+		}
+
+		if (entity != null && entity instanceof EntityPlayer)
+		{
+			((EntityPlayer)entity).addStat(CaveAchievements.CAVENIC_SPIDER);
+		}
 	}
 
 	@Override

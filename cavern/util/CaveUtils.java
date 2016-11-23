@@ -26,8 +26,12 @@ import com.google.common.collect.Sets;
 import cavern.core.Cavern;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -310,5 +314,20 @@ public class CaveUtils
 		}
 
 		return stateA.getBlock() == stateB.getBlock() && stateA.getBlock().getMetaFromState(stateA) == stateB.getBlock().getMetaFromState(stateB);
+	}
+
+	public static ItemStack getSpawnEgg(String entityName)
+	{
+		ItemStack item = new ItemStack(Items.SPAWN_EGG);
+		ItemMonsterPlacer.applyEntityIdToItemStack(item, entityName);
+
+		return item;
+	}
+
+	public static ItemStack getSpawnEgg(Class<? extends Entity> entityClass)
+	{
+		String entityName = EntityList.getEntityStringFromClass(entityClass);
+
+		return getSpawnEgg(entityName);
 	}
 }

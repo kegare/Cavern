@@ -186,9 +186,9 @@ public class MinerStatsHUDEventHooks
 		RenderItem renderItem = mc.getRenderItem();
 		FontRenderer renderer = mc.fontRendererObj;
 		boolean flag = false;
-		long timeDiff = Minecraft.getSystemTime() - MinerStats.lastMineTime;
+		long processTime = Minecraft.getSystemTime() - MinerStats.lastMineTime;
 
-		if (MinerStats.lastMineTime > 0 && timeDiff < 2000L && MinerStats.lastMine != null && MinerStats.lastMinePoint != 0)
+		if (MinerStats.lastMineTime > 0 && processTime < 2000L && MinerStats.lastMine != null && MinerStats.lastMinePoint != 0)
 		{
 			Block block = MinerStats.lastMine.getBlock();
 
@@ -238,7 +238,7 @@ public class MinerStatsHUDEventHooks
 
 		String combo = null;
 
-		if (timeDiff > 15000L)
+		if (processTime > 15000L)
 		{
 			MinerStats.mineCombo = 0;
 		}
@@ -246,11 +246,11 @@ public class MinerStatsHUDEventHooks
 		{
 			TextFormatting format = TextFormatting.WHITE;
 
-			if (timeDiff < 3000L)
+			if (processTime < 3000L)
 			{
 				format = TextFormatting.BOLD;
 			}
-			else if (timeDiff > 12000L)
+			else if (processTime > 12000L)
 			{
 				format = TextFormatting.GRAY;
 			}

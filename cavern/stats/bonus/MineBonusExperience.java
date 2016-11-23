@@ -20,7 +20,7 @@ public class MineBonusExperience implements IMineBonus
 		{
 			player.worldObj.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_EXPERIENCE_ORB_TOUCH, SoundCategory.PLAYERS, 0.1F, 0.5F * ((player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.7F + 1.8F));
 
-			player.addExperience(combo / 5);
+			player.addExperience(combo / 10);
 		}
 	}
 }
