@@ -11,7 +11,7 @@ public class MCEPlugin
 	@Method(modid = MODID)
 	public static void load()
 	{
-		MCEPluginWrapper.registerShops();
 		MCEPluginWrapper.registerPurchaseItems();
+		MCEPluginWrapper.registerShops();
 	}
 }

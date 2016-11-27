@@ -26,11 +26,7 @@ import cavern.util.BlockMeta;
 import cavern.util.CaveUtils;
 import cavern.util.WeightedItem;
 import cavern.world.TeleporterRepatriation;
-import cavern.world.WorldProviderAquaCavern;
-import cavern.world.WorldProviderCaveland;
-import cavern.world.WorldProviderCavern;
 import cavern.world.WorldProviderIceCavern;
-import cavern.world.WorldProviderRuinsCavern;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.material.Material;
@@ -65,7 +61,6 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
@@ -567,37 +562,6 @@ public class CaveEventHooks
 			IIceEquipment equip = IceEquipment.get(itemstack);
 
 			event.getToolTip().add(Cavern.proxy.translateFormat("tooltip.iceEquipment.charge", equip.getCharge()));
-		}
-	}
-
-	@SubscribeEvent
-	public void onWorldUnload(WorldEvent.Unload event)
-	{
-		World world = event.getWorld();
-		int dim = world.provider.getDimension();
-
-		if (!world.isRemote)
-		{
-			if (CavernAPI.dimension.isCavern(dim))
-			{
-				WorldProviderCavern.saveHandler.writeToFile();
-			}
-			else if (CavernAPI.dimension.isAquaCavern(dim))
-			{
-				WorldProviderAquaCavern.saveHandler.writeToFile();
-			}
-			else if (CavernAPI.dimension.isCaveland(dim))
-			{
-				WorldProviderCaveland.saveHandler.writeToFile();
-			}
-			else if (CavernAPI.dimension.isIceCavern(dim))
-			{
-				WorldProviderIceCavern.saveHandler.writeToFile();
-			}
-			else if (CavernAPI.dimension.isRuinsCavern(dim))
-			{
-				WorldProviderRuinsCavern.saveHandler.writeToFile();
-			}
 		}
 	}
 }

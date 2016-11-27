@@ -165,11 +165,17 @@ public class BlockCave extends Block
 			case FISSURED_PACKED_ICE:
 				if (!world.isRemote)
 				{
+					EntityPlayer player = harvesters.get();
 					FissureBreakEvent event = WeightedRandom.getRandomItem(RANDOM, FISSURE_EVENTS);
 
 					if (event != null)
 					{
 						event.get().onBreakBlock(world, pos, state, chance, fortune, harvesters.get(), RANDOM);
+					}
+
+					if (player != null)
+					{
+						player.addStat(CaveAchievements.FISSURE);
 					}
 				}
 

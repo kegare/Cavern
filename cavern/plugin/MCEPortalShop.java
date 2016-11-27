@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import shift.mceconomy3.api.MCEconomyAPI;
 import shift.mceconomy3.api.shop.IProduct;
 import shift.mceconomy3.api.shop.IShop;
 
@@ -42,9 +43,24 @@ public class MCEPortalShop implements IShop
 		return products;
 	}
 
+	public void addProduct(ItemStack item)
+	{
+		addProduct(item, null);
+	}
+
 	public void addProduct(ItemStack item, int cost)
 	{
 		addProduct(item, cost, null);
+	}
+
+	public void addProduct(ItemStack item, @Nullable MinerRank rank)
+	{
+		int cost = MCEconomyAPI.getPurchase(item);
+
+		if (cost > 0)
+		{
+			addProduct(item, cost * 2, rank);
+		}
 	}
 
 	public void addProduct(ItemStack item, int cost, @Nullable MinerRank rank)

@@ -6,9 +6,13 @@ import com.google.common.collect.Lists;
 
 import cavern.client.config.CaveConfigEntries;
 import cavern.config.property.ConfigBlocks;
+import cavern.config.property.ConfigItems;
 import cavern.config.property.ConfigMinerRank;
 import cavern.core.Cavern;
 import cavern.stats.MinerRank;
+import cavern.util.CaveUtils;
+import cavern.util.ItemMeta;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -16,6 +20,7 @@ public class MiningAssistConfig
 {
 	public static Configuration config;
 
+	public static ConfigItems effectiveItems = new ConfigItems();
 	public static ConfigMinerRank minerRank = new ConfigMinerRank();
 	public static boolean collectDrops;
 	public static boolean collectExps;
@@ -38,6 +43,16 @@ public class MiningAssistConfig
 		{
 			config = Config.loadConfig(category);
 		}
+
+		prop = config.get(category, "effectiveItems", new String[0]);
+		prop.setConfigEntryClass(CaveConfigEntries.selectItems);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		effectiveItems.setValues(prop.getStringList());
 
 		prop = config.get(category, "minerRank", MinerRank.IRON_MINER.getRank());
 		prop.setMinValue(0).setMaxValue(MinerRank.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleInteger);
@@ -156,6 +171,35 @@ public class MiningAssistConfig
 		config.setCategoryPropertyOrder(category, propOrder);
 
 		Config.saveConfig(config);
+	}
+
+	public static boolean refreshEffectiveItems()
+	{
+		if (effectiveItems == null)
+		{
+			return false;
+		}
+
+		effectiveItems.refreshItems();
+
+		return true;
+	}
+
+	public static boolean isEffectiveItem(ItemStack itemstack)
+	{
+		if (effectiveItems == null || itemstack == null || itemstack.getItem() == null)
+		{
+			return false;
+		}
+
+		if (effectiveItems.getItems().isEmpty())
+		{
+			return CaveUtils.isItemPickaxe(itemstack);
+		}
+
+		ItemMeta itemMeta = new ItemMeta(itemstack.getItem(), itemstack.isItemStackDamageable() ? -1 : itemstack.getItemDamage());
+
+		return effectiveItems.getItems().contains(itemMeta);
 	}
 
 	public static void refreshTargetBlocks()

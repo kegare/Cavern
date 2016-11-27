@@ -25,7 +25,7 @@ public final class CaveType
 
 	public static void registerDimensions()
 	{
-		DIM_CAVERN = DimensionType.register("Cavern", "_cavern", CavernConfig.dimensionId, WorldProviderCavern.class, true);
+		DIM_CAVERN = DimensionType.register("Cavern", "_cavern", CavernConfig.dimensionId, WorldProviderCavern.class, false);
 
 		DimensionManager.registerDimension(DIM_CAVERN.getId(), DIM_CAVERN);
 
@@ -38,7 +38,7 @@ public final class CaveType
 
 		if (!CavernAPI.dimension.isCavelandDisabled())
 		{
-			DIM_CAVELAND = DimensionType.register("Caveland", "_caveland", CavelandConfig.dimensionId, WorldProviderCaveland.class, true);
+			DIM_CAVELAND = DimensionType.register("Caveland", "_caveland", CavelandConfig.dimensionId, WorldProviderCaveland.class, false);
 
 			DimensionManager.registerDimension(DIM_CAVELAND.getId(), DIM_CAVELAND);
 		}

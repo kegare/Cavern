@@ -16,16 +16,20 @@ import net.minecraft.world.chunk.IChunkGenerator;
 
 public class WorldProviderRuinsCavern extends WorldProviderCavern
 {
-	public static final CaveSaveHandler saveHandler = new CaveSaveHandler("Ruins Cavern");
-
 	public static final List<WeightedItem> RUINS_CHEST_ITEMS = Lists.newArrayList();
 
-	public WorldProviderRuinsCavern()
+	@Override
+	protected void createBiomeProvider()
 	{
-		this.hasNoSky = true;
-		this.setDimension(RuinsCavernConfig.dimensionId);
+		super.createBiomeProvider();
 
-		saveHandler.setDimension(getDimension()).setWorldHeight(RuinsCavernConfig.worldHeight);
+		biomeProvider = new BiomeProviderSingle(Biomes.PLAINS);
+	}
+
+	@Override
+	public IChunkGenerator createChunkGenerator()
+	{
+		return new ChunkProviderRuinsCavern(worldObj);
 	}
 
 	@Override
@@ -47,14 +51,15 @@ public class WorldProviderRuinsCavern extends WorldProviderCavern
 	}
 
 	@Override
-	public int getActualHeight()
+	public int getWorldHeight()
 	{
-		if (!worldObj.isRemote && saveHandler.getRawData() == null)
-		{
-			saveHandler.getData();
-		}
+		return RuinsCavernConfig.worldHeight;
+	}
 
-		return saveHandler.getWorldHeight();
+	@Override
+	public boolean isRandomSeed()
+	{
+		return false;
 	}
 
 	@Override
@@ -73,18 +78,6 @@ public class WorldProviderRuinsCavern extends WorldProviderCavern
 	public double getBrightness()
 	{
 		return RuinsCavernConfig.caveBrightness;
-	}
-
-	@Override
-	protected void createBiomeProvider()
-	{
-		biomeProvider = new BiomeProviderSingle(Biomes.PLAINS);
-	}
-
-	@Override
-	public IChunkGenerator createChunkGenerator()
-	{
-		return new ChunkProviderRuinsCavern(worldObj);
 	}
 
 	@Override

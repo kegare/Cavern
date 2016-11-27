@@ -8,9 +8,6 @@ import cavern.network.server.MineBonusMessage;
 import cavern.network.server.MiningAssistMessage;
 import cavern.network.server.RegenerationMessage;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.Packet;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -34,30 +31,9 @@ public class CaveNetworkRegistry
 		registerMessage(messageHandler, requestMessageType, Side.SERVER);
 	}
 
-	public static Packet<?> getPacket(IMessage message)
-	{
-		return NETWORK.getPacketFrom(message);
-	}
-
 	public static void sendToAll(IMessage message)
 	{
 		NETWORK.sendToAll(message);
-	}
-
-	public static void sendToOthers(IMessage message, EntityPlayerMP player)
-	{
-		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-
-		if (server != null && server.isDedicatedServer())
-		{
-			for (EntityPlayerMP thePlayer : server.getPlayerList().getPlayerList())
-			{
-				if (player == thePlayer)
-				{
-					sendTo(message, thePlayer);
-				}
-			}
-		}
 	}
 
 	public static void sendTo(IMessage message, EntityPlayerMP player)

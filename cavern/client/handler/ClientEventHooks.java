@@ -110,6 +110,7 @@ public class ClientEventHooks
 
 					if (event.isWorldRunning())
 					{
+						MiningAssistConfig.refreshEffectiveItems();
 						MiningAssistConfig.refreshTargetBlocks();
 					}
 

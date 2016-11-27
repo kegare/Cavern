@@ -13,14 +13,10 @@ import net.minecraft.world.chunk.IChunkGenerator;
 
 public class WorldProviderAquaCavern extends WorldProviderCavern
 {
-	public static final CaveSaveHandler saveHandler = new CaveSaveHandler("Aqua Cavern");
-
-	public WorldProviderAquaCavern()
+	@Override
+	public IChunkGenerator createChunkGenerator()
 	{
-		this.hasNoSky = true;
-		this.setDimension(AquaCavernConfig.dimensionId);
-
-		saveHandler.setDimension(getDimension()).setWorldHeight(AquaCavernConfig.worldHeight);
+		return new ChunkProviderAquaCavern(worldObj);
 	}
 
 	@Override
@@ -36,30 +32,15 @@ public class WorldProviderAquaCavern extends WorldProviderCavern
 	}
 
 	@Override
-	public long getSeed()
+	public int getWorldHeight()
 	{
-		if (!AquaCavernConfig.randomSeed)
-		{
-			return worldObj.getWorldInfo().getSeed();
-		}
-
-		if (!worldObj.isRemote && saveHandler.getRawData() == null)
-		{
-			saveHandler.getData();
-		}
-
-		return saveHandler.getWorldSeed();
+		return AquaCavernConfig.worldHeight;
 	}
 
 	@Override
-	public int getActualHeight()
+	public boolean isRandomSeed()
 	{
-		if (!worldObj.isRemote && saveHandler.getRawData() == null)
-		{
-			saveHandler.getData();
-		}
-
-		return saveHandler.getWorldHeight();
+		return AquaCavernConfig.randomSeed;
 	}
 
 	@Override
@@ -84,12 +65,6 @@ public class WorldProviderAquaCavern extends WorldProviderCavern
 	public SoundEvent getMusicSound()
 	{
 		return CaveSounds.MUSIC_AQUA;
-	}
-
-	@Override
-	public IChunkGenerator createChunkGenerator()
-	{
-		return new ChunkProviderAquaCavern(worldObj);
 	}
 
 	@Override

@@ -13,7 +13,6 @@ import com.google.common.collect.Maps;
 
 import cavern.api.IMinerStats;
 import cavern.client.CaveKeyBindings;
-import cavern.config.GeneralConfig;
 import cavern.config.MiningAssistConfig;
 import cavern.core.Cavern;
 import cavern.miningassist.AditMiningExecutor;
@@ -130,7 +129,7 @@ public class MiningAssistEventHooks
 
 	public static boolean canMiningAssist(EntityPlayer player, IBlockState state)
 	{
-		if (GeneralConfig.isMiningPointItem(player.getHeldItemMainhand()))
+		if (MiningAssistConfig.isEffectiveItem(player.getHeldItemMainhand()))
 		{
 			IMinerStats stats = MinerStats.get(player);
 

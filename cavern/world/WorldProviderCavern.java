@@ -1,5 +1,7 @@
 package cavern.world;
 
+import java.util.Random;
+
 import cavern.client.renderer.EmptyRenderer;
 import cavern.config.CavernConfig;
 import cavern.config.manager.CaveBiomeManager;
@@ -10,6 +12,7 @@ import cavern.network.client.CaveMusicMessage;
 import cavern.world.CaveEntitySpawner.IWorldEntitySpawner;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.SoundEvent;
@@ -28,18 +31,42 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class WorldProviderCavern extends WorldProviderSurface implements IWorldEntitySpawner
 {
-	public static final CaveSaveHandler saveHandler = new CaveSaveHandler("Cavern");
+	protected static final Random RANDOM = new Random();
 
 	protected int musicTime = 0;
 
+	protected CaveDataManager dataManager;
 	protected CaveEntitySpawner entitySpawner = new CaveEntitySpawner(this);
 
-	public WorldProviderCavern()
+	@Override
+	protected void createBiomeProvider()
 	{
-		this.hasNoSky = true;
-		this.setDimension(CavernConfig.dimensionId);
+		hasNoSky = true;
+		dataManager = new CaveDataManager(worldObj.getWorldInfo().getDimensionData(getDimensionType()).getCompoundTag("WorldData"));
 
-		saveHandler.setDimension(getDimension()).setWorldHeight(CavernConfig.worldHeight);
+		CaveBiomeManager manager = getBiomeManager();
+
+		if (manager != null)
+		{
+			switch (getBiomeType())
+			{
+				case SQUARE:
+					biomeProvider = new BiomeProviderCavern(worldObj, 1, manager);
+					return;
+				case LARGE_SQUARE:
+					biomeProvider = new BiomeProviderCavern(worldObj, 5, manager);
+					return;
+				default:
+			}
+		}
+
+		super.createBiomeProvider();
+	}
+
+	@Override
+	public IChunkGenerator createChunkGenerator()
+	{
+		return new ChunkProviderCavern(worldObj);
 	}
 
 	@Override
@@ -56,28 +83,38 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	@Override
 	public long getSeed()
 	{
-		if (!CavernConfig.randomSeed)
+		if (!isRandomSeed())
 		{
 			return worldObj.getWorldInfo().getSeed();
 		}
 
-		if (!worldObj.isRemote && saveHandler.getRawData() == null)
+		if (dataManager != null)
 		{
-			saveHandler.getData();
+			return dataManager.getWorldSeed(RANDOM.nextLong());
 		}
 
-		return saveHandler.getWorldSeed();
+		return super.getSeed();
 	}
 
 	@Override
 	public int getActualHeight()
 	{
-		if (!worldObj.isRemote && saveHandler.getRawData() == null)
+		if (dataManager != null)
 		{
-			saveHandler.getData();
+			return dataManager.getWorldHeight(getWorldHeight());
 		}
 
-		return saveHandler.getWorldHeight();
+		return super.getActualHeight();
+	}
+
+	public int getWorldHeight()
+	{
+		return CavernConfig.worldHeight;
+	}
+
+	public boolean isRandomSeed()
+	{
+		return CavernConfig.randomSeed;
 	}
 
 	public CaveBiomeManager getBiomeManager()
@@ -118,34 +155,6 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 
 			lightBrightnessTable[i] = (1.0F - f1) / (f1 * 3.0F + 1.0F) * (1.0F - f) + f;
 		}
-	}
-
-	@Override
-	protected void createBiomeProvider()
-	{
-		CaveBiomeManager manager = getBiomeManager();
-
-		if (manager != null)
-		{
-			switch (getBiomeType())
-			{
-				case SQUARE:
-					biomeProvider = new BiomeProviderCavern(worldObj, 1, manager);
-					return;
-				case LARGE_SQUARE:
-					biomeProvider = new BiomeProviderCavern(worldObj, 5, manager);
-					return;
-				default:
-			}
-		}
-
-		super.createBiomeProvider();
-	}
-
-	@Override
-	public IChunkGenerator createChunkGenerator()
-	{
-		return new ChunkProviderCavern(worldObj);
 	}
 
 	@Override
@@ -305,6 +314,12 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	}
 
 	@Override
+	public boolean getHasNoSky()
+	{
+		return true;
+	}
+
+	@Override
 	public boolean canDoLightning(Chunk chunk)
 	{
 		return false;
@@ -314,6 +329,25 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	public boolean canDoRainSnowIce(Chunk chunk)
 	{
 		return false;
+	}
+
+	@Override
+	public boolean canDropChunk(int x, int z)
+	{
+		return true;
+	}
+
+	@Override
+	public void onWorldSave()
+	{
+		NBTTagCompound compound = new NBTTagCompound();
+
+		if (dataManager != null)
+		{
+			compound.setTag("WorldData", dataManager.getCompound());
+		}
+
+		worldObj.getWorldInfo().setDimensionData(getDimensionType(), compound);
 	}
 
 	@Override

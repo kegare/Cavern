@@ -10,14 +10,10 @@ import net.minecraft.world.chunk.IChunkGenerator;
 
 public class WorldProviderCaveland extends WorldProviderCavern
 {
-	public static final CaveSaveHandler saveHandler = new CaveSaveHandler("Caveland");
-
-	public WorldProviderCaveland()
+	@Override
+	public IChunkGenerator createChunkGenerator()
 	{
-		this.hasNoSky = true;
-		this.setDimension(CavelandConfig.dimensionId);
-
-		saveHandler.setDimension(getDimension()).setWorldHeight(CavelandConfig.worldHeight);
+		return new ChunkProviderCaveland(worldObj);
 	}
 
 	@Override
@@ -33,30 +29,15 @@ public class WorldProviderCaveland extends WorldProviderCavern
 	}
 
 	@Override
-	public long getSeed()
+	public int getWorldHeight()
 	{
-		if (!CavelandConfig.randomSeed)
-		{
-			return worldObj.getWorldInfo().getSeed();
-		}
-
-		if (!worldObj.isRemote && saveHandler.getRawData() == null)
-		{
-			saveHandler.getData();
-		}
-
-		return saveHandler.getWorldSeed();
+		return CavelandConfig.worldHeight;
 	}
 
 	@Override
-	public int getActualHeight()
+	public boolean isRandomSeed()
 	{
-		if (!worldObj.isRemote && saveHandler.getRawData() == null)
-		{
-			saveHandler.getData();
-		}
-
-		return saveHandler.getWorldHeight();
+		return CavelandConfig.randomSeed;
 	}
 
 	@Override
@@ -81,11 +62,5 @@ public class WorldProviderCaveland extends WorldProviderCavern
 	public SoundEvent getMusicSound()
 	{
 		return CaveSounds.MUSIC_HOPE;
-	}
-
-	@Override
-	public IChunkGenerator createChunkGenerator()
-	{
-		return new ChunkProviderCaveland(worldObj);
 	}
 }

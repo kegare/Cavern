@@ -15,16 +15,20 @@ import net.minecraft.world.chunk.IChunkGenerator;
 
 public class WorldProviderIceCavern extends WorldProviderCavern
 {
-	public static final CaveSaveHandler saveHandler = new CaveSaveHandler("Ice Cavern");
-
 	public static final List<WeightedItem> HIBERNATE_ITEMS = Lists.newArrayList();
 
-	public WorldProviderIceCavern()
+	@Override
+	protected void createBiomeProvider()
 	{
-		this.hasNoSky = true;
-		this.setDimension(IceCavernConfig.dimensionId);
+		super.createBiomeProvider();
 
-		saveHandler.setDimension(getDimension()).setWorldHeight(IceCavernConfig.worldHeight);
+		biomeProvider = new BiomeProviderSingle(Biomes.ICE_PLAINS);
+	}
+
+	@Override
+	public IChunkGenerator createChunkGenerator()
+	{
+		return new ChunkProviderIceCavern(worldObj);
 	}
 
 	@Override
@@ -40,30 +44,15 @@ public class WorldProviderIceCavern extends WorldProviderCavern
 	}
 
 	@Override
-	public long getSeed()
+	public int getWorldHeight()
 	{
-		if (!IceCavernConfig.randomSeed)
-		{
-			return worldObj.getWorldInfo().getSeed();
-		}
-
-		if (!worldObj.isRemote && saveHandler.getRawData() == null)
-		{
-			saveHandler.getData();
-		}
-
-		return saveHandler.getWorldSeed();
+		return IceCavernConfig.worldHeight;
 	}
 
 	@Override
-	public int getActualHeight()
+	public boolean isRandomSeed()
 	{
-		if (!worldObj.isRemote && saveHandler.getRawData() == null)
-		{
-			saveHandler.getData();
-		}
-
-		return saveHandler.getWorldHeight();
+		return IceCavernConfig.randomSeed;
 	}
 
 	@Override
@@ -82,17 +71,5 @@ public class WorldProviderIceCavern extends WorldProviderCavern
 	public double getBrightness()
 	{
 		return IceCavernConfig.caveBrightness;
-	}
-
-	@Override
-	protected void createBiomeProvider()
-	{
-		biomeProvider = new BiomeProviderSingle(Biomes.ICE_PLAINS);
-	}
-
-	@Override
-	public IChunkGenerator createChunkGenerator()
-	{
-		return new ChunkProviderIceCavern(worldObj);
 	}
 }

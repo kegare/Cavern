@@ -249,6 +249,7 @@ public class Cavern
 		GeneralConfig.refreshMiningPointItems();
 		GeneralConfig.refreshMiningPoints();
 
+		MiningAssistConfig.refreshEffectiveItems();
 		MiningAssistConfig.refreshTargetBlocks();
 
 		CavernConfig.refreshDungeonMobs();
