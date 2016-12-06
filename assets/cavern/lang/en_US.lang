@@ -282,10 +282,10 @@ item.shovelIce.name=Ice Shovel
 item.hoeIce.name=Ice Hoe
 item.bowIce.name=Ice Bow
 
-entity.cavern.CavenicSkeleton.name=Cavenic Skeleton
-entity.cavern.CavenicCreeper.name=Cavenic Creeper
-entity.cavern.CavenicZombie.name=Cavenic Zombie
-entity.cavern.CavenicSpider.name=Cavenic Spider
+entity.CavenicSkeleton.name=Cavenic Skeleton
+entity.CavenicCreeper.name=Cavenic Creeper
+entity.CavenicZombie.name=Cavenic Zombie
+entity.CavenicSpider.name=Cavenic Spider
 
 itemGroup.cavern=Cavern
 
@@ -358,5 +358,3 @@ book.cavebornEscapeMission.text4=#LF
 book.cavebornEscapeMission.text5=If you fulfilled the above missions, You will surely escape from Cavern.
 book.cavebornEscapeMission.text6=#LF
 book.cavebornEscapeMission.text7=Good luck!
-
-shop.cavern.portal.name=Portal Shop

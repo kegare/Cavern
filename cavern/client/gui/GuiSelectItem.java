@@ -1,17 +1,15 @@
 package cavern.client.gui;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.RecursiveAction;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
@@ -34,6 +32,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.ArrayEntry;
@@ -48,7 +47,7 @@ public class GuiSelectItem extends GuiScreen
 
 	static
 	{
-		List<ItemStack> list = Lists.newArrayList();
+		NonNullList<ItemStack> list = NonNullList.create();
 
 		for (Item item : Item.REGISTRY)
 		{
@@ -76,16 +75,13 @@ public class GuiSelectItem extends GuiScreen
 			}
 			else for (ItemStack itemstack : list)
 			{
-				if (itemstack != null && itemstack.getItem() != null)
+				if (itemstack.getItemDamage() == 0 && itemstack.isItemStackDamageable())
 				{
-					if (itemstack.getItemDamage() == 0 && itemstack.isItemStackDamageable())
-					{
-						ITEMS.addIfAbsent(new ItemMeta(itemstack.getItem(), -1));
-					}
-					else
-					{
-						ITEMS.addIfAbsent(new ItemMeta(itemstack));
-					}
+					ITEMS.addIfAbsent(new ItemMeta(itemstack.getItem(), -1));
+				}
+				else
+				{
+					ITEMS.addIfAbsent(new ItemMeta(itemstack));
 				}
 			}
 		}
@@ -517,38 +513,33 @@ public class GuiSelectItem extends GuiScreen
 
 			if (arrayEntry != null)
 			{
-				for (Object obj : arrayEntry.getCurrentValues())
+				Arrays.stream(arrayEntry.getCurrentValues()).filter(o -> o != null && !Strings.isNullOrEmpty(o.toString())).forEach(o ->
 				{
-					String value = Objects.toString(obj, "");
+					String value = o.toString().trim();
 
-					if (!Strings.isNullOrEmpty(value))
+					if (!value.contains(":"))
 					{
-						value = value.trim();
-
-						if (!value.contains(":"))
-						{
-							value = "minecraft:" + value;
-						}
-
-						ItemMeta itemMeta;
-
-						if (value.indexOf(':') != value.lastIndexOf(':'))
-						{
-							int i = value.lastIndexOf(':');
-
-							itemMeta = new ItemMeta(value.substring(0, i), NumberUtils.toInt(value.substring(i + 1)));
-						}
-						else
-						{
-							itemMeta = new ItemMeta(value, -1);
-						}
-
-						if (itemMeta.getItem() != null)
-						{
-							select.add(itemMeta);
-						}
+						value = "minecraft:" + value;
 					}
-				}
+
+					ItemMeta itemMeta;
+
+					if (value.indexOf(':') != value.lastIndexOf(':'))
+					{
+						int i = value.lastIndexOf(':');
+
+						itemMeta = new ItemMeta(value.substring(0, i), NumberUtils.toInt(value.substring(i + 1)));
+					}
+					else
+					{
+						itemMeta = new ItemMeta(value, -1);
+					}
+
+					if (!itemMeta.isEmpty())
+					{
+						select.add(itemMeta);
+					}
+				});
 			}
 
 			for (ItemMeta itemMeta : ITEMS)
@@ -613,7 +604,7 @@ public class GuiSelectItem extends GuiScreen
 				return null;
 			}
 
-			if (itemstack == null)
+			if (itemstack.isEmpty())
 			{
 				itemstack = itemMeta.getItemStack();
 			}
@@ -647,7 +638,7 @@ public class GuiSelectItem extends GuiScreen
 
 		public String getItemMetaTypeName(ItemMeta itemMeta)
 		{
-			return getItemMetaTypeName(itemMeta, null);
+			return getItemMetaTypeName(itemMeta, ItemStack.EMPTY);
 		}
 
 		@Override
@@ -667,7 +658,6 @@ public class GuiSelectItem extends GuiScreen
 			}
 
 			ItemStack itemstack = itemMeta.getItemStack();
-
 			String name = getItemMetaTypeName(itemMeta, itemstack);
 
 			if (!Strings.isNullOrEmpty(name))
@@ -715,52 +705,37 @@ public class GuiSelectItem extends GuiScreen
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(new RecursiveAction()
+			CaveUtils.getPool().execute(() ->
 			{
-				@Override
-				protected void compute()
+				List<ItemMeta> result;
+
+				if (Strings.isNullOrEmpty(filter))
 				{
-					List<ItemMeta> result;
-
-					if (Strings.isNullOrEmpty(filter))
+					result = entries;
+				}
+				else if (filter.equals("selected"))
+				{
+					result = Lists.newArrayList(selected);
+				}
+				else
+				{
+					if (!filterCache.containsKey(filter))
 					{
-						result = entries;
-					}
-					else if (filter.equals("selected"))
-					{
-						result = Lists.newArrayList(selected);
-					}
-					else
-					{
-						if (!filterCache.containsKey(filter))
-						{
-							filterCache.put(filter, Lists.newArrayList(Collections2.filter(entries, new ItemFilter(filter))));
-						}
-
-						result = filterCache.get(filter);
+						filterCache.put(filter, Lists.newArrayList(Collections2.filter(entries, e -> filterMatch(e, filter))));
 					}
 
-					if (!contents.equals(result))
-					{
-						contents.clear();
-						contents.addAll(result);
-					}
+					result = filterCache.get(filter);
+				}
+
+				if (!contents.equals(result))
+				{
+					contents.clear();
+					contents.addAll(result);
 				}
 			});
 		}
-	}
 
-	public static class ItemFilter implements Predicate<ItemMeta>
-	{
-		private final String filter;
-
-		public ItemFilter(String filter)
-		{
-			this.filter = filter;
-		}
-
-		@Override
-		public boolean apply(ItemMeta itemMeta)
+		protected boolean filterMatch(ItemMeta itemMeta, String filter)
 		{
 			return CaveFilters.itemFilter(itemMeta, filter);
 		}

@@ -230,9 +230,9 @@ public class CavernAPIHandler implements ICavernAPI
 		handler.addRandomiteItem(Items.DIAMOND_AXE, 1);
 		handler.addRandomiteItem(Items.DIAMOND_SHOVEL, 1);
 		handler.addRandomiteItem(Items.DIAMOND_HOE, 1);
-		handler.addRandomiteItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MINER_ORB.getItemDamage()), 1);
+		handler.addRandomiteItem(ItemCave.EnumType.MINER_ORB.getItemStack(), 1);
 
-		handler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 8, ItemCave.EnumType.ICE_STICK.getItemDamage()), 30);
+		handler.addHibernateItem(ItemCave.EnumType.ICE_STICK.getItemStack(8), 30);
 		handler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_SWORD, 20), 10);
 		handler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_PICKAXE, 30), 10);
 		handler.addHibernateItem(IceEquipment.getChargedItem(CaveItems.ICE_AXE, 30), 10);

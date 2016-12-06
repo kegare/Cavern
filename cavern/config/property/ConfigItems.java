@@ -1,11 +1,12 @@
 package cavern.config.property;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Set;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import cavern.util.ItemMeta;
 
@@ -13,7 +14,7 @@ public class ConfigItems
 {
 	private String[] values;
 
-	private final List<ItemMeta> items = Lists.newArrayList();
+	private final Set<ItemMeta> items = Sets.newConcurrentHashSet();
 
 	public String[] getValues()
 	{
@@ -30,7 +31,7 @@ public class ConfigItems
 		values = items;
 	}
 
-	public List<ItemMeta> getItems()
+	public Set<ItemMeta> getItems()
 	{
 		return items;
 	}
@@ -39,35 +40,32 @@ public class ConfigItems
 	{
 		items.clear();
 
-		for (String value : values)
+		Arrays.stream(getValues()).filter(value -> !Strings.isNullOrEmpty(value)).forEach(value ->
 		{
-			if (!Strings.isNullOrEmpty(value))
+			value = value.trim();
+
+			if (!value.contains(":"))
 			{
-				value = value.trim();
-
-				if (!value.contains(":"))
-				{
-					value = "minecraft:" + value;
-				}
-
-				ItemMeta itemMeta;
-
-				if (value.indexOf(':') != value.lastIndexOf(':'))
-				{
-					int i = value.lastIndexOf(':');
-
-					itemMeta = new ItemMeta(value.substring(0, i), NumberUtils.toInt(value.substring(i + 1)));
-				}
-				else
-				{
-					itemMeta = new ItemMeta(value, 0);
-				}
-
-				if (itemMeta.getItem() != null)
-				{
-					items.add(itemMeta);
-				}
+				value = "minecraft:" + value;
 			}
-		}
+
+			ItemMeta itemMeta;
+
+			if (value.indexOf(':') != value.lastIndexOf(':'))
+			{
+				int i = value.lastIndexOf(':');
+
+				itemMeta = new ItemMeta(value.substring(0, i), NumberUtils.toInt(value.substring(i + 1)));
+			}
+			else
+			{
+				itemMeta = new ItemMeta(value, 0);
+			}
+
+			if (!itemMeta.isEmpty())
+			{
+				items.add(itemMeta);
+			}
+		});
 	}
 }

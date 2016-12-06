@@ -81,7 +81,7 @@ public class CaveVein
 			{
 				Type type = (Type)element;
 
-				for (Biome biome : BiomeDictionary.getBiomesForType(type))
+				for (Biome biome : BiomeDictionary.getBiomes(type))
 				{
 					biomes.add(Biome.getIdForBiome(biome));
 				}
@@ -232,12 +232,12 @@ public class CaveVein
 						double var11 = random.nextDouble() * size / 16.0D;
 						double var12 = (MathHelper.sin(j * (float)Math.PI / size) + 1.0F) * var11 + 1.0D;
 						double var13 = (MathHelper.sin(j * (float)Math.PI / size) + 1.0F) * var11 + 1.0D;
-						int xMin = MathHelper.floor_double(var8 - var12 / 2.0D);
-						int xMax = MathHelper.floor_double(var8 + var12 / 2.0D);
-						int yMin = MathHelper.floor_double(var9 - var13 / 2.0D);
-						int yMax = MathHelper.floor_double(var9 + var13 / 2.0D);
-						int zMin = MathHelper.floor_double(var10 - var12 / 2.0D);
-						int zMax = MathHelper.floor_double(var10 + var12 / 2.0D);
+						int xMin = MathHelper.floor(var8 - var12 / 2.0D);
+						int xMax = MathHelper.floor(var8 + var12 / 2.0D);
+						int yMin = MathHelper.floor(var9 - var13 / 2.0D);
+						int yMax = MathHelper.floor(var9 + var13 / 2.0D);
+						int zMin = MathHelper.floor(var10 - var12 / 2.0D);
+						int zMax = MathHelper.floor(var10 + var12 / 2.0D);
 
 						for (x = xMin; gen <= size && x <= xMax; ++x)
 						{
@@ -262,7 +262,7 @@ public class CaveVein
 
 												if (state.getBlock() == target.getBlock() && state.getBlock().getMetaFromState(state) == target.getMeta())
 												{
-													if (biomes == null || biomes.length <= 0 || ArrayUtils.contains(biomes, Biome.getIdForBiome(world.getBiomeGenForCoords(blockpos))))
+													if (biomes == null || biomes.length <= 0 || ArrayUtils.contains(biomes, Biome.getIdForBiome(world.getBiome(blockpos))))
 													{
 														if (world.setBlockState(blockpos, blockMeta.getBlockState(), 2))
 														{

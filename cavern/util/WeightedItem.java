@@ -15,6 +15,6 @@ public class WeightedItem extends WeightedRandom.Item
 
 	public ItemStack getItem()
 	{
-		return ItemStack.copyItemStack(item);
+		return item.copy();
 	}
 }

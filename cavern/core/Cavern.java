@@ -1,11 +1,11 @@
 package cavern.core;
 
-import org.apache.logging.log4j.Level;
-
 import cavern.api.CavernAPI;
 import cavern.block.CaveBlocks;
 import cavern.capability.CaveCapabilities;
 import cavern.client.CaveKeyBindings;
+import cavern.client.CaveRenderingRegistry;
+import cavern.client.config.CaveConfigEntries;
 import cavern.client.handler.ClientEventHooks;
 import cavern.client.handler.MinerStatsHUDEventHooks;
 import cavern.config.AquaCavernConfig;
@@ -25,19 +25,17 @@ import cavern.handler.api.CavernAPIHandler;
 import cavern.handler.api.DimensionHandler;
 import cavern.item.CaveItems;
 import cavern.network.CaveNetworkRegistry;
-import cavern.plugin.HaCPlugin;
-import cavern.plugin.MCEPlugin;
 import cavern.stats.MinerStats;
-import cavern.util.CaveLog;
 import cavern.util.Version;
 import cavern.world.CaveType;
 import cavern.world.RuinsBlockData;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -54,13 +52,16 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod
 (
-	modid = Cavern.MODID,
-	guiFactory = "cavern.client.config.CaveGuiFactory",
-	updateJSON = "https://dl.dropboxusercontent.com/u/51943112/versions/cavern.json",
-	acceptedMinecraftVersions = "[1.10.2]"
+		modid = Cavern.MODID,
+		guiFactory = "cavern.client.config.CaveGuiFactory",
+		updateJSON = "https://dl.dropboxusercontent.com/u/51943112/versions/cavern.json",
+		acceptedMinecraftVersions = "[1.11,)",
+		dependencies = "required-after:Forge@[13.19.0.2180,)"
 )
 @EventBusSubscriber
 public class Cavern
@@ -85,6 +86,24 @@ public class Cavern
 
 		CavernAPI.apiHandler = new CavernAPIHandler();
 		CavernAPI.dimension = new DimensionHandler();
+
+		if (event.getSide().isClient())
+		{
+			clientConstruct();
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void clientConstruct()
+	{
+		Minecraft mc = FMLClientHandler.instance().getClient();
+
+		if (mc.isJava64bit() && Runtime.getRuntime().maxMemory() >= 2000000000L)
+		{
+			Config.highDefault = true;
+		}
+
+		CaveConfigEntries.initEntries();
 	}
 
 	@SubscribeEvent
@@ -115,13 +134,13 @@ public class Cavern
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		Cavern.proxy.initConfigEntries();
-		Cavern.proxy.registerRenderers();
-
 		if (event.getSide().isClient())
 		{
 			CaveBlocks.registerModels();
 			CaveItems.registerModels();
+
+			CaveRenderingRegistry.registerRenderers();
+			CaveRenderingRegistry.registerRenderBlocks();
 
 			CaveKeyBindings.registerKeyBindings();
 		}
@@ -198,36 +217,7 @@ public class Cavern
 		CavernAPIHandler.registerItems(CavernAPI.apiHandler);
 		CavernAPIHandler.registerEvents(CavernAPI.apiHandler);
 
-		loadPlugins();
-
 		RuinsBlockData.init();
-	}
-
-	public void loadPlugins()
-	{
-		if (Loader.isModLoaded(HaCPlugin.LIB_MODID))
-		{
-			try
-			{
-				HaCPlugin.load();
-			}
-			catch (Exception e)
-			{
-				CaveLog.log(Level.WARN, e, "Failed to load the Heat&Climate mod plugin.");
-			}
-		}
-
-		if (Loader.isModLoaded(MCEPlugin.MODID))
-		{
-			try
-			{
-				MCEPlugin.load();
-			}
-			catch (Exception e)
-			{
-				CaveLog.log(Level.WARN, e, "Failed to load the MCEconomy mod plugin.");
-			}
-		}
 	}
 
 	@EventHandler

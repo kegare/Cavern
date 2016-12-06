@@ -173,9 +173,10 @@ public class CaveItems
 
 	public static void registerOreDicts()
 	{
-		OreDictionary.registerOre("gemAquamarine", new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()));
-		OreDictionary.registerOre("ingotMagnite", new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()));
-		OreDictionary.registerOre("gemHexcite", new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()));
+		OreDictionary.registerOre("gemAquamarine", ItemCave.EnumType.AQUAMARINE.getItemStack());
+		OreDictionary.registerOre("ingotMagnite", ItemCave.EnumType.MAGNITE_INGOT.getItemStack());
+		OreDictionary.registerOre("gemHexcite", ItemCave.EnumType.HEXCITE.getItemStack());
+		OreDictionary.registerOre("stickIce", ItemCave.EnumType.ICE_STICK.getItemStack());
 	}
 
 	public static void registerEquipments()
@@ -190,25 +191,25 @@ public class CaveItems
 
 	public static void registerRecipes()
 	{
-		GameRegistry.addShapelessRecipe(new ItemStack(CAVE_ITEM, 9, ItemCave.EnumType.AQUAMARINE.getItemDamage()),
+		GameRegistry.addShapelessRecipe(ItemCave.EnumType.AQUAMARINE.getItemStack(9),
 			new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.AQUAMARINE_BLOCK.getMetadata()));
 
-		GameRegistry.addShapelessRecipe(new ItemStack(CAVE_ITEM, 9, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()),
+		GameRegistry.addShapelessRecipe(ItemCave.EnumType.MAGNITE_INGOT.getItemStack(9),
 			new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.MAGNITE_BLOCK.getMetadata()));
 
-		GameRegistry.addShapelessRecipe(new ItemStack(CAVE_ITEM, 9, ItemCave.EnumType.HEXCITE.getItemDamage()),
+		GameRegistry.addShapelessRecipe(ItemCave.EnumType.HEXCITE.getItemStack(9),
 				new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_BLOCK.getMetadata()));
 
-		GameRegistry.addRecipe(new ItemStack(CAVE_ITEM, 2, ItemCave.EnumType.ICE_STICK.getItemDamage()),
+		GameRegistry.addRecipe(ItemCave.EnumType.ICE_STICK.getItemStack(2),
 			"I", "I",
 			'I', Blocks.ICE
 		);
-		GameRegistry.addRecipe(new ItemStack(CAVE_ITEM, 8, ItemCave.EnumType.ICE_STICK.getItemDamage()),
+		GameRegistry.addRecipe(ItemCave.EnumType.ICE_STICK.getItemStack(8),
 			"I", "I",
 			'I', Blocks.PACKED_ICE
 		);
 
-		ItemStack material = new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage());
+		ItemStack material = ItemCave.EnumType.AQUAMARINE.getItemStack();
 		ItemStack subMaterial;
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(AQUAMARINE_PICKAXE,
@@ -229,7 +230,7 @@ public class CaveItems
 			'S', "stickWood"
 		));
 
-		material = new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage());
+		material = ItemCave.EnumType.MAGNITE_INGOT.getItemStack();
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(MAGNITE_SWORD,
 			"M", "M", "S",
@@ -255,7 +256,7 @@ public class CaveItems
 			'S', "stickWood"
 		));
 
-		material = new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage());
+		material = ItemCave.EnumType.HEXCITE.getItemStack();
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(HEXCITE_SWORD,
 			"H", "H", "S",
@@ -308,7 +309,7 @@ public class CaveItems
 		);
 
 		material = new ItemStack(Blocks.ICE);
-		subMaterial = new ItemStack(CAVE_ITEM, 1, ItemCave.EnumType.ICE_STICK.getItemDamage());
+		subMaterial = ItemCave.EnumType.ICE_STICK.getItemStack();
 
 		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_SWORD, 3),
 			"I", "I", "S",

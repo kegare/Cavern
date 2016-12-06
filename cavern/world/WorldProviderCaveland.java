@@ -13,7 +13,7 @@ public class WorldProviderCaveland extends WorldProviderCavern
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkProviderCaveland(worldObj);
+		return new ChunkProviderCaveland(world);
 	}
 
 	@Override

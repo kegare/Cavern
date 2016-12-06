@@ -174,17 +174,17 @@ public class CaveBlocks
 	{
 		GameRegistry.addShapedRecipe(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.AQUAMARINE_BLOCK.getMetadata()),
 			"AAA", "AAA", "AAA",
-			'A', new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage())
+			'A', ItemCave.EnumType.AQUAMARINE.getItemStack()
 		);
 
 		GameRegistry.addShapedRecipe(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.MAGNITE_BLOCK.getMetadata()),
 			"MMM", "MMM", "MMM",
-			'M', new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage())
+			'M', ItemCave.EnumType.MAGNITE_INGOT.getItemStack()
 		);
 
 		GameRegistry.addShapedRecipe(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_BLOCK.getMetadata()),
 			"HHH", "HHH", "HHH",
-			'H', new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage())
+			'H', ItemCave.EnumType.HEXCITE.getItemStack()
 		);
 
 		GameRegistry.addShapelessRecipe(new ItemStack(Items.STICK, 8), new ItemStack(PERVERTED_LOG, 1, OreDictionary.WILDCARD_VALUE));

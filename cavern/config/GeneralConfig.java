@@ -228,7 +228,7 @@ public class GeneralConfig
 
 	public static boolean isMiningPointItem(ItemStack itemstack)
 	{
-		if (miningPointItems == null || itemstack == null || itemstack.getItem() == null)
+		if (miningPointItems == null || itemstack.isEmpty())
 		{
 			return false;
 		}

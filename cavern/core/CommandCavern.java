@@ -19,7 +19,7 @@ import net.minecraft.util.math.BlockPos;
 public class CommandCavern extends CommandBase
 {
 	@Override
-	public String getCommandName()
+	public String getName()
 	{
 		return "cavern";
 	}
@@ -31,9 +31,9 @@ public class CommandCavern extends CommandBase
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender sender)
+	public String getUsage(ICommandSender sender)
 	{
-		return String.format("/%s <%s>", getCommandName(), Joiner.on('|').join(getCommands()));
+		return String.format("/%s <%s>", getName(), Joiner.on('|').join(getCommands()));
 	}
 
 	public String[] getCommands()
@@ -84,7 +84,7 @@ public class CommandCavern extends CommandBase
 	}
 
 	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos)
 	{
 		return args.length == 1 ? CommandBase.getListOfStringsMatchingLastWord(args, getCommands()) : Collections.<String>emptyList();
 	}

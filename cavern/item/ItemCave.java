@@ -1,11 +1,10 @@
 package cavern.item;
 
-import java.util.List;
-
 import cavern.core.Cavern;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -27,7 +26,7 @@ public class ItemCave extends Item
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subItems)
+	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems)
 	{
 		for (EnumType type : EnumType.values())
 		{
@@ -62,6 +61,16 @@ public class ItemCave extends Item
 		public String getUnlocalizedName()
 		{
 			return unlocalizedName;
+		}
+
+		public ItemStack getItemStack()
+		{
+			return getItemStack(1);
+		}
+
+		public ItemStack getItemStack(int amount)
+		{
+			return new ItemStack(CaveItems.CAVE_ITEM, amount, getItemDamage());
 		}
 
 		public static EnumType byDamage(int damage)

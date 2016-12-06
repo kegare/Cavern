@@ -21,7 +21,7 @@ public class ConfigBiomeType
 		Type[] types = Type.values();
 		int max = types.length - 1;
 
-		return types[MathHelper.clamp_int(getValue(), 0, max)];
+		return types[MathHelper.clamp(getValue(), 0, max)];
 	}
 
 	public enum Type

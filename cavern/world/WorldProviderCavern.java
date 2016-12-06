@@ -39,10 +39,11 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	protected CaveEntitySpawner entitySpawner = new CaveEntitySpawner(this);
 
 	@Override
-	protected void createBiomeProvider()
+	protected void init()
 	{
 		hasNoSky = true;
-		dataManager = new CaveDataManager(worldObj.getWorldInfo().getDimensionData(getDimensionType()).getCompoundTag("WorldData"));
+		hasSkyLight = false;
+		dataManager = new CaveDataManager(world.getWorldInfo().getDimensionData(getDimensionType()).getCompoundTag("WorldData"));
 
 		CaveBiomeManager manager = getBiomeManager();
 
@@ -50,23 +51,23 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 		{
 			switch (getBiomeType())
 			{
-				case SQUARE:
-					biomeProvider = new BiomeProviderCavern(worldObj, 1, manager);
-					return;
-				case LARGE_SQUARE:
-					biomeProvider = new BiomeProviderCavern(worldObj, 5, manager);
-					return;
-				default:
+			case SQUARE:
+				biomeProvider = new BiomeProviderCavern(world, 1, manager);
+				return;
+			case LARGE_SQUARE:
+				biomeProvider = new BiomeProviderCavern(world, 5, manager);
+				return;
+			default:
 			}
 		}
 
-		super.createBiomeProvider();
+		super.init();
 	}
 
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkProviderCavern(worldObj);
+		return new ChunkProviderCavern(world);
 	}
 
 	@Override
@@ -85,7 +86,7 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	{
 		if (!isRandomSeed())
 		{
-			return worldObj.getWorldInfo().getSeed();
+			return world.getWorldInfo().getSeed();
 		}
 
 		if (dataManager != null)
@@ -134,7 +135,7 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 
 	public SoundEvent getMusicSound()
 	{
-		if (worldObj.rand.nextInt(3) == 0)
+		if (world.rand.nextInt(3) == 0)
 		{
 			return CaveSounds.MUSIC_CAVE;
 		}
@@ -272,25 +273,20 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	@Override
 	public void calculateInitialWeather()
 	{
-		if (!worldObj.isRemote)
+		if (!world.isRemote)
 		{
-			musicTime = worldObj.rand.nextInt(4000) + 8000;
+			musicTime = world.rand.nextInt(4000) + 8000;
 		}
-
-		worldObj.prevRainingStrength = 0.0F;
-		worldObj.rainingStrength = 0.0F;
-		worldObj.prevThunderingStrength = 0.0F;
-		worldObj.thunderingStrength = 0.0F;
 	}
 
 	@Override
 	public void updateWeather()
 	{
-		if (!worldObj.isRemote)
+		if (!world.isRemote)
 		{
 			if (--musicTime <= 0)
 			{
-				musicTime = worldObj.rand.nextInt(5000) + 10000;
+				musicTime = world.rand.nextInt(5000) + 10000;
 
 				SoundEvent music = getMusicSound();
 
@@ -300,11 +296,6 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 				}
 			}
 		}
-
-		worldObj.prevRainingStrength = 0.0F;
-		worldObj.rainingStrength = 0.0F;
-		worldObj.prevThunderingStrength = 0.0F;
-		worldObj.thunderingStrength = 0.0F;
 	}
 
 	@Override
@@ -314,7 +305,13 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	}
 
 	@Override
-	public boolean getHasNoSky()
+	public boolean hasSkyLight()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean hasNoSky()
 	{
 		return true;
 	}
@@ -347,27 +344,27 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 			compound.setTag("WorldData", dataManager.getCompound());
 		}
 
-		worldObj.getWorldInfo().setDimensionData(getDimensionType(), compound);
+		world.getWorldInfo().setDimensionData(getDimensionType(), compound);
 	}
 
 	@Override
 	public void onWorldUpdateEntities()
 	{
-		if (getMonsterSpawn() > 0 && worldObj instanceof WorldServer)
+		if (getMonsterSpawn() > 0 && world instanceof WorldServer)
 		{
-			WorldServer world = (WorldServer)worldObj;
+			WorldServer worldServer = (WorldServer)world;
 
-			if (world.getGameRules().getBoolean("doMobSpawning") && world.getWorldInfo().getTerrainType() != WorldType.DEBUG_WORLD)
+			if (worldServer.getGameRules().getBoolean("doMobSpawning") && worldServer.getWorldInfo().getTerrainType() != WorldType.DEBUG_WORLD)
 			{
-				MinecraftServer server = world.getMinecraftServer();
-				boolean spawnHostileMobs = world.getDifficulty() != EnumDifficulty.PEACEFUL;
+				MinecraftServer server = worldServer.getMinecraftServer();
+				boolean spawnHostileMobs = worldServer.getDifficulty() != EnumDifficulty.PEACEFUL;
 
 				if (server != null && !server.isSinglePlayer() && server.isDedicatedServer() && server instanceof DedicatedServer)
 				{
 					spawnHostileMobs = ((DedicatedServer)server).allowSpawnMonsters();
 				}
 
-				entitySpawner.findChunksForSpawning(world, spawnHostileMobs, false, world.getWorldInfo().getWorldTotalTime() % 400L == 0L);
+				entitySpawner.findChunksForSpawning(worldServer, spawnHostileMobs, false, worldServer.getWorldInfo().getWorldTotalTime() % 400L == 0L);
 			}
 		}
 	}

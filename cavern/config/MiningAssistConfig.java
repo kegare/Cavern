@@ -187,7 +187,7 @@ public class MiningAssistConfig
 
 	public static boolean isEffectiveItem(ItemStack itemstack)
 	{
-		if (effectiveItems == null || itemstack == null || itemstack.getItem() == null)
+		if (effectiveItems == null || itemstack.isEmpty())
 		{
 			return false;
 		}

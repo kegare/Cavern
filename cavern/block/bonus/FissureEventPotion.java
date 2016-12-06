@@ -72,7 +72,7 @@ public class FissureEventPotion implements IFissureBreakEvent
 			areaEffectCloud.setDuration(150);
 			areaEffectCloud.addEffect(new PotionEffect(potion, 200, random.nextInt(2)));
 
-			world.spawnEntityInWorld(areaEffectCloud);
+			world.spawnEntity(areaEffectCloud);
 		}
 	}
 }

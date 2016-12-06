@@ -1,7 +1,5 @@
 package cavern.item;
 
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -18,6 +16,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -45,7 +44,7 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subItems)
+	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems)
 	{
 		for (EnumType type : EnumType.values())
 		{
@@ -76,11 +75,13 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-		if (isSeeds(stack))
+		ItemStack held = player.getHeldItem(hand);
+
+		if (isSeeds(held))
 		{
-			if (facing == EnumFacing.UP && player.canPlayerEdit(pos, facing, stack) && player.canPlayerEdit(pos.up(), facing, stack))
+			if (facing == EnumFacing.UP && player.canPlayerEdit(pos, facing, held) && player.canPlayerEdit(pos.up(), facing, held))
 			{
 				IBlockState state = world.getBlockState(pos);
 				Block soil = state.getBlock();
@@ -89,7 +90,7 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 				{
 					world.setBlockState(pos.up(), getPlant(world, pos));
 
-					--stack.stackSize;
+					held.shrink(1);
 
 					return EnumActionResult.SUCCESS;
 				}
@@ -104,7 +105,7 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 	{
 		if (isFruits(stack))
 		{
-			--stack.stackSize;
+			stack.shrink(1);
 
 			if (entityLiving instanceof EntityPlayer)
 			{
@@ -124,19 +125,21 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
 	{
-		if (isFruits(stack))
+		ItemStack held = player.getHeldItem(hand);
+
+		if (isFruits(held))
 		{
 			if (player.canEat(false))
 			{
 				player.setActiveHand(hand);
 
-				return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+				return new ActionResult<>(EnumActionResult.SUCCESS, held);
 			}
 		}
 
-		return new ActionResult<>(EnumActionResult.FAIL, stack);
+		return new ActionResult<>(EnumActionResult.FAIL, held);
 	}
 
 	@Override

@@ -24,6 +24,7 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySnowman;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -78,7 +79,7 @@ public class IceCavernConfig
 		propOrder.add(prop.getName());
 		dimensionId = prop.getInt(dimensionId);
 
-		prop = config.get(category, "worldHeight", 128);
+		prop = config.get(category, "worldHeight", Config.highDefault ? 256 : 128);
 		prop.setMinValue(64).setMaxValue(256);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -149,7 +150,12 @@ public class IceCavernConfig
 
 		for (Class<? extends Entity> clazz : classes)
 		{
-			mobs.add(EntityList.CLASS_TO_NAME.get(clazz));
+			ResourceLocation name = EntityList.getKey(clazz);
+
+			if (name != null)
+			{
+				mobs.add(name.toString());
+			}
 		}
 
 		prop = config.get(category, "dungeonMobs", mobs.toArray(new String[mobs.size()]));
@@ -162,7 +168,7 @@ public class IceCavernConfig
 		propOrder.add(prop.getName());
 		dungeonMobs = prop.getStringList();
 
-		prop = config.get(category, "monsterSpawn", 0);
+		prop = config.get(category, "monsterSpawn", Config.highDefault ? 100 : 0);
 		prop.setMinValue(0).setMaxValue(5000);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");

@@ -5,10 +5,10 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.google.common.base.Strings;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
@@ -43,7 +43,7 @@ public class CaveFilters
 		Block block = blockMeta.getBlock();
 		ItemStack itemstack = new ItemStack(block, 1, blockMeta.getMeta());
 
-		if (itemstack.getItem() == null)
+		if (itemstack.getItem() == Items.AIR)
 		{
 			try
 			{
@@ -158,7 +158,7 @@ public class CaveFilters
 
 		try
 		{
-			if (BiomeDictionary.isBiomeOfType(biome, Type.valueOf(filter.toUpperCase())))
+			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.getType(filter)))
 			{
 				return true;
 			}

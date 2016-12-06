@@ -36,6 +36,7 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		this.aquaCavern = aquaCavern;
 		this.caveland = caveland;
 		this.iceCavern = iceCavern;
+		this.ruinsCavern = ruinsCavern;
 	}
 
 	public RegenerationMessage setCavern()

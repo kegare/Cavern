@@ -1,6 +1,5 @@
 package cavern.block;
 
-import java.util.List;
 import java.util.Random;
 
 import com.google.common.cache.LoadingCache;
@@ -12,15 +11,10 @@ import cavern.config.GeneralConfig;
 import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
 import cavern.core.Cavern;
-import cavern.plugin.HaCPlugin;
-import cavern.plugin.MCEPlugin;
 import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
-import cavern.util.CaveUtils;
 import cavern.world.CaveType;
 import cavern.world.TeleporterCavern;
-import defeatedcrow.hac.api.climate.DCHeatTier;
-import defeatedcrow.hac.api.climate.IHeatTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPortal;
 import net.minecraft.block.SoundType;
@@ -43,6 +37,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Teleporter;
@@ -50,14 +45,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Optional.Interface;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import shift.mceconomy3.api.MCEconomyAPI;
 
-@Interface(iface = "defeatedcrow.hac.api.climate.IHeatTile", modid = HaCPlugin.LIB_MODID, striprefs = true)
-public class BlockPortalCavern extends BlockPortal implements IHeatTile
+public class BlockPortalCavern extends BlockPortal
 {
 	public BlockPortalCavern()
 	{
@@ -99,7 +90,7 @@ public class BlockPortalCavern extends BlockPortal implements IHeatTile
 	}
 
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos pos2)
 	{
 		EnumFacing.Axis axis = state.getValue(AXIS);
 		Size size;
@@ -125,37 +116,20 @@ public class BlockPortalCavern extends BlockPortal implements IHeatTile
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		if (Loader.isModLoaded(MCEPlugin.MODID) && openShop(world, pos, state, player, hand, heldItem, side))
-		{
-			return true;
-		}
-
 		if (world.isRemote)
 		{
-			displayGui(world, pos, state, player, hand, heldItem, side);
+			displayGui(world, pos, state, player, hand, side);
 		}
 
 		return true;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void displayGui(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side)
+	public void displayGui(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side)
 	{
 		FMLClientHandler.instance().showGuiScreen(new GuiRegeneration().setCavern());
-	}
-
-	public boolean openShop(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side)
-	{
-		if (CaveUtils.isItemPickaxe(heldItem) && MCEPlugin.PORTAL_SHOP >= 0)
-		{
-			MCEconomyAPI.openShopGui(MCEPlugin.PORTAL_SHOP, player, world, pos.getX(), pos.getY(), pos.getZ());
-
-			return true;
-		}
-
-		return false;
 	}
 
 	public int getType()
@@ -261,7 +235,7 @@ public class BlockPortalCavern extends BlockPortal implements IHeatTile
 
 					server.getPlayerList().transferEntityToWorld(entity, dimOld, worldOld, worldNew, teleporter);
 
-					Entity target = EntityList.createEntityByName(EntityList.getEntityString(entity), worldNew);
+					Entity target = EntityList.createEntityByIDFromName(EntityList.getKey(entity), worldNew);
 
 					if (target != null)
 					{
@@ -276,7 +250,7 @@ public class BlockPortalCavern extends BlockPortal implements IHeatTile
 
 						target.forceSpawn = true;
 
-						worldNew.spawnEntityInWorld(target);
+						worldNew.spawnEntity(target);
 						worldNew.updateEntityWithOptionalForce(target, false);
 
 						x = target.posX;
@@ -371,23 +345,12 @@ public class BlockPortalCavern extends BlockPortal implements IHeatTile
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list)
+	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list)
 	{
 		if (!isDimensionDisabled())
 		{
 			super.getSubBlocks(itemIn, tab, list);
 		}
-	}
-
-	@Override
-	public DCHeatTier getHeatTier(World world, BlockPos to, BlockPos from)
-	{
-		if (world.provider.getHasNoSky())
-		{
-			return DCHeatTier.WARM;
-		}
-
-		return DCHeatTier.COOL;
 	}
 
 	public class Size

@@ -7,7 +7,6 @@ import cavern.world.CaveType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +25,7 @@ public class BlockPortalAquaCavern extends BlockPortalCavern
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void displayGui(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side)
+	public void displayGui(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side)
 	{
 		FMLClientHandler.instance().showGuiScreen(new GuiRegeneration().setAquaCavern());
 	}

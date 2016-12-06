@@ -18,9 +18,9 @@ public class WorldProviderIceCavern extends WorldProviderCavern
 	public static final List<WeightedItem> HIBERNATE_ITEMS = Lists.newArrayList();
 
 	@Override
-	protected void createBiomeProvider()
+	protected void init()
 	{
-		super.createBiomeProvider();
+		super.init();
 
 		biomeProvider = new BiomeProviderSingle(Biomes.ICE_PLAINS);
 	}
@@ -28,7 +28,7 @@ public class WorldProviderIceCavern extends WorldProviderCavern
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkProviderIceCavern(worldObj);
+		return new ChunkProviderIceCavern(world);
 	}
 
 	@Override

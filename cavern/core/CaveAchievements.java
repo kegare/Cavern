@@ -33,20 +33,20 @@ public class CaveAchievements
 	public static final Achievement CAVELAND = CaveAchievement.of("caveland", 2, 0, CaveBlocks.CAVELAND_PORTAL, null);
 	public static final Achievement ICE_CAVERN = CaveAchievement.of("iceCavern", -4, 0, CaveBlocks.ICE_CAVERN_PORTAL, null);
 	public static final Achievement RUINS_CAVERN = CaveAchievement.of("ruinsCavern", 4, 0, CaveBlocks.RUINS_CAVERN_PORTAL, null);
-	public static final Achievement AQUAMARINE = CaveAchievement.of("aquamarine", -2, -2, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()), CAVERN);
-	public static final Achievement MAGNITE = CaveAchievement.of("magnite", 0, -4, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()), CAVERN);
+	public static final Achievement AQUAMARINE = CaveAchievement.of("aquamarine", -2, -2, ItemCave.EnumType.AQUAMARINE.getItemStack(), CAVERN);
+	public static final Achievement MAGNITE = CaveAchievement.of("magnite", 0, -4, ItemCave.EnumType.MAGNITE_INGOT.getItemStack(), CAVERN);
 	public static final Achievement ACRESIA = CaveAchievement.of("acresia", 2, -2, new ItemStack(CaveBlocks.ACRESIA, 1, ItemAcresia.EnumType.FRUITS.getItemDamage()), CAVELAND);
 	public static final Achievement RANDOMITE = CaveAchievement.of("randomite", 3, 3, new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.RANDOMITE_ORE.getMetadata()), CAVERN);
 	public static final Achievement FISSURE = CaveAchievement.of("fissure", 5, 2, new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.FISSURED_STONE.getMetadata()), CAVERN);
-	public static final Achievement HEXCITE = CaveAchievement.of("hexcite", -3, 4, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()), CAVERN);
+	public static final Achievement HEXCITE = CaveAchievement.of("hexcite", -3, 4, ItemCave.EnumType.HEXCITE.getItemStack(), CAVERN);
 	public static final Achievement GOOD_MINE = CaveAchievement.of("goodMine", 0, 2, Items.IRON_PICKAXE, CAVERN);
 	public static final Achievement SLIP_ICE = CaveAchievement.of("slipIce", -4, -2, CaveBlocks.SLIPPERY_ICE, ICE_CAVERN);
 	public static final Achievement ICE_CHARGE = CaveAchievement.of("iceCharge", -6, -2, CaveItems.ICE_PICKAXE, ICE_CAVERN);
-	public static final Achievement MAGNITE_MINER = CaveAchievement.of("magniteMiner", -2, 2, MinerRank.MAGNITE_MINER.getPickaxe(), CAVERN);
-	public static final Achievement GOLD_MINER = CaveAchievement.of("goldMiner", -4, 2, MinerRank.GOLD_MINER.getPickaxe(), MAGNITE_MINER);
-	public static final Achievement AQUA_MINER = CaveAchievement.of("aquaMiner", -6, 2, MinerRank.AQUA_MINER.getPickaxe(), GOLD_MINER);
-	public static final Achievement DIAMOND_MINER = CaveAchievement.of("diamondMiner", -8, 2, MinerRank.DIAMOND_MINER.getPickaxe(), AQUA_MINER).setSpecial();
-	public static final Achievement MINER_ORB = CaveAchievement.of("orbMiner", 3, 5, new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MINER_ORB.getItemDamage()), RANDOMITE);
+	public static final Achievement MAGNITE_MINER = CaveAchievement.of("magniteMiner", -2, 2, MinerRank.MAGNITE_MINER.getItemStack(), CAVERN);
+	public static final Achievement GOLD_MINER = CaveAchievement.of("goldMiner", -4, 2, MinerRank.GOLD_MINER.getItemStack(), MAGNITE_MINER);
+	public static final Achievement AQUA_MINER = CaveAchievement.of("aquaMiner", -6, 2, MinerRank.AQUA_MINER.getItemStack(), GOLD_MINER);
+	public static final Achievement DIAMOND_MINER = CaveAchievement.of("diamondMiner", -8, 2, MinerRank.DIAMOND_MINER.getItemStack(), AQUA_MINER).setSpecial();
+	public static final Achievement MINER_ORB = CaveAchievement.of("orbMiner", 3, 5, ItemCave.EnumType.MINER_ORB.getItemStack(), RANDOMITE);
 	public static final Achievement CAVENIC_SKELETON = CaveAchievement.of("cavenicSkeleton", -1, 7, CaveUtils.getSpawnEgg(EntityCavenicSkeleton.class), CAVERN);
 	public static final Achievement CAVENIC_CREEPER = CaveAchievement.of("cavenicCreeper", -3, 7, CaveUtils.getSpawnEgg(EntityCavenicCreeper.class), CAVERN);
 	public static final Achievement CAVENIC_ZOMBIE = CaveAchievement.of("cavenicZombie", 1, 7, CaveUtils.getSpawnEgg(EntityCavenicZombie.class), CAVERN);
@@ -109,7 +109,7 @@ public class CaveAchievements
 
 		public static CaveAchievement of(String name, int column, int row, ItemStack itemstack, Achievement parent)
 		{
-			if (itemstack.getItem() == null)
+			if (itemstack.isEmpty())
 			{
 				itemstack = new ItemStack(Blocks.STONE);
 			}

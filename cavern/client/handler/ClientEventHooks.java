@@ -95,59 +95,59 @@ public class ClientEventHooks
 			}
 			else switch (type)
 			{
-				case Configuration.CATEGORY_GENERAL:
-					GeneralConfig.syncConfig();
+			case Configuration.CATEGORY_GENERAL:
+				GeneralConfig.syncConfig();
 
-					if (event.isWorldRunning())
-					{
-						GeneralConfig.refreshMiningPointItems();
-						GeneralConfig.refreshMiningPoints();
-					}
+				if (event.isWorldRunning())
+				{
+					GeneralConfig.refreshMiningPointItems();
+					GeneralConfig.refreshMiningPoints();
+				}
 
-					break;
-				case "miningassist":
-					MiningAssistConfig.syncConfig();
+				break;
+			case "miningassist":
+				MiningAssistConfig.syncConfig();
 
-					if (event.isWorldRunning())
-					{
-						MiningAssistConfig.refreshEffectiveItems();
-						MiningAssistConfig.refreshTargetBlocks();
-					}
+				if (event.isWorldRunning())
+				{
+					MiningAssistConfig.refreshEffectiveItems();
+					MiningAssistConfig.refreshTargetBlocks();
+				}
 
-					break;
-				case "dimension.cavern":
-					CavernConfig.syncConfig();
+				break;
+			case "dimension.cavern":
+				CavernConfig.syncConfig();
 
-					if (event.isWorldRunning())
-					{
-						CavernConfig.refreshDungeonMobs();
-					}
+				if (event.isWorldRunning())
+				{
+					CavernConfig.refreshDungeonMobs();
+				}
 
-					break;
-				case "dimension.aquaCavern":
-					AquaCavernConfig.syncConfig();
+				break;
+			case "dimension.aquaCavern":
+				AquaCavernConfig.syncConfig();
 
-					if (event.isWorldRunning())
-					{
-						AquaCavernConfig.refreshDungeonMobs();
-					}
+				if (event.isWorldRunning())
+				{
+					AquaCavernConfig.refreshDungeonMobs();
+				}
 
-					break;
-				case "dimension.caveland":
-					CavelandConfig.syncConfig();
-					break;
-				case "dimension.iceCavern":
-					IceCavernConfig.syncConfig();
+				break;
+			case "dimension.caveland":
+				CavelandConfig.syncConfig();
+				break;
+			case "dimension.iceCavern":
+				IceCavernConfig.syncConfig();
 
-					if (event.isWorldRunning())
-					{
-						IceCavernConfig.refreshDungeonMobs();
-					}
+				if (event.isWorldRunning())
+				{
+					IceCavernConfig.refreshDungeonMobs();
+				}
 
-					break;
-				case "dimension.ruinsCavern":
-					RuinsCavernConfig.syncConfig();
-					break;
+				break;
+			case "dimension.ruinsCavern":
+				RuinsCavernConfig.syncConfig();
+				break;
 			}
 		}
 	}
@@ -156,7 +156,7 @@ public class ClientEventHooks
 	public void onRenderGameTextOverlay(RenderGameOverlayEvent.Text event)
 	{
 		Minecraft mc = FMLClientHandler.instance().getClient();
-		EntityPlayer player = mc.thePlayer;
+		EntityPlayer player = mc.player;
 
 		if (mc.gameSettings.showDebugInfo)
 		{
@@ -198,7 +198,7 @@ public class ClientEventHooks
 				Cavern.metadata.description = desc;
 			}
 		}
-		else if (CavernAPI.dimension.isEntityInCaves(mc.thePlayer) && (mc.currentScreen == null || !(mc.currentScreen instanceof GuiWorldSelection)))
+		else if (CavernAPI.dimension.isEntityInCaves(mc.player) && (mc.currentScreen == null || !(mc.currentScreen instanceof GuiWorldSelection)))
 		{
 			if (gui == null)
 			{
@@ -220,7 +220,7 @@ public class ClientEventHooks
 		Minecraft mc = FMLClientHandler.instance().getClient();
 		ISound sound = event.getSound();
 
-		if (sound != null && sound.getCategory() == SoundCategory.MUSIC && CavernAPI.dimension.isEntityInCaves(mc.thePlayer))
+		if (sound != null && sound.getCategory() == SoundCategory.MUSIC && CavernAPI.dimension.isEntityInCaves(mc.player))
 		{
 			event.setResultSound(null);
 		}
@@ -286,7 +286,7 @@ public class ClientEventHooks
 				message.getStyle().setColor(TextFormatting.GRAY).setItalic(Boolean.valueOf(true));
 				message = new TextComponentTranslation("cavern.miningassist.notify.message", message);
 
-				player.addChatMessage(message);
+				player.sendMessage(message);
 			}
 		}
 	}
@@ -376,7 +376,7 @@ public class ClientEventHooks
 		EntityPlayer player = event.getEntity();
 		ItemStack using = player.getActiveItemStack();
 
-		if (using != null && using.getItem() instanceof ItemBowIce)
+		if (!using.isEmpty() && using.getItem() instanceof ItemBowIce)
 		{
 			float f = using.getMaxItemUseDuration() / 20.0F;
 

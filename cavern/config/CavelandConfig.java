@@ -66,7 +66,7 @@ public class CavelandConfig
 		propOrder.add(prop.getName());
 		dimensionId = prop.getInt(dimensionId);
 
-		prop = config.get(category, "worldHeight", 128);
+		prop = config.get(category, "worldHeight", Config.highDefault ? 256 : 128);
 		prop.setMinValue(64).setMaxValue(256);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -107,7 +107,7 @@ public class CavelandConfig
 		propOrder.add(prop.getName());
 		generateLakes = prop.getBoolean(generateLakes);
 
-		prop = config.get(category, "monsterSpawn", 0);
+		prop = config.get(category, "monsterSpawn", Config.highDefault ? 150 : 0);
 		prop.setMinValue(0).setMaxValue(5000);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");

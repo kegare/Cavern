@@ -32,12 +32,12 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 	protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
 	protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
 
-	private final World worldObj;
+	private final World world;
 	private final Random rand;
 
 	public ChunkProviderRuinsCavern(World world)
 	{
-		this.worldObj = world;
+		this.world = world;
 		this.rand = new Random();
 	}
 
@@ -70,7 +70,7 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 			}
 		}
 
-		int worldHeight = worldObj.provider.getActualHeight();
+		int worldHeight = world.provider.getActualHeight();
 		int blockHeight = worldHeight - 1;
 
 		for (int x = 0; x < 16; ++x)
@@ -100,7 +100,7 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 
 		replaceBiomeBlocks(chunkX, chunkZ, primer);
 
-		Chunk chunk = new Chunk(worldObj, primer, chunkX, chunkZ);
+		Chunk chunk = new Chunk(world, primer, chunkX, chunkZ);
 		byte[] biomeArray = chunk.getBiomeArray();
 
 		for (int i = 0; i < biomeArray.length; ++i)
@@ -125,12 +125,12 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 
 				if (RuinsCavernConfig.decorateTorches)
 				{
-					worldObj.setBlockState(pos, state, 3);
-					worldObj.checkLightFor(EnumSkyBlock.BLOCK, pos);
+					world.setBlockState(pos, state, 3);
+					world.checkLightFor(EnumSkyBlock.BLOCK, pos);
 				}
 				else
 				{
-					worldObj.setBlockState(pos, AIR, 2);
+					world.setBlockState(pos, AIR, 2);
 				}
 			}
 
@@ -139,9 +139,9 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 				BlockPos pos = data.getLeft();
 				IBlockState state = data.getRight();
 
-				worldObj.setBlockState(pos, state, 2);
+				world.setBlockState(pos, state, 2);
 
-				TileEntity tile = worldObj.getTileEntity(pos);
+				TileEntity tile = world.getTileEntity(pos);
 
 				if (tile != null && rand.nextDouble() <= RuinsCavernConfig.bonusChest && tile instanceof TileEntityChest)
 				{
@@ -157,11 +157,13 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 
 							if (item != null)
 							{
-								if (item.stackSize > 1)
-								{
-									int min = item.stackSize / 2;
+								int count = item.getCount();
 
-									item.stackSize = Math.max(rand.nextInt(item.stackSize) + 1, min);
+								if (count > 1)
+								{
+									int min = count / 2;
+
+									item.setCount(Math.max(rand.nextInt(count) + 1, min));
 								}
 
 								chest.setInventorySlotContents(i, item);
@@ -186,7 +188,7 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 	}
 
 	@Override
-	public BlockPos getStrongholdGen(World worldIn, String structureName, BlockPos pos)
+	public BlockPos getStrongholdGen(World worldIn, String structureName, BlockPos pos, boolean flag)
 	{
 		return null;
 	}

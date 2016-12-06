@@ -1,9 +1,10 @@
 package cavern.config.property;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Set;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import cavern.util.BlockMeta;
 
@@ -11,7 +12,7 @@ public class ConfigBlocks
 {
 	private String[] values;
 
-	private final List<BlockMeta> blocks = Lists.newArrayList();
+	private final Set<BlockMeta> blocks = Sets.newConcurrentHashSet();
 
 	public String[] getValues()
 	{
@@ -28,7 +29,7 @@ public class ConfigBlocks
 		values = blocks;
 	}
 
-	public List<BlockMeta> getBlocks()
+	public Set<BlockMeta> getBlocks()
 	{
 		return blocks;
 	}
@@ -37,35 +38,32 @@ public class ConfigBlocks
 	{
 		blocks.clear();
 
-		for (String value : values)
+		Arrays.stream(getValues()).filter(value -> !Strings.isNullOrEmpty(value)).forEach(value ->
 		{
-			if (!Strings.isNullOrEmpty(value))
+			value = value.trim();
+
+			if (!value.contains(":"))
 			{
-				value = value.trim();
-
-				if (!value.contains(":"))
-				{
-					value = "minecraft:" + value;
-				}
-
-				BlockMeta blockMeta;
-
-				if (value.indexOf(':') != value.lastIndexOf(':'))
-				{
-					int i = value.lastIndexOf(':');
-
-					blockMeta = new BlockMeta(value.substring(0, i), value.substring(i + 1));
-				}
-				else
-				{
-					blockMeta = new BlockMeta(value, 0);
-				}
-
-				if (blockMeta.getBlock() != null)
-				{
-					blocks.add(blockMeta);
-				}
+				value = "minecraft:" + value;
 			}
-		}
+
+			BlockMeta blockMeta;
+
+			if (value.indexOf(':') != value.lastIndexOf(':'))
+			{
+				int i = value.lastIndexOf(':');
+
+				blockMeta = new BlockMeta(value.substring(0, i), value.substring(i + 1));
+			}
+			else
+			{
+				blockMeta = new BlockMeta(value, 0);
+			}
+
+			if (blockMeta.getBlock() != null)
+			{
+				blocks.add(blockMeta);
+			}
+		});
 	}
 }

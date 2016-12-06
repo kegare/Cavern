@@ -7,17 +7,18 @@ import net.minecraft.block.BlockPackedIce;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
 public class RecipeChargeIceEquipment implements IRecipe
 {
-	private ItemStack resultItem;
+	private ItemStack resultItem = ItemStack.EMPTY;
 
 	@Override
 	public boolean matches(InventoryCrafting crafting, World world)
 	{
-		resultItem = null;
+		resultItem = ItemStack.EMPTY;
 
 		if (!IceEquipment.isIceEquipment(crafting.getStackInRowAndColumn(1, 1)))
 		{
@@ -37,7 +38,7 @@ public class RecipeChargeIceEquipment implements IRecipe
 
 				ItemStack itemstack = crafting.getStackInRowAndColumn(row, column);
 
-				if (itemstack != null && itemstack.getItem() != null)
+				if (!itemstack.isEmpty())
 				{
 					Block block = Block.getBlockFromItem(itemstack.getItem());
 
@@ -83,7 +84,7 @@ public class RecipeChargeIceEquipment implements IRecipe
 
 				ItemStack itemstack = crafting.getStackInRowAndColumn(row, column);
 
-				if (itemstack != null && itemstack.getItem() != null)
+				if (!itemstack.isEmpty())
 				{
 					Block block = Block.getBlockFromItem(itemstack.getItem());
 
@@ -114,11 +115,11 @@ public class RecipeChargeIceEquipment implements IRecipe
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting crafting)
 	{
-		return ItemStack.copyItemStack(resultItem);
+		return resultItem.copy();
 	}
 
 	@Override
-	public ItemStack[] getRemainingItems(InventoryCrafting inv)
+	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
 	{
 		return ForgeHooks.defaultRecipeGetRemainingItems(inv);
 	}

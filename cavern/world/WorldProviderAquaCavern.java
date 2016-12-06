@@ -16,7 +16,7 @@ public class WorldProviderAquaCavern extends WorldProviderCavern
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkProviderAquaCavern(worldObj);
+		return new ChunkProviderAquaCavern(world);
 	}
 
 	@Override
@@ -70,13 +70,13 @@ public class WorldProviderAquaCavern extends WorldProviderCavern
 	@Override
 	public void onWorldUpdateEntities()
 	{
-		if (worldObj instanceof WorldServer)
+		if (world instanceof WorldServer)
 		{
-			WorldServer world = (WorldServer)worldObj;
+			WorldServer worldServer = (WorldServer)world;
 
-			if (world.getWorldInfo().getTerrainType() != WorldType.DEBUG_WORLD)
+			if (worldServer.getWorldInfo().getTerrainType() != WorldType.DEBUG_WORLD)
 			{
-				entitySpawner.findChunksForSpawning(world, false, true, world.getWorldInfo().getWorldTotalTime() % 400L == 0L);
+				entitySpawner.findChunksForSpawning(worldServer, false, true, worldServer.getWorldInfo().getWorldTotalTime() % 400L == 0L);
 			}
 		}
 	}

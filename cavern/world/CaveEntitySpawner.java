@@ -61,8 +61,8 @@ public class CaveEntitySpawner
 			{
 				if (!player.isSpectator())
 				{
-					int j = MathHelper.floor_double(player.posX / 16.0D);
-					int k = MathHelper.floor_double(player.posZ / 16.0D);
+					int j = MathHelper.floor(player.posX / 16.0D);
+					int k = MathHelper.floor(player.posZ / 16.0D);
 					int range = 8;
 
 					for (int i1 = -range; i1 <= range; ++i1)
@@ -130,7 +130,7 @@ public class CaveEntitySpawner
 									int n = 6;
 									Biome.SpawnListEntry entry = null;
 									IEntityLivingData data = null;
-									int f = MathHelper.ceiling_double_int(Math.random() * 4.0D);
+									int f = MathHelper.ceil(Math.random() * 4.0D);
 
 									for (int m = 0; m < f; ++m)
 									{
@@ -172,7 +172,7 @@ public class CaveEntitySpawner
 
 												entity.setLocationAndAngles(posX, y, posZ, world.rand.nextFloat() * 360.0F, 0.0F);
 
-												Result canSpawn = net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(entity, world, posX, y, posZ);
+												Result canSpawn = ForgeEventFactory.canEntitySpawn(entity, world, posX, y, posZ);
 
 												if (canSpawn == Result.ALLOW || canSpawn == Result.DEFAULT && entity.getCanSpawnHere() && entity.isNotColliding())
 												{
@@ -185,7 +185,7 @@ public class CaveEntitySpawner
 													{
 														++k;
 
-														world.spawnEntityInWorld(entity);
+														world.spawnEntity(entity);
 													}
 													else
 													{

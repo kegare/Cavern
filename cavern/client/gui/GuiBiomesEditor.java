@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.RecursiveAction;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharUtils;
@@ -16,7 +15,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
@@ -784,15 +782,11 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 		biomeList.biomes.clear();
 		biomeList.contents.clear();
 
-		List<CaveBiome> list = Lists.newArrayList(biomes);
-
-		Collections.sort(list);
-
-		for (CaveBiome biome : list)
+		biomes.stream().sorted().forEach(biome ->
 		{
 			biomeList.biomes.addIfAbsent(biome);
 			biomeList.contents.addIfAbsent(biome);
-		}
+		});
 	}
 
 	protected class BiomeList extends GuiListSlot implements Comparator<CaveBiome>
@@ -879,41 +873,33 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 				Block block = blockMeta.getBlock();
 				int meta = blockMeta.getMeta();
 				ItemStack itemstack = new ItemStack(block, 1, meta);
-				boolean hasItem = itemstack.getItem() != null;
 
-				if (hasItem)
+				try
 				{
-					try
-					{
-						GlStateManager.enableRescaleNormal();
-						RenderHelper.enableGUIStandardItemLighting();
-						itemRender.renderItemIntoGUI(itemstack, width / 2 - 100, par3 + 1);
-						itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 - 100, par3 + 1, Integer.toString(Biome.getIdForBiome(biome)));
-						RenderHelper.disableStandardItemLighting();
-						GlStateManager.disableRescaleNormal();
-					}
-					catch (Throwable e) {}
+					GlStateManager.enableRescaleNormal();
+					RenderHelper.enableGUIStandardItemLighting();
+					itemRender.renderItemIntoGUI(itemstack, width / 2 - 100, par3 + 1);
+					itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 - 100, par3 + 1, Integer.toString(Biome.getIdForBiome(biome)));
+					RenderHelper.disableStandardItemLighting();
+					GlStateManager.disableRescaleNormal();
 				}
+				catch (Throwable e) {}
 
 				blockMeta = caveBiome.getTopBlock();
 				block = blockMeta.getBlock();
 				meta = blockMeta.getMeta();
 				itemstack = new ItemStack(block, 1, meta);
-				hasItem = itemstack.getItem() != null;
 
-				if (hasItem)
+				try
 				{
-					try
-					{
-						GlStateManager.enableRescaleNormal();
-						RenderHelper.enableGUIStandardItemLighting();
-						itemRender.renderItemIntoGUI(itemstack, width / 2 + 90, par3 + 1);
-						itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 + 90, par3 + 1, Integer.toString(caveBiome.getWeight()));
-						RenderHelper.disableStandardItemLighting();
-						GlStateManager.disableRescaleNormal();
-					}
-					catch (Throwable e) {}
+					GlStateManager.enableRescaleNormal();
+					RenderHelper.enableGUIStandardItemLighting();
+					itemRender.renderItemIntoGUI(itemstack, width / 2 + 90, par3 + 1);
+					itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 + 90, par3 + 1, Integer.toString(caveBiome.getWeight()));
+					RenderHelper.disableStandardItemLighting();
+					GlStateManager.disableRescaleNormal();
 				}
+				catch (Throwable e) {}
 			}
 		}
 
@@ -961,52 +947,37 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(new RecursiveAction()
+			CaveUtils.getPool().execute(() ->
 			{
-				@Override
-				protected void compute()
+				List<CaveBiome> result;
+
+				if (Strings.isNullOrEmpty(filter))
 				{
-					List<CaveBiome> result;
-
-					if (Strings.isNullOrEmpty(filter))
+					result = biomes;
+				}
+				else if (filter.equals("selected"))
+				{
+					result = Lists.newArrayList(selected);
+				}
+				else
+				{
+					if (!filterCache.containsKey(filter))
 					{
-						result = biomes;
-					}
-					else if (filter.equals("selected"))
-					{
-						result = Lists.newArrayList(selected);
-					}
-					else
-					{
-						if (!filterCache.containsKey(filter))
-						{
-							filterCache.put(filter, Lists.newArrayList(Collections2.filter(biomes, new BiomeFilter(filter))));
-						}
-
-						result = filterCache.get(filter);
+						filterCache.put(filter, Lists.newArrayList(Collections2.filter(biomes, e -> filterMatch(e, filter))));
 					}
 
-					if (!contents.equals(result))
-					{
-						contents.clear();
-						contents.addAll(result);
-					}
+					result = filterCache.get(filter);
+				}
+
+				if (!contents.equals(result))
+				{
+					contents.clear();
+					contents.addAll(result);
 				}
 			});
 		}
-	}
 
-	public static class BiomeFilter implements Predicate<CaveBiome>
-	{
-		private final String filter;
-
-		public BiomeFilter(String filter)
-		{
-			this.filter = filter;
-		}
-
-		@Override
-		public boolean apply(CaveBiome entry)
+		protected boolean filterMatch(CaveBiome entry, String filter)
 		{
 			return CaveFilters.biomeFilter(entry.getBiome(), filter) || entry.getWeight() == NumberUtils.toInt(filter, -1) ||
 				CaveFilters.blockFilter(entry.getTerrainBlock(), filter) || CaveFilters.blockFilter(entry.getTopBlock(), filter);

@@ -219,30 +219,30 @@ public class GuiRegeneration extends GuiScreen
 		{
 			switch (button.id)
 			{
-				case 0:
-					boolean b1 = cavernCheckBox.isChecked();
-					boolean b2 = aquaCavernCheckBox.isChecked();
-					boolean b3 = cavelandCheckBox.isChecked();
-					boolean b4 = iceCavernCheckBox.isChecked();
-					boolean b5 = ruinsCavernCheckBox.isChecked();
+			case 0:
+				boolean b1 = cavernCheckBox.isChecked();
+				boolean b2 = aquaCavernCheckBox.isChecked();
+				boolean b3 = cavelandCheckBox.isChecked();
+				boolean b4 = iceCavernCheckBox.isChecked();
+				boolean b5 = ruinsCavernCheckBox.isChecked();
 
-					if (!b1 && !b2 && !b3 && !b4 && !b5)
-					{
-						break;
-					}
+				if (!b1 && !b2 && !b3 && !b4 && !b5)
+				{
+					break;
+				}
 
-					CaveNetworkRegistry.sendToServer(new RegenerationMessage(backupCheckBox.isChecked(), b1, b2, b3, b4, b5));
+				CaveNetworkRegistry.sendToServer(new RegenerationMessage(backupCheckBox.isChecked(), b1, b2, b3, b4, b5));
 
-					regenButton.enabled = false;
-					cancelButton.visible = false;
-					break;
-				case 1:
-					mc.displayGuiScreen(null);
-					mc.setIngameFocus();
-					break;
-				case 2:
-					DimensionRegeneration.backup = backupCheckBox.isChecked();
-					break;
+				regenButton.enabled = false;
+				cancelButton.visible = false;
+				break;
+			case 1:
+				mc.displayGuiScreen(null);
+				mc.setIngameFocus();
+				break;
+			case 2:
+				DimensionRegeneration.backup = backupCheckBox.isChecked();
+				break;
 			}
 		}
 	}
@@ -285,22 +285,22 @@ public class GuiRegeneration extends GuiScreen
 		}
 		else switch (type)
 		{
-			case START:
-				regenButton.displayString = I18n.format("cavern.regeneration.gui.progress.start");
-				break;
-			case BACKUP:
-				regenButton.displayString = I18n.format("cavern.regeneration.gui.progress.backup");
-				break;
-			case REGENERATED:
-				regenButton.displayString = I18n.format("cavern.regeneration.gui.progress.regenerated");
-				cancelButton.displayString = I18n.format("gui.done");
-				cancelButton.visible = true;
-				break;
-			case FAILED:
-				regenButton.displayString = I18n.format("cavern.regeneration.gui.progress.failed");
-				cancelButton.visible = true;
-				break;
-			default:
+		case START:
+			regenButton.displayString = I18n.format("cavern.regeneration.gui.progress.start");
+			break;
+		case BACKUP:
+			regenButton.displayString = I18n.format("cavern.regeneration.gui.progress.backup");
+			break;
+		case REGENERATED:
+			regenButton.displayString = I18n.format("cavern.regeneration.gui.progress.regenerated");
+			cancelButton.displayString = I18n.format("gui.done");
+			cancelButton.visible = true;
+			break;
+		case FAILED:
+			regenButton.displayString = I18n.format("cavern.regeneration.gui.progress.failed");
+			cancelButton.visible = true;
+			break;
+		default:
 		}
 	}
 }

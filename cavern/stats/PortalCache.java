@@ -3,9 +3,10 @@ package cavern.stats;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang3.tuple.Pair;
-
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Table;
+import com.google.common.collect.Table.Cell;
 
 import cavern.capability.CaveCapabilities;
 import net.minecraft.entity.Entity;
@@ -17,7 +18,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 public class PortalCache implements IPortalCache
 {
 	private final Map<Integer, Integer> lastDim = Maps.newHashMap();
-	private final Map<Pair<Integer, Integer>, BlockPos> lastPos = Maps.newHashMap();
+	private final Table<Integer, Integer, BlockPos> lastPos = HashBasedTable.create();
 
 	public static IPortalCache get(Entity entity)
 	{
@@ -34,7 +35,7 @@ public class PortalCache implements IPortalCache
 	@Override
 	public int getLastDim(int type)
 	{
-		Integer ret = lastDim.get(type);
+		Integer ret = lastDim.get(Integer.valueOf(type));
 
 		if (ret == null)
 		{
@@ -47,13 +48,13 @@ public class PortalCache implements IPortalCache
 	@Override
 	public void setLastDim(int type, int dim)
 	{
-		lastDim.put(type, dim);
+		lastDim.put(Integer.valueOf(type), Integer.valueOf(dim));
 	}
 
 	@Override
 	public BlockPos getLastPos(int type, int dim)
 	{
-		return lastPos.get(Pair.of(type, dim));
+		return lastPos.get(Integer.valueOf(type), Integer.valueOf(dim));
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class PortalCache implements IPortalCache
 	@Override
 	public boolean hasLastPos(int type, int dim)
 	{
-		return lastPos.containsKey(Pair.of(type, dim));
+		return lastPos.contains(Integer.valueOf(type), Integer.valueOf(dim));
 	}
 
 	@Override
@@ -75,11 +76,11 @@ public class PortalCache implements IPortalCache
 	{
 		if (pos == null)
 		{
-			lastPos.remove(Pair.of(type, dim));
+			lastPos.remove(Integer.valueOf(type), Integer.valueOf(dim));
 		}
 		else
 		{
-			lastPos.put(Pair.of(type, dim), pos);
+			lastPos.put(Integer.valueOf(type), Integer.valueOf(dim), pos);
 		}
 	}
 
@@ -90,33 +91,43 @@ public class PortalCache implements IPortalCache
 
 		for (Entry<Integer, Integer> entry : lastDim.entrySet())
 		{
-			NBTTagCompound data = new NBTTagCompound();
+			Integer typeObj = entry.getKey();
+			Integer dimObj = entry.getValue();
 
-			data.setInteger("Type", entry.getKey());
-			data.setInteger("Dim", entry.getValue());
+			if (typeObj != null && dimObj != null)
+			{
+				NBTTagCompound data = new NBTTagCompound();
 
-			list.appendTag(data);
+				data.setInteger("Type", typeObj.intValue());
+				data.setInteger("Dim", dimObj.intValue());
+
+				list.appendTag(data);
+			}
 		}
 
 		nbt.setTag("LastDim", list);
 
 		list = new NBTTagList();
 
-		for (Entry<Pair<Integer, Integer>, BlockPos> entry : lastPos.entrySet())
+		for (Cell<Integer, Integer, BlockPos> entry : lastPos.cellSet())
 		{
-			NBTTagCompound data = new NBTTagCompound();
-			Pair<Integer, Integer> key = entry.getKey();
-
-			data.setInteger("Type", key.getRight());
-			data.setInteger("Dim", key.getLeft());
-
+			Integer typeObj = entry.getRowKey();
+			Integer dimObj = entry.getColumnKey();
 			BlockPos pos = entry.getValue();
 
-			data.setInteger("X", pos.getX());
-			data.setInteger("Y", pos.getY());
-			data.setInteger("Z", pos.getZ());
+			if (typeObj != null && dimObj != null && pos != null)
+			{
+				NBTTagCompound data = new NBTTagCompound();
 
-			list.appendTag(data);
+				data.setInteger("Type", typeObj.intValue());
+				data.setInteger("Dim", dimObj.intValue());
+
+				data.setInteger("X", pos.getX());
+				data.setInteger("Y", pos.getY());
+				data.setInteger("Z", pos.getZ());
+
+				list.appendTag(data);
+			}
 		}
 
 		nbt.setTag("LastPos", list);
@@ -133,7 +144,7 @@ public class PortalCache implements IPortalCache
 			int type = data.getInteger("Type");
 			int dim = data.getInteger("Dim");
 
-			lastDim.put(type, dim);
+			lastDim.put(Integer.valueOf(type), Integer.valueOf(dim));
 		}
 
 		list = nbt.getTagList("LastPos", NBT.TAG_COMPOUND);
@@ -147,7 +158,7 @@ public class PortalCache implements IPortalCache
 			int y = data.getInteger("Y");
 			int z = data.getInteger("Z");
 
-			lastPos.put(Pair.of(type, dim), new BlockPos(x, y, z));
+			lastPos.put(Integer.valueOf(type), Integer.valueOf(dim), new BlockPos(x, y, z));
 		}
 	}
 }

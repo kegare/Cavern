@@ -2,6 +2,7 @@ package cavern.util;
 
 import com.google.common.base.Objects;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -9,7 +10,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemMeta
 {
-	private Item item;
+	private Item item = Items.AIR;
 	private int meta;
 
 	public ItemMeta(Item item, int meta)
@@ -40,7 +41,12 @@ public class ItemMeta
 
 	public ItemStack getItemStack()
 	{
-		return new ItemStack(item, 1, meta);
+		return isEmpty() ? ItemStack.EMPTY : new ItemStack(item, 1, meta);
+	}
+
+	public boolean isEmpty()
+	{
+		return item == null || item == Items.AIR;
 	}
 
 	public String getItemName()
@@ -50,11 +56,6 @@ public class ItemMeta
 
 	public String getName()
 	{
-		if (item == null)
-		{
-			return "null";
-		}
-
 		String name = getItemName();
 
 		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE)
@@ -68,11 +69,6 @@ public class ItemMeta
 	@Override
 	public String toString()
 	{
-		if (item == null)
-		{
-			return "null";
-		}
-
 		String name = getItemName();
 
 		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE)

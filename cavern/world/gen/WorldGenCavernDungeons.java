@@ -3,6 +3,7 @@ package cavern.world.gen;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -18,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenDungeons;
@@ -25,46 +27,51 @@ import net.minecraft.world.storage.loot.LootTableList;
 
 public class WorldGenCavernDungeons extends WorldGenDungeons
 {
-	private static final List<String> dungeonMobs = Lists.newArrayList();
+	private static final List<ResourceLocation> MOBS = Lists.newArrayList();
 
-	public static boolean addDungeonMob(String name)
+	public static boolean addDungeonMob(ResourceLocation name)
 	{
-		return !Strings.isNullOrEmpty(name) && EntityList.getEntityNameList().contains(name) && dungeonMobs.add(name);
+		return name != null && EntityList.isRegistered(name) && MOBS.add(name);
 	}
 
 	public static boolean addDungeonMob(Class<? extends Entity> clazz)
 	{
-		String name = EntityList.getEntityStringFromClass(clazz);
+		ResourceLocation name = EntityList.getKey(clazz);
 
-		return !Strings.isNullOrEmpty(name) && dungeonMobs.add(name);
+		return name != null && MOBS.add(name);
 	}
 
 	public static void addDungeonMobs(Collection<String> names)
 	{
-		List<String> list = EntityList.getEntityNameList();
+		Set<ResourceLocation> nameSet = EntityList.getEntityNameList();
 
 		for (String name : names)
 		{
-			if (!Strings.isNullOrEmpty(name) && list.contains(name))
+			if (!Strings.isNullOrEmpty(name))
 			{
-				dungeonMobs.add(name);
+				ResourceLocation entryName = new ResourceLocation(name);
+
+				if (nameSet.contains(entryName))
+				{
+					MOBS.add(entryName);
+				}
 			}
 		}
 	}
 
-	public static boolean removeDungeonMob(String name)
+	public static boolean removeDungeonMob(ResourceLocation name)
 	{
-		return !Strings.isNullOrEmpty(name) && dungeonMobs.remove(name);
+		return name != null && MOBS.remove(name);
 	}
 
 	public static boolean removeDungeonMob(Class<? extends Entity> clazz)
 	{
-		return removeDungeonMob(EntityList.getEntityStringFromClass(clazz));
+		return removeDungeonMob(EntityList.getKey(clazz));
 	}
 
 	public static void clearDungeonMobs()
 	{
-		dungeonMobs.clear();
+		MOBS.clear();
 	}
 
 	@Override
@@ -200,7 +207,7 @@ public class WorldGenCavernDungeons extends WorldGenDungeons
 
 			if (tile != null && tile instanceof TileEntityMobSpawner)
 			{
-				((TileEntityMobSpawner)tile).getSpawnerBaseLogic().setEntityName(pickMobSpawner(rand));
+				((TileEntityMobSpawner)tile).getSpawnerBaseLogic().setEntityId(pickMobSpawner(rand));
 			}
 			else
 			{
@@ -213,17 +220,17 @@ public class WorldGenCavernDungeons extends WorldGenDungeons
 		return false;
 	}
 
-	public String pickMobSpawner(Random random)
+	public ResourceLocation pickMobSpawner(Random random)
 	{
-		if (!dungeonMobs.isEmpty())
+		if (!MOBS.isEmpty())
 		{
-			if (dungeonMobs.size() > 1)
+			if (MOBS.size() > 1)
 			{
-				return dungeonMobs.get(random.nextInt(dungeonMobs.size() - 1));
+				return MOBS.get(random.nextInt(MOBS.size() - 1));
 			}
 			else
 			{
-				return dungeonMobs.get(0);
+				return MOBS.get(0);
 			}
 		}
 

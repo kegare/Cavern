@@ -35,7 +35,7 @@ public class MiningAssistMessage implements IMessage, IMessageHandler<MiningAssi
 			component = new TextComponentTranslation("cavern.miningassist.toggle.failed.message", component);
 			component.getStyle().setColor(TextFormatting.RED);
 
-			player.addChatMessage(component);
+			player.sendMessage(component);
 		}
 		else
 		{
@@ -46,7 +46,7 @@ public class MiningAssistMessage implements IMessage, IMessageHandler<MiningAssi
 			component.getStyle().setColor(TextFormatting.GRAY).setItalic(Boolean.valueOf(true));
 			component = new TextComponentTranslation("cavern.miningassist.toggle.message", component);
 
-			player.addChatMessage(component);
+			player.sendMessage(component);
 		}
 
 		return null;

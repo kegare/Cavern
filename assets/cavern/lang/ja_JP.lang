@@ -272,10 +272,10 @@ item.shovelIce.name=氷のシャベル
 item.hoeIce.name=氷のクワ
 item.bowIce.name=氷の弓
 
-entity.cavern.CavenicSkeleton.name=ケイブニックスケルトン
-entity.cavern.CavenicCreeper.name=ケイブニッククリーパー
-entity.cavern.CavenicZombie.name=ケイブニックゾンビ
-entity.cavern.CavenicSpider.name=ケイブニックスパイダー
+entity.CavenicSkeleton.name=ケイブニックスケルトン
+entity.CavenicCreeper.name=ケイブニッククリーパー
+entity.CavenicZombie.name=ケイブニックゾンビ
+entity.CavenicSpider.name=ケイブニックスパイダー
 
 achievement.cavern.cavern=洞窟の世界
 achievement.cavern.cavern.desc=Cavernへ行く
@@ -346,5 +346,3 @@ book.cavebornEscapeMission.text6=果たしたならば、きっと
 book.cavebornEscapeMission.text7=洞窟から脱出できるだろう
 book.cavebornEscapeMission.text8=#LF
 book.cavebornEscapeMission.text9=健闘を祈る
-
-shop.cavern.portal.name=ポータルショップ

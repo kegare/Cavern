@@ -13,7 +13,6 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Comparator;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.regex.Pattern;
 
@@ -21,7 +20,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 import cavern.core.Cavern;
 import net.minecraft.block.Block;
@@ -63,7 +61,7 @@ public class CaveUtils
 		{
 			mod = Loader.instance().activeModContainer();
 
-			if (mod == null || mod.getModId() != Cavern.MODID)
+			if (mod == null || !Cavern.MODID.equals(mod.getModId()))
 			{
 				return new DummyModContainer(Cavern.metadata);
 			}
@@ -144,75 +142,23 @@ public class CaveUtils
 		return i;
 	};
 
-	public static final Set<Item>
-	pickaxeItems = Sets.newLinkedHashSet(),
-	excludeItems = Sets.newHashSet();
-
-	public static boolean isItemPickaxe(Item item)
-	{
-		if (item != null)
-		{
-			if (pickaxeItems.contains(item))
-			{
-				return true;
-			}
-
-			if (excludeItems.contains(item))
-			{
-				pickaxeItems.remove(item);
-
-				return false;
-			}
-
-			if (item instanceof ItemPickaxe)
-			{
-				pickaxeItems.add(item);
-
-				return true;
-			}
-
-			if (item.getToolClasses(new ItemStack(item)).contains("pickaxe"))
-			{
-				pickaxeItems.add(item);
-
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	public static boolean isItemPickaxe(ItemStack itemstack)
 	{
-		if (itemstack != null && itemstack.getItem() != null && itemstack.stackSize > 0)
+		if (itemstack.isEmpty())
 		{
-			Item item = itemstack.getItem();
+			return false;
+		}
 
-			if (pickaxeItems.contains(item))
-			{
-				return true;
-			}
+		Item item = itemstack.getItem();
 
-			if (excludeItems.contains(item))
-			{
-				pickaxeItems.remove(item);
+		if (item instanceof ItemPickaxe)
+		{
+			return true;
+		}
 
-				return false;
-			}
-
-			if (item instanceof ItemPickaxe)
-			{
-				pickaxeItems.add(item);
-
-				return true;
-			}
-
-			if (item.getToolClasses(itemstack).contains("pickaxe"))
-			{
-				pickaxeItems.add(item);
-
-				return true;
-			}
+		if (item.getToolClasses(itemstack).contains("pickaxe"))
+		{
+			return true;
 		}
 
 		return false;
@@ -316,13 +262,13 @@ public class CaveUtils
 		return stateA.getBlock() == stateB.getBlock() && stateA.getBlock().getMetaFromState(stateA) == stateB.getBlock().getMetaFromState(stateB);
 	}
 
-	public static ItemStack getSpawnEgg(String entityName)
+	public static ItemStack getSpawnEgg(ResourceLocation entityName)
 	{
 		ItemStack item = new ItemStack(Items.SPAWN_EGG);
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTTagCompound tag = new NBTTagCompound();
 
-		tag.setString("id", entityName);
+		tag.setString("id", entityName.toString());
 		nbt.setTag("EntityTag", tag);
 
 		item.setTagCompound(nbt);
@@ -332,7 +278,7 @@ public class CaveUtils
 
 	public static ItemStack getSpawnEgg(Class<? extends Entity> entityClass)
 	{
-		String entityName = EntityList.getEntityStringFromClass(entityClass);
+		ResourceLocation entityName = EntityList.getKey(entityClass);
 
 		return getSpawnEgg(entityName);
 	}

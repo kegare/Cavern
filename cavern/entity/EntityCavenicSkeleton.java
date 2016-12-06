@@ -8,8 +8,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackRangedBow;
+import net.minecraft.entity.monster.AbstractSkeleton;
 import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.SkeletonType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
@@ -17,9 +17,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
@@ -43,7 +41,7 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 
 	protected void applyCustomValues()
 	{
-		ObfuscationReflectionHelper.setPrivateValue(EntitySkeleton.class, this, aiArrowAttack, "aiArrowAttack", "field_85037_d");
+		ObfuscationReflectionHelper.setPrivateValue(AbstractSkeleton.class, this, aiArrowAttack, "aiArrowAttack", "field_85037_d");
 	}
 
 	@Override
@@ -54,18 +52,6 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40.0D);
 		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.85D);
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2D);
-	}
-
-	@Override
-	public SkeletonType func_189771_df()
-	{
-		return SkeletonType.NORMAL;
-	}
-
-	@Override
-	public void func_189768_a(SkeletonType type)
-	{
-		setSize(0.68F, 2.0F);
 	}
 
 	@Override
@@ -82,16 +68,15 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 	@Override
 	public void attackEntityWithRangedAttack(EntityLivingBase target, float dist)
 	{
-		EntityArrow arrow = new EntityCavenicArrow(worldObj, this);
+		EntityArrow arrow = new EntityCavenicArrow(world, this);
 		double d0 = target.posX - posX;
 		double d1 = target.getEntityBoundingBox().minY + target.height / 3.0F - arrow.posY;
 		double d2 = target.posZ - posZ;
-		double d3 = MathHelper.sqrt_double(d0 * d0 + d2 * d2);
-		arrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, 14 - worldObj.getDifficulty().getDifficultyId() * 4);
+		double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
+		arrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, 14 - world.getDifficulty().getDifficultyId() * 4);
 		int i = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.POWER, this);
 		int j = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.PUNCH, this);
-		DifficultyInstance diff = worldObj.getDifficultyForLocation(new BlockPos(this));
-		arrow.setDamage(dist * 2.0F + rand.nextGaussian() * 0.25D + worldObj.getDifficulty().getDifficultyId() * 0.11F);
+		arrow.setDamage(dist * 2.0F + rand.nextGaussian() * 0.25D + world.getDifficulty().getDifficultyId() * 0.11F);
 
 		if (i > 0)
 		{
@@ -103,7 +88,7 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 			arrow.setKnockbackStrength(j);
 		}
 
-		boolean flag = isBurning() && diff.func_190083_c() && rand.nextBoolean();
+		boolean flag = isBurning() && rand.nextBoolean();
 		flag = flag || EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FLAME, this) > 0;
 
 		if (flag)
@@ -113,7 +98,7 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 
 		playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (getRNG().nextFloat() * 0.4F + 0.8F));
 
-		worldObj.spawnEntityInWorld(arrow);
+		world.spawnEntity(arrow);
 	}
 
 	@Override
@@ -137,7 +122,7 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float damage)
 	{
-		if (source == DamageSource.fall)
+		if (source == DamageSource.FALL)
 		{
 			damage *= 0.35F;
 		}

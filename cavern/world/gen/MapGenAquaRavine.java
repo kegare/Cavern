@@ -28,7 +28,7 @@ public class MapGenAquaRavine extends MapGenCavernRavine
 	@Override
 	protected void digBlock(ChunkPrimer data, int x, int y, int z, int chunkX, int chunkZ, boolean foundTop)
 	{
-		if (y < 2 || y > worldObj.getActualHeight() - 3)
+		if (y < 2 || y > world.getActualHeight() - 3)
 		{
 			data.setBlockState(x, y, z, BLK_STONE);
 		}

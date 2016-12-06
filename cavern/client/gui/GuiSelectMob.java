@@ -3,17 +3,14 @@ package cavern.client.gui;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.RecursiveAction;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
@@ -33,10 +30,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.ArrayEntry;
 import net.minecraftforge.fml.client.config.HoverChecker;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -131,23 +131,23 @@ public class GuiSelectMob extends GuiScreen
 		{
 			switch (button.id)
 			{
-				case 0:
-					if (arrayEntry != null)
-					{
-						arrayEntry.setListFromChildScreen(mobList.selected.toArray());
-					}
+			case 0:
+				if (arrayEntry != null)
+				{
+					arrayEntry.setListFromChildScreen(mobList.selected.toArray());
+				}
 
-					mc.displayGuiScreen(parent);
+				mc.displayGuiScreen(parent);
 
-					mobList.selected.clear();
-					mobList.scrollToTop();
-					break;
-				case 1:
-					CaveConfigGui.detailInfo = detailInfo.isChecked();
-					break;
-				case 2:
-					CaveConfigGui.instantFilter = instantFilter.isChecked();
-					break;
+				mobList.selected.clear();
+				mobList.scrollToTop();
+				break;
+			case 1:
+				CaveConfigGui.detailInfo = detailInfo.isChecked();
+				break;
+			case 2:
+				CaveConfigGui.instantFilter = instantFilter.isChecked();
+				break;
 			}
 		}
 	}
@@ -324,16 +324,17 @@ public class GuiSelectMob extends GuiScreen
 		{
 			super(GuiSelectMob.this.mc, 0, 0, 0, 0, 18);
 
-			for (Iterator<Entry<String, Class<? extends Entity>>> iterator = EntityList.NAME_TO_CLASS.entrySet().iterator(); iterator.hasNext();)
+			for (Entry<ResourceLocation, EntityEntry> entry : ForgeRegistries.ENTITIES.getEntries())
 			{
-				Entry<String, Class<? extends Entity>> entry = iterator.next();
-				String name = entry.getKey();
-				Class<? extends Entity> clazz = entry.getValue();
+				EntityEntry entityEntry = entry.getValue();
+				Class<? extends Entity> entityClass = entityEntry.getEntityClass();
 
-				if (!Strings.isNullOrEmpty(name) && EntityMob.class != clazz && EntityLiving.class != clazz && EntityLiving.class.isAssignableFrom(clazz))
+				if (EntityMob.class == entityClass || EntityLiving.class == entityClass || !EntityLiving.class.isAssignableFrom(entityClass))
 				{
-					mobs.addIfAbsent(name);
+					continue;
 				}
+
+				mobs.addIfAbsent(entry.getKey().toString());
 			}
 
 			Collections.sort(mobs);
@@ -408,12 +409,14 @@ public class GuiSelectMob extends GuiScreen
 
 			switch (nameType)
 			{
-				case 1:
-					name = entry;
-					break;
-				default:
-					name = I18n.format("entity." + entry + ".name");
-					break;
+			case 1:
+				name = entry;
+				break;
+			default:
+				ResourceLocation entryName = new ResourceLocation(entry);
+
+				name = I18n.format("entity." + EntityList.getTranslationName(entryName) + ".name");
+				break;
 			}
 
 			drawCenteredString(fontRendererObj, name, width / 2, par3 + 1, 0xFFFFFF);
@@ -453,54 +456,39 @@ public class GuiSelectMob extends GuiScreen
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(new RecursiveAction()
+			CaveUtils.getPool().execute(() ->
 			{
-				@Override
-				protected void compute()
+				List<String> result;
+
+				if (Strings.isNullOrEmpty(filter))
 				{
-					List<String> result;
-
-					if (Strings.isNullOrEmpty(filter))
+					result = mobs;
+				}
+				else if (filter.equals("selected"))
+				{
+					result = Lists.newArrayList(selected);
+				}
+				else
+				{
+					if (!filterCache.containsKey(filter))
 					{
-						result = mobs;
-					}
-					else if (filter.equals("selected"))
-					{
-						result = Lists.newArrayList(selected);
-					}
-					else
-					{
-						if (!filterCache.containsKey(filter))
-						{
-							filterCache.put(filter, Lists.newArrayList(Collections2.filter(mobs, new MobFilter(filter))));
-						}
-
-						result = filterCache.get(filter);
+						filterCache.put(filter, Lists.newArrayList(Collections2.filter(mobs, e -> filterMatch(e, filter))));
 					}
 
-					if (!contents.equals(result))
-					{
-						contents.clear();
-						contents.addAll(result);
-					}
+					result = filterCache.get(filter);
+				}
+
+				if (!contents.equals(result))
+				{
+					contents.clear();
+					contents.addAll(result);
 				}
 			});
 		}
-	}
 
-	public static class MobFilter implements Predicate<String>
-	{
-		private final String filter;
-
-		public MobFilter(String filter)
+		protected boolean filterMatch(String name, String filter)
 		{
-			this.filter = filter;
-		}
-
-		@Override
-		public boolean apply(String input)
-		{
-			return StringUtils.containsIgnoreCase(input, filter) || StringUtils.containsIgnoreCase(I18n.format("entity." + input + ".name"), filter);
+			return StringUtils.containsIgnoreCase(name, filter) || StringUtils.containsIgnoreCase(I18n.format("entity." + name + ".name"), filter);
 		}
 	}
 }

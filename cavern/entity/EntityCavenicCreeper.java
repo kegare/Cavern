@@ -72,7 +72,7 @@ public class EntityCavenicCreeper extends EntityCreeper
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float damage)
 	{
-		if (source == DamageSource.fall)
+		if (source == DamageSource.FALL)
 		{
 			damage *= 0.35F;
 		}

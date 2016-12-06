@@ -1,6 +1,5 @@
 package cavern.stats;
 
-import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.HashBasedTable;
@@ -18,7 +17,6 @@ import cavern.core.CaveSounds;
 import cavern.miningassist.MiningAssist;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.MinerStatsAdjustMessage;
-import cavern.plugin.MCEPlugin;
 import cavern.stats.bonus.MineBonusExperience;
 import cavern.stats.bonus.MineBonusGoodMine;
 import cavern.stats.bonus.MineBonusHaste;
@@ -32,17 +30,16 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-import shift.mceconomy3.api.MCEconomyAPI;
 
 public class MinerStats implements IMinerStats
 {
@@ -154,7 +151,7 @@ public class MinerStats implements IMinerStats
 				ITextComponent component = new TextComponentTranslation("cavern.minerrank.promoted", player.getDisplayName(), name);
 				component.getStyle().setColor(TextFormatting.GRAY).setItalic(true);
 
-				server.getPlayerList().sendChatMsg(component);
+				server.getPlayerList().sendMessage(component);
 
 				double x = player.posX;
 				double y = player.posY + player.getEyeHeight();
@@ -177,11 +174,6 @@ public class MinerStats implements IMinerStats
 						player.addStat(CaveAchievements.DIAMOND_MINER);
 						break;
 					default:
-				}
-
-				if (Loader.isModLoaded(MCEPlugin.MODID))
-				{
-					MCEconomyAPI.addPlayerMP(player, 100 * current.getRank(), false);
 				}
 			}
 
@@ -206,7 +198,7 @@ public class MinerStats implements IMinerStats
 	{
 		int prev = rank;
 
-		rank = MathHelper.clamp_int(value, 0, MinerRank.values().length - 1);
+		rank = MathHelper.clamp(value, 0, MinerRank.values().length - 1);
 
 		if (adjust && rank != prev)
 		{
@@ -231,7 +223,7 @@ public class MinerStats implements IMinerStats
 	{
 		int prev = miningAssist;
 
-		miningAssist = MathHelper.clamp_int(type, 0, MiningAssist.values().length - 1);
+		miningAssist = MathHelper.clamp(type, 0, MiningAssist.values().length - 1);
 
 		if (adjust && miningAssist != prev)
 		{
@@ -337,7 +329,7 @@ public class MinerStats implements IMinerStats
 
 	public static void setPointAmount(String oredict, int amount)
 	{
-		List<ItemStack> ores = OreDictionary.getOres(oredict);
+		NonNullList<ItemStack> ores = OreDictionary.getOres(oredict);
 
 		if (!ores.isEmpty())
 		{
@@ -345,7 +337,7 @@ public class MinerStats implements IMinerStats
 			{
 				Block block = Block.getBlockFromItem(entry.getItem());
 
-				if (block != null && block != Blocks.AIR)
+				if (block != Blocks.AIR)
 				{
 					setPointAmount(block, entry.getItemDamage(), amount);
 				}

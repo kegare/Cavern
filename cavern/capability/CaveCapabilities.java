@@ -82,7 +82,7 @@ public class CaveCapabilities
 	{
 		EntityPlayer player = event.getEntityPlayer();
 
-		if (player.worldObj.isRemote)
+		if (player.world.isRemote)
 		{
 			return;
 		}

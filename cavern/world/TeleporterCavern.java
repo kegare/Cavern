@@ -6,6 +6,7 @@ import cavern.api.CavernAPI;
 import cavern.block.BlockPortalCavern;
 import cavern.block.CaveBlocks;
 import cavern.config.GeneralConfig;
+import cavern.item.ItemCave;
 import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
 import cavern.util.CaveUtils;
@@ -16,9 +17,11 @@ import net.minecraft.block.BlockPortal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +36,7 @@ public class TeleporterCavern extends Teleporter
 	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
 	protected static final IBlockState MOSSY_COBBLESTONE = Blocks.MOSSY_COBBLESTONE.getDefaultState();
 
-	private final WorldServer worldObj;
+	private final WorldServer world;
 	private final Random random;
 	private final BlockPortalCavern portal;
 
@@ -42,7 +45,7 @@ public class TeleporterCavern extends Teleporter
 	public TeleporterCavern(WorldServer worldServer, BlockPortalCavern portal)
 	{
 		super(worldServer);
-		this.worldObj = worldServer;
+		this.world = worldServer;
 		this.random = new Random(worldServer.getSeed());
 		this.portal = portal;
 	}
@@ -76,9 +79,7 @@ public class TeleporterCavern extends Teleporter
 
 			if (cache.hasLastPos(getType(), entity.dimension))
 			{
-				BlockPos pos = cache.getLastPos(getType(), entity.dimension);
-
-				setLocationAndAngles(entity, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+				setLocationAndAngles(entity, cache.getLastPos(getType(), entity.dimension));
 
 				if (placeInExistingPortal(entity, rotationYaw))
 				{
@@ -95,7 +96,26 @@ public class TeleporterCavern extends Teleporter
 		{
 			if (portal.getType() == CaveType.RUINS_CAVERN && portal.isEntityInCave(entity))
 			{
-				new TeleporterRuinsCavern(worldObj).placeInPortal(entity, rotationYaw);
+				new TeleporterRuinsCavern(world).placeInPortal(entity, rotationYaw);
+
+				if (entity instanceof EntityPlayerMP)
+				{
+					EntityPlayerMP player = (EntityPlayerMP)entity;
+					ItemStack stack = ItemCave.EnumType.MINER_ORB.getItemStack();
+
+					if (!player.inventory.hasItemStack(stack))
+					{
+						BlockPos pos = player.getPosition();
+						double d0 = random.nextFloat() * 0.5F + 0.25D;
+						double d1 = random.nextFloat() * 0.5F + 0.25D;
+						double d2 = random.nextFloat() * 0.5F + 0.25D;
+						EntityItem entityItem = new EntityItem(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, stack);
+
+						entityItem.setPickupDelay(120);
+
+						world.spawnEntity(entityItem);
+					}
+				}
 
 				flag = true;
 			}
@@ -129,18 +149,18 @@ public class TeleporterCavern extends Teleporter
 	public boolean placeInExistingPortal(Entity entity, float par2)
 	{
 		double d0 = -1.0D;
-		int x = MathHelper.floor_double(entity.posX);
-		int z = MathHelper.floor_double(entity.posZ);
+		int x = MathHelper.floor(entity.posX);
+		int z = MathHelper.floor(entity.posZ);
 		boolean flag = true;
 		BlockPos pos = BlockPos.ORIGIN;
-		long coord = ChunkPos.chunkXZ2Int(x, z);
+		long coord = ChunkPos.asLong(x, z);
 
 		if (coordCache.containsKey(coord))
 		{
 			PortalPosition portalpos = coordCache.get(coord);
 			d0 = 0.0D;
 			pos = portalpos;
-			portalpos.lastUpdateTime = worldObj.getTotalWorldTime();
+			portalpos.lastUpdateTime = world.getTotalWorldTime();
 			flag = false;
 		}
 		else
@@ -153,13 +173,13 @@ public class TeleporterCavern extends Teleporter
 
 				for (int pz = -128; pz <= 128; ++pz)
 				{
-					for (BlockPos blockpos = pos1.add(px, worldObj.getActualHeight() - 1 - pos1.getY(), pz); blockpos.getY() >= 0; blockpos = current)
+					for (BlockPos blockpos = pos1.add(px, world.getActualHeight() - 1 - pos1.getY(), pz); blockpos.getY() >= 0; blockpos = current)
 					{
 						current = blockpos.down();
 
-						if (isPortalBlock(worldObj.getBlockState(blockpos)))
+						if (isPortalBlock(world.getBlockState(blockpos)))
 						{
-							while (isPortalBlock(worldObj.getBlockState(current = blockpos.down())))
+							while (isPortalBlock(world.getBlockState(current = blockpos.down())))
 							{
 								blockpos = current;
 							}
@@ -181,7 +201,7 @@ public class TeleporterCavern extends Teleporter
 		{
 			if (flag)
 			{
-				coordCache.put(coord, new PortalPosition(pos, worldObj.getTotalWorldTime()));
+				coordCache.put(coord, new PortalPosition(pos, world.getTotalWorldTime()));
 			}
 
 			double posX = pos.getX() + 0.5D;
@@ -189,22 +209,22 @@ public class TeleporterCavern extends Teleporter
 			double posZ = pos.getZ() + 0.5D;
 			EnumFacing face = null;
 
-			if (isPortalBlock(worldObj.getBlockState(pos.west())))
+			if (isPortalBlock(world.getBlockState(pos.west())))
 			{
 				face = EnumFacing.NORTH;
 			}
 
-			if (isPortalBlock(worldObj.getBlockState(pos.east())))
+			if (isPortalBlock(world.getBlockState(pos.east())))
 			{
 				face = EnumFacing.SOUTH;
 			}
 
-			if (isPortalBlock(worldObj.getBlockState(pos.north())))
+			if (isPortalBlock(world.getBlockState(pos.north())))
 			{
 				face = EnumFacing.EAST;
 			}
 
-			if (isPortalBlock(worldObj.getBlockState(pos.south())))
+			if (isPortalBlock(world.getBlockState(pos.south())))
 			{
 				face = EnumFacing.WEST;
 			}
@@ -292,7 +312,7 @@ public class TeleporterCavern extends Teleporter
 
 	protected boolean isNotAir(BlockPos pos)
 	{
-		return !worldObj.isAirBlock(pos) || !worldObj.isAirBlock(pos.up());
+		return !world.isAirBlock(pos) || !world.isAirBlock(pos.up());
 	}
 
 	protected boolean isPortalBlock(IBlockState state)
@@ -312,14 +332,22 @@ public class TeleporterCavern extends Teleporter
 		}
 	}
 
+	public void setLocationAndAngles(Entity entity, BlockPos pos)
+	{
+		if (pos != null)
+		{
+			setLocationAndAngles(entity, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+		}
+	}
+
 	@Override
 	public boolean makePortal(Entity entity)
 	{
 		int range = 16;
 		double d0 = -1.0D;
-		int x = MathHelper.floor_double(entity.posX);
-		int y = MathHelper.floor_double(entity.posY);
-		int z = MathHelper.floor_double(entity.posZ);
+		int x = MathHelper.floor(entity.posX);
+		int y = MathHelper.floor(entity.posY);
+		int z = MathHelper.floor(entity.posZ);
 		int x1 = x;
 		int y1 = y;
 		int z1 = z;
@@ -335,11 +363,11 @@ public class TeleporterCavern extends Teleporter
 			{
 				double zSize = pz + 0.5D - entity.posZ;
 
-				outside: for (int py = worldObj.getActualHeight() - 1; py >= 0; --py)
+				outside: for (int py = world.getActualHeight() - 1; py >= 0; --py)
 				{
-					if (worldObj.isAirBlock(pos.setPos(px, py, pz)))
+					if (world.isAirBlock(pos.setPos(px, py, pz)))
 					{
-						while (py > 0 && worldObj.isAirBlock(pos.setPos(px, py - 1, pz)))
+						while (py > 0 && world.isAirBlock(pos.setPos(px, py - 1, pz)))
 						{
 							--py;
 						}
@@ -367,7 +395,7 @@ public class TeleporterCavern extends Teleporter
 
 										pos.setPos(px1, py1, pz1);
 
-										if (k2 < 0 && !worldObj.getBlockState(pos).getMaterial().isSolid() || k2 >= 0 && !worldObj.isAirBlock(pos))
+										if (k2 < 0 && !world.getBlockState(pos).getMaterial().isSolid() || k2 >= 0 && !world.isAirBlock(pos))
 										{
 											continue outside;
 										}
@@ -402,11 +430,11 @@ public class TeleporterCavern extends Teleporter
 				{
 					double zSize = pz + 0.5D - entity.posZ;
 
-					outside: for (int py = worldObj.getActualHeight() - 1; py >= 0; --py)
+					outside: for (int py = world.getActualHeight() - 1; py >= 0; --py)
 					{
-						if (worldObj.isAirBlock(pos.setPos(px, py, pz)))
+						if (world.isAirBlock(pos.setPos(px, py, pz)))
 						{
-							while (py > 0 && worldObj.isAirBlock(pos.setPos(px, py - 1, pz)))
+							while (py > 0 && world.isAirBlock(pos.setPos(px, py - 1, pz)))
 							{
 								--py;
 							}
@@ -426,7 +454,7 @@ public class TeleporterCavern extends Teleporter
 
 										pos.setPos(px1, py1, pz1);
 
-										if (j2 < 0 && !worldObj.getBlockState(pos).getMaterial().isSolid() || j2 >= 0 && !worldObj.isAirBlock(pos))
+										if (j2 < 0 && !world.getBlockState(pos).getMaterial().isSolid() || j2 >= 0 && !world.isAirBlock(pos))
 										{
 											continue outside;
 										}
@@ -465,7 +493,7 @@ public class TeleporterCavern extends Teleporter
 
 		if (d0 < 0.0D)
 		{
-			y1 = MathHelper.clamp_int(y1, CavernAPI.dimension.isEntityInCaves(entity) ? 10 : 70, worldObj.getActualHeight() - 10);
+			y1 = MathHelper.clamp(y1, CavernAPI.dimension.isEntityInCaves(entity) ? 10 : 70, world.getActualHeight() - 10);
 			y2 = y1;
 
 			for (int i2 = -1; i2 <= 1; ++i2)
@@ -479,7 +507,7 @@ public class TeleporterCavern extends Teleporter
 						int blockZ = z2 + (j2 - 1) * j1 - i2 * i1;
 						boolean flag = k2 < 0;
 
-						worldObj.setBlockState(pos.setPos(blockX, blockY, blockZ), flag ? MOSSY_COBBLESTONE : AIR);
+						world.setBlockState(pos.setPos(blockX, blockY, blockZ), flag ? MOSSY_COBBLESTONE : AIR);
 					}
 				}
 			}
@@ -498,7 +526,7 @@ public class TeleporterCavern extends Teleporter
 					int blockZ = z2 + (j2 - 1) * j1;
 					boolean flag1 = j2 == 0 || j2 == 3 || k2 == -1 || k2 == 3;
 
-					worldObj.setBlockState(pos.setPos(blockX, blockY, blockZ), flag1 ? MOSSY_COBBLESTONE : state, 2);
+					world.setBlockState(pos.setPos(blockX, blockY, blockZ), flag1 ? MOSSY_COBBLESTONE : state, 2);
 				}
 			}
 
@@ -510,7 +538,7 @@ public class TeleporterCavern extends Teleporter
 					int blockY = y2 + k2;
 					int blockZ = z2 + (j2 - 1) * j1;
 
-					worldObj.notifyNeighborsOfStateChange(pos.setPos(blockX, blockY, blockZ), worldObj.getBlockState(pos).getBlock());
+					world.notifyNeighborsOfStateChange(pos.setPos(blockX, blockY, blockZ), world.getBlockState(pos).getBlock(), false);
 				}
 			}
 		}

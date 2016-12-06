@@ -1,25 +1,24 @@
 package cavern.miningassist;
 
 import java.util.Deque;
-import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Queues;
 
 import cavern.config.MiningAssistConfig;
-import cavern.core.Cavern;
 import cavern.handler.MiningAssistEventHooks;
 import cavern.util.BlockMeta;
 import cavern.util.CaveUtils;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.management.PlayerInteractionManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -49,7 +48,7 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 		return MiningAssist.RANGED;
 	}
 
-	public List<BlockMeta> getTargetBlocks()
+	public Set<BlockMeta> getTargetBlocks()
 	{
 		return MiningAssistConfig.rangedTargetBlocks.getBlocks();
 	}
@@ -67,17 +66,16 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 	}
 
 	@Override
-	public void start()
+	public void execute()
 	{
 		if (world.isRemote)
 		{
 			return;
 		}
 
-		if (player != null && player instanceof EntityPlayerMP)
+		if (player instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP thePlayer = (EntityPlayerMP)player;
-			PlayerInteractionManager im = thePlayer.interactionManager;
 
 			check();
 
@@ -86,38 +84,19 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 
 			if (harvestTargets != null)
 			{
+				PlayerInteractionManager im = thePlayer.interactionManager;
+
 				do
 				{
-					BlockPos pos = harvestTargets.pollFirst();
-
-					if (pos != null)
+					if (!harvestBlock(im, harvestTargets.pollFirst()))
 					{
-						if (Cavern.proxy.isSinglePlayer())
-						{
-							IBlockState state = world.getBlockState(pos);
-
-							if (im.tryHarvestBlock(pos))
-							{
-								if (!player.capabilities.isCreativeMode)
-								{
-									world.playEvent(null, 2001, pos, Block.getStateId(state));
-								}
-
-								continue;
-							}
-						}
-						else if (im.tryHarvestBlock(pos))
-						{
-							continue;
-						}
+						break;
 					}
-
-					break;
 				}
 				while (!harvestTargets.isEmpty());
 			}
 
-			List<ItemStack> drops = MiningAssistEventHooks.captureDrops(false);
+			Set<ItemStack> drops = MiningAssistEventHooks.captureDrops(false);
 
 			for (ItemStack item : drops)
 			{
@@ -133,7 +112,7 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 					int i = EntityXPOrb.getXPSplit(exp);
 					exp -= i;
 
-					world.spawnEntityInWorld(new EntityXPOrb(world, originPos.getX() + 0.5D, originPos.getY() + 0.5D, originPos.getZ() + 0.5D, i));
+					world.spawnEntity(new EntityXPOrb(world, originPos.getX() + 0.5D, originPos.getY() + 0.5D, originPos.getZ() + 0.5D, i));
 				}
 			}
 		}
@@ -161,7 +140,7 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 
 		harvestTargets = Queues.newLinkedBlockingDeque(9);
 
-		switch (BlockPistonBase.getFacingFromEntity(originPos, player).getAxis())
+		switch (EnumFacing.getDirectionFromEntityLiving(originPos, player).getAxis())
 		{
 			case X:
 				checkX();
@@ -231,7 +210,7 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 		{
 			ItemStack held = player.getHeldItemMainhand();
 
-			if (held != null)
+			if (!held.isEmpty())
 			{
 				return held.canHarvestBlock(state);
 			}

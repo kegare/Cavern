@@ -76,6 +76,6 @@ public class ArrayListExtended<E> extends ArrayList<E>
 
 	public ArrayListExtended<E> swapTo(int index, int amount)
 	{
-		return swap(index, MathHelper.clamp_int(index + amount, 0, size() - 1));
+		return swap(index, MathHelper.clamp(index + amount, 0, size() - 1));
 	}
 }

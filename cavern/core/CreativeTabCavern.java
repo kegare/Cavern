@@ -2,7 +2,7 @@ package cavern.core;
 
 import cavern.block.CaveBlocks;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -15,8 +15,8 @@ public class CreativeTabCavern extends CreativeTabs
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public Item getTabIconItem()
+	public ItemStack getTabIconItem()
 	{
-		return Item.getItemFromBlock(CaveBlocks.CAVERN_PORTAL);
+		return new ItemStack(CaveBlocks.CAVERN_PORTAL);
 	}
 }

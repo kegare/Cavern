@@ -61,17 +61,17 @@ public class EntityCavenicSpider extends EntitySpider
 			{
 				int sec;
 
-				switch (worldObj.getDifficulty())
+				switch (world.getDifficulty())
 				{
-					case NORMAL:
-						sec = 5;
-						break;
-					case HARD:
-						sec = 10;
-						break;
-					default:
-						sec = 3;
-						break;
+				case NORMAL:
+					sec = 5;
+					break;
+				case HARD:
+					sec = 10;
+					break;
+				default:
+					sec = 3;
+					break;
 				}
 
 				if (sec > 0)
@@ -112,7 +112,7 @@ public class EntityCavenicSpider extends EntitySpider
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float damage)
 	{
-		if (source == DamageSource.fall)
+		if (source == DamageSource.FALL)
 		{
 			damage *= 0.35F;
 		}

@@ -34,7 +34,7 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 	protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
 	protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
 
-	private final World worldObj;
+	private final World world;
 	private final Random rand;
 
 	private Biome[] biomesForGeneration;
@@ -46,7 +46,7 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 
 	public ChunkProviderAquaCavern(World world)
 	{
-		this.worldObj = world;
+		this.world = world;
 		this.rand = new Random(world.getSeed());
 	}
 
@@ -66,12 +66,12 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 
 	public void replaceBiomeBlocks(int chunkX, int chunkZ, ChunkPrimer primer)
 	{
-		if (!ForgeEventFactory.onReplaceBiomeBlocks(this, chunkX, chunkZ, primer, worldObj))
+		if (!ForgeEventFactory.onReplaceBiomeBlocks(this, chunkX, chunkZ, primer, world))
 		{
 			return;
 		}
 
-		int worldHeight = worldObj.provider.getActualHeight();
+		int worldHeight = world.provider.getActualHeight();
 		int blockHeight = worldHeight - 1;
 
 		for (int x = 0; x < 16; ++x)
@@ -97,7 +97,7 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 	{
 		rand.setSeed(chunkX * 341873128712L + chunkZ * 132897987541L);
 
-		biomesForGeneration = worldObj.getBiomeProvider().loadBlockGeneratorData(biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
+		biomesForGeneration = world.getBiomeProvider().getBiomes(biomesForGeneration, chunkX * 16, chunkZ * 16, 16, 16);
 
 		ChunkPrimer primer = new ChunkPrimer();
 
@@ -105,17 +105,17 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 
 		if (AquaCavernConfig.generateCaves)
 		{
-			caveGenerator.generate(worldObj, chunkX, chunkZ, primer);
+			caveGenerator.generate(world, chunkX, chunkZ, primer);
 		}
 
 		if (AquaCavernConfig.generateRavine)
 		{
-			ravineGenerator.generate(worldObj, chunkX, chunkZ, primer);
+			ravineGenerator.generate(world, chunkX, chunkZ, primer);
 		}
 
 		replaceBiomeBlocks(chunkX, chunkZ, primer);
 
-		Chunk chunk = new Chunk(worldObj, primer, chunkX, chunkZ);
+		Chunk chunk = new Chunk(world, primer, chunkX, chunkZ);
 		byte[] biomeArray = chunk.getBiomeArray();
 
 		for (int i = 0; i < biomeArray.length; ++i)
@@ -136,13 +136,13 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 		int worldX = chunkX * 16;
 		int worldZ = chunkZ * 16;
 		BlockPos blockPos = new BlockPos(worldX, 0, worldZ);
-		int worldHeight = worldObj.provider.getActualHeight();
+		int worldHeight = world.provider.getActualHeight();
 
-		ForgeEventFactory.onChunkPopulate(true, this, worldObj, rand, chunkX, chunkZ, false);
+		ForgeEventFactory.onChunkPopulate(true, this, world, rand, chunkX, chunkZ, false);
 
 		int x, y, z;
 
-		if (AquaCavernConfig.generateDungeons && TerrainGen.populate(this, worldObj, rand, chunkX, chunkZ, false, EventType.DUNGEON))
+		if (AquaCavernConfig.generateDungeons && TerrainGen.populate(this, world, rand, chunkX, chunkZ, false, EventType.DUNGEON))
 		{
 			for (int i = 0; i < 20; ++i)
 			{
@@ -150,24 +150,24 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 				y = rand.nextInt(worldHeight - 30) + 5;
 				z = rand.nextInt(16) + 8;
 
-				dungeonGen.generate(worldObj, rand, blockPos.add(x, y, z));
+				dungeonGen.generate(world, rand, blockPos.add(x, y, z));
 			}
 		}
 
-		MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Pre(worldObj, rand, blockPos));
+		MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Pre(world, rand, blockPos));
 
-		MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Pre(worldObj, rand, blockPos));
+		MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Pre(world, rand, blockPos));
 
 		for (CaveVein vein : AquaCavernConfig.veinManager.getCaveVeins())
 		{
-			vein.generateVeins(worldObj, rand, blockPos);
+			vein.generateVeins(world, rand, blockPos);
 		}
 
-		MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Post(worldObj, rand, blockPos));
+		MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Post(world, rand, blockPos));
 
-		MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(worldObj, rand, blockPos));
+		MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Post(world, rand, blockPos));
 
-		ForgeEventFactory.onChunkPopulate(false, this, worldObj, rand, chunkX, chunkZ, false);
+		ForgeEventFactory.onChunkPopulate(false, this, world, rand, chunkX, chunkZ, false);
 
 		BlockFalling.fallInstantly = false;
 	}
@@ -181,13 +181,13 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 	@Override
 	public List<SpawnListEntry> getPossibleCreatures(EnumCreatureType creatureType, BlockPos pos)
 	{
-		Biome biome = worldObj.getBiomeGenForCoords(pos);
+		Biome biome = world.getBiome(pos);
 
 		return biome.getSpawnableList(creatureType);
 	}
 
 	@Override
-	public BlockPos getStrongholdGen(World world, String structureName, BlockPos pos)
+	public BlockPos getStrongholdGen(World world, String structureName, BlockPos pos, boolean flag)
 	{
 		return null;
 	}

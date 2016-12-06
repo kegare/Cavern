@@ -38,7 +38,7 @@ public class DimensionRegeneration
 	{
 		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 
-		for (EntityPlayerMP player : server.getPlayerList().getPlayerList())
+		for (EntityPlayerMP player : server.getPlayerList().getPlayers())
 		{
 			if (player.dimension == dim)
 			{
@@ -59,7 +59,7 @@ public class DimensionRegeneration
 		text = new TextComponentTranslation("cavern.regeneration.regenerating", name);
 		text.getStyle().setColor(TextFormatting.GRAY);
 
-		server.getPlayerList().sendChatMsg(text);
+		server.getPlayerList().sendMessage(text);
 
 		if (server.isSinglePlayer())
 		{
@@ -123,7 +123,7 @@ public class DimensionRegeneration
 		text = new TextComponentTranslation("cavern.regeneration.regenerated", name);
 		text.getStyle().setColor(TextFormatting.GRAY);
 
-		server.getPlayerList().sendChatMsg(text);
+		server.getPlayerList().sendMessage(text);
 
 		CaveNetworkRegistry.sendToAll(new RegenerationGuiMessage(EnumType.REGENERATED));
 
@@ -193,7 +193,7 @@ public class DimensionRegeneration
 		text = new TextComponentTranslation("cavern.regeneration.backup", name);
 		text.getStyle().setColor(TextFormatting.GRAY);
 
-		server.getPlayerList().sendChatMsg(text);
+		server.getPlayerList().sendMessage(text);
 
 		CaveNetworkRegistry.sendToAll(new RegenerationGuiMessage(EnumType.BACKUP));
 
@@ -204,7 +204,7 @@ public class DimensionRegeneration
 			text = new TextComponentTranslation("cavern.regeneration.backup.success", name);
 			text.getStyle().setColor(TextFormatting.GRAY).setClickEvent(click);
 
-			server.getPlayerList().sendChatMsg(text);
+			server.getPlayerList().sendMessage(text);
 
 			return true;
 		}
@@ -213,7 +213,7 @@ public class DimensionRegeneration
 			text = new TextComponentTranslation("cavern.regeneration.backup.failed", name);
 			text.getStyle().setColor(TextFormatting.RED);
 
-			server.getPlayerList().sendChatMsg(text);
+			server.getPlayerList().sendMessage(text);
 
 			CaveNetworkRegistry.sendToAll(new RegenerationGuiMessage(EnumType.FAILED));
 		}

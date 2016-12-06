@@ -253,9 +253,9 @@ public class CaveEventHooks
 		EnumHand hand = event.getHand();
 		ItemStack held = event.getItemStack();
 
-		if (held != null)
+		if (!held.isEmpty())
 		{
-			Item portal = null;
+			Item portal = Items.AIR;
 
 			if (held.getItem() == Items.EMERALD)
 			{
@@ -288,9 +288,9 @@ public class CaveEventHooks
 				}
 			}
 
-			if (portal != null)
+			if (portal != Items.AIR)
 			{
-				EnumActionResult result = portal.onItemUse(held, player, world, pos, hand, side, (float)hit.xCoord, (float)hit.yCoord, (float)hit.zCoord);
+				EnumActionResult result = portal.onItemUse(player, world, pos, hand, side, (float)hit.xCoord, (float)hit.yCoord, (float)hit.zCoord);
 
 				if (result == EnumActionResult.SUCCESS)
 				{
@@ -320,7 +320,7 @@ public class CaveEventHooks
 					{
 						IMinerStats stats = MinerStats.get(thePlayer);
 
-						if (player.inventory.hasItemStack(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MINER_ORB.getItemDamage())))
+						if (player.inventory.hasItemStack(ItemCave.EnumType.MINER_ORB.getItemStack()))
 						{
 							if (RANDOM.nextDouble() < 0.3D)
 							{
@@ -379,7 +379,7 @@ public class CaveEventHooks
 		ItemStack heldMain = player.getHeldItemMainhand();
 		boolean miner = CavernAPI.dimension.isEntityInCaves(player) && CaveUtils.isItemPickaxe(heldMain);
 
-		if (heldMain != null && player.isInsideOfMaterial(Material.WATER))
+		if (!heldMain.isEmpty() && player.isInsideOfMaterial(Material.WATER))
 		{
 			if (miner && MinerStats.get(player).getRank() >= MinerRank.AQUA_MINER.getRank())
 			{
@@ -467,7 +467,7 @@ public class CaveEventHooks
 	{
 		EntityPlayer player = event.player;
 		EntityItem entityItem = event.pickedUp;
-		World world = entityItem.worldObj;
+		World world = entityItem.world;
 
 		if (!world.isRemote)
 		{
@@ -482,7 +482,7 @@ public class CaveEventHooks
 			{
 				ItemStack itemstack = entityItem.getEntityItem();
 
-				if (itemstack != null)
+				if (!itemstack.isEmpty())
 				{
 					if (itemstack.getItem() == CaveItems.CAVE_ITEM)
 					{
@@ -514,9 +514,9 @@ public class CaveEventHooks
 	{
 		EntityPlayer player = event.player;
 		ItemStack itemstack = event.crafting;
-		World world = player.worldObj;
+		World world = player.world;
 
-		if (!world.isRemote && itemstack != null)
+		if (!world.isRemote && !itemstack.isEmpty())
 		{
 			if (IceEquipment.isIceEquipment(itemstack))
 			{
@@ -535,9 +535,9 @@ public class CaveEventHooks
 	{
 		EntityPlayer player = event.player;
 		ItemStack itemstack = event.smelting;
-		World world = player.worldObj;
+		World world = player.world;
 
-		if (!world.isRemote && itemstack != null)
+		if (!world.isRemote && !itemstack.isEmpty())
 		{
 			if (itemstack.getItem() == CaveItems.CAVE_ITEM)
 			{

@@ -23,9 +23,10 @@ public class ItemPortalCave extends ItemBlock
 	}
 
 	@Override
-	public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
+	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		BlockPos blockpos = pos.offset(side);
+		ItemStack held = player.getHeldItem(hand);
 
 		if (((BlockPortal)block).trySpawnPortal(world, blockpos))
 		{
@@ -33,7 +34,7 @@ public class ItemPortalCave extends ItemBlock
 
 			if (!player.capabilities.isCreativeMode)
 			{
-				--stack.stackSize;
+				held.shrink(1);
 			}
 
 			return EnumActionResult.SUCCESS;

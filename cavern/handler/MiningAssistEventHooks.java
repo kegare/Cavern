@@ -3,13 +3,14 @@ package cavern.handler;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import cavern.api.IMinerStats;
 import cavern.client.CaveKeyBindings;
@@ -47,63 +48,33 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MiningAssistEventHooks
 {
-	protected static final ThreadLocal<Boolean> captureDrops = new ThreadLocal<Boolean>()
-	{
-		@Override
-		protected Boolean initialValue()
-		{
-			return false;
-		}
-	};
+	private static boolean captureDrops;
+	private static boolean captureExps;
 
-	protected static final ThreadLocal<List<ItemStack>> capturedDrops = new ThreadLocal<List<ItemStack>>()
-	{
-		@Override
-		protected List<ItemStack> initialValue()
-		{
-			return Lists.newArrayList();
-		}
-	};
+	private static final Set<ItemStack> DROPS = Sets.newHashSet();
+	private static final Set<Integer> EXPS = Sets.newHashSet();
 
-	public static List<ItemStack> captureDrops(boolean start)
+	public static Set<ItemStack> captureDrops(boolean start)
 	{
 		if (!MiningAssistConfig.collectDrops)
 		{
-			return Collections.emptyList();
+			return Collections.emptySet();
 		}
 
 		if (start)
 		{
-			captureDrops.set(true);
-			capturedDrops.get().clear();
+			captureDrops = true;
+			DROPS.clear();
 
 			return null;
 		}
 		else
 		{
-			captureDrops.set(false);
+			captureDrops = false;
 
-			return capturedDrops.get();
+			return DROPS;
 		}
 	}
-
-	protected static final ThreadLocal<Boolean> captureExps = new ThreadLocal<Boolean>()
-	{
-		@Override
-		protected Boolean initialValue()
-		{
-			return false;
-		}
-	};
-
-	protected static final ThreadLocal<Integer> capturedExps = new ThreadLocal<Integer>()
-	{
-		@Override
-		protected Integer initialValue()
-		{
-			return Integer.valueOf(0);
-		}
-	};
 
 	public static int captureExps(boolean start)
 	{
@@ -114,16 +85,16 @@ public class MiningAssistEventHooks
 
 		if (start)
 		{
-			captureExps.set(true);
-			capturedExps.set(Integer.valueOf(0));
+			captureExps = true;
+			EXPS.clear();
 
 			return 0;
 		}
 		else
 		{
-			captureExps.set(false);
+			captureExps = false;
 
-			return capturedExps.get().intValue();
+			return EXPS.parallelStream().filter(i -> i != null).mapToInt(i -> i.intValue()).sum();
 		}
 	}
 
@@ -136,7 +107,7 @@ public class MiningAssistEventHooks
 			if (stats.getMiningAssist() > MiningAssist.DISABLED.getType() && stats.getRank() >= MiningAssistConfig.minerRank.getValue())
 			{
 				MiningAssist type = MiningAssist.get(stats.getMiningAssist());
-				List<BlockMeta> targets = null;
+				Set<BlockMeta> targets = null;
 
 				switch (type)
 				{
@@ -195,14 +166,14 @@ public class MiningAssistEventHooks
 		return null;
 	}
 
-	private static final Map<BlockPos, BreakSpeedCache> SPEED_CACHES = Maps.newHashMap();
+	private static final Map<BlockPos, BreakSpeedCache> SPEED_CACHES = new WeakHashMap<>();
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onHarvestDrops(HarvestDropsEvent event)
 	{
 		World world = event.getWorld();
 
-		if (captureDrops.get())
+		if (captureDrops)
 		{
 			List<ItemStack> drops = event.getDrops();
 			float chance = event.getDropChance();
@@ -211,7 +182,7 @@ public class MiningAssistEventHooks
 			{
 				if (world.rand.nextFloat() < chance)
 				{
-					capturedDrops.get().add(stack);
+					DROPS.add(stack);
 				}
 			}
 
@@ -222,11 +193,9 @@ public class MiningAssistEventHooks
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onBlockBreak(BreakEvent event)
 	{
-		if (captureExps.get())
+		if (captureExps)
 		{
-			int i = capturedExps.get();
-
-			capturedExps.set(Integer.valueOf(i + event.getExpToDrop()));
+			EXPS.add(Integer.valueOf(event.getExpToDrop()));
 
 			event.setExpToDrop(0);
 		}
@@ -240,7 +209,7 @@ public class MiningAssistEventHooks
 
 			if (canMiningAssist(player, state))
 			{
-				if (captureDrops.get())
+				if (captureDrops)
 				{
 					return;
 				}
@@ -248,7 +217,7 @@ public class MiningAssistEventHooks
 				BlockPos pos = event.getPos();
 				IMiningAssistExecutor executor = createExecutor(null, world, player, pos, state);
 
-				executor.start();
+				executor.execute();
 			}
 		}
 	}
@@ -268,7 +237,7 @@ public class MiningAssistEventHooks
 
 			if (cache != null)
 			{
-				if (CaveUtils.areBlockStatesEqual(state, cache.getBlockState()) && time - cache.getCachedTime() <= 3000L)
+				if (CaveUtils.areBlockStatesEqual(state, cache.getBlockState()) && time - cache.getCachedTime() <= 5000L)
 				{
 					cachedSpeed = cache.getBreakSpeed();
 				}
@@ -287,7 +256,7 @@ public class MiningAssistEventHooks
 				return;
 			}
 
-			IMiningAssistExecutor executor = createExecutor(null, player.worldObj, player, pos, state);
+			IMiningAssistExecutor executor = createExecutor(null, player.world, player, pos, state);
 			MinerRank rank = MinerRank.get(MinerStats.get(player).getRank());
 			float speed = event.getNewSpeed();
 			float power = rank.getBoost() * 1.7145F;
@@ -313,7 +282,7 @@ public class MiningAssistEventHooks
 
 		if (CaveKeyBindings.KEY_MINING_ASSIST.isActiveAndMatches(key))
 		{
-			if (mc.thePlayer != null)
+			if (mc.player != null)
 			{
 				CaveNetworkRegistry.sendToServer(new MiningAssistMessage());
 			}

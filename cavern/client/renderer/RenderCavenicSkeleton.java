@@ -3,7 +3,7 @@ package cavern.client.renderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSkeleton;
-import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.AbstractSkeleton;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,13 +19,13 @@ public class RenderCavenicSkeleton extends RenderSkeleton
 	}
 
 	@Override
-	protected void preRenderCallback(EntitySkeleton entity, float ticks)
+	protected void preRenderCallback(AbstractSkeleton entity, float ticks)
 	{
 		GlStateManager.scale(1.1F, 1.1F, 1.1F);
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntitySkeleton entity)
+	protected ResourceLocation getEntityTexture(AbstractSkeleton entity)
 	{
 		return cavenicSkeletonTexture;
 	}

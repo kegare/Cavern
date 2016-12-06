@@ -203,11 +203,13 @@ public class BlockAcresia extends BlockCrops
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
 		if (!canGrow(world, pos, state, world.isRemote))
 		{
-			if (heldItem != null && heldItem.getItem() instanceof ItemShears)
+			ItemStack heldItem = player.getHeldItem(hand);
+
+			if (!heldItem.isEmpty() && heldItem.getItem() instanceof ItemShears)
 			{
 				if (!world.isRemote)
 				{
@@ -217,7 +219,7 @@ public class BlockAcresia extends BlockCrops
 
 					drop.setPickupDelay(10);
 
-					world.spawnEntityInWorld(drop);
+					world.spawnEntity(drop);
 					world.setBlockState(pos, withAge(2), 2);
 
 					heldItem.damageItem(1, player);

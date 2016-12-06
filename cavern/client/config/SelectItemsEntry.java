@@ -7,6 +7,7 @@ import cavern.client.gui.IItemSelector;
 import cavern.util.ItemMeta;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.init.Blocks;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.ArrayEntry;
@@ -43,6 +44,6 @@ public class SelectItemsEntry extends ArrayEntry implements IItemSelector
 	@Override
 	public boolean canSelectItem(int id, ItemMeta itemMeta)
 	{
-		return Block.getBlockFromItem(itemMeta.getItem()) == null;
+		return Block.getBlockFromItem(itemMeta.getItem()) == Blocks.AIR;
 	}
 }

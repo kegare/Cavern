@@ -9,7 +9,7 @@ import cavern.config.RuinsCavernConfig;
 import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 
-public final class CaveType
+public class CaveType
 {
 	public static final int CAVERN = 0;
 	public static final int RUINS_CAVERN = 1;

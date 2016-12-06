@@ -27,6 +27,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -114,7 +115,7 @@ public class BlockCave extends Block
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, List<ItemStack> list)
+	public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list)
 	{
 		for (EnumType type : EnumType.values())
 		{
@@ -142,7 +143,7 @@ public class BlockCave extends Block
 					ItemStack item = randomItem.getItem();
 					EntityPlayer player = harvesters.get();
 
-					if (item == null || RANDOM.nextInt(10) == 0)
+					if (item.isEmpty() || RANDOM.nextInt(10) == 0)
 					{
 						if (player != null)
 						{
@@ -165,8 +166,8 @@ public class BlockCave extends Block
 			case FISSURED_PACKED_ICE:
 				if (!world.isRemote)
 				{
-					EntityPlayer player = harvesters.get();
 					FissureBreakEvent event = WeightedRandom.getRandomItem(RANDOM, FISSURE_EVENTS);
+					EntityPlayer player = harvesters.get();
 
 					if (event != null)
 					{
@@ -242,7 +243,7 @@ public class BlockCave extends Block
 		{
 			case AQUAMARINE_ORE:
 			case RANDOMITE_ORE:
-				return MathHelper.getRandomIntegerInRange(RANDOM, 1, 3);
+				return MathHelper.getInt(RANDOM, 1, 3);
 			default:
 		}
 

@@ -3,6 +3,7 @@ package cavern.item;
 import javax.annotation.Nullable;
 
 import cavern.core.Cavern;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemBow;
@@ -35,7 +36,7 @@ public class ItemBowIce extends ItemBow
 					ItemStack itemstack = entity.getActiveItemStack();
 					float f = 0.001F  * IceEquipment.get(itemstack).getCharge();
 
-					return itemstack != null && itemstack.getItem() == ItemBowIce.this ? (stack.getMaxItemUseDuration() - entity.getItemInUseCount()) / Math.max(10.0F - f, 6.7F) : 0.0F;
+					return !itemstack.isEmpty() && itemstack.getItem() == ItemBowIce.this ? (stack.getMaxItemUseDuration() - entity.getItemInUseCount()) / Math.max(10.0F - f, 6.7F) : 0.0F;
 				}
 			}
 		});
@@ -56,12 +57,18 @@ public class ItemBowIce extends ItemBow
 		int min = duration / 2;
 		int max = duration / 3;
 
-		return MathHelper.clamp_int(min - duration / 8 * IceEquipment.get(itemstack).getCharge(), min, max);
+		return MathHelper.clamp(min - duration / 8 * IceEquipment.get(itemstack).getCharge(), min, max);
 	}
 
 	@Override
 	public int getItemEnchantability()
 	{
 		return 0;
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)
+	{
+		return super.canApplyAtEnchantingTable(stack, enchantment) && IceEquipment.canApplyEnchantments(stack, enchantment);
 	}
 }

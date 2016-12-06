@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.RecursiveAction;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharUtils;
@@ -16,7 +15,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
@@ -42,6 +40,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.biome.Biome;
@@ -1195,7 +1194,7 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 			Block block = blockMeta.getBlock();
 			int meta = blockMeta.getMeta();
 			ItemStack itemstack = new ItemStack(block, 1, meta);
-			boolean hasItem = itemstack.getItem() != null;
+			boolean hasItem = itemstack.getItem() != Items.AIR;
 
 			String text = null;
 
@@ -1241,39 +1240,32 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 
 			if (detailInfo.isChecked())
 			{
-				if (hasItem)
+				try
 				{
-					try
-					{
-						GlStateManager.enableRescaleNormal();
-						RenderHelper.enableGUIStandardItemLighting();
-						itemRender.renderItemIntoGUI(itemstack, width / 2 - 100, par3 + 1);
-						itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 - 100, par3 + 1, Integer.toString(vein.getSize()));
-						RenderHelper.disableStandardItemLighting();
-						GlStateManager.disableRescaleNormal();
-					}
-					catch (Throwable e) {}
+					GlStateManager.enableRescaleNormal();
+					RenderHelper.enableGUIStandardItemLighting();
+					itemRender.renderItemIntoGUI(itemstack, width / 2 - 100, par3 + 1);
+					itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 - 100, par3 + 1, Integer.toString(vein.getSize()));
+					RenderHelper.disableStandardItemLighting();
+					GlStateManager.disableRescaleNormal();
 				}
+				catch (Throwable e) {}
 
 				blockMeta = vein.getTarget();
 				block = blockMeta.getBlock();
 				meta = blockMeta.getMeta();
 				itemstack = new ItemStack(block, 1, meta);
-				hasItem = itemstack.getItem() != null;
 
-				if (hasItem)
+				try
 				{
-					try
-					{
-						GlStateManager.enableRescaleNormal();
-						RenderHelper.enableGUIStandardItemLighting();
-						itemRender.renderItemIntoGUI(itemstack, width / 2 + 90, par3 + 1);
-						itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 + 90, par3 + 1, Integer.toString(vein.getWeight()));
-						RenderHelper.disableStandardItemLighting();
-						GlStateManager.disableRescaleNormal();
-					}
-					catch (Throwable e) {}
+					GlStateManager.enableRescaleNormal();
+					RenderHelper.enableGUIStandardItemLighting();
+					itemRender.renderItemIntoGUI(itemstack, width / 2 + 90, par3 + 1);
+					itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 + 90, par3 + 1, Integer.toString(vein.getWeight()));
+					RenderHelper.disableStandardItemLighting();
+					GlStateManager.disableRescaleNormal();
 				}
+				catch (Throwable e) {}
 			}
 		}
 
@@ -1321,52 +1313,37 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(new RecursiveAction()
+			CaveUtils.getPool().execute(() ->
 			{
-				@Override
-				protected void compute()
+				List<CaveVein> result;
+
+				if (Strings.isNullOrEmpty(filter))
 				{
-					List<CaveVein> result;
-
-					if (Strings.isNullOrEmpty(filter))
+					result = veins;
+				}
+				else if (filter.equals("selected"))
+				{
+					result = selected;
+				}
+				else
+				{
+					if (!filterCache.containsKey(filter))
 					{
-						result = veins;
-					}
-					else if (filter.equals("selected"))
-					{
-						result = selected;
-					}
-					else
-					{
-						if (!filterCache.containsKey(filter))
-						{
-							filterCache.put(filter, Lists.newArrayList(Collections2.filter(veins, new VeinFilter(filter))));
-						}
-
-						result = filterCache.get(filter);
+						filterCache.put(filter, Lists.newArrayList(Collections2.filter(veins, e -> filterMatch(e, filter))));
 					}
 
-					if (!contents.equals(result))
-					{
-						contents.clear();
-						contents.addAll(result);
-					}
+					result = filterCache.get(filter);
+				}
+
+				if (!contents.equals(result))
+				{
+					contents.clear();
+					contents.addAll(result);
 				}
 			});
 		}
-	}
 
-	public static class VeinFilter implements Predicate<CaveVein>
-	{
-		private final String filter;
-
-		public VeinFilter(String filter)
-		{
-			this.filter = filter;
-		}
-
-		@Override
-		public boolean apply(CaveVein vein)
+		protected boolean filterMatch(CaveVein vein, String filter)
 		{
 			if (CaveFilters.blockFilter(vein.getBlockMeta(), filter) || CaveFilters.blockFilter(vein.getTarget(), filter))
 			{

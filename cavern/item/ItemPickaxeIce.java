@@ -3,6 +3,7 @@ package cavern.item;
 import cavern.core.Cavern;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -59,5 +60,11 @@ public class ItemPickaxeIce extends ItemPickaxeCave
 		}
 
 		return super.getStrVsBlock(stack, state);
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)
+	{
+		return super.canApplyAtEnchantingTable(stack, enchantment) && IceEquipment.canApplyEnchantments(stack, enchantment);
 	}
 }

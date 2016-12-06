@@ -45,24 +45,24 @@ public class BiomeProviderCavern extends BiomeProvider
 
 		if (biomeSize <= 0)
 		{
-			random.setSeed(ChunkPos.chunkXZ2Int(chunkX, chunkZ) ^ worldObj.getSeed());
+			random.setSeed(ChunkPos.asLong(chunkX, chunkZ) ^ worldObj.getSeed());
 		}
 		else
 		{
-			random.setSeed(ChunkPos.chunkXZ2Int((chunkX + 1) / biomeSize, (chunkZ + 1) / biomeSize) ^ worldObj.getSeed());
+			random.setSeed(ChunkPos.asLong((chunkX + 1) / biomeSize, (chunkZ + 1) / biomeSize) ^ worldObj.getSeed());
 		}
 
 		return biomeManager.getRandomCaveBiome(random).getBiome();
 	}
 
 	@Override
-	public Biome getBiomeGenerator(BlockPos pos)
+	public Biome getBiome(BlockPos pos)
 	{
-		return getBiomeGenerator(pos, Biomes.PLAINS);
+		return getBiome(pos, Biomes.PLAINS);
 	}
 
 	@Override
-	public Biome getBiomeGenerator(BlockPos pos, Biome biomeIn)
+	public Biome getBiome(BlockPos pos, Biome biomeIn)
 	{
 		Biome biome = biomeCache.getBiome(pos.getX(), pos.getZ(), null);
 
@@ -88,13 +88,13 @@ public class BiomeProviderCavern extends BiomeProvider
 	}
 
 	@Override
-	public Biome[] loadBlockGeneratorData(Biome[] biomes, int x, int z, int xSize, int zSize)
+	public Biome[] getBiomes(Biome[] biomes, int x, int z, int xSize, int zSize)
 	{
 		return getBiomesForGeneration(biomes, x, z, xSize, zSize);
 	}
 
 	@Override
-	public Biome[] getBiomeGenAt(Biome[] biomes, int x, int z, int xSize, int zSize, boolean cache)
+	public Biome[] getBiomes(Biome[] biomes, int x, int z, int xSize, int zSize, boolean cache)
 	{
 		return getBiomesForGeneration(biomes, x, z, xSize, zSize);
 	}
@@ -102,7 +102,7 @@ public class BiomeProviderCavern extends BiomeProvider
 	@Override
 	public boolean areBiomesViable(int x, int z, int range, List<Biome> list)
 	{
-		return list.contains(getBiomeGenerator(new BlockPos(x, 0, z)));
+		return list.contains(getBiome(new BlockPos(x, 0, z)));
 	}
 
 	@Override

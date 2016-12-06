@@ -43,7 +43,7 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 	{
 		ItemStack held = entity.getHeldItemMainhand();
 
-		return held != null && held.getItem() != null && held.getItem() instanceof ItemBow;
+		return !held.isEmpty() && held.getItem() instanceof ItemBow;
 	}
 
 	@Override

@@ -1,23 +1,20 @@
 package cavern.miningassist;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
 import cavern.config.MiningAssistConfig;
-import cavern.core.Cavern;
 import cavern.handler.MiningAssistEventHooks;
 import cavern.util.BlockMeta;
 import cavern.util.CaveUtils;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.management.PlayerInteractionManager;
-import net.minecraft.util.EnumFacing.Axis;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -46,50 +43,31 @@ public class AditMiningExecutor implements IMiningAssistExecutor
 		return MiningAssist.ADIT;
 	}
 
-	public List<BlockMeta> getTargetBlocks()
+	public Set<BlockMeta> getTargetBlocks()
 	{
 		return MiningAssistConfig.aditTargetBlocks.getBlocks();
 	}
 
 	@Override
-	public void start()
+	public void execute()
 	{
 		if (world.isRemote)
 		{
 			return;
 		}
 
-		if (player != null && player instanceof EntityPlayerMP)
+		if (player instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP thePlayer = (EntityPlayerMP)player;
-			PlayerInteractionManager im = thePlayer.interactionManager;
 
 			check();
 
 			MiningAssistEventHooks.captureDrops(true);
 			MiningAssistEventHooks.captureExps(true);
 
-			if (harvestTarget != null)
-			{
-				if (Cavern.proxy.isSinglePlayer())
-				{
-					IBlockState state = world.getBlockState(harvestTarget);
+			harvestBlock(thePlayer.interactionManager, harvestTarget);
 
-					if (im.tryHarvestBlock(harvestTarget))
-					{
-						if (!player.capabilities.isCreativeMode)
-						{
-							world.playEvent(null, 2001, harvestTarget, Block.getStateId(state));
-						}
-					}
-				}
-				else
-				{
-					im.tryHarvestBlock(harvestTarget);
-				}
-			}
-
-			List<ItemStack> drops = MiningAssistEventHooks.captureDrops(false);
+			Set<ItemStack> drops = MiningAssistEventHooks.captureDrops(false);
 
 			for (ItemStack item : drops)
 			{
@@ -105,7 +83,7 @@ public class AditMiningExecutor implements IMiningAssistExecutor
 					int i = EntityXPOrb.getXPSplit(exp);
 					exp -= i;
 
-					world.spawnEntityInWorld(new EntityXPOrb(world, originPos.getX() + 0.5D, originPos.getY() + 0.5D, originPos.getZ() + 0.5D, i));
+					world.spawnEntity(new EntityXPOrb(world, originPos.getX() + 0.5D, originPos.getY() + 0.5D, originPos.getZ() + 0.5D, i));
 				}
 			}
 		}
@@ -133,12 +111,12 @@ public class AditMiningExecutor implements IMiningAssistExecutor
 
 		harvestTarget = null;
 
-		if (BlockPistonBase.getFacingFromEntity(originPos, player).getAxis() == Axis.Y)
+		if (EnumFacing.getDirectionFromEntityLiving(originPos, player).getAxis().isVertical())
 		{
 			return;
 		}
 
-		if (originPos.getY() == MathHelper.floor_double(player.posY + 0.5D))
+		if (originPos.getY() == MathHelper.floor(player.posY + 0.5D))
 		{
 			offer(originPos.up());
 		}
@@ -173,7 +151,7 @@ public class AditMiningExecutor implements IMiningAssistExecutor
 		{
 			ItemStack held = player.getHeldItemMainhand();
 
-			if (held != null)
+			if (!held.isEmpty())
 			{
 				return held.canHarvestBlock(state);
 			}

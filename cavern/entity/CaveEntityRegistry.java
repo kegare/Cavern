@@ -2,59 +2,50 @@ package cavern.entity;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 import cavern.core.Cavern;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class CaveEntityRegistry
 {
 	private static int entityId;
 
-	public static void registerEntity(Class<? extends Entity> entityClass, String entityName, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
+	public static void registerEntity(Class<? extends Entity> entityClass, String registryName, String entityName, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
 	{
-		EntityRegistry.registerModEntity(entityClass, entityName, entityId++, Cavern.instance, trackingRange, updateFrequency, sendsVelocityUpdates);
+		EntityRegistry.registerModEntity(new ResourceLocation(Cavern.MODID, registryName), entityClass, entityName, entityId++, Cavern.instance, trackingRange, updateFrequency, sendsVelocityUpdates);
 	}
 
-	public static void registerEntity(Class<? extends Entity> entityClass, String entityName, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates, int primaryColor, int secondaryColor)
+	public static void registerEntity(Class<? extends Entity> entityClass, String registryName, String entityName, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates, int primaryColor, int secondaryColor)
 	{
-		EntityRegistry.registerModEntity(entityClass, entityName, entityId++, Cavern.instance, trackingRange, updateFrequency, sendsVelocityUpdates, primaryColor, secondaryColor);
+		EntityRegistry.registerModEntity(new ResourceLocation(Cavern.MODID, registryName), entityClass, entityName, entityId++, Cavern.instance, trackingRange, updateFrequency, sendsVelocityUpdates, primaryColor, secondaryColor);
 	}
 
-	public static void registerMob(Class<? extends Entity> entityClass, String entityName)
+	public static void registerMob(Class<? extends Entity> entityClass, String registryName, String entityName)
 	{
-		registerEntity(entityClass, entityName, 128, 3, true);
+		registerEntity(entityClass, registryName, entityName, 128, 3, true);
 	}
 
-	public static void registerMob(Class<? extends Entity> entityClass, String entityName, int primaryColor, int secondaryColor)
+	public static void registerMob(Class<? extends Entity> entityClass, String registryName, String entityName, int primaryColor, int secondaryColor)
 	{
-		registerEntity(entityClass, entityName, 128, 3, true, primaryColor, secondaryColor);
+		registerEntity(entityClass, registryName, entityName, 128, 3, true, primaryColor, secondaryColor);
 	}
 
 	public static void registerEntities()
 	{
-		registerMob(EntityCavenicSkeleton.class, "CavenicSkeleton", 0xAAAAAA, 0xDDDDDD);
-		registerMob(EntityCavenicCreeper.class, "CavenicCreeper", 0xAAAAAA, 0x2E8B57);
-		registerMob(EntityCavenicZombie.class, "CavenicZombie", 0xAAAAAA, 0x00A0A0);
-		registerMob(EntityCavenicSpider.class, "CavenicSpider", 0xAAAAAA, 0x811F1F);
-		registerEntity(EntityAquaSquid.class, "Squid", 64, 3, true);
+		registerMob(EntityCavenicSkeleton.class, "cavenic_skeleton", "CavenicSkeleton", 0xAAAAAA, 0xDDDDDD);
+		registerMob(EntityCavenicCreeper.class, "cavenic_creeper", "CavenicCreeper", 0xAAAAAA, 0x2E8B57);
+		registerMob(EntityCavenicZombie.class, "cavenic_zombie", "CavenicZombie", 0xAAAAAA, 0x00A0A0);
+		registerMob(EntityCavenicSpider.class, "cavenic_spider", "CavenicSpider", 0xAAAAAA, 0x811F1F);
+		registerEntity(EntityAquaSquid.class, "squid", "Squid", 64, 3, true);
 	}
 
 	public static void addSpawns()
 	{
-		List<Biome> biomes = Lists.newArrayList();
-
-		for (Biome biome : Biome.REGISTRY)
-		{
-			if (biome != null)
-			{
-				biomes.add(biome);
-			}
-		}
-
+		List<Biome> biomes = ForgeRegistries.BIOMES.getValues();
 		Biome[] biomeArray = biomes.toArray(new Biome[biomes.size()]);
 
 		EntityRegistry.addSpawn(EntityCavenicSkeleton.class, 15, 1, 1, EnumCreatureType.MONSTER, biomeArray);

@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class EntityCavenicZombie extends EntityZombie
@@ -30,36 +29,6 @@ public class EntityCavenicZombie extends EntityZombie
 		getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(50.0D);
 		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(2.5D);
 		getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
-	}
-
-	@Override
-	public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack)
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isVillager()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isConverting()
-	{
-		return false;
-	}
-
-	@Override
-	protected void startConversion(int ticks) {}
-
-	@Override
-	protected void convertToVillager() {}
-
-	@Override
-	protected int getConversionTimeBoost()
-	{
-		return 0;
 	}
 
 	@Override
@@ -94,7 +63,7 @@ public class EntityCavenicZombie extends EntityZombie
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float damage)
 	{
-		if (source == DamageSource.fall)
+		if (source == DamageSource.FALL)
 		{
 			damage *= 0.35F;
 		}

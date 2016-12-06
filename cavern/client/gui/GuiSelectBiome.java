@@ -4,13 +4,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.RecursiveAction;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
@@ -33,6 +31,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.biome.Biome;
@@ -262,7 +261,7 @@ public class GuiSelectBiome extends GuiScreen
 				Block block = state.getBlock();
 				int meta = block.getMetaFromState(state);
 				ItemStack itemstack = new ItemStack(block, 1, meta);
-				boolean hasItem = itemstack.getItem() != null;
+				boolean hasItem = itemstack.getItem() != Items.AIR;
 
 				String text;
 
@@ -272,7 +271,7 @@ public class GuiSelectBiome extends GuiScreen
 				}
 				else
 				{
-					text = block.getRegistryName() + ":" + meta;;
+					text = block.getRegistryName() + ":" + meta;
 				}
 
 				info.add(TextFormatting.GRAY + I18n.format(Config.LANG_KEY + "select.biome.info.topBlock") + ": " + text);
@@ -281,7 +280,7 @@ public class GuiSelectBiome extends GuiScreen
 				block = state.getBlock();
 				meta = block.getMetaFromState(state);
 				itemstack = new ItemStack(block, 1, meta);
-				hasItem = itemstack.getItem() != null;
+				hasItem = itemstack.getItem() != Items.AIR;
 
 				if (hasItem)
 				{
@@ -297,13 +296,13 @@ public class GuiSelectBiome extends GuiScreen
 				info.add(TextFormatting.GRAY + I18n.format(Config.LANG_KEY + "select.biome.info.temperature") + ": " + biome.getTemperature());
 				info.add(TextFormatting.GRAY + I18n.format(Config.LANG_KEY + "select.biome.info.rainfall") + ": " + biome.getRainfall());
 
-				if (BiomeDictionary.isBiomeRegistered(biome))
+				if (BiomeDictionary.hasAnyType(biome))
 				{
 					Set<String> types = Sets.newTreeSet();
 
-					for (Type type : BiomeDictionary.getTypesForBiome(biome))
+					for (Type type : BiomeDictionary.getTypes(biome))
 					{
-						types.add(type.name());
+						types.add(type.getName());
 					}
 
 					info.add(TextFormatting.GRAY + I18n.format(Config.LANG_KEY + "select.biome.info.type") + ": " + Joiner.on(", ").skipNulls().join(types));
@@ -589,39 +588,31 @@ public class GuiSelectBiome extends GuiScreen
 					Block block = state.getBlock();
 					int meta = block.getMetaFromState(state);
 					ItemStack itemstack = new ItemStack(block, 1, meta);
-					boolean hasItem = itemstack.getItem() != null;
 
-					if (hasItem)
+					try
 					{
-						try
-						{
-							GlStateManager.enableRescaleNormal();
-							RenderHelper.enableGUIStandardItemLighting();
-							itemRender.renderItemIntoGUI(itemstack, width / 2 + 70, par3 - 1);
-							RenderHelper.disableStandardItemLighting();
-							GlStateManager.disableRescaleNormal();
-						}
-						catch (Throwable e) {}
+						GlStateManager.enableRescaleNormal();
+						RenderHelper.enableGUIStandardItemLighting();
+						itemRender.renderItemIntoGUI(itemstack, width / 2 + 70, par3 - 1);
+						RenderHelper.disableStandardItemLighting();
+						GlStateManager.disableRescaleNormal();
 					}
+					catch (Throwable e) {}
 
 					state = biome.fillerBlock;
 					block = state.getBlock();
 					meta = block.getMetaFromState(state);
 					itemstack = new ItemStack(block, 1, meta);
-					hasItem = itemstack.getItem() != null;
 
-					if (hasItem)
+					try
 					{
-						try
-						{
-							GlStateManager.enableRescaleNormal();
-							RenderHelper.enableGUIStandardItemLighting();
-							itemRender.renderItemIntoGUI(itemstack, width / 2 + 90, par3 - 1);
-							RenderHelper.disableStandardItemLighting();
-							GlStateManager.disableRescaleNormal();
-						}
-						catch (Throwable e) {}
+						GlStateManager.enableRescaleNormal();
+						RenderHelper.enableGUIStandardItemLighting();
+						itemRender.renderItemIntoGUI(itemstack, width / 2 + 90, par3 - 1);
+						RenderHelper.disableStandardItemLighting();
+						GlStateManager.disableRescaleNormal();
 					}
+					catch (Throwable e) {}
 				}
 			}
 		}
@@ -647,52 +638,37 @@ public class GuiSelectBiome extends GuiScreen
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(new RecursiveAction()
+			CaveUtils.getPool().execute(() ->
 			{
-				@Override
-				protected void compute()
+				List<Biome> result;
+
+				if (Strings.isNullOrEmpty(filter))
 				{
-					List<Biome> result;
-
-					if (Strings.isNullOrEmpty(filter))
+					result = biomes;
+				}
+				else if (filter.equals("selected"))
+				{
+					result = Lists.newArrayList(selected);
+				}
+				else
+				{
+					if (!filterCache.containsKey(filter))
 					{
-						result = biomes;
-					}
-					else if (filter.equals("selected"))
-					{
-						result = Lists.newArrayList(selected);
-					}
-					else
-					{
-						if (!filterCache.containsKey(filter))
-						{
-							filterCache.put(filter, Lists.newArrayList(Collections2.filter(biomes, new BiomeFilter(filter))));
-						}
-
-						result = filterCache.get(filter);
+						filterCache.put(filter, Lists.newArrayList(Collections2.filter(biomes, e -> filterMatch(e, filter))));
 					}
 
-					if (!contents.equals(result))
-					{
-						contents.clear();
-						contents.addAll(result);
-					}
+					result = filterCache.get(filter);
+				}
+
+				if (!contents.equals(result))
+				{
+					contents.clear();
+					contents.addAll(result);
 				}
 			});
 		}
-	}
 
-	public static class BiomeFilter implements Predicate<Biome>
-	{
-		private final String filter;
-
-		public BiomeFilter(String filter)
-		{
-			this.filter = filter;
-		}
-
-		@Override
-		public boolean apply(Biome biome)
+		protected boolean filterMatch(Biome biome, String filter)
 		{
 			return CaveFilters.biomeFilter(biome, filter);
 		}

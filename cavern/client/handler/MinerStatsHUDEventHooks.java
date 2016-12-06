@@ -2,14 +2,13 @@ package cavern.client.handler;
 
 import cavern.api.CavernAPI;
 import cavern.api.IMinerStats;
-import cavern.client.ClientProxy;
+import cavern.client.CaveRenderingRegistry;
 import cavern.config.GeneralConfig;
 import cavern.config.MiningAssistConfig;
 import cavern.config.property.ConfigDisplayPos;
 import cavern.miningassist.MiningAssist;
 import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
@@ -47,7 +46,7 @@ public class MinerStatsHUDEventHooks
 			return false;
 		}
 
-		if (!CavernAPI.dimension.isEntityInCaves(mc.thePlayer))
+		if (!CavernAPI.dimension.isEntityInCaves(mc.player))
 		{
 			return false;
 		}
@@ -62,12 +61,12 @@ public class MinerStatsHUDEventHooks
 			return true;
 		}
 
-		if (mc.thePlayer.capabilities.isCreativeMode || mc.gameSettings.advancedItemTooltips)
+		if (mc.player.capabilities.isCreativeMode || mc.gameSettings.advancedItemTooltips)
 		{
 			return true;
 		}
 
-		return GeneralConfig.isMiningPointItem(mc.thePlayer.getHeldItemMainhand()) || GeneralConfig.isMiningPointItem(mc.thePlayer.getHeldItemOffhand());
+		return GeneralConfig.isMiningPointItem(mc.player.getHeldItemMainhand()) || GeneralConfig.isMiningPointItem(mc.player.getHeldItemOffhand());
 	}
 
 	protected void setDisplayPos(ConfigDisplayPos.Type type, Minecraft mc, int scaledWidth, int scaledHeight)
@@ -78,7 +77,7 @@ public class MinerStatsHUDEventHooks
 				posX = scaledWidth - 20;
 				posY = 5;
 
-				if (!mc.thePlayer.getActivePotionEffects().isEmpty())
+				if (!mc.player.getActivePotionEffects().isEmpty())
 				{
 					posY = 30;
 				}
@@ -166,7 +165,7 @@ public class MinerStatsHUDEventHooks
 		ScaledResolution resolution = event.getResolution();
 		ConfigDisplayPos.Type displayType = getDisplayType();
 
-		IMinerStats stats = MinerStats.get(mc.thePlayer);
+		IMinerStats stats = MinerStats.get(mc.player);
 		MinerRank minerRank = MinerRank.get(stats.getRank());
 		MiningAssist miningAssist = MiningAssist.get(stats.getMiningAssist());
 
@@ -190,24 +189,14 @@ public class MinerStatsHUDEventHooks
 
 		if (MinerStats.lastMineTime > 0 && processTime < 2000L && MinerStats.lastMine != null && MinerStats.lastMinePoint != 0)
 		{
-			Block block = MinerStats.lastMine.getBlock();
+			ItemStack item = new ItemStack(CaveRenderingRegistry.getRenderBlock(MinerStats.lastMine.getBlock()), 1, MinerStats.lastMine.getMeta());
 
-			if (ClientProxy.RENDER_BLOCK_MAP.containsKey(block))
-			{
-				block = ClientProxy.RENDER_BLOCK_MAP.get(block);
-			}
+			RenderHelper.enableGUIStandardItemLighting();
+			renderItem.renderItemIntoGUI(item, x, y);
+			renderItem.renderItemOverlayIntoGUI(renderer, item, x, y, Integer.toString(MinerStats.lastMinePoint));
+			RenderHelper.disableStandardItemLighting();
 
-			ItemStack item = new ItemStack(block, 1, MinerStats.lastMine.getMeta());
-
-			if (item != null && item.getItem() != null)
-			{
-				RenderHelper.enableGUIStandardItemLighting();
-				renderItem.renderItemIntoGUI(item, x, y);
-				renderItem.renderItemOverlayIntoGUI(renderer, item, x, y, Integer.toString(MinerStats.lastMinePoint));
-				RenderHelper.disableStandardItemLighting();
-
-				flag = true;
-			}
+			flag = true;
 		}
 
 		if (flag)
@@ -215,7 +204,7 @@ public class MinerStatsHUDEventHooks
 			x += displayType.isLeft() ? 20 : -20;
 		}
 
-		renderItem.renderItemIntoGUI(minerRank.getRenderItemStack(), x, y);
+		renderItem.renderItemIntoGUI(minerRank.getItemStack(), x, y);
 
 		GlStateManager.pushMatrix();
 		GlStateManager.disableDepth();

@@ -1,7 +1,6 @@
 package cavern.config;
 
 import java.io.File;
-import java.util.concurrent.RecursiveAction;
 
 import org.apache.logging.log4j.Level;
 
@@ -17,6 +16,8 @@ public class Config
 	public static final String LANG_KEY = "cavern.config.";
 
 	protected static final Side SIDE = FMLLaunchHandler.side();
+
+	public static boolean highDefault;
 
 	public static File getConfigDir()
 	{
@@ -103,13 +104,9 @@ public class Config
 	{
 		if (config.hasChanged())
 		{
-			CaveUtils.getPool().execute(new RecursiveAction()
+			CaveUtils.getPool().execute(() ->
 			{
-				@Override
-				protected void compute()
-				{
-					config.save();
-				}
+				config.save();
 			});
 		}
 	}

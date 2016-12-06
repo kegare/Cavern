@@ -82,7 +82,8 @@ public class CavebornEventHooks
 							EntityItem entityItem = new EntityItem(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, new ItemStack(Blocks.TORCH, 64));
 
 							entityItem.setPickupDelay(85);
-							world.spawnEntityInWorld(entityItem);
+
+							world.spawnEntity(entityItem);
 						}
 					});
 				}

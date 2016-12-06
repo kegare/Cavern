@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.RecursiveAction;
 
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -14,7 +13,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
@@ -35,6 +33,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -772,7 +771,7 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 			Block block = blockMeta.getBlock();
 			int meta = blockMeta.getMeta();
 			ItemStack itemstack = new ItemStack(block, 1, meta);
-			boolean hasItem = itemstack.getItem() != null;
+			boolean hasItem = itemstack.getItem() != Items.AIR;
 
 			String text = null;
 
@@ -818,19 +817,16 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 
 			if (detailInfo.isChecked())
 			{
-				if (hasItem)
+				try
 				{
-					try
-					{
-						GlStateManager.enableRescaleNormal();
-						RenderHelper.enableGUIStandardItemLighting();
-						itemRender.renderItemIntoGUI(itemstack, width / 2 - 100, par3 + 1);
-						itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 - 100, par3 + 1, Integer.toString(entry.getPoint()));
-						RenderHelper.disableStandardItemLighting();
-						GlStateManager.disableRescaleNormal();
-					}
-					catch (Throwable e) {}
+					GlStateManager.enableRescaleNormal();
+					RenderHelper.enableGUIStandardItemLighting();
+					itemRender.renderItemIntoGUI(itemstack, width / 2 - 100, par3 + 1);
+					itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 - 100, par3 + 1, Integer.toString(entry.getPoint()));
+					RenderHelper.disableStandardItemLighting();
+					GlStateManager.disableRescaleNormal();
 				}
+				catch (Throwable e) {}
 			}
 		}
 
@@ -865,38 +861,39 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 
 		protected void setFilter(final String filter)
 		{
-			CaveUtils.getPool().execute(new RecursiveAction()
+			CaveUtils.getPool().execute(() ->
 			{
-				@Override
-				protected void compute()
+				List<PointEntry> result;
+
+				if (Strings.isNullOrEmpty(filter))
 				{
-					List<PointEntry> result;
-
-					if (Strings.isNullOrEmpty(filter))
+					result = points;
+				}
+				else if (filter.equals("selected"))
+				{
+					result = Lists.newArrayList(selected);
+				}
+				else
+				{
+					if (!filterCache.containsKey(filter))
 					{
-						result = points;
-					}
-					else if (filter.equals("selected"))
-					{
-						result = Lists.newArrayList(selected);
-					}
-					else
-					{
-						if (!filterCache.containsKey(filter))
-						{
-							filterCache.put(filter, Lists.newArrayList(Collections2.filter(points, new PointFilter(filter))));
-						}
-
-						result = filterCache.get(filter);
+						filterCache.put(filter, Lists.newArrayList(Collections2.filter(points, e -> filterMatch(e, filter))));
 					}
 
-					if (!contents.equals(result))
-					{
-						contents.clear();
-						contents.addAll(result);
-					}
+					result = filterCache.get(filter);
+				}
+
+				if (!contents.equals(result))
+				{
+					contents.clear();
+					contents.addAll(result);
 				}
 			});
+		}
+
+		protected boolean filterMatch(PointEntry entry, String filter)
+		{
+			return CaveFilters.blockFilter(entry.getBlockMeta(), filter);
 		}
 
 		@Override
@@ -971,22 +968,6 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 		public String toString()
 		{
 			return blockMeta.getBlockName() + ":" + blockMeta.getMetaString() + "," + point;
-		}
-	}
-
-	public static class PointFilter implements Predicate<PointEntry>
-	{
-		private final String filter;
-
-		public PointFilter(String filter)
-		{
-			this.filter = filter;
-		}
-
-		@Override
-		public boolean apply(PointEntry vein)
-		{
-			return CaveFilters.blockFilter(vein.getBlockMeta(), filter);
 		}
 	}
 }

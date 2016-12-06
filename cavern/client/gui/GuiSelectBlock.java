@@ -5,11 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.RecursiveAction;
 
 import org.lwjgl.input.Keyboard;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
@@ -31,8 +29,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.ArrayEntry;
@@ -47,7 +47,7 @@ public class GuiSelectBlock extends GuiScreen
 
 	static
 	{
-		List<ItemStack> list = Lists.newArrayList();
+		NonNullList<ItemStack> list = NonNullList.create();
 
 		for (Block block : Block.REGISTRY)
 		{
@@ -71,18 +71,15 @@ public class GuiSelectBlock extends GuiScreen
 				}
 				else for (ItemStack itemstack : list)
 				{
-					if (itemstack != null && itemstack.getItem() != null)
+					Block sub = Block.getBlockFromItem(itemstack.getItem());
+					int meta = itemstack.getItemDamage();
+
+					if (meta < 0 || meta > 15 || sub == Blocks.AIR || sub.hasTileEntity(sub.getStateFromMeta(meta)))
 					{
-						Block sub = Block.getBlockFromItem(itemstack.getItem());
-						int meta = itemstack.getItemDamage();
-
-						if (meta < 0 || meta > 15 || sub == Blocks.AIR || sub.hasTileEntity(sub.getStateFromMeta(meta)))
-						{
-							continue;
-						}
-
-						BLOCKS.addIfAbsent(new BlockMeta(sub, meta));
+						continue;
 					}
+
+					BLOCKS.addIfAbsent(new BlockMeta(sub, meta));
 				}
 			}
 			catch (Throwable e) {}
@@ -600,7 +597,7 @@ public class GuiSelectBlock extends GuiScreen
 				return null;
 			}
 
-			if (itemstack == null)
+			if (itemstack.isEmpty())
 			{
 				itemstack = new ItemStack(blockMeta.getBlock(), 1, blockMeta.getMeta());
 			}
@@ -613,7 +610,7 @@ public class GuiSelectBlock extends GuiScreen
 				{
 					name = blockMeta.getName();
 				}
-				else if (itemstack.getItem() != null)
+				else if (itemstack.getItem() != Items.AIR)
 				{
 					switch (nameType)
 					{
@@ -647,7 +644,7 @@ public class GuiSelectBlock extends GuiScreen
 
 		public String getBlockMetaTypeName(BlockMeta blockMeta)
 		{
-			return getBlockMetaTypeName(blockMeta, null);
+			return getBlockMetaTypeName(blockMeta, ItemStack.EMPTY);
 		}
 
 		@Override
@@ -669,8 +666,6 @@ public class GuiSelectBlock extends GuiScreen
 			Block block = blockMeta.getBlock();
 			int meta = blockMeta.getMeta();
 			ItemStack itemstack = new ItemStack(block, 1, meta);
-			boolean hasItem = itemstack.getItem() != null;
-
 			String name = getBlockMetaTypeName(blockMeta, itemstack);
 
 			if (!Strings.isNullOrEmpty(name))
@@ -678,7 +673,7 @@ public class GuiSelectBlock extends GuiScreen
 				drawCenteredString(fontRendererObj, name, width / 2, par3 + 1, 0xFFFFFF);
 			}
 
-			if (detailInfo.isChecked() && hasItem)
+			if (detailInfo.isChecked())
 			{
 				try
 				{
@@ -718,52 +713,37 @@ public class GuiSelectBlock extends GuiScreen
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(new RecursiveAction()
+			CaveUtils.getPool().execute(() ->
 			{
-				@Override
-				protected void compute()
+				List<BlockMeta> result;
+
+				if (Strings.isNullOrEmpty(filter))
 				{
-					List<BlockMeta> result;
-
-					if (Strings.isNullOrEmpty(filter))
+					result = entries;
+				}
+				else if (filter.equals("selected"))
+				{
+					result = Lists.newArrayList(selected);
+				}
+				else
+				{
+					if (!filterCache.containsKey(filter))
 					{
-						result = entries;
-					}
-					else if (filter.equals("selected"))
-					{
-						result = Lists.newArrayList(selected);
-					}
-					else
-					{
-						if (!filterCache.containsKey(filter))
-						{
-							filterCache.put(filter, Lists.newArrayList(Collections2.filter(entries, new BlockFilter(filter))));
-						}
-
-						result = filterCache.get(filter);
+						filterCache.put(filter, Lists.newArrayList(Collections2.filter(entries, e -> filterMatch(e, filter))));
 					}
 
-					if (!contents.equals(result))
-					{
-						contents.clear();
-						contents.addAll(result);
-					}
+					result = filterCache.get(filter);
+				}
+
+				if (!contents.equals(result))
+				{
+					contents.clear();
+					contents.addAll(result);
 				}
 			});
 		}
-	}
 
-	public static class BlockFilter implements Predicate<BlockMeta>
-	{
-		private final String filter;
-
-		public BlockFilter(String filter)
-		{
-			this.filter = filter;
-		}
-
-		@Override
-		public boolean apply(BlockMeta blockMeta)
+		protected boolean filterMatch(BlockMeta blockMeta, String filter)
 		{
 			return CaveFilters.blockFilter(blockMeta, filter);
 		}

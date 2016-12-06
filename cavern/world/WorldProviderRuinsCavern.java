@@ -19,9 +19,9 @@ public class WorldProviderRuinsCavern extends WorldProviderCavern
 	public static final List<WeightedItem> RUINS_CHEST_ITEMS = Lists.newArrayList();
 
 	@Override
-	protected void createBiomeProvider()
+	protected void init()
 	{
-		super.createBiomeProvider();
+		super.init();
 
 		biomeProvider = new BiomeProviderSingle(Biomes.PLAINS);
 	}
@@ -29,7 +29,7 @@ public class WorldProviderRuinsCavern extends WorldProviderCavern
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkProviderRuinsCavern(worldObj);
+		return new ChunkProviderRuinsCavern(world);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class WorldProviderRuinsCavern extends WorldProviderCavern
 	@Override
 	public long getSeed()
 	{
-		return worldObj.getWorldInfo().getSeed();
+		return world.getWorldInfo().getSeed();
 	}
 
 	@Override
