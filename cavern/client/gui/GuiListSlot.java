@@ -50,7 +50,7 @@ public abstract class GuiListSlot extends GuiSlot
 
 	private static int panoramaTimer;
 
-	private static final Random random = new Random();
+	private static final Random RANDOM = new Random();
 
 	public GuiListSlot(Minecraft mc, int width, int height, int top, int bottom, int slotHeight)
 	{
@@ -68,7 +68,7 @@ public abstract class GuiListSlot extends GuiSlot
 		}
 		else if (currentPanoramaPaths == null)
 		{
-			currentPanoramaPaths = panoramaPaths.get(random.nextInt(panoramaPaths.size()), null);
+			currentPanoramaPaths = panoramaPaths.get(RANDOM.nextInt(panoramaPaths.size()), null);
 		}
 
 		return currentPanoramaPaths;

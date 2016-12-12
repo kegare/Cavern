@@ -94,7 +94,7 @@ public class MiningAssistEventHooks
 		{
 			captureExps = false;
 
-			return EXPS.parallelStream().filter(i -> i != null).mapToInt(i -> i.intValue()).sum();
+			return EXPS.stream().filter(i -> i != null).mapToInt(i -> i.intValue()).sum();
 		}
 	}
 

@@ -192,6 +192,7 @@ public class BlockCave extends Block
 		switch (state.getValue(VARIANT))
 		{
 			case AQUAMARINE_ORE:
+			case HEXCITE_ORE:
 				return CaveItems.CAVE_ITEM;
 			default:
 		}
@@ -206,6 +207,8 @@ public class BlockCave extends Block
 		{
 			case AQUAMARINE_ORE:
 				return ItemCave.EnumType.AQUAMARINE.getItemDamage();
+			case HEXCITE_ORE:
+				return ItemCave.EnumType.HEXCITE.getItemDamage();
 			default:
 		}
 
@@ -228,6 +231,7 @@ public class BlockCave extends Block
 			switch (type)
 			{
 				case AQUAMARINE_ORE:
+				case HEXCITE_ORE:
 					return ret * (Math.max(random.nextInt(fortune + 2) - 1, 0) + 1);
 				default:
 			}
@@ -244,6 +248,8 @@ public class BlockCave extends Block
 			case AQUAMARINE_ORE:
 			case RANDOMITE_ORE:
 				return MathHelper.getInt(RANDOM, 1, 3);
+			case HEXCITE_ORE:
+				return MathHelper.getInt(RANDOM, 3, 5);
 			default:
 		}
 

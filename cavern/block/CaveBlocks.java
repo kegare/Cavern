@@ -1,5 +1,10 @@
 package cavern.block;
 
+import java.util.Collections;
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 import cavern.config.GeneralConfig;
 import cavern.item.CaveItems;
 import cavern.item.ItemAcresia;
@@ -37,6 +42,8 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class CaveBlocks
 {
+	private static final List<Block> BLOCKS = Lists.newArrayList();
+
 	public static final BlockPortalCavern CAVERN_PORTAL = new BlockPortalCavern();
 	public static final BlockPortalAquaCavern AQUA_CAVERN_PORTAL = new BlockPortalAquaCavern();
 	public static final BlockPortalCaveland CAVELAND_PORTAL = new BlockPortalCaveland();
@@ -49,34 +56,46 @@ public class CaveBlocks
 	public static final BlockSaplingPerverted PERVERTED_SAPLING = new BlockSaplingPerverted();
 	public static final BlockSlipperyIce SLIPPERY_ICE = new BlockSlipperyIce();
 
+	public static List<Block> getBlocks()
+	{
+		return Collections.unmodifiableList(BLOCKS);
+	}
+
+	public static void registerBlock(IForgeRegistry<Block> registry, Block block)
+	{
+		BLOCKS.add(block);
+
+		registry.register(block);
+	}
+
 	public static void registerBlocks(IForgeRegistry<Block> registry)
 	{
-		registry.register(CAVERN_PORTAL.setRegistryName("cavern_portal"));
-		registry.register(AQUA_CAVERN_PORTAL.setRegistryName("aqua_cavern_portal"));
-		registry.register(CAVELAND_PORTAL.setRegistryName("caveland_portal"));
-		registry.register(ICE_CAVERN_PORTAL.setRegistryName("ice_cavern_portal"));
-		registry.register(RUINS_CAVERN_PORTAL.setRegistryName("ruins_cavern_portal"));
-		registry.register(CAVE_BLOCK.setRegistryName("cave_block"));
-		registry.register(ACRESIA.setRegistryName("acresia"));
-		registry.register(PERVERTED_LOG.setRegistryName("perverted_log"));
-		registry.register(PERVERTED_LEAVES.setRegistryName("perverted_leaves"));
-		registry.register(PERVERTED_SAPLING.setRegistryName("perverted_sapling"));
-		registry.register(SLIPPERY_ICE.setRegistryName("slippery_ice"));
+		registerBlock(registry, CAVERN_PORTAL.setRegistryName("cavern_portal"));
+		registerBlock(registry, AQUA_CAVERN_PORTAL.setRegistryName("aqua_cavern_portal"));
+		registerBlock(registry, CAVELAND_PORTAL.setRegistryName("caveland_portal"));
+		registerBlock(registry, ICE_CAVERN_PORTAL.setRegistryName("ice_cavern_portal"));
+		registerBlock(registry, RUINS_CAVERN_PORTAL.setRegistryName("ruins_cavern_portal"));
+		registerBlock(registry, CAVE_BLOCK.setRegistryName("cave_block"));
+		registerBlock(registry, ACRESIA.setRegistryName("acresia"));
+		registerBlock(registry, PERVERTED_LOG.setRegistryName("perverted_log"));
+		registerBlock(registry, PERVERTED_LEAVES.setRegistryName("perverted_leaves"));
+		registerBlock(registry, PERVERTED_SAPLING.setRegistryName("perverted_sapling"));
+		registerBlock(registry, SLIPPERY_ICE.setRegistryName("slippery_ice"));
 	}
 
 	public static void registerItemBlocks(IForgeRegistry<Item> registry)
 	{
-		registry.register(new ItemPortalCave(CAVERN_PORTAL));
-		registry.register(new ItemPortalCave(AQUA_CAVERN_PORTAL));
-		registry.register(new ItemPortalCave(CAVELAND_PORTAL));
-		registry.register(new ItemPortalCave(ICE_CAVERN_PORTAL));
-		registry.register(new ItemPortalCave(RUINS_CAVERN_PORTAL));
-		registry.register(new ItemBlockCave(CAVE_BLOCK));
-		registry.register(new ItemAcresia(ACRESIA));
-		registry.register(new ItemBlockPerverted(PERVERTED_LOG, Blocks.LOG));
-		registry.register(new ItemBlockPerverted(PERVERTED_LEAVES, Blocks.LEAVES));
-		registry.register(new ItemBlockPerverted(PERVERTED_SAPLING, Blocks.SAPLING));
-		registry.register(new ItemBlock(SLIPPERY_ICE).setRegistryName(SLIPPERY_ICE.getRegistryName()));
+		CaveItems.registerItem(registry, new ItemPortalCave(CAVERN_PORTAL));
+		CaveItems.registerItem(registry, new ItemPortalCave(AQUA_CAVERN_PORTAL));
+		CaveItems.registerItem(registry, new ItemPortalCave(CAVELAND_PORTAL));
+		CaveItems.registerItem(registry, new ItemPortalCave(ICE_CAVERN_PORTAL));
+		CaveItems.registerItem(registry, new ItemPortalCave(RUINS_CAVERN_PORTAL));
+		CaveItems.registerItem(registry, new ItemBlockCave(CAVE_BLOCK));
+		CaveItems.registerItem(registry, new ItemAcresia(ACRESIA));
+		CaveItems.registerItem(registry, new ItemBlockPerverted(PERVERTED_LOG, Blocks.LOG));
+		CaveItems.registerItem(registry, new ItemBlockPerverted(PERVERTED_LEAVES, Blocks.LEAVES));
+		CaveItems.registerItem(registry, new ItemBlockPerverted(PERVERTED_SAPLING, Blocks.SAPLING));
+		CaveItems.registerItem(registry, new ItemBlock(SLIPPERY_ICE).setRegistryName(SLIPPERY_ICE.getRegistryName()));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -163,9 +182,12 @@ public class CaveBlocks
 	public static void registerOreDicts()
 	{
 		OreDictionary.registerOre("oreAquamarine", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.AQUAMARINE_ORE.getMetadata()));
+		OreDictionary.registerOre("blockAquamarine", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.AQUAMARINE_BLOCK.getMetadata()));
 		OreDictionary.registerOre("oreMagnite", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.MAGNITE_ORE.getMetadata()));
+		OreDictionary.registerOre("blockMagnite", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.MAGNITE_BLOCK.getMetadata()));
 		OreDictionary.registerOre("oreRandomite", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.RANDOMITE_ORE.getMetadata()));
 		OreDictionary.registerOre("oreHexcite", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_ORE.getMetadata()));
+		OreDictionary.registerOre("blockHexcite", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_BLOCK.getMetadata()));
 		OreDictionary.registerOre("treeLeaves", new ItemStack(PERVERTED_LEAVES, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("treeSapling", new ItemStack(PERVERTED_SAPLING, 1, OreDictionary.WILDCARD_VALUE));
 	}
