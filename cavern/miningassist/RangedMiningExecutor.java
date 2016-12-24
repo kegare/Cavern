@@ -29,7 +29,7 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 	private final BlockPos originPos;
 
 	private IBlockState originState;
-	private int range;
+	private int rowRange, columnRange;
 
 	private Deque<BlockPos> harvestTargets;
 
@@ -39,7 +39,8 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 		this.player = player;
 		this.originPos = origin;
 		this.originState = target;
-		this.range = 1;
+		this.rowRange = 1;
+		this.columnRange = 1;
 	}
 
 	@Override
@@ -53,16 +54,27 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 		return MiningAssistConfig.rangedTargetBlocks.getBlocks();
 	}
 
-	public int getRange()
+	public int getRowRange()
 	{
-		return range;
+		return rowRange;
+	}
+
+	public int getColumnRange()
+	{
+		return columnRange;
+	}
+
+	public RangedMiningExecutor setRange(int row, int column)
+	{
+		rowRange = row;
+		columnRange = column;
+
+		return this;
 	}
 
 	public RangedMiningExecutor setRange(int amount)
 	{
-		range = amount;
-
-		return this;
+		return setRange(amount, amount);
 	}
 
 	@Override
@@ -156,9 +168,9 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 
 	protected void checkX()
 	{
-		for (int i = -range; i <= range; ++i)
+		for (int i = -columnRange; i <= columnRange; ++i)
 		{
-			for (int j = -range; j <= range; ++j)
+			for (int j = -rowRange; j <= rowRange; ++j)
 			{
 				offer(originPos.add(0, i, j));
 			}
@@ -167,9 +179,9 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 
 	protected void checkY()
 	{
-		for (int i = -range; i <= range; ++i)
+		for (int i = -rowRange; i <= rowRange; ++i)
 		{
-			for (int j = -range; j <= range; ++j)
+			for (int j = -columnRange; j <= columnRange; ++j)
 			{
 				offer(originPos.add(i, 0, j));
 			}
@@ -178,9 +190,9 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 
 	protected void checkZ()
 	{
-		for (int i = -range; i <= range; ++i)
+		for (int i = -rowRange; i <= rowRange; ++i)
 		{
-			for (int j = -range; j <= range; ++j)
+			for (int j = -columnRange; j <= columnRange; ++j)
 			{
 				offer(originPos.add(i, j, 0));
 			}
@@ -201,7 +213,7 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 	{
 		IBlockState state = world.getBlockState(target);
 
-		if (state.getBlock().isAir(state, world, target))
+		if (state.getBlock().isAir(state, world, target) || state.getBlockHardness(world, target) < 0.0F)
 		{
 			return false;
 		}

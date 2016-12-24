@@ -76,7 +76,7 @@ public class CapabilityPortalCache implements ICapabilitySerializable<NBTTagComp
 					instance.readFromNBT((NBTTagCompound)nbt);
 				}
 			},
-			() -> new PortalCache()
+			PortalCache::new
 		);
 	}
 }

@@ -145,6 +145,7 @@ public class MiningAssistEventHooks
 		return false;
 	}
 
+	@Nullable
 	public static IMiningAssistExecutor createExecutor(@Nullable MiningAssist type, World world, EntityPlayer player, BlockPos origin, @Nullable IBlockState target)
 	{
 		if (type == null)
@@ -217,7 +218,10 @@ public class MiningAssistEventHooks
 				BlockPos pos = event.getPos();
 				IMiningAssistExecutor executor = createExecutor(null, world, player, pos, state);
 
-				executor.execute();
+				if (executor != null)
+				{
+					executor.execute();
+				}
 			}
 		}
 	}
@@ -257,6 +261,12 @@ public class MiningAssistEventHooks
 			}
 
 			IMiningAssistExecutor executor = createExecutor(null, player.world, player, pos, state);
+
+			if (executor == null)
+			{
+				return;
+			}
+
 			MinerRank rank = MinerRank.get(MinerStats.get(player).getRank());
 			float speed = event.getNewSpeed();
 			float power = rank.getBoost() * 1.7145F;

@@ -35,7 +35,7 @@ public interface IMiningAssistExecutor
 			{
 				if (!player.capabilities.isCreativeMode)
 				{
-					world.playEvent(null, 2001, pos, Block.getStateId(state));
+					world.playEvent(2001, pos, Block.getStateId(state));
 				}
 
 				return true;

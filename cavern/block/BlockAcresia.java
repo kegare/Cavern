@@ -11,7 +11,6 @@ import cavern.item.ItemAcresia;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockFarmland;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -108,7 +107,7 @@ public class BlockAcresia extends BlockCrops
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {getAgeProperty()});
+		return new BlockStateContainer(this, getAgeProperty());
 	}
 
 	@Override

@@ -76,7 +76,7 @@ public class CapabilityIceEquipment implements ICapabilitySerializable<NBTTagCom
 					instance.readFromNBT((NBTTagCompound)nbt);
 				}
 			},
-			() -> new IceEquipment()
+			IceEquipment::new
 		);
 	}
 }

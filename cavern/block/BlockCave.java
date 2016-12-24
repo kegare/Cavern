@@ -10,18 +10,19 @@ import cavern.core.CaveAchievements;
 import cavern.core.Cavern;
 import cavern.item.CaveItems;
 import cavern.item.ItemCave;
+import cavern.util.CaveUtils;
 import cavern.util.WeightedItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,6 +36,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -56,7 +58,7 @@ public class BlockCave extends Block
 	@Override
 	protected BlockStateContainer createBlockState()
 	{
-		return new BlockStateContainer(this, new IProperty[] {VARIANT});
+		return new BlockStateContainer(this, VARIANT);
 	}
 
 	@Override
@@ -65,40 +67,50 @@ public class BlockCave extends Block
 		return getDefaultState().withProperty(VARIANT, EnumType.byMetadata(meta));
 	}
 
+	public EnumType getType(IBlockState state)
+	{
+		if (state == null || state.getBlock() != this || state.getPropertyKeys().isEmpty())
+		{
+			state = getDefaultState();
+		}
+
+		return state.getValue(VARIANT);
+	}
+
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(VARIANT).getMetadata();
+		return getType(state).getMetadata();
 	}
 
 	@Override
 	public MapColor getMapColor(IBlockState state)
 	{
-		return state.getValue(VARIANT).getMapColor();
+		return getType(state).getMapColor();
 	}
 
 	@Override
 	public Material getMaterial(IBlockState state)
 	{
-		return state.getValue(VARIANT).getMaterial();
+		return getType(state).getMaterial();
 	}
 
 	@Override
 	public SoundType getSoundType(IBlockState state, World world, BlockPos pos, Entity entity)
 	{
-		return state.getValue(VARIANT).getSoundType();
+		return getType(state).getSoundType();
 	}
 
 	@Override
 	public float getBlockHardness(IBlockState state, World world, BlockPos pos)
 	{
-		return state.getValue(VARIANT).getBlockHardness();
+		return getType(state).getBlockHardness();
 	}
 
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, Entity exploder, Explosion explosion)
 	{
-		return world.getBlockState(pos).getValue(VARIANT).getBlockHardness() * 5.0F;
+		return getType(world.getBlockState(pos)).getBlockHardness() * 5.0F;
 	}
 
 	@Override
@@ -110,7 +122,7 @@ public class BlockCave extends Block
 	@Override
 	public int getHarvestLevel(IBlockState state)
 	{
-		return state.getValue(VARIANT).getHarvestLevel();
+		return getType(state).getHarvestLevel();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -128,11 +140,13 @@ public class BlockCave extends Block
 	{
 		super.dropBlockAsItemWithChance(world, pos, state, chance, fortune);
 
-		switch (state.getValue(VARIANT))
+		if (!world.isRemote && !world.restoringBlockSnapshots)
 		{
-			case RANDOMITE_ORE:
-				if (!world.isRemote)
-				{
+			EntityPlayer player = harvesters.get();
+
+			switch (getType(state))
+			{
+				case RANDOMITE_ORE:
 					WeightedItem randomItem = WeightedRandom.getRandomItem(RANDOM, RANDOMITE_ITEMS);
 
 					if (randomItem == null)
@@ -140,10 +154,19 @@ public class BlockCave extends Block
 						break;
 					}
 
-					ItemStack item = randomItem.getItem();
-					EntityPlayer player = harvesters.get();
+					ItemStack stack = randomItem.getItem();
 
-					if (item.isEmpty() || RANDOM.nextInt(10) == 0)
+					if (RANDOM.nextDouble() <= 0.01D)
+					{
+						Item item = CaveUtils.getRandomItem(ForgeRegistries.ITEMS.getValues(), RANDOM);
+
+						if (item != null)
+						{
+							stack = new ItemStack(item);
+						}
+					}
+
+					if (stack.isEmpty() || RANDOM.nextInt(10) == 0)
 					{
 						if (player != null)
 						{
@@ -152,22 +175,18 @@ public class BlockCave extends Block
 					}
 					else
 					{
-						spawnAsEntity(world, pos, item);
+						spawnAsEntity(world, pos, stack);
 					}
 
 					if (player != null)
 					{
 						player.addStat(CaveAchievements.RANDOMITE);
 					}
-				}
 
-				break;
-			case FISSURED_STONE:
-			case FISSURED_PACKED_ICE:
-				if (!world.isRemote)
-				{
+					break;
+				case FISSURED_STONE:
+				case FISSURED_PACKED_ICE:
 					FissureBreakEvent event = WeightedRandom.getRandomItem(RANDOM, FISSURE_EVENTS);
-					EntityPlayer player = harvesters.get();
 
 					if (event != null)
 					{
@@ -178,22 +197,26 @@ public class BlockCave extends Block
 					{
 						player.addStat(CaveAchievements.FISSURE);
 					}
-				}
 
-				break;
-			default:
-				return;
+					break;
+				default:
+					return;
+			}
 		}
 	}
 
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		switch (state.getValue(VARIANT))
+		switch (getType(state))
 		{
 			case AQUAMARINE_ORE:
 			case HEXCITE_ORE:
 				return CaveItems.CAVE_ITEM;
+			case RANDOMITE_ORE:
+			case FISSURED_STONE:
+			case FISSURED_PACKED_ICE:
+				return Items.AIR;
 			default:
 		}
 
@@ -203,7 +226,7 @@ public class BlockCave extends Block
 	@Override
 	public int damageDropped(IBlockState state)
 	{
-		switch (state.getValue(VARIANT))
+		switch (getType(state))
 		{
 			case AQUAMARINE_ORE:
 				return ItemCave.EnumType.AQUAMARINE.getItemDamage();
@@ -219,7 +242,7 @@ public class BlockCave extends Block
 	public int quantityDropped(IBlockState state, int fortune, Random random)
 	{
 		int ret = quantityDropped(random);
-		EnumType type = state.getValue(VARIANT);
+		EnumType type = getType(state);
 
 		if (type == EnumType.RANDOMITE_ORE || type == EnumType.FISSURED_STONE || type == EnumType.FISSURED_PACKED_ICE)
 		{
@@ -243,12 +266,14 @@ public class BlockCave extends Block
 	@Override
 	public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune)
 	{
-		switch (state.getValue(VARIANT))
+		switch (getType(state))
 		{
 			case AQUAMARINE_ORE:
 			case RANDOMITE_ORE:
 				return MathHelper.getInt(RANDOM, 1, 3);
 			case HEXCITE_ORE:
+			case FISSURED_STONE:
+			case FISSURED_PACKED_ICE:
 				return MathHelper.getInt(RANDOM, 3, 5);
 			default:
 		}

@@ -18,7 +18,6 @@ import net.minecraft.block.BlockOldLeaf;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockSapling;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.statemap.StateMap;
@@ -103,7 +102,7 @@ public class CaveBlocks
 	{
 		ModelLoader.setCustomStateMapper(CAVE_BLOCK, new StateMap.Builder().withName(BlockCave.VARIANT).build());
 		ModelLoader.setCustomStateMapper(PERVERTED_LOG, new StateMap.Builder().withName(BlockOldLog.VARIANT).withSuffix("_log").build());
-		ModelLoader.setCustomStateMapper(PERVERTED_LEAVES, new StateMap.Builder().withName(BlockOldLeaf.VARIANT).withSuffix("_leaves").ignore(new IProperty[] {BlockLeaves.CHECK_DECAY, BlockLeaves.DECAYABLE}).build());
+		ModelLoader.setCustomStateMapper(PERVERTED_LEAVES, new StateMap.Builder().withName(BlockOldLeaf.VARIANT).withSuffix("_leaves").ignore(BlockLeaves.CHECK_DECAY, BlockLeaves.DECAYABLE).build());
 		ModelLoader.setCustomStateMapper(PERVERTED_SAPLING, new StateMap.Builder().withName(BlockSapling.TYPE).withSuffix("_sapling").build());
 
 		registerModel(CAVERN_PORTAL, "cavern_portal");
@@ -156,12 +155,12 @@ public class CaveBlocks
 			BlockPlanks.EnumType type = state.getValue(BlockOldLeaf.VARIANT);
 
 			return type == BlockPlanks.EnumType.SPRUCE ? ColorizerFoliage.getFoliageColorPine() : type == BlockPlanks.EnumType.BIRCH ? ColorizerFoliage.getFoliageColorBirch() : world != null && pos != null ? BiomeColorHelper.getFoliageColorAtPos(world, pos) : ColorizerFoliage.getFoliageColorBasic();
-		}, new Block[] {PERVERTED_LEAVES});
+		}, PERVERTED_LEAVES);
 
 		colors.registerBlockColorHandler((state, world, pos, tintIndex) ->
 		{
 			return GeneralConfig.slipperyIceCustomColor ? 0xEFFAFF : -1;
-		}, new Block[] {SLIPPERY_ICE});
+		}, SLIPPERY_ICE);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -176,7 +175,7 @@ public class CaveBlocks
 			IBlockState state = ((ItemBlock)stack.getItem()).getBlock().getStateFromMeta(stack.getMetadata());
 
 			return blockColors.colorMultiplier(state, null, null, tintIndex);
-		}, new Block[] {PERVERTED_LEAVES, SLIPPERY_ICE});
+		}, PERVERTED_LEAVES, SLIPPERY_ICE);
 	}
 
 	public static void registerOreDicts()
@@ -224,13 +223,13 @@ public class CaveBlocks
 		}
 
 		GameRegistry.addSmelting(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.AQUAMARINE_ORE.getMetadata()),
-			new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()), 1.0F);
+			ItemCave.EnumType.AQUAMARINE.getItemStack(), 1.0F);
 
 		GameRegistry.addSmelting(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.MAGNITE_ORE.getMetadata()),
-			new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()), 0.7F);
+			ItemCave.EnumType.MAGNITE_INGOT.getItemStack(), 0.7F);
 
 		GameRegistry.addSmelting(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_ORE.getMetadata()),
-			new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()), 1.0F);
+			ItemCave.EnumType.HEXCITE.getItemStack(), 1.0F);
 
 		GameRegistry.addSmelting(new ItemStack(PERVERTED_LOG, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.COAL, 1, 1), 0.0F);
 

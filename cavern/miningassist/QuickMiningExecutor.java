@@ -193,7 +193,7 @@ public class QuickMiningExecutor implements IMiningAssistExecutor
 	{
 		IBlockState state = world.getBlockState(target);
 
-		if (state.getBlock().isAir(state, world, target))
+		if (state.getBlock().isAir(state, world, target) || state.getBlockHardness(world, target) < 0.0F)
 		{
 			return false;
 		}

@@ -12,7 +12,9 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
 import java.util.regex.Pattern;
 
@@ -237,6 +239,24 @@ public class CaveUtils
 
 			return false;
 		}
+	}
+
+	@Nullable
+	public static <E> E getRandomItem(List<E> list, Random random)
+	{
+		if (list == null || list.isEmpty() || random == null)
+		{
+			return null;
+		}
+
+		int size = list.size();
+
+		if (size == 1)
+		{
+			return list.get(0);
+		}
+
+		return list.get(random.nextInt(size - 1));
 	}
 
 	public static void setDimensionChange(EntityPlayerMP player)

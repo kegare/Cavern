@@ -1,5 +1,7 @@
 package cavern.config.property;
 
+import javax.annotation.Nullable;
+
 import cavern.block.BlockPortalCavern;
 import cavern.block.CaveBlocks;
 import net.minecraft.util.math.MathHelper;
@@ -42,6 +44,7 @@ public class ConfigCaveborn
 			this.portalBlock = block;
 		}
 
+		@Nullable
 		public BlockPortalCavern getPortalBlock()
 		{
 			return portalBlock;
