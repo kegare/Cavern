@@ -51,6 +51,7 @@ public class CaveAchievements
 	public static final Achievement CAVENIC_CREEPER = CaveAchievement.of("cavenicCreeper", -3, 7, CaveUtils.getSpawnEgg(EntityCavenicCreeper.class), CAVERN);
 	public static final Achievement CAVENIC_ZOMBIE = CaveAchievement.of("cavenicZombie", 1, 7, CaveUtils.getSpawnEgg(EntityCavenicZombie.class), CAVERN);
 	public static final Achievement CAVENIC_SPIDER = CaveAchievement.of("cavenicSpider", 3, 7, CaveUtils.getSpawnEgg(EntityCavenicSpider.class), CAVERN);
+	public static final Achievement LOST_ORB = CaveAchievement.of("lostOrb", 4, -2, ItemCave.EnumType.MINER_ORB.getItemStack(), RUINS_CAVERN);
 
 	public static final List<Achievement> ESCAPE_ACHIEVEMENTS = Lists.newArrayList();
 

@@ -43,7 +43,7 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	{
 		hasNoSky = true;
 		hasSkyLight = false;
-		dataManager = new CaveDataManager(world.getWorldInfo().getDimensionData(getDimensionType()).getCompoundTag("WorldData"));
+		dataManager = new CaveDataManager(world.getWorldInfo().getDimensionData(getDimensionType().getId()).getCompoundTag("WorldData"));
 
 		CaveBiomeManager manager = getBiomeManager();
 
@@ -344,7 +344,7 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 			compound.setTag("WorldData", dataManager.getCompound());
 		}
 
-		world.getWorldInfo().setDimensionData(getDimensionType(), compound);
+		world.getWorldInfo().setDimensionData(getDimensionType().getId(), compound);
 	}
 
 	@Override

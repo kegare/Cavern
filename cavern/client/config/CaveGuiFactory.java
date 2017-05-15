@@ -17,7 +17,7 @@ public class CaveGuiFactory implements IModGuiFactory
 	@Override
 	public Class<? extends GuiScreen> mainConfigGuiClass()
 	{
-		return CaveConfigGui.class;
+		return null;
 	}
 
 	@Override
@@ -30,5 +30,17 @@ public class CaveGuiFactory implements IModGuiFactory
 	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element)
 	{
 		return null;
+	}
+
+	@Override
+	public boolean hasConfigGui()
+	{
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(GuiScreen parentScreen)
+	{
+		return new CaveConfigGui(parentScreen);
 	}
 }

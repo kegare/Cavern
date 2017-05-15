@@ -10,7 +10,6 @@ import cavern.core.CaveAchievements;
 import cavern.core.Cavern;
 import cavern.item.CaveItems;
 import cavern.item.ItemCave;
-import cavern.util.CaveUtils;
 import cavern.util.WeightedItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -36,7 +35,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -156,9 +154,9 @@ public class BlockCave extends Block
 
 					ItemStack stack = randomItem.getItem();
 
-					if (RANDOM.nextDouble() <= 0.01D)
+					if (RANDOM.nextDouble() <= 0.015D)
 					{
-						Item item = CaveUtils.getRandomItem(ForgeRegistries.ITEMS.getValues(), RANDOM);
+						Item item = Item.REGISTRY.getRandomObject(RANDOM);
 
 						if (item != null)
 						{

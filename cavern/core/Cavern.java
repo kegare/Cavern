@@ -59,9 +59,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 (
 		modid = Cavern.MODID,
 		guiFactory = "cavern.client.config.CaveGuiFactory",
-		updateJSON = "https://dl.dropboxusercontent.com/u/51943112/versions/cavern.json",
+		updateJSON = "https://raw.githubusercontent.com/kegare/Cavern/6ca51784828565d350f55c1b23e61f346502045f/cavern.json",
 		acceptedMinecraftVersions = "[1.11,)",
-		dependencies = "required-after:Forge@[13.19.0.2180,)"
+		dependencies = "required-after:Forge@[13.20.0.2262,)"
 )
 @EventBusSubscriber
 public class Cavern

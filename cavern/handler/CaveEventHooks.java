@@ -57,6 +57,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.AchievementEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -458,6 +459,12 @@ public class CaveEventHooks
 						}
 					}
 				}
+
+				if (player.ticksExisted % 100 == 0 && player.getEntityData().hasKey("Cavern:LostOrb"))
+				{
+					player.addStat(CaveAchievements.LOST_ORB);
+					player.getEntityData().removeTag("Cavern:LostOrb");
+				}
 			}
 		}
 	}
@@ -562,6 +569,18 @@ public class CaveEventHooks
 			IIceEquipment equip = IceEquipment.get(itemstack);
 
 			event.getToolTip().add(Cavern.proxy.translateFormat("tooltip.iceEquipment.charge", equip.getCharge()));
+		}
+	}
+
+	@SubscribeEvent
+	public void onAchievement(AchievementEvent event)
+	{
+		EntityPlayer player = event.getEntityPlayer();
+		Achievement achievement = event.getAchievement();
+
+		if (achievement == CaveAchievements.RUINS_CAVERN && !player.hasAchievement(CaveAchievements.RUINS_CAVERN))
+		{
+			player.getEntityData().setBoolean("Cavern:LostOrb", true);
 		}
 	}
 }

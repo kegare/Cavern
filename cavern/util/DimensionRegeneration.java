@@ -80,7 +80,7 @@ public class DimensionRegeneration
 		}
 
 		world.flush();
-		world.getWorldInfo().setDimensionData(type, null);
+		world.getWorldInfo().setDimensionData(type.getId(), null);
 
 		MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(world));
 
