@@ -3,6 +3,7 @@ package cavern.handler.api;
 import cavern.api.IDimension;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
+import cavern.config.CaveniaConfig;
 import cavern.config.CavernConfig;
 import cavern.config.IceCavernConfig;
 import cavern.config.RuinsCavernConfig;
@@ -41,6 +42,12 @@ public class DimensionHandler implements IDimension
 	}
 
 	@Override
+	public int getCaveniaDimension()
+	{
+		return CaveniaConfig.dimensionId;
+	}
+
+	@Override
 	public boolean isAquaCavernDisabled()
 	{
 		return AquaCavernConfig.dimensionDisabled;
@@ -62,6 +69,12 @@ public class DimensionHandler implements IDimension
 	public boolean isRuinsCavernDisabled()
 	{
 		return RuinsCavernConfig.dimensionDisabled;
+	}
+
+	@Override
+	public boolean isCaveniaDisabled()
+	{
+		return CaveniaConfig.dimensionDisabled;
 	}
 
 	@Override
@@ -95,9 +108,15 @@ public class DimensionHandler implements IDimension
 	}
 
 	@Override
+	public boolean isEntityInCavenia(Entity entity)
+	{
+		return !isCaveniaDisabled() && entity != null && entity.dimension == getCaveniaDimension();
+	}
+
+	@Override
 	public boolean isEntityInCaves(Entity entity)
 	{
-		return isEntityInCavern(entity) || isEntityInAquaCavern(entity) || isEntityInCaveland(entity) || isEntityInIceCavern(entity) || isEntityInRuinsCavern(entity);
+		return isEntityInCavern(entity) || isEntityInAquaCavern(entity) || isEntityInCaveland(entity) || isEntityInIceCavern(entity) || isEntityInRuinsCavern(entity) || isEntityInCavenia(entity);
 	}
 
 	@Override
@@ -131,8 +150,14 @@ public class DimensionHandler implements IDimension
 	}
 
 	@Override
+	public boolean isCavenia(int dimension)
+	{
+		return !isCaveniaDisabled() && getCaveniaDimension() == dimension;
+	}
+
+	@Override
 	public boolean isCaves(int dimension)
 	{
-		return isCavern(dimension) || isAquaCavern(dimension) || isCaveland(dimension) || isIceCavern(dimension) || isRuinsCavern(dimension);
+		return isCavern(dimension) || isAquaCavern(dimension) || isCaveland(dimension) || isIceCavern(dimension) || isRuinsCavern(dimension) || isCavenia(dimension);
 	}
 }

@@ -39,6 +39,26 @@
       }
     ]
   },
+  "cavemusic.cavenia1": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "cavern:cavemusic/cavenia1",
+        "volume": 0.4,
+        "stream": true
+      }
+    ]
+  },
+  "cavemusic.cavenia2": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "cavern:cavemusic/cavenia2",
+        "volume": 0.4,
+        "stream": true
+      }
+    ]
+  },
   "cave_portal": {
     "category": "block",
     "sounds": [

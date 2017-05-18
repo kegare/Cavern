@@ -20,12 +20,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiRegeneration extends GuiScreen
 {
-	protected boolean cavern, aquaCavern, caveland, iceCavern, ruinsCavern;
+	protected boolean cavern, aquaCavern, caveland, iceCavern, ruinsCavern, cavenia;
 
 	protected GuiButton regenButton;
 	protected GuiButton cancelButton;
 
-	protected GuiCheckBox backupCheckBox, cavernCheckBox, aquaCavernCheckBox, cavelandCheckBox, iceCavernCheckBox, ruinsCavernCheckBox;
+	protected GuiCheckBox backupCheckBox, cavernCheckBox, aquaCavernCheckBox,
+		cavelandCheckBox, iceCavernCheckBox, ruinsCavernCheckBox, caveniaCheckBox;
 
 	private HoverChecker backupHoverChecker;
 
@@ -85,6 +86,18 @@ public class GuiRegeneration extends GuiScreen
 	public GuiRegeneration setRuinsCavern(boolean value)
 	{
 		ruinsCavern = value;
+
+		return this;
+	}
+
+	public GuiRegeneration setCavenia()
+	{
+		return setCavenia(true);
+	}
+
+	public GuiRegeneration setCavenia(boolean value)
+	{
+		cavenia = value;
 
 		return this;
 	}
@@ -175,7 +188,7 @@ public class GuiRegeneration extends GuiScreen
 			ruinsCavernCheckBox = new GuiCheckBox(7, 10, before.yPosition + before.height + 5, "Ruins Cavern", ruinsCavern);
 		}
 
-		if (CavernAPI.dimension.isIceCavernDisabled())
+		if (CavernAPI.dimension.isRuinsCavernDisabled())
 		{
 			ruinsCavernCheckBox.enabled = false;
 			ruinsCavernCheckBox.visible = false;
@@ -184,6 +197,22 @@ public class GuiRegeneration extends GuiScreen
 		else
 		{
 			before = ruinsCavernCheckBox;
+		}
+
+		if (caveniaCheckBox == null)
+		{
+			caveniaCheckBox = new GuiCheckBox(8, 10, before.yPosition + before.height + 5, "Cavenia", cavenia);
+		}
+
+		if (CavernAPI.dimension.isCaveniaDisabled())
+		{
+			caveniaCheckBox.enabled = false;
+			caveniaCheckBox.visible = false;
+			caveniaCheckBox.setIsChecked(false);
+		}
+		else
+		{
+			before = caveniaCheckBox;
 		}
 
 		buttonList.clear();
@@ -195,6 +224,7 @@ public class GuiRegeneration extends GuiScreen
 		buttonList.add(cavelandCheckBox);
 		buttonList.add(iceCavernCheckBox);
 		buttonList.add(ruinsCavernCheckBox);
+		buttonList.add(caveniaCheckBox);
 
 		if (backupHoverChecker == null)
 		{
@@ -225,13 +255,14 @@ public class GuiRegeneration extends GuiScreen
 					boolean b3 = cavelandCheckBox.isChecked();
 					boolean b4 = iceCavernCheckBox.isChecked();
 					boolean b5 = ruinsCavernCheckBox.isChecked();
+					boolean b6 = caveniaCheckBox.isChecked();
 
-					if (!b1 && !b2 && !b3 && !b4 && !b5)
+					if (!b1 && !b2 && !b3 && !b4 && !b5 && !b6)
 					{
 						break;
 					}
 
-					CaveNetworkRegistry.sendToServer(new RegenerationMessage(backupCheckBox.isChecked(), b1, b2, b3, b4, b5));
+					CaveNetworkRegistry.sendToServer(new RegenerationMessage(backupCheckBox.isChecked(), b1, b2, b3, b4, b5, b6));
 
 					regenButton.enabled = false;
 					cancelButton.visible = false;

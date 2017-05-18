@@ -212,6 +212,20 @@ public class CaveEventHooks
 
 				player.addStat(CaveAchievements.RUINS_CAVERN);
 			}
+			else if (CavernAPI.dimension.isEntityInCavenia(player))
+			{
+				NBTTagCompound data = player.getEntityData();
+				String key = "Cavenia" + suffix;
+
+				if (!data.hasKey(key, NBT.TAG_ANY_NUMERIC) || data.getLong(key) + 18000L < world.getTotalWorldTime())
+				{
+					CaveNetworkRegistry.sendTo(new CaveMusicMessage(CaveSounds.MUSIC_UNREST), player);
+				}
+
+				data.setLong(key, world.getTotalWorldTime());
+
+				player.addStat(CaveAchievements.CAVENIA);
+			}
 		}
 	}
 
@@ -578,7 +592,7 @@ public class CaveEventHooks
 		EntityPlayer player = event.getEntityPlayer();
 		Achievement achievement = event.getAchievement();
 
-		if (achievement == CaveAchievements.RUINS_CAVERN && !player.hasAchievement(CaveAchievements.RUINS_CAVERN))
+		if (achievement == CaveAchievements.RUINS_CAVERN && !player.hasAchievement(CaveAchievements.LOST_ORB))
 		{
 			player.getEntityData().setBoolean("Cavern:LostOrb", true);
 		}

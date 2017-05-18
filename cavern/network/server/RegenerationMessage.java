@@ -3,6 +3,7 @@ package cavern.network.server;
 import cavern.api.CavernAPI;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
+import cavern.config.CaveniaConfig;
 import cavern.config.CavernConfig;
 import cavern.config.IceCavernConfig;
 import cavern.config.RuinsCavernConfig;
@@ -21,6 +22,7 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 	protected boolean caveland;
 	protected boolean iceCavern;
 	protected boolean ruinsCavern;
+	protected boolean cavenia;
 
 	public RegenerationMessage() {}
 
@@ -29,7 +31,7 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		this.backup = backup;
 	}
 
-	public RegenerationMessage(boolean backup, boolean cavern, boolean aquaCavern, boolean caveland, boolean iceCavern, boolean ruinsCavern)
+	public RegenerationMessage(boolean backup, boolean cavern, boolean aquaCavern, boolean caveland, boolean iceCavern, boolean ruinsCavern, boolean cavenia)
 	{
 		this(backup);
 		this.cavern = cavern;
@@ -37,6 +39,7 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		this.caveland = caveland;
 		this.iceCavern = iceCavern;
 		this.ruinsCavern = ruinsCavern;
+		this.cavenia = cavenia;
 	}
 
 	public RegenerationMessage setCavern()
@@ -99,6 +102,18 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		return this;
 	}
 
+	public RegenerationMessage setCavenia()
+	{
+		return setRuinsCavern(true);
+	}
+
+	public RegenerationMessage setCavenia(boolean value)
+	{
+		cavenia = value;
+
+		return this;
+	}
+
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
@@ -108,6 +123,7 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		caveland = buf.readBoolean();
 		iceCavern = buf.readBoolean();
 		ruinsCavern = buf.readBoolean();
+		cavenia = buf.readBoolean();
 	}
 
 	@Override
@@ -119,6 +135,7 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		buf.writeBoolean(caveland);
 		buf.writeBoolean(iceCavern);
 		buf.writeBoolean(ruinsCavern);
+		buf.writeBoolean(cavenia);
 	}
 
 	@Override
@@ -147,6 +164,11 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		if (message.ruinsCavern && !CavernAPI.dimension.isRuinsCavernDisabled())
 		{
 			DimensionRegeneration.regenerate(RuinsCavernConfig.dimensionId, message.backup);
+		}
+
+		if (message.cavenia && !CavernAPI.dimension.isCaveniaDisabled())
+		{
+			DimensionRegeneration.regenerate(CaveniaConfig.dimensionId, message.backup);
 		}
 
 		return null;

@@ -22,6 +22,8 @@ public interface ICavernAPI
 
 	public void addMineBonus(IMineBonus bonus);
 
+	public IHunterStats getHunterStats(EntityPlayer player);
+
 	public void addRandomiteItem(ItemStack item, int weight);
 
 	public void addRandomiteItem(Item item, int weight);

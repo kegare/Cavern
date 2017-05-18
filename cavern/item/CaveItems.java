@@ -113,7 +113,7 @@ public class CaveItems
 	@SideOnly(Side.CLIENT)
 	public static void registerModels()
 	{
-		registerModelWithMeta(CAVE_ITEM, "aquamarine", "magnite_ingot", "hexcite", "ice_stick", "miner_orb");
+		registerModelWithMeta(CAVE_ITEM, "aquamarine", "magnite_ingot", "hexcite", "ice_stick", "miner_orb", "cavenic_orb");
 		registerModel(AQUAMARINE_PICKAXE, "aquamarine_pickaxe");
 		registerModel(AQUAMARINE_AXE, "aquamarine_axe");
 		registerModel(AQUAMARINE_SHOVEL, "aquamarine_shovel");

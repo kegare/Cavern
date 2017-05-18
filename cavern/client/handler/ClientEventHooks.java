@@ -7,6 +7,7 @@ import cavern.client.gui.GuiDownloadCaveTerrain;
 import cavern.client.gui.GuiLoadCaveTerrain;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
+import cavern.config.CaveniaConfig;
 import cavern.config.CavernConfig;
 import cavern.config.GeneralConfig;
 import cavern.config.IceCavernConfig;
@@ -92,62 +93,68 @@ public class ClientEventHooks
 				CavernConfig.syncConfig();
 				AquaCavernConfig.syncConfig();
 				CavelandConfig.syncConfig();
+				IceCavernConfig.syncConfig();
+				RuinsCavernConfig.syncConfig();
+				CaveniaConfig.syncConfig();
 			}
 			else switch (type)
 			{
-			case Configuration.CATEGORY_GENERAL:
-				GeneralConfig.syncConfig();
+				case Configuration.CATEGORY_GENERAL:
+					GeneralConfig.syncConfig();
 
-				if (event.isWorldRunning())
-				{
-					GeneralConfig.refreshMiningPointItems();
-					GeneralConfig.refreshMiningPoints();
-				}
+					if (event.isWorldRunning())
+					{
+						GeneralConfig.refreshMiningPointItems();
+						GeneralConfig.refreshMiningPoints();
+					}
 
-				break;
-			case "miningassist":
-				MiningAssistConfig.syncConfig();
+					break;
+				case "miningassist":
+					MiningAssistConfig.syncConfig();
 
-				if (event.isWorldRunning())
-				{
-					MiningAssistConfig.refreshEffectiveItems();
-					MiningAssistConfig.refreshTargetBlocks();
-				}
+					if (event.isWorldRunning())
+					{
+						MiningAssistConfig.refreshEffectiveItems();
+						MiningAssistConfig.refreshTargetBlocks();
+					}
 
-				break;
-			case "dimension.cavern":
-				CavernConfig.syncConfig();
+					break;
+				case "dimension.cavern":
+					CavernConfig.syncConfig();
 
-				if (event.isWorldRunning())
-				{
-					CavernConfig.refreshDungeonMobs();
-				}
+					if (event.isWorldRunning())
+					{
+						CavernConfig.refreshDungeonMobs();
+					}
 
-				break;
-			case "dimension.aquaCavern":
-				AquaCavernConfig.syncConfig();
+					break;
+				case "dimension.aquaCavern":
+					AquaCavernConfig.syncConfig();
 
-				if (event.isWorldRunning())
-				{
-					AquaCavernConfig.refreshDungeonMobs();
-				}
+					if (event.isWorldRunning())
+					{
+						AquaCavernConfig.refreshDungeonMobs();
+					}
 
-				break;
-			case "dimension.caveland":
-				CavelandConfig.syncConfig();
-				break;
-			case "dimension.iceCavern":
-				IceCavernConfig.syncConfig();
+					break;
+				case "dimension.caveland":
+					CavelandConfig.syncConfig();
+					break;
+				case "dimension.iceCavern":
+					IceCavernConfig.syncConfig();
 
-				if (event.isWorldRunning())
-				{
-					IceCavernConfig.refreshDungeonMobs();
-				}
+					if (event.isWorldRunning())
+					{
+						IceCavernConfig.refreshDungeonMobs();
+					}
 
-				break;
-			case "dimension.ruinsCavern":
-				RuinsCavernConfig.syncConfig();
-				break;
+					break;
+				case "dimension.ruinsCavern":
+					RuinsCavernConfig.syncConfig();
+					break;
+				case "dimension.cavenia":
+					CaveniaConfig.syncConfig();
+					break;
 			}
 		}
 	}
@@ -179,6 +186,10 @@ public class ClientEventHooks
 			else if (CavernAPI.dimension.isEntityInRuinsCavern(player))
 			{
 				event.getLeft().add("Dim: Ruins Cavern");
+			}
+			else if (CavernAPI.dimension.isEntityInCavenia(player))
+			{
+				event.getLeft().add("Dim: Cavenia");
 			}
 		}
 	}
@@ -329,6 +340,13 @@ public class ClientEventHooks
 				event.setDensity((float)Math.abs(Math.pow((Math.min(entity.posY, 20) - 63) / (255 - 63), 4)));
 				event.setCanceled(true);
 			}
+			else if (CavernAPI.dimension.isEntityInCavenia(entity))
+			{
+				GlStateManager.setFog(GlStateManager.FogMode.EXP);
+
+				event.setDensity(0.005F);
+				event.setCanceled(true);
+			}
 		}
 	}
 
@@ -345,6 +363,10 @@ public class ClientEventHooks
 		else if (CavernAPI.dimension.isEntityInIceCavern(entity))
 		{
 			var1 = 0.75F;
+		}
+		else if (CavernAPI.dimension.isEntityInCavenia(entity))
+		{
+			var1 = 0.95F;
 		}
 
 		if (var1 > 0.0F)

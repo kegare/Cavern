@@ -5,6 +5,7 @@ import java.util.Set;
 
 import cavern.api.ICavernAPI;
 import cavern.api.IFissureBreakEvent;
+import cavern.api.IHunterStats;
 import cavern.api.IIceEquipment;
 import cavern.api.IMineBonus;
 import cavern.api.IMinerStats;
@@ -17,6 +18,7 @@ import cavern.core.CaveAchievements;
 import cavern.item.CaveItems;
 import cavern.item.IceEquipment;
 import cavern.item.ItemCave;
+import cavern.stats.HunterStats;
 import cavern.stats.MinerStats;
 import cavern.util.WeightedItem;
 import cavern.world.WorldProviderIceCavern;
@@ -57,6 +59,12 @@ public class CavernAPIHandler implements ICavernAPI
 	public void addMineBonus(IMineBonus bonus)
 	{
 		MinerStats.MINE_BONUS.add(bonus);
+	}
+
+	@Override
+	public IHunterStats getHunterStats(EntityPlayer player)
+	{
+		return HunterStats.get(player);
 	}
 
 	@Override

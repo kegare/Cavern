@@ -13,6 +13,8 @@ public class CaveSounds
 	public static final CaveSoundEvent MUSIC_UNREST = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.unrest"));
 	public static final CaveSoundEvent MUSIC_AQUA = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.aqua"));
 	public static final CaveSoundEvent MUSIC_HOPE = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.hope"));
+	public static final CaveSoundEvent MUSIC_CAVENIA1 = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.cavenia1"));
+	public static final CaveSoundEvent MUSIC_CAVENIA2 = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.cavenia2"));
 
 	public static void registerSounds(IForgeRegistry<SoundEvent> registry)
 	{
@@ -23,6 +25,8 @@ public class CaveSounds
 		registry.register(MUSIC_UNREST);
 		registry.register(MUSIC_AQUA);
 		registry.register(MUSIC_HOPE);
+		registry.register(MUSIC_CAVENIA1);
+		registry.register(MUSIC_CAVENIA2);
 	}
 
 	public static class CaveSoundEvent extends SoundEvent

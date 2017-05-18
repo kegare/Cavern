@@ -1,18 +1,19 @@
 package cavern.entity;
 
 import cavern.api.CavernAPI;
+import cavern.api.ICavenicMob;
 import cavern.core.CaveAchievements;
+import cavern.item.ItemCave;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class EntityCavenicCreeper extends EntityCreeper
+public class EntityCavenicCreeper extends EntityCreeper implements ICavenicMob
 {
 	protected int fuseTime = 15;
 	protected int explosionRadius = 5;
@@ -35,19 +36,24 @@ public class EntityCavenicCreeper extends EntityCreeper
 	{
 		super.applyEntityAttributes();
 
+		applyMobAttributes();
+	}
+
+	protected void applyMobAttributes()
+	{
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
 		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(0.85D);
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2D);
 	}
 
 	@Override
-	protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
+	protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source)
 	{
-		super.dropFewItems(wasRecentlyHit, lootingModifier);
+		super.dropLoot(wasRecentlyHit, lootingModifier, source);
 
-		if (rand.nextInt(10) == 0)
+		if (rand.nextInt(5) == 0)
 		{
-			entityDropItem(new ItemStack(Items.DIAMOND), 0.5F);
+			entityDropItem(ItemCave.EnumType.CAVENIC_ORB.getItemStack(), 0.5F);
 		}
 	}
 
@@ -65,8 +71,13 @@ public class EntityCavenicCreeper extends EntityCreeper
 
 		if (entity != null && entity instanceof EntityPlayer)
 		{
-			((EntityPlayer)entity).addStat(CaveAchievements.CAVENIC_CREEPER);
+			((EntityPlayer)entity).addStat(getKillAchievement());
 		}
+	}
+
+	protected Achievement getKillAchievement()
+	{
+		return CaveAchievements.CAVENIC_CREEPER;
 	}
 
 	@Override
@@ -89,6 +100,12 @@ public class EntityCavenicCreeper extends EntityCreeper
 	@Override
 	public int getMaxSpawnedInChunk()
 	{
-		return 1;
+		return CavernAPI.dimension.isEntityInCavenia(this) ? 2 : 1;
+	}
+
+	@Override
+	public int getHuntingPoint()
+	{
+		return 3;
 	}
 }

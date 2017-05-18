@@ -51,6 +51,11 @@ public class MinerStatsHUDEventHooks
 			return false;
 		}
 
+		if (CavernAPI.dimension.isEntityInCavenia(mc.player) && getDisplayType() == GeneralConfig.huntingPointPosition.getType())
+		{
+			return false;
+		}
+
 		if (mc.currentScreen != null && !GuiChat.class.isInstance(mc.currentScreen))
 		{
 			return false;

@@ -155,7 +155,7 @@ public class BlockPortalCavern extends BlockPortal
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
 	{
-		if (!world.isRemote && entity.isEntityAlive() && !isDimensionDisabled())
+		if (!world.isRemote && entity.isEntityAlive() && !isDimensionDisabled() && entity.isNonBoss())
 		{
 			if (entity.timeUntilPortal <= 0)
 			{

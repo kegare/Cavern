@@ -1,17 +1,18 @@
 package cavern.entity;
 
 import cavern.api.CavernAPI;
+import cavern.api.ICavenicMob;
 import cavern.core.CaveAchievements;
+import cavern.item.ItemCave;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public class EntityCavenicZombie extends EntityZombie
+public class EntityCavenicZombie extends EntityZombie implements ICavenicMob
 {
 	public EntityCavenicZombie(World world)
 	{
@@ -24,21 +25,26 @@ public class EntityCavenicZombie extends EntityZombie
 	{
 		super.applyEntityAttributes();
 
-		getEntityAttribute(SPAWN_REINFORCEMENTS_CHANCE).setBaseValue(0.0D);
+		applyMobAttributes();
+	}
+
+	protected void applyMobAttributes()
+	{
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(50.0D);
 		getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(50.0D);
 		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(2.5D);
 		getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
+		getEntityAttribute(SPAWN_REINFORCEMENTS_CHANCE).setBaseValue(0.0D);
 	}
 
 	@Override
-	protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
+	protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source)
 	{
-		super.dropFewItems(wasRecentlyHit, lootingModifier);
+		super.dropLoot(wasRecentlyHit, lootingModifier, source);
 
-		if (rand.nextInt(10) == 0)
+		if (rand.nextInt(8) == 0)
 		{
-			entityDropItem(new ItemStack(Items.DIAMOND), 0.5F);
+			entityDropItem(ItemCave.EnumType.CAVENIC_ORB.getItemStack(), 0.5F);
 		}
 	}
 
@@ -56,8 +62,13 @@ public class EntityCavenicZombie extends EntityZombie
 
 		if (entity != null && entity instanceof EntityPlayer)
 		{
-			((EntityPlayer)entity).addStat(CaveAchievements.CAVENIC_ZOMBIE);
+			((EntityPlayer)entity).addStat(getKillAchievement());
 		}
+	}
+
+	protected Achievement getKillAchievement()
+	{
+		return CaveAchievements.CAVENIC_ZOMBIE;
 	}
 
 	@Override
@@ -80,6 +91,12 @@ public class EntityCavenicZombie extends EntityZombie
 	@Override
 	public int getMaxSpawnedInChunk()
 	{
-		return 1;
+		return CavernAPI.dimension.isEntityInCavenia(this) ? 5 : 1;
+	}
+
+	@Override
+	public int getHuntingPoint()
+	{
+		return 2;
 	}
 }

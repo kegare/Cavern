@@ -1,21 +1,21 @@
 package cavern.api.event;
 
-import cavern.stats.MinerStats;
+import cavern.api.IMinerStats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
 public class MinerStatsEvent extends PlayerEvent
 {
-	private final MinerStats stats;
+	private final IMinerStats stats;
 
-	public MinerStatsEvent(EntityPlayer player, MinerStats stats)
+	public MinerStatsEvent(EntityPlayer player, IMinerStats stats)
 	{
 		super(player);
 		this.stats = stats;
 	}
 
-	public MinerStats getStats()
+	public IMinerStats getStats()
 	{
 		return stats;
 	}
@@ -27,7 +27,7 @@ public class MinerStatsEvent extends PlayerEvent
 
 		private int newPoint;
 
-		public AddPoint(EntityPlayer player, MinerStats stats, int point)
+		public AddPoint(EntityPlayer player, IMinerStats stats, int point)
 		{
 			super(player, stats);
 			this.originalPoint = point;
@@ -52,7 +52,7 @@ public class MinerStatsEvent extends PlayerEvent
 
 	public static class PromoteRank extends MinerStatsEvent
 	{
-		public PromoteRank(EntityPlayer player, MinerStats stats)
+		public PromoteRank(EntityPlayer player, IMinerStats stats)
 		{
 			super(player, stats);
 		}

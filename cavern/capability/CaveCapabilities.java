@@ -1,5 +1,6 @@
 package cavern.capability;
 
+import cavern.api.IHunterStats;
 import cavern.api.IIceEquipment;
 import cavern.api.IMinerStats;
 import cavern.core.Cavern;
@@ -24,17 +25,21 @@ public class CaveCapabilities
 	public static Capability<IPortalCache> PORTAL_CACHE = null;
 	@CapabilityInject(IMinerStats.class)
 	public static Capability<IMinerStats> MINER_STATS = null;
+	@CapabilityInject(IHunterStats.class)
+	public static Capability<IHunterStats> HUNTER_STATS = null;
 	@CapabilityInject(IIceEquipment.class)
 	public static Capability<IIceEquipment> ICE_EQUIP = null;
 
 	public static final ResourceLocation PORTAL_CACHE_ID = new ResourceLocation(Cavern.MODID, "PortalCache");
 	public static final ResourceLocation MINER_STATS_ID = new ResourceLocation(Cavern.MODID, "MinerStats");
+	public static final ResourceLocation HUNTER_STATS_ID = new ResourceLocation(Cavern.MODID, "HunterStats");
 	public static final ResourceLocation ICE_EQUIP_ID = new ResourceLocation(Cavern.MODID, "IceEquip");
 
 	public static void registerCapabilities()
 	{
 		CapabilityPortalCache.register();
 		CapabilityMinerStats.register();
+		CapabilityHunterStats.register();
 		CapabilityIceEquipment.register();
 
 		MinecraftForge.EVENT_BUS.register(new CaveCapabilities());
@@ -65,6 +70,7 @@ public class CaveCapabilities
 			EntityPlayer player = (EntityPlayer)event.getObject();
 
 			event.addCapability(MINER_STATS_ID, new CapabilityMinerStats(player));
+			event.addCapability(HUNTER_STATS_ID, new CapabilityHunterStats(player));
 		}
 	}
 
@@ -109,6 +115,17 @@ public class CaveCapabilities
 
 			originalMinerStats.writeToNBT(nbt);
 			minerStats.readFromNBT(nbt);
+		}
+
+		IHunterStats originalHunterStats = getCapability(original, HUNTER_STATS);
+		IHunterStats hunterStats = getCapability(player, HUNTER_STATS);
+
+		if (originalHunterStats != null && hunterStats != null)
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+
+			originalHunterStats.writeToNBT(nbt);
+			hunterStats.readFromNBT(nbt);
 		}
 	}
 }

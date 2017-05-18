@@ -1,23 +1,24 @@
 package cavern.entity;
 
 import cavern.api.CavernAPI;
+import cavern.api.ICavenicMob;
 import cavern.core.CaveAchievements;
+import cavern.item.ItemCave;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class EntityCavenicSpider extends EntitySpider
+public class EntityCavenicSpider extends EntitySpider implements ICavenicMob
 {
 	public EntityCavenicSpider(World world)
 	{
@@ -30,6 +31,11 @@ public class EntityCavenicSpider extends EntitySpider
 	{
 		super.applyEntityAttributes();
 
+		applyMobAttributes();
+	}
+
+	protected void applyMobAttributes()
+	{
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
 		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.5D);
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.60000001192092896D);
@@ -42,13 +48,26 @@ public class EntityCavenicSpider extends EntitySpider
 	}
 
 	@Override
-	protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
+	protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source)
 	{
-		super.dropFewItems(wasRecentlyHit, lootingModifier);
+		super.dropLoot(wasRecentlyHit, lootingModifier, source);
 
-		if (rand.nextInt(10) == 0)
+		if (rand.nextInt(8) == 0)
 		{
-			entityDropItem(new ItemStack(Items.DIAMOND), 0.5F);
+			entityDropItem(ItemCave.EnumType.CAVENIC_ORB.getItemStack(), 0.5F);
+		}
+	}
+
+	protected int getBlindnessAttackPower()
+	{
+		switch (world.getDifficulty())
+		{
+			case NORMAL:
+				return 5;
+			case HARD:
+				return 10;
+			default:
+				return 3;
 		}
 	}
 
@@ -59,20 +78,7 @@ public class EntityCavenicSpider extends EntitySpider
 		{
 			if (entity instanceof EntityLivingBase)
 			{
-				int sec;
-
-				switch (world.getDifficulty())
-				{
-				case NORMAL:
-					sec = 5;
-					break;
-				case HARD:
-					sec = 10;
-					break;
-				default:
-					sec = 3;
-					break;
-				}
+				int sec = getBlindnessAttackPower();
 
 				if (sec > 0)
 				{
@@ -105,8 +111,13 @@ public class EntityCavenicSpider extends EntitySpider
 
 		if (entity != null && entity instanceof EntityPlayer)
 		{
-			((EntityPlayer)entity).addStat(CaveAchievements.CAVENIC_SPIDER);
+			((EntityPlayer)entity).addStat(getKillAchievement());
 		}
+	}
+
+	protected Achievement getKillAchievement()
+	{
+		return CaveAchievements.CAVENIC_SPIDER;
 	}
 
 	@Override
@@ -128,6 +139,12 @@ public class EntityCavenicSpider extends EntitySpider
 
 	@Override
 	public int getMaxSpawnedInChunk()
+	{
+		return CavernAPI.dimension.isEntityInCavenia(this) ? 4 : 1;
+	}
+
+	@Override
+	public int getHuntingPoint()
 	{
 		return 1;
 	}

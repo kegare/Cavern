@@ -8,6 +8,7 @@ import com.google.common.base.Joiner;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.RegenerationGuiMessage;
 import cavern.network.client.RegenerationGuiMessage.EnumType;
+import cavern.stats.HunterStats;
 import cavern.stats.MinerStats;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -72,6 +73,20 @@ public class CommandCavern extends CommandBase
 				if (value != 0)
 				{
 					MinerStats.get(player).addPoint(value);
+				}
+			}
+		}
+		else if (args[0].equalsIgnoreCase("hp") && isPlayer)
+		{
+			EntityPlayerMP player = (EntityPlayerMP)sender;
+
+			if (player.getServerWorld().getWorldInfo().areCommandsAllowed())
+			{
+				int value = parseInt(args[1]);
+
+				if (value != 0)
+				{
+					HunterStats.get(player).addPoint(value);
 				}
 			}
 		}

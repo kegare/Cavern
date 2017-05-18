@@ -1,8 +1,10 @@
 package cavern.entity;
 
 import cavern.api.CavernAPI;
+import cavern.api.ICavenicMob;
 import cavern.core.CaveAchievements;
 import cavern.entity.ai.EntityAIAttackCavenicBow;
+import cavern.item.ItemCave;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,15 +15,14 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class EntityCavenicSkeleton extends EntitySkeleton
+public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 {
 	protected EntityAIAttackRangedBow aiArrowAttack;
 
@@ -49,19 +50,24 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 	{
 		super.applyEntityAttributes();
 
+		applyMobAttributes();
+	}
+
+	protected void applyMobAttributes()
+	{
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40.0D);
 		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.85D);
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2D);
 	}
 
 	@Override
-	protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
+	protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source)
 	{
-		super.dropFewItems(wasRecentlyHit, lootingModifier);
+		super.dropLoot(wasRecentlyHit, lootingModifier, source);
 
 		if (rand.nextInt(5) == 0)
 		{
-			entityDropItem(new ItemStack(Items.DIAMOND), 0.5F);
+			entityDropItem(ItemCave.EnumType.CAVENIC_ORB.getItemStack(), 0.5F);
 		}
 	}
 
@@ -115,8 +121,13 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 
 		if (entity != null && entity instanceof EntityPlayer)
 		{
-			((EntityPlayer)entity).addStat(CaveAchievements.CAVENIC_SKELETON);
+			((EntityPlayer)entity).addStat(getKillAchievement());
 		}
+	}
+
+	protected Achievement getKillAchievement()
+	{
+		return CaveAchievements.CAVENIC_SKELETON;
 	}
 
 	@Override
@@ -127,7 +138,7 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 			damage *= 0.35F;
 		}
 
-		return !source.isFireDamage() && source.getEntity() != this && super.attackEntityFrom(source, damage);
+		return !source.isFireDamage() && source.getEntity() != this && source.getSourceOfDamage() != this && super.attackEntityFrom(source, damage);
 	}
 
 	@Override
@@ -139,6 +150,12 @@ public class EntityCavenicSkeleton extends EntitySkeleton
 	@Override
 	public int getMaxSpawnedInChunk()
 	{
-		return 1;
+		return CavernAPI.dimension.isEntityInCavenia(this) ? 4 : 1;
+	}
+
+	@Override
+	public int getHuntingPoint()
+	{
+		return 3;
 	}
 }

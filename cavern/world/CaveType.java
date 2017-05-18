@@ -3,6 +3,7 @@ package cavern.world;
 import cavern.api.CavernAPI;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
+import cavern.config.CaveniaConfig;
 import cavern.config.CavernConfig;
 import cavern.config.IceCavernConfig;
 import cavern.config.RuinsCavernConfig;
@@ -16,12 +17,14 @@ public class CaveType
 	public static final int AQUA_CAVERN = 2;
 	public static final int CAVELAND = 3;
 	public static final int ICE_CAVERN = 4;
+	public static final int CAVENIA = 5;
 
 	public static DimensionType DIM_CAVERN;
 	public static DimensionType DIM_RUINS_CAVERN;
 	public static DimensionType DIM_AQUA_CAVERN;
 	public static DimensionType DIM_CAVELAND;
 	public static DimensionType DIM_ICE_CAVERN;
+	public static DimensionType DIM_CAVENIA;
 
 	public static void registerDimensions()
 	{
@@ -55,6 +58,13 @@ public class CaveType
 			DIM_RUINS_CAVERN = DimensionType.register("Ruins Cavern", "_ruins_cavern", RuinsCavernConfig.dimensionId, WorldProviderRuinsCavern.class, false);
 
 			DimensionManager.registerDimension(DIM_RUINS_CAVERN.getId(), DIM_RUINS_CAVERN);
+		}
+
+		if (!CavernAPI.dimension.isCaveniaDisabled())
+		{
+			DIM_CAVENIA = DimensionType.register("Cavenia", "_cavenia", CaveniaConfig.dimensionId, WorldProviderCavenia.class, false);
+
+			DimensionManager.registerDimension(DIM_CAVENIA.getId(), DIM_CAVENIA);
 		}
 	}
 }

@@ -54,6 +54,7 @@ public class CaveNetworkRegistry
 	public static void registerMessages()
 	{
 		registerMessage(MinerStatsAdjustMessage.class, MinerStatsAdjustMessage.class);
+		registerMessage(HunterStatsAdjustMessage.class, HunterStatsAdjustMessage.class);
 		registerMessage(LastMineMessage.class, LastMineMessage.class, Side.CLIENT);
 		registerMessage(MineBonusMessage.class, MineBonusMessage.class, Side.SERVER);
 		registerMessage(CaveMusicMessage.class, CaveMusicMessage.class, Side.CLIENT);

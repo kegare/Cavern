@@ -7,9 +7,11 @@ import cavern.client.CaveKeyBindings;
 import cavern.client.CaveRenderingRegistry;
 import cavern.client.config.CaveConfigEntries;
 import cavern.client.handler.ClientEventHooks;
+import cavern.client.handler.HunterStatsHUDEventHooks;
 import cavern.client.handler.MinerStatsHUDEventHooks;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
+import cavern.config.CaveniaConfig;
 import cavern.config.CavernConfig;
 import cavern.config.Config;
 import cavern.config.GeneralConfig;
@@ -20,6 +22,7 @@ import cavern.entity.CaveEntityRegistry;
 import cavern.handler.CaveEventHooks;
 import cavern.handler.CaveFuelHandler;
 import cavern.handler.CavebornEventHooks;
+import cavern.handler.CaveniaEventHooks;
 import cavern.handler.MiningAssistEventHooks;
 import cavern.handler.api.CavernAPIHandler;
 import cavern.handler.api.DimensionHandler;
@@ -57,11 +60,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod
 (
-		modid = Cavern.MODID,
-		guiFactory = "cavern.client.config.CaveGuiFactory",
-		updateJSON = "https://raw.githubusercontent.com/kegare/Cavern/6ca51784828565d350f55c1b23e61f346502045f/cavern.json",
-		acceptedMinecraftVersions = "[1.11,)",
-		dependencies = "required-after:Forge@[13.20.0.2262,)"
+	modid = Cavern.MODID,
+	guiFactory = "cavern.client.config.CaveGuiFactory",
+	updateJSON = "https://raw.githubusercontent.com/kegare/Cavern/master/cavern.json",
+	dependencies = "required-after:Forge@[13.20.0.2262,)"
 )
 @EventBusSubscriber
 public class Cavern
@@ -192,6 +194,10 @@ public class Cavern
 
 		RuinsCavernConfig.syncConfig();
 
+		CaveniaConfig.syncConfig();
+		CaveniaConfig.syncBiomesConfig();
+		CaveniaConfig.syncVeinsConfig();
+
 		CaveType.registerDimensions();
 
 		CaveAchievements.registerAchievements();
@@ -200,11 +206,13 @@ public class Cavern
 		{
 			MinecraftForge.EVENT_BUS.register(new ClientEventHooks());
 			MinecraftForge.EVENT_BUS.register(new MinerStatsHUDEventHooks());
+			MinecraftForge.EVENT_BUS.register(new HunterStatsHUDEventHooks());
 		}
 
 		MinecraftForge.EVENT_BUS.register(new CaveEventHooks());
 		MinecraftForge.EVENT_BUS.register(new CavebornEventHooks());
 		MinecraftForge.EVENT_BUS.register(new MiningAssistEventHooks());
+		MinecraftForge.EVENT_BUS.register(new CaveniaEventHooks());
 	}
 
 	@EventHandler

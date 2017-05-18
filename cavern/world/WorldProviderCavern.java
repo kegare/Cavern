@@ -51,13 +51,13 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 		{
 			switch (getBiomeType())
 			{
-			case SQUARE:
-				biomeProvider = new BiomeProviderCavern(world, 1, manager);
-				return;
-			case LARGE_SQUARE:
-				biomeProvider = new BiomeProviderCavern(world, 5, manager);
-				return;
-			default:
+				case SQUARE:
+					biomeProvider = new BiomeProviderCavern(world, 1, manager);
+					return;
+				case LARGE_SQUARE:
+					biomeProvider = new BiomeProviderCavern(world, 5, manager);
+					return;
+				default:
 			}
 		}
 
