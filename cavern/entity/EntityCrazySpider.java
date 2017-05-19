@@ -29,7 +29,7 @@ public class EntityCrazySpider extends EntityCavenicSpider
 	@Override
 	protected void applyMobAttributes()
 	{
-		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000.0D);
+		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1500.0D);
 		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(2.0D);
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.60000001192092896D);
 	}
@@ -45,6 +45,20 @@ public class EntityCrazySpider extends EntityCavenicSpider
 				return 20;
 			default:
 				return 5;
+		}
+	}
+
+	@Override
+	protected int getPoisonAttackPower()
+	{
+		switch (world.getDifficulty())
+		{
+			case NORMAL:
+				return 5;
+			case HARD:
+				return 8;
+			default:
+				return 3;
 		}
 	}
 

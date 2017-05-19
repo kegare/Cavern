@@ -4,10 +4,12 @@ import cavern.api.CavernAPI;
 import cavern.client.particle.ParticleCrazyMob;
 import cavern.core.CaveAchievements;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.Achievement;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
@@ -28,10 +30,10 @@ public class EntityCrazyZombie extends EntityCavenicZombie
 	@Override
 	protected void applyMobAttributes()
 	{
-		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1250.0D);
+		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(2000.0D);
 		getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(50.0D);
 		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(3.0D);
-		getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(6.0D);
+		getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(7.5D);
 		getEntityAttribute(SPAWN_REINFORCEMENTS_CHANCE).setBaseValue(0.0D);
 	}
 
@@ -94,6 +96,28 @@ public class EntityCrazyZombie extends EntityCavenicZombie
 				FMLClientHandler.instance().getClient().effectRenderer.addEffect(particle);
 			}
 		}
+	}
+
+	@Override
+	public boolean attackEntityAsMob(Entity entity)
+	{
+		boolean ret = super.attackEntityAsMob(entity);
+
+		int power = rand.nextInt(5) == 0 ? rand.nextInt(3) + 3 : 0;
+
+		if (power > 0)
+		{
+			if (entity instanceof EntityLivingBase)
+			{
+				((EntityLivingBase)entity).knockBack(this, power * 0.5F, MathHelper.sin(rotationYaw * 0.017453292F), -MathHelper.cos(rotationYaw * 0.017453292F));
+			}
+			else
+			{
+				entity.addVelocity(-MathHelper.sin(rotationYaw * 0.017453292F) * power * 0.5F, 0.1D, MathHelper.cos(rotationYaw * 0.017453292F) * power * 0.5F);
+			}
+		}
+
+		return ret;
 	}
 
 	@Override

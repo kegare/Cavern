@@ -28,8 +28,8 @@ public class EntityCrazyCreeper extends EntityCavenicCreeper
 	@Override
 	protected void applyCustomValues()
 	{
-		fuseTime = 120;
-		explosionRadius = 25;
+		fuseTime = 150;
+		explosionRadius = 30;
 
 		super.applyCustomValues();
 	}

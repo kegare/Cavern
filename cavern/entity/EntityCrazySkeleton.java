@@ -3,6 +3,7 @@ package cavern.entity;
 import cavern.api.CavernAPI;
 import cavern.client.particle.ParticleCrazyMob;
 import cavern.core.CaveAchievements;
+import cavern.entity.ai.EntityAIAttackCavenicBow;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.effect.EntityLightningBolt;
@@ -24,6 +25,12 @@ public class EntityCrazySkeleton extends EntityCavenicSkeleton
 	{
 		super(world);
 		this.experienceValue = 50;
+	}
+
+	@Override
+	protected void initCustomValues()
+	{
+		aiArrowAttack = new EntityAIAttackCavenicBow(this, 0.99D, 6.0F);
 	}
 
 	@Override

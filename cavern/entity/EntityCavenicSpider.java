@@ -71,6 +71,11 @@ public class EntityCavenicSpider extends EntitySpider implements ICavenicMob
 		}
 	}
 
+	protected int getPoisonAttackPower()
+	{
+		return 0;
+	}
+
 	@Override
 	public boolean attackEntityAsMob(Entity entity)
 	{
@@ -78,16 +83,19 @@ public class EntityCavenicSpider extends EntitySpider implements ICavenicMob
 		{
 			if (entity instanceof EntityLivingBase)
 			{
+				EntityLivingBase target = (EntityLivingBase)entity;
 				int sec = getBlindnessAttackPower();
 
-				if (sec > 0)
+				if (sec > 0 && !target.isPotionActive(MobEffects.BLINDNESS))
 				{
-					EntityLivingBase target = (EntityLivingBase)entity;
+					target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, sec * 20));
+				}
 
-					if (!target.isPotionActive(MobEffects.BLINDNESS))
-					{
-						target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, sec * 20));
-					}
+				sec = getPoisonAttackPower();
+
+				if (sec > 0 && !target.isPotionActive(MobEffects.POISON))
+				{
+					target.addPotionEffect(new PotionEffect(MobEffects.POISON, sec * 20));
 				}
 			}
 

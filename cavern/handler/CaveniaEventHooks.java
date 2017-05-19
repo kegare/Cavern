@@ -218,7 +218,7 @@ public class CaveniaEventHooks
 								potion = MobEffects.REGENERATION;
 						}
 
-						player.addPotionEffect(new PotionEffect(potion, 120 * 20, CaveEventHooks.RANDOM.nextInt(2) + 1));
+						player.addPotionEffect(new PotionEffect(potion, 90 * 20, CaveEventHooks.RANDOM.nextInt(2) + 1));
 
 						data.setLong("Cavenia:BuffTime", world.getTotalWorldTime());
 					}
