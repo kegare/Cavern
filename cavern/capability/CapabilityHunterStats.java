@@ -12,7 +12,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 public class CapabilityHunterStats implements ICapabilitySerializable<NBTTagCompound>
 {
-	private final HunterStats stats;
+	private final IHunterStats stats;
 
 	public CapabilityHunterStats(EntityPlayer player)
 	{

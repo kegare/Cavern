@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderCrazySpider extends RenderSpider<EntitySpider>
 {
-	private static final ResourceLocation crazySpiderTexture = new ResourceLocation("cavern", "textures/entity/crazy_spider.png");
+	private static final ResourceLocation CRAZY_SPIDER_TEXTURE = new ResourceLocation("cavern", "textures/entity/crazy_spider.png");
 
 	public RenderCrazySpider(RenderManager manager)
 	{
@@ -20,7 +20,7 @@ public class RenderCrazySpider extends RenderSpider<EntitySpider>
 	@Override
 	protected ResourceLocation getEntityTexture(EntitySpider entity)
 	{
-		return crazySpiderTexture;
+		return CRAZY_SPIDER_TEXTURE;
 	}
 
 	@Override

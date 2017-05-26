@@ -2,9 +2,12 @@ package cavern.capability;
 
 import cavern.api.IHunterStats;
 import cavern.api.IIceEquipment;
+import cavern.api.IInventoryEquipment;
+import cavern.api.IMagicianStats;
 import cavern.api.IMinerStats;
 import cavern.core.Cavern;
 import cavern.item.IceEquipment;
+import cavern.item.ItemMagicalBook;
 import cavern.stats.IPortalCache;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,20 +30,28 @@ public class CaveCapabilities
 	public static Capability<IMinerStats> MINER_STATS = null;
 	@CapabilityInject(IHunterStats.class)
 	public static Capability<IHunterStats> HUNTER_STATS = null;
+	@CapabilityInject(IMagicianStats.class)
+	public static Capability<IMagicianStats> MAGICIAN_STATS = null;
 	@CapabilityInject(IIceEquipment.class)
 	public static Capability<IIceEquipment> ICE_EQUIP = null;
+	@CapabilityInject(IInventoryEquipment.class)
+	public static Capability<IInventoryEquipment> INVENTORY_EQUIP = null;
 
 	public static final ResourceLocation PORTAL_CACHE_ID = new ResourceLocation(Cavern.MODID, "PortalCache");
 	public static final ResourceLocation MINER_STATS_ID = new ResourceLocation(Cavern.MODID, "MinerStats");
 	public static final ResourceLocation HUNTER_STATS_ID = new ResourceLocation(Cavern.MODID, "HunterStats");
+	public static final ResourceLocation MAGICIAN_STATS_ID = new ResourceLocation(Cavern.MODID, "MagicianStats");
 	public static final ResourceLocation ICE_EQUIP_ID = new ResourceLocation(Cavern.MODID, "IceEquip");
+	public static final ResourceLocation INVENTORY_EQUIP_ID = new ResourceLocation(Cavern.MODID, "InventoryEquip");
 
 	public static void registerCapabilities()
 	{
 		CapabilityPortalCache.register();
 		CapabilityMinerStats.register();
 		CapabilityHunterStats.register();
+		CapabilityMagicianStats.register();
 		CapabilityIceEquipment.register();
+		CapabilityInventoryEquipment.register();
 
 		MinecraftForge.EVENT_BUS.register(new CaveCapabilities());
 	}
@@ -71,15 +82,23 @@ public class CaveCapabilities
 
 			event.addCapability(MINER_STATS_ID, new CapabilityMinerStats(player));
 			event.addCapability(HUNTER_STATS_ID, new CapabilityHunterStats(player));
+			event.addCapability(MAGICIAN_STATS_ID, new CapabilityMagicianStats(player));
 		}
 	}
 
 	@SubscribeEvent
 	public void onAttachItemCapabilities(AttachCapabilitiesEvent<Item> event)
 	{
-		if (IceEquipment.isIceEquipment(event.getObject()))
+		Item item = event.getObject();
+
+		if (IceEquipment.isIceEquipment(item))
 		{
 			event.addCapability(ICE_EQUIP_ID, new CapabilityIceEquipment());
+		}
+
+		if (item instanceof ItemMagicalBook)
+		{
+			event.addCapability(INVENTORY_EQUIP_ID, new CapabilityInventoryEquipment("item.magicalBook.storage.name"));
 		}
 	}
 
@@ -126,6 +145,17 @@ public class CaveCapabilities
 
 			originalHunterStats.writeToNBT(nbt);
 			hunterStats.readFromNBT(nbt);
+		}
+
+		IMagicianStats originalMagicianStats = getCapability(original, MAGICIAN_STATS);
+		IMagicianStats magicianStats = getCapability(player, MAGICIAN_STATS);
+
+		if (originalMagicianStats != null && magicianStats != null)
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+
+			originalMagicianStats.writeToNBT(nbt);
+			magicianStats.readFromNBT(nbt);
 		}
 	}
 }

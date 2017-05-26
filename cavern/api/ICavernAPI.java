@@ -24,6 +24,8 @@ public interface ICavernAPI
 
 	public IHunterStats getHunterStats(EntityPlayer player);
 
+	public IMagicianStats getMagicianStats(EntityPlayer player);
+
 	public void addRandomiteItem(ItemStack item, int weight);
 
 	public void addRandomiteItem(Item item, int weight);

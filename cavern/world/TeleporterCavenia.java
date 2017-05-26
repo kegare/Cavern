@@ -1,10 +1,11 @@
 package cavern.world;
 
+import cavern.item.ItemCave;
 import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
+import cavern.util.CaveUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
@@ -28,9 +29,9 @@ public class TeleporterCavenia extends Teleporter
 	{
 		IPortalCache cache = PortalCache.get(entity);
 
-		if (cache.hasLastPos(10, entity.dimension))
+		if (cache.hasLastPos(ItemCave.CAVENIA, entity.dimension))
 		{
-			setLocationAndAngles(entity, cache.getLastPos(10, entity.dimension));
+			CaveUtils.setLocationAndAngles(entity, cache.getLastPos(ItemCave.CAVENIA, entity.dimension));
 		}
 
 		int x = MathHelper.floor(entity.posX);
@@ -81,7 +82,7 @@ public class TeleporterCavenia extends Teleporter
 				}
 			}
 
-			setLocationAndAngles(entity, x, y, z);
+			CaveUtils.setLocationAndAngles(entity, x, y, z);
 
 			entity.motionX = 0.0D;
 			entity.motionY = 0.0D;
@@ -108,24 +109,4 @@ public class TeleporterCavenia extends Teleporter
 
 	@Override
 	public void removeStalePortalLocations(long worldTime) {}
-
-	public void setLocationAndAngles(Entity entity, double posX, double posY, double posZ)
-	{
-		if (entity instanceof EntityPlayerMP)
-		{
-			((EntityPlayerMP)entity).connection.setPlayerLocation(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
-		}
-		else
-		{
-			entity.setLocationAndAngles(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
-		}
-	}
-
-	public void setLocationAndAngles(Entity entity, BlockPos pos)
-	{
-		if (pos != null)
-		{
-			setLocationAndAngles(entity, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
-		}
-	}
 }

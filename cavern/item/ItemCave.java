@@ -21,12 +21,13 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemCave extends Item
 {
+	public static final int CAVENIA = 10;
+
 	public ItemCave()
 	{
 		super();
@@ -59,42 +60,9 @@ public class ItemCave extends Item
 		switch (EnumType.byItemStack(held))
 		{
 			case CAVENIC_ORB:
-				if (!CavernAPI.dimension.isEntityInCaves(player))
+				if (!transferByCavenia(player))
 				{
 					break;
-				}
-
-				IPortalCache cache = PortalCache.get(player);
-				MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-				int dimOld = player.dimension;
-				int dimNew = CavernAPI.dimension.isEntityInCavenia(player) ? cache.getLastDim(10) : CaveniaConfig.dimensionId;
-				WorldServer worldOld = server.worldServerForDimension(dimOld);
-				WorldServer worldNew = server.worldServerForDimension(dimNew);
-				BlockPos prevPos = player.getPosition();
-
-				double x = player.posX;
-				double y = player.posY + player.getEyeHeight();
-				double z = player.posZ;
-
-				worldOld.playSound(player, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 0.5F, 0.5F);
-
-				if (player instanceof EntityPlayerMP)
-				{
-					server.getPlayerList().transferPlayerToDimension((EntityPlayerMP)player, dimNew, new TeleporterCavenia(worldNew));
-				}
-
-				x = player.posX;
-				y = player.posY + player.getEyeHeight();
-				z = player.posZ;
-
-				worldNew.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_FALL, SoundCategory.BLOCKS, 0.75F, 1.0F);
-
-				cache.setLastDim(10, dimOld);
-				cache.setLastPos(10, dimOld, prevPos);
-
-				if (player.getBedLocation(dimNew) == null)
-				{
-					player.setSpawnChunk(player.getPosition(), true, dimNew);
 				}
 
 				if (!player.capabilities.isCreativeMode)
@@ -107,6 +75,52 @@ public class ItemCave extends Item
 		}
 
 		return super.onItemRightClick(world, player, hand);
+	}
+
+	public boolean transferByCavenia(EntityPlayer entityPlayer)
+	{
+		if (!CavernAPI.dimension.isEntityInCaves(entityPlayer))
+		{
+			return false;
+		}
+
+		if (!(entityPlayer instanceof EntityPlayerMP))
+		{
+			return false;
+		}
+
+		EntityPlayerMP player = (EntityPlayerMP)entityPlayer;
+		IPortalCache cache = PortalCache.get(player);
+		MinecraftServer server = player.mcServer;
+		int dimOld = player.dimension;
+		int dimNew = CavernAPI.dimension.isEntityInCavenia(player) ? cache.getLastDim(CAVENIA) : CaveniaConfig.dimensionId;
+		WorldServer worldOld = server.worldServerForDimension(dimOld);
+		WorldServer worldNew = server.worldServerForDimension(dimNew);
+		BlockPos prevPos = player.getPosition();
+
+		double x = player.posX;
+		double y = player.posY + player.getEyeHeight();
+		double z = player.posZ;
+
+		worldOld.playSound(player, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 0.5F, 0.5F);
+
+		server.getPlayerList().transferPlayerToDimension(player, dimNew, new TeleporterCavenia(worldNew));
+
+		x = player.posX;
+		y = player.posY + player.getEyeHeight();
+		z = player.posZ;
+
+		worldNew.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_FALL, SoundCategory.BLOCKS, 0.75F, 1.0F);
+
+		cache.setLastDim(CAVENIA, dimOld);
+		cache.setLastPos(CAVENIA, dimOld, prevPos);
+
+		if (player.getBedLocation(dimNew) == null)
+		{
+			player.setSpawnChunk(player.getPosition(), true, dimNew);
+		}
+
+		return true;
 	}
 
 	public enum EnumType

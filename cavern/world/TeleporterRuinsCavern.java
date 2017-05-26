@@ -1,8 +1,8 @@
 package cavern.world;
 
+import cavern.util.CaveUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.Teleporter;
@@ -21,7 +21,7 @@ public class TeleporterRuinsCavern extends Teleporter
 		entity.rotationYaw = 90.0F;
 		entity.rotationPitch = 10.0F;
 
-		setLocationAndAngles(entity, 0.5D, 80.0D, 0.5D);
+		CaveUtils.setLocationAndAngles(entity, 0.5D, 80.0D, 0.5D);
 
 		if (entity instanceof EntityLivingBase)
 		{
@@ -43,16 +43,4 @@ public class TeleporterRuinsCavern extends Teleporter
 
 	@Override
 	public void removeStalePortalLocations(long worldTime) {}
-
-	public void setLocationAndAngles(Entity entity, double posX, double posY, double posZ)
-	{
-		if (entity instanceof EntityPlayerMP)
-		{
-			((EntityPlayerMP)entity).connection.setPlayerLocation(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
-		}
-		else
-		{
-			entity.setLocationAndAngles(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
-		}
-	}
 }

@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderCrazyCreeper extends RenderCreeper
 {
-	private static final ResourceLocation crazyCreeperTexture = new ResourceLocation("cavern", "textures/entity/crazy_creeper.png");
+	private static final ResourceLocation CRAZY_CREEPER_TEXTURE = new ResourceLocation("cavern", "textures/entity/crazy_creeper.png");
 
 	public RenderCrazyCreeper(RenderManager manager)
 	{
@@ -20,6 +20,6 @@ public class RenderCrazyCreeper extends RenderCreeper
 	@Override
 	protected ResourceLocation getEntityTexture(EntityCreeper entity)
 	{
-		return crazyCreeperTexture;
+		return CRAZY_CREEPER_TEXTURE;
 	}
 }

@@ -4,7 +4,8 @@ import cavern.api.CavernAPI;
 import cavern.api.IHunterStats;
 import cavern.config.GeneralConfig;
 import cavern.config.property.ConfigDisplayPos;
-import cavern.item.ItemCave;
+import cavern.item.ItemMagicalBook;
+import cavern.network.server.StatsAdjustRequestMessage;
 import cavern.stats.HunterRank;
 import cavern.stats.HunterStats;
 import net.minecraft.client.Minecraft;
@@ -12,10 +13,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -48,7 +47,17 @@ public class HunterStatsHUDEventHooks
 			return false;
 		}
 
-		return mc.currentScreen == null || GuiChat.class.isInstance(mc.currentScreen);
+		if (mc.currentScreen != null && !GuiChat.class.isInstance(mc.currentScreen))
+		{
+			return false;
+		}
+
+		if (getDisplayType() == GeneralConfig.magicianPointPosition.getType() && ItemMagicalBook.heldMagicItem(mc.player))
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	protected void setDisplayPos(ConfigDisplayPos.Type type, Minecraft mc, int scaledWidth, int scaledHeight)
@@ -147,7 +156,15 @@ public class HunterStatsHUDEventHooks
 		ScaledResolution resolution = event.getResolution();
 		ConfigDisplayPos.Type displayType = getDisplayType();
 
-		IHunterStats stats = HunterStats.get(mc.player);
+		IHunterStats stats = HunterStats.get(mc.player, true);
+
+		if (stats == null || !stats.isClientAdjusted())
+		{
+			StatsAdjustRequestMessage.request();
+
+			return;
+		}
+
 		HunterRank hunterRank = HunterRank.get(stats.getRank());
 
 		String point = Integer.toString(stats.getPoint());
@@ -160,25 +177,6 @@ public class HunterStatsHUDEventHooks
 
 		RenderItem renderItem = mc.getRenderItem();
 		FontRenderer renderer = mc.fontRendererObj;
-		boolean flag = false;
-		long processTime = Minecraft.getSystemTime() - HunterStats.lastHuntTime;
-
-		if (HunterStats.lastHuntTime > 0 && processTime < 2000L && HunterStats.lastHuntPoint != 0)
-		{
-			ItemStack item = ItemCave.EnumType.CAVENIC_ORB.getItemStack();
-
-			RenderHelper.enableGUIStandardItemLighting();
-			renderItem.renderItemIntoGUI(item, x, y);
-			renderItem.renderItemOverlayIntoGUI(renderer, item, x, y, Integer.toString(HunterStats.lastHuntPoint));
-			RenderHelper.disableStandardItemLighting();
-
-			flag = true;
-		}
-
-		if (flag)
-		{
-			x += displayType.isLeft() ? 20 : -20;
-		}
 
 		renderItem.renderItemIntoGUI(hunterRank.getItemStack(), x, y);
 

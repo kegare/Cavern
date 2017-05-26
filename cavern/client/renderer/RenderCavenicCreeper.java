@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderCavenicCreeper extends RenderCreeper
 {
-	private static final ResourceLocation cavenicCreeperTexture = new ResourceLocation("cavern", "textures/entity/cavenic_creeper.png");
+	private static final ResourceLocation CAVENIC_CREEPER_TEXTURE = new ResourceLocation("cavern", "textures/entity/cavenic_creeper.png");
 
 	public RenderCavenicCreeper(RenderManager manager)
 	{
@@ -20,6 +20,6 @@ public class RenderCavenicCreeper extends RenderCreeper
 	@Override
 	protected ResourceLocation getEntityTexture(EntityCreeper entity)
 	{
-		return cavenicCreeperTexture;
+		return CAVENIC_CREEPER_TEXTURE;
 	}
 }

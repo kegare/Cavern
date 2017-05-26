@@ -16,7 +16,7 @@ import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
 import cavern.miningassist.MiningAssist;
 import cavern.network.CaveNetworkRegistry;
-import cavern.network.MinerStatsAdjustMessage;
+import cavern.network.client.MinerStatsAdjustMessage;
 import cavern.stats.bonus.MineBonusExperience;
 import cavern.stats.bonus.MineBonusGoodMine;
 import cavern.stats.bonus.MineBonusHaste;
@@ -60,6 +60,8 @@ public class MinerStats implements IMinerStats
 	private int rank;
 	private int miningAssist;
 
+	private boolean clientAdjusted;
+
 	public MinerStats(EntityPlayer player)
 	{
 		this.entityPlayer = player;
@@ -84,9 +86,17 @@ public class MinerStats implements IMinerStats
 
 		point = Math.max(value, 0);
 
-		if (adjust && point != prev)
+		if (point != prev)
 		{
-			adjustData();
+			if (adjust)
+			{
+				adjustData();
+			}
+
+			if (entityPlayer != null && entityPlayer.world.isRemote)
+			{
+				clientAdjusted = true;
+			}
 		}
 	}
 
@@ -200,9 +210,17 @@ public class MinerStats implements IMinerStats
 
 		rank = MathHelper.clamp(value, 0, MinerRank.values().length - 1);
 
-		if (adjust && rank != prev)
+		if (rank != prev)
 		{
-			adjustData();
+			if (adjust)
+			{
+				adjustData();
+			}
+
+			if (entityPlayer != null && entityPlayer.world.isRemote)
+			{
+				clientAdjusted = true;
+			}
 		}
 	}
 
@@ -225,9 +243,17 @@ public class MinerStats implements IMinerStats
 
 		miningAssist = MathHelper.clamp(type, 0, MiningAssist.values().length - 1);
 
-		if (adjust && miningAssist != prev)
+		if (miningAssist != prev)
 		{
-			adjustData();
+			if (adjust)
+			{
+				adjustData();
+			}
+
+			if (entityPlayer != null && entityPlayer.world.isRemote)
+			{
+				clientAdjusted = true;
+			}
 		}
 	}
 
@@ -245,20 +271,17 @@ public class MinerStats implements IMinerStats
 	}
 
 	@Override
+	public boolean isClientAdjusted()
+	{
+		return clientAdjusted;
+	}
+
+	@Override
 	public void adjustData()
 	{
 		if (entityPlayer != null && entityPlayer instanceof EntityPlayerMP)
 		{
 			CaveNetworkRegistry.sendTo(new MinerStatsAdjustMessage(this), (EntityPlayerMP)entityPlayer);
-		}
-	}
-
-	@Override
-	public void adjustClientData()
-	{
-		if (entityPlayer != null)
-		{
-			CaveNetworkRegistry.sendToServer(new MinerStatsAdjustMessage(this));
 		}
 	}
 
@@ -280,11 +303,16 @@ public class MinerStats implements IMinerStats
 
 	public static IMinerStats get(EntityPlayer player)
 	{
+		return get(player, false);
+	}
+
+	public static IMinerStats get(EntityPlayer player, boolean nullable)
+	{
 		IMinerStats stats = CaveCapabilities.getCapability(player, CaveCapabilities.MINER_STATS);
 
 		if (stats == null)
 		{
-			return new MinerStats(player);
+			return nullable ? null : new MinerStats(player);
 		}
 
 		return stats;

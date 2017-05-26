@@ -6,7 +6,9 @@ import cavern.client.CaveRenderingRegistry;
 import cavern.config.GeneralConfig;
 import cavern.config.MiningAssistConfig;
 import cavern.config.property.ConfigDisplayPos;
+import cavern.item.ItemMagicalBook;
 import cavern.miningassist.MiningAssist;
+import cavern.network.server.StatsAdjustRequestMessage;
 import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
 import net.minecraft.client.Minecraft;
@@ -61,6 +63,11 @@ public class MinerStatsHUDEventHooks
 			return false;
 		}
 
+		if (getDisplayType() == GeneralConfig.magicianPointPosition.getType() && ItemMagicalBook.heldMagicItem(mc.player))
+		{
+			return false;
+		}
+
 		if (GeneralConfig.alwaysShowMinerStatus)
 		{
 			return true;
@@ -71,7 +78,15 @@ public class MinerStatsHUDEventHooks
 			return true;
 		}
 
-		return GeneralConfig.isMiningPointItem(mc.player.getHeldItemMainhand()) || GeneralConfig.isMiningPointItem(mc.player.getHeldItemOffhand());
+		for (ItemStack held : mc.player.getHeldEquipment())
+		{
+			if (GeneralConfig.isMiningPointItem(held))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	protected void setDisplayPos(ConfigDisplayPos.Type type, Minecraft mc, int scaledWidth, int scaledHeight)
@@ -170,7 +185,15 @@ public class MinerStatsHUDEventHooks
 		ScaledResolution resolution = event.getResolution();
 		ConfigDisplayPos.Type displayType = getDisplayType();
 
-		IMinerStats stats = MinerStats.get(mc.player);
+		IMinerStats stats = MinerStats.get(mc.player, true);
+
+		if (stats == null || !stats.isClientAdjusted())
+		{
+			StatsAdjustRequestMessage.request();
+
+			return;
+		}
+
 		MinerRank minerRank = MinerRank.get(stats.getRank());
 		MiningAssist miningAssist = MiningAssist.get(stats.getMiningAssist());
 

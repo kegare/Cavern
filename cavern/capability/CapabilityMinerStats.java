@@ -12,7 +12,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 public class CapabilityMinerStats implements ICapabilitySerializable<NBTTagCompound>
 {
-	private final MinerStats stats;
+	private final IMinerStats stats;
 
 	public CapabilityMinerStats(EntityPlayer player)
 	{

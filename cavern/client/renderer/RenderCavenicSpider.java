@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderCavenicSpider extends RenderSpider<EntitySpider>
 {
-	private static final ResourceLocation cavenicSpiderTexture = new ResourceLocation("cavern", "textures/entity/cavenic_spider.png");
+	private static final ResourceLocation CAVENIC_SPIDER_TEXTURE = new ResourceLocation("cavern", "textures/entity/cavenic_spider.png");
 
 	public RenderCavenicSpider(RenderManager manager)
 	{
@@ -20,7 +20,7 @@ public class RenderCavenicSpider extends RenderSpider<EntitySpider>
 	@Override
 	protected ResourceLocation getEntityTexture(EntitySpider entity)
 	{
-		return cavenicSpiderTexture;
+		return CAVENIC_SPIDER_TEXTURE;
 	}
 
 	@Override

@@ -28,9 +28,9 @@ public interface IMinerStats
 
 	public void toggleMiningAssist();
 
-	public void adjustData();
+	public boolean isClientAdjusted();
 
-	public void adjustClientData();
+	public void adjustData();
 
 	public void writeToNBT(NBTTagCompound nbt);
 

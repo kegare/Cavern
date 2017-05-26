@@ -20,9 +20,9 @@ public interface IHunterStats
 
 	public void setRank(int value, boolean adjust);
 
-	public void adjustData();
+	public boolean isClientAdjusted();
 
-	public void adjustClientData();
+	public void adjustData();
 
 	public void writeToNBT(NBTTagCompound nbt);
 

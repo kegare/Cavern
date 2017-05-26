@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderCrazySkeleton extends RenderSkeleton
 {
-	private static final ResourceLocation crazySkeletonTexture = new ResourceLocation("cavern", "textures/entity/crazy_skeleton.png");
+	private static final ResourceLocation CRAZY_SKELETON_TEXTURE = new ResourceLocation("cavern", "textures/entity/crazy_skeleton.png");
 
 	public RenderCrazySkeleton(RenderManager manager)
 	{
@@ -27,6 +27,6 @@ public class RenderCrazySkeleton extends RenderSkeleton
 	@Override
 	protected ResourceLocation getEntityTexture(AbstractSkeleton entity)
 	{
-		return crazySkeletonTexture;
+		return CRAZY_SKELETON_TEXTURE;
 	}
 }

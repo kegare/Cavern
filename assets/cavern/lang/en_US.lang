@@ -50,6 +50,15 @@ cavern.config.general.huntingPointPosition.3=Buttom Left
 cavern.config.general.huntingPointPosition.4=Hidden
 cavern.config.general.showHunterRank=Show Hunter Rank
 cavern.config.general.showHunterRank.tooltip=Whether to show the hunter rank along with hunting points.
+cavern.config.general.magicianPointPosition=Magician Point Position
+cavern.config.general.magicianPointPosition.tooltip=Specify the display position of magician point.
+cavern.config.general.magicianPointPosition.0=Top Right
+cavern.config.general.magicianPointPosition.1=Top Left
+cavern.config.general.magicianPointPosition.2=Buttom Right
+cavern.config.general.magicianPointPosition.3=Buttom Left
+cavern.config.general.magicianPointPosition.4=Hidden
+cavern.config.general.showMagicianRank=Show Magician Rank
+cavern.config.general.showMagicianRank.tooltip=Whether to show the magician rank along with magician points.
 cavern.config.general.caveborn=Caveborn
 cavern.config.general.caveborn.tooltip=Specify the caveborn type. Transfer to the cave dimension when join to world for the first time.
 cavern.config.general.caveborn.0=Disabled
@@ -232,6 +241,17 @@ cavern.hunterrank.ranger=Ranger
 cavern.hunterrank.crazyRanger=Crazy Ranger
 cavern.hunterrank.promoted=Congratulations! %s has promoted to the %s rank.
 
+cavern.magicianrank.beginner=Beginner
+cavern.magicianrank.noviceMagician=Novice Magician
+cavern.magicianrank.magician=Magician
+cavern.magicianrank.mage=Mage
+cavern.magicianrank.grandMage=Grand Mage
+cavern.magicianrank.promoted=Congratulations! %s has promoted to the %s rank.
+
+cavern.magicianstats.rank.short=The magic beyond your magical knowledge
+cavern.magicianstats.mp.short=You did not have enough MP
+cavern.magicianstats.magic.short=The magic does not meet the conditions
+
 cavern.terrain.wait=Please wait a moment
 cavern.terrain.load=Loading terrain
 
@@ -303,6 +323,24 @@ item.axeIce.name=Ice Axe
 item.shovelIce.name=Ice Shovel
 item.hoeIce.name=Ice Hoe
 item.bowIce.name=Ice Bow
+item.magicalBook.name=Magical Book
+item.magicalBook.flameBreath.name=Flame Breath
+item.magicalBook.explosion.name=Explosion
+item.magicalBook.thunderbolt.name=Thunderbolt
+item.magicalBook.venomBlast.name=Venom Blast
+item.magicalBook.return.name=Return
+item.magicalBook.heal.name=Heal
+item.magicalBook.holyBless.name=Holy Bless
+item.magicalBook.storage.name=Storage
+item.magicalBook.storage.stock=Stock
+item.magicalBook.warp.name=Warp
+item.magicalBook.warp.point=Warp Point
+item.magicalBook.warp.point.set=Warp Point has been set
+item.magicalBook.warp.point.far=Warp Point is too far
+item.elixir.name=Elixir
+item.elixirMedium.name=Medium Elixir
+item.elixirHigh.name=High Elixir
+item.elixir.tooltip.mp=Heal MP
 
 entity.CavenicSkeleton.name=Cavenic Skeleton
 entity.CavenicCreeper.name=Cavenic Creeper
@@ -312,6 +350,7 @@ entity.CrazySkeleton.name=Crazy Skeleton
 entity.CrazyCreeper.name=Crazy Creeper
 entity.CrazyZombie.name=Crazy Zombie
 entity.CrazySpider.name=Crazy Spider
+entity.CavenicBear.name=Cavenic Bear
 
 itemGroup.cavern=Cavern
 
@@ -361,6 +400,8 @@ achievement.cavern.cavenicZombie=Hideous Zombie
 achievement.cavern.cavenicZombie.desc=Kill a Cavenic Zombie
 achievement.cavern.cavenicSpider=Hideous Spider
 achievement.cavern.cavenicSpider.desc=Kill a Cavenic Spider
+achievement.cavern.cavenicBear=Hideous Bear
+achievement.cavern.cavenicBear.desc=Kill a Cavenic Bear
 achievement.cavern.lostOrb=In Search of Lost Orb
 achievement.cavern.lostOrb.desc=Mission of Ruins Cavern
 achievement.cavern.cavenia=Cavenia
@@ -381,6 +422,14 @@ achievement.cavern.crazyHunter=Crazy Hunter
 achievement.cavern.crazyHunter.desc=Become an Crazy Hunter
 achievement.cavern.crazyRanger=Crazy Ranger
 achievement.cavern.crazyRanger.desc=Become a Crazy Ranger
+achievement.cavern.noviceMagician=Novice Magician
+achievement.cavern.noviceMagician.desc=Become a Novice Magician
+achievement.cavern.magician=Magician
+achievement.cavern.magician.desc=Become a Magician
+achievement.cavern.mage=Mage
+achievement.cavern.mage.desc=Become a Mage
+achievement.cavern.grandMage=Grand Mage
+achievement.cavern.grandMage.desc=Become a Grand Mage
 
 key.cavern.miningAssist=Toggle Mining Assist
 

@@ -2,11 +2,16 @@ package cavern.network;
 
 import cavern.core.Cavern;
 import cavern.network.client.CaveMusicMessage;
+import cavern.network.client.HunterStatsAdjustMessage;
 import cavern.network.client.LastMineMessage;
+import cavern.network.client.MagicianStatsAdjustMessage;
+import cavern.network.client.MinerStatsAdjustMessage;
 import cavern.network.client.RegenerationGuiMessage;
+import cavern.network.server.MagicExecuteMessage;
 import cavern.network.server.MineBonusMessage;
 import cavern.network.server.MiningAssistMessage;
 import cavern.network.server.RegenerationMessage;
+import cavern.network.server.StatsAdjustRequestMessage;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -23,12 +28,6 @@ public class CaveNetworkRegistry
 	public static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, Side side)
 	{
 		NETWORK.registerMessage(messageHandler, requestMessageType, messageId++, side);
-	}
-
-	public static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType)
-	{
-		registerMessage(messageHandler, requestMessageType, Side.CLIENT);
-		registerMessage(messageHandler, requestMessageType, Side.SERVER);
 	}
 
 	public static void sendToAll(IMessage message)
@@ -53,13 +52,16 @@ public class CaveNetworkRegistry
 
 	public static void registerMessages()
 	{
-		registerMessage(MinerStatsAdjustMessage.class, MinerStatsAdjustMessage.class);
-		registerMessage(HunterStatsAdjustMessage.class, HunterStatsAdjustMessage.class);
+		registerMessage(MinerStatsAdjustMessage.class, MinerStatsAdjustMessage.class, Side.CLIENT);
+		registerMessage(HunterStatsAdjustMessage.class, HunterStatsAdjustMessage.class, Side.CLIENT);
+		registerMessage(MagicianStatsAdjustMessage.class, MagicianStatsAdjustMessage.class, Side.CLIENT);
 		registerMessage(LastMineMessage.class, LastMineMessage.class, Side.CLIENT);
 		registerMessage(MineBonusMessage.class, MineBonusMessage.class, Side.SERVER);
 		registerMessage(CaveMusicMessage.class, CaveMusicMessage.class, Side.CLIENT);
 		registerMessage(RegenerationGuiMessage.class, RegenerationGuiMessage.class, Side.CLIENT);
 		registerMessage(RegenerationMessage.class, RegenerationMessage.class, Side.SERVER);
 		registerMessage(MiningAssistMessage.class, MiningAssistMessage.class, Side.SERVER);
+		registerMessage(MagicExecuteMessage.class, MagicExecuteMessage.class, Side.SERVER);
+		registerMessage(StatsAdjustRequestMessage.class, StatsAdjustRequestMessage.class, Side.SERVER);
 	}
 }

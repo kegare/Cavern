@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 
 import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
+import cavern.entity.EntityCavenicBear;
 import cavern.entity.EntityCavenicCreeper;
 import cavern.entity.EntityCavenicSkeleton;
 import cavern.entity.EntityCavenicSpider;
@@ -18,6 +19,7 @@ import cavern.item.CaveItems;
 import cavern.item.ItemAcresia;
 import cavern.item.ItemCave;
 import cavern.stats.HunterRank;
+import cavern.stats.MagicianRank;
 import cavern.stats.MinerRank;
 import cavern.util.ArrayListExtended;
 import cavern.util.CaveUtils;
@@ -56,6 +58,7 @@ public class CaveAchievements
 	public static final Achievement CAVENIC_CREEPER = CaveAchievement.of("cavenicCreeper", -3, 7, CaveUtils.getSpawnEgg(EntityCavenicCreeper.class), CAVERN);
 	public static final Achievement CAVENIC_ZOMBIE = CaveAchievement.of("cavenicZombie", 1, 7, CaveUtils.getSpawnEgg(EntityCavenicZombie.class), CAVERN);
 	public static final Achievement CAVENIC_SPIDER = CaveAchievement.of("cavenicSpider", 3, 7, CaveUtils.getSpawnEgg(EntityCavenicSpider.class), CAVERN);
+	public static final Achievement CAVENIC_BEAR = CaveAchievement.of("cavenicBear", -8, 0, CaveUtils.getSpawnEgg(EntityCavenicBear.class), ICE_CAVERN);
 	public static final Achievement LOST_ORB = CaveAchievement.of("lostOrb", 4, -2, ItemCave.EnumType.MINER_ORB.getItemStack(), RUINS_CAVERN);
 	public static final Achievement CAVENIA = CaveAchievement.of("cavenia", 0, 9, ItemCave.EnumType.CAVENIC_ORB.getItemStack(), null);
 	public static final Achievement HUNTER = CaveAchievement.of("hunter", -2, 11, HunterRank.HUNTER.getItemStack(), CAVENIA);
@@ -66,6 +69,10 @@ public class CaveAchievements
 	public static final Achievement CRAZY_CREEPER = CaveAchievement.of("crazyCreeper", -3, 13, CaveUtils.getSpawnEgg(EntityCrazyCreeper.class), CAVENIA).setSpecial();
 	public static final Achievement CRAZY_ZOMBIE = CaveAchievement.of("crazyZombie", 1, 13, CaveUtils.getSpawnEgg(EntityCrazyZombie.class), CAVENIA).setSpecial();
 	public static final Achievement CRAZY_SPIDER = CaveAchievement.of("crazySpider", 3, 13, CaveUtils.getSpawnEgg(EntityCrazySpider.class), CAVENIA).setSpecial();
+	public static final Achievement NOVICE_MAGICIAN = CaveAchievement.of("noviceMagician", 3, 9, MagicianRank.NOVICE_MAGICIAN.getItemStack(), null);
+	public static final Achievement MAGICIAN = CaveAchievement.of("magician", 5, 9, MagicianRank.MAGICIAN.getItemStack(), NOVICE_MAGICIAN);
+	public static final Achievement MAGE = CaveAchievement.of("mage", 7, 9, MagicianRank.MAGE.getItemStack(), MAGICIAN);
+	public static final Achievement GRAND_MAGE = CaveAchievement.of("grandMage", 9, 9, MagicianRank.GRAND_MAGE.getItemStack(), MAGE).setSpecial();
 
 	public static final List<Achievement> ESCAPE_ACHIEVEMENTS = Lists.newArrayList();
 

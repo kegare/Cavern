@@ -5,7 +5,9 @@ import java.util.Random;
 import com.google.common.base.Strings;
 
 import cavern.api.CavernAPI;
+import cavern.api.IHunterStats;
 import cavern.api.IIceEquipment;
+import cavern.api.IMagicianStats;
 import cavern.api.IMinerStats;
 import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
@@ -17,9 +19,12 @@ import cavern.item.CaveItems;
 import cavern.item.IAquaTool;
 import cavern.item.IceEquipment;
 import cavern.item.ItemCave;
+import cavern.item.ItemMagicalBook;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.CaveMusicMessage;
 import cavern.network.client.LastMineMessage;
+import cavern.stats.HunterStats;
+import cavern.stats.MagicianStats;
 import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
 import cavern.util.BlockMeta;
@@ -67,11 +72,12 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemSmeltedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 public class CaveEventHooks
 {
 	protected static final Random RANDOM = new Random();
+
+	private static final String NBT_LOST_ORB = "Cavern:LostOrb";
 
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)
@@ -80,18 +86,31 @@ public class CaveEventHooks
 		{
 			EntityPlayerMP player = (EntityPlayerMP)event.getEntity();
 
-			MinerStats.get(player).adjustData();
+			adjustPlayerStats(player);
 		}
 	}
 
-	@SubscribeEvent
-	public void onPlayerLoggedIn(PlayerLoggedInEvent event)
+	public static void adjustPlayerStats(EntityPlayer player)
 	{
-		if (event.player instanceof EntityPlayerMP)
-		{
-			EntityPlayerMP player = (EntityPlayerMP)event.player;
+		IMinerStats minerStats = MinerStats.get(player, true);
 
-			MinerStats.get(player).adjustData();
+		if (minerStats != null)
+		{
+			minerStats.adjustData();
+		}
+
+		IHunterStats hunterStats = HunterStats.get(player, true);
+
+		if (hunterStats != null)
+		{
+			hunterStats.adjustData();
+		}
+
+		IMagicianStats magicianStats = MagicianStats.get(player, true);
+
+		if (magicianStats != null)
+		{
+			magicianStats.adjustData();
 		}
 	}
 
@@ -380,6 +399,24 @@ public class CaveEventHooks
 						{
 							Block.spawnAsEntity(world, pos, new ItemStack(Blocks.PACKED_ICE));
 						}
+						else if (RANDOM.nextDouble() < 0.01D)
+						{
+							WeightedItem randomItem = WeightedRandom.getRandomItem(RANDOM, ItemMagicalBook.MAGIC_ITEMS);
+							ItemStack stack = randomItem.getItem();
+
+							if (stack.getItem() instanceof ItemMagicalBook)
+							{
+								ItemMagicalBook magicalBook = (ItemMagicalBook)stack.getItem();
+								int rank = MagicianStats.get(thePlayer).getRank();
+
+								if (magicalBook.getMagicLevel(stack) > rank + 1)
+								{
+									magicalBook.setMagicLevel(stack, 1);
+								}
+							}
+
+							Block.spawnAsEntity(world, pos, stack);
+						}
 					}
 				}
 			}
@@ -474,12 +511,18 @@ public class CaveEventHooks
 					}
 				}
 
-				if (player.ticksExisted % 100 == 0 && player.getEntityData().hasKey("Cavern:LostOrb"))
+				if (player.ticksExisted % 100 == 0 && player.getEntityData().hasKey(NBT_LOST_ORB))
 				{
 					player.addStat(CaveAchievements.LOST_ORB);
-					player.getEntityData().removeTag("Cavern:LostOrb");
+
+					player.getEntityData().removeTag(NBT_LOST_ORB);
 				}
 			}
+		}
+
+		if (entity instanceof EntityPlayer)
+		{
+			MagicianStats.get((EntityPlayer)entity).onUpdate();
 		}
 	}
 
@@ -594,7 +637,7 @@ public class CaveEventHooks
 
 		if (achievement == CaveAchievements.RUINS_CAVERN && !player.hasAchievement(CaveAchievements.LOST_ORB))
 		{
-			player.getEntityData().setBoolean("Cavern:LostOrb", true);
+			player.getEntityData().setBoolean(NBT_LOST_ORB, true);
 		}
 	}
 }

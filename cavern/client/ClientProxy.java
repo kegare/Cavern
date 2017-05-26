@@ -31,12 +31,6 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public EntityPlayer getClientPlayer()
-	{
-		return FMLClientHandler.instance().getClientPlayerEntity();
-	}
-
-	@Override
 	public boolean hasAchievementUnlocked(EntityPlayer player, Achievement achievement)
 	{
 		if (player != null && player instanceof EntityPlayerSP)

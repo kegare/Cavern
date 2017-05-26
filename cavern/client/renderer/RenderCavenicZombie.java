@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderCavenicZombie extends RenderZombie
 {
-	private static final ResourceLocation cavenicZombieTexture = new ResourceLocation("cavern", "textures/entity/cavenic_zombie.png");
+	private static final ResourceLocation CAVENIC_ZOMBIE_TEXTURE = new ResourceLocation("cavern", "textures/entity/cavenic_zombie.png");
 
 	public RenderCavenicZombie(RenderManager manager)
 	{
@@ -20,6 +20,6 @@ public class RenderCavenicZombie extends RenderZombie
 	@Override
 	protected ResourceLocation getEntityTexture(EntityZombie entity)
 	{
-		return cavenicZombieTexture;
+		return CAVENIC_ZOMBIE_TEXTURE;
 	}
 }

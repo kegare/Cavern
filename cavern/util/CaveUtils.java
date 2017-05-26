@@ -33,6 +33,7 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.Loader;
@@ -281,5 +282,25 @@ public class CaveUtils
 		ResourceLocation entityName = EntityList.getKey(entityClass);
 
 		return getSpawnEgg(entityName);
+	}
+
+	public static void setLocationAndAngles(Entity entity, double posX, double posY, double posZ)
+	{
+		if (entity instanceof EntityPlayerMP)
+		{
+			((EntityPlayerMP)entity).connection.setPlayerLocation(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
+		}
+		else
+		{
+			entity.setLocationAndAngles(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
+		}
+	}
+
+	public static void setLocationAndAngles(Entity entity, BlockPos pos)
+	{
+		if (pos != null)
+		{
+			setLocationAndAngles(entity, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+		}
 	}
 }

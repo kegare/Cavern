@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderCrazyZombie extends RenderZombie
 {
-	private static final ResourceLocation crazyZombieTexture = new ResourceLocation("cavern", "textures/entity/crazy_zombie.png");
+	private static final ResourceLocation CRAZY_ZOMBIE_TEXTURE = new ResourceLocation("cavern", "textures/entity/crazy_zombie.png");
 
 	public RenderCrazyZombie(RenderManager manager)
 	{
@@ -20,6 +20,6 @@ public class RenderCrazyZombie extends RenderZombie
 	@Override
 	protected ResourceLocation getEntityTexture(EntityZombie entity)
 	{
-		return crazyZombieTexture;
+		return CRAZY_ZOMBIE_TEXTURE;
 	}
 }

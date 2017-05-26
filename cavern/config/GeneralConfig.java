@@ -36,6 +36,9 @@ public class GeneralConfig
 	public static ConfigDisplayPos huntingPointPosition = new ConfigDisplayPos();
 	public static boolean showHunterRank;
 
+	public static ConfigDisplayPos magicianPointPosition = new ConfigDisplayPos();
+	public static boolean showMagicianRank;
+
 	public static ConfigCaveborn caveborn = new ConfigCaveborn();
 	public static boolean cavernEscapeMission;
 
@@ -185,6 +188,42 @@ public class GeneralConfig
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		showHunterRank = prop.getBoolean(showHunterRank);
+
+		if (side.isClient())
+		{
+			prop = config.get(category, "magicianPointPosition", ConfigDisplayPos.Type.BOTTOM_RIGHT.ordinal());
+			prop.setMinValue(0).setMaxValue(ConfigDisplayPos.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleInteger);
+			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
+
+			int min = Integer.parseInt(prop.getMinValue());
+			int max = Integer.parseInt(prop.getMaxValue());
+
+			for (int i = min; i <= max; ++i)
+			{
+				comment += Configuration.NEW_LINE + i + ": " + Cavern.proxy.translate(prop.getLanguageKey() + "." + i);
+
+				if (i < max)
+				{
+					comment += ",";
+				}
+			}
+
+			prop.setComment(comment);
+			propOrder.add(prop.getName());
+			magicianPointPosition.setValue(prop.getInt(magicianPointPosition.getValue()));
+		}
+
+		prop = config.get(category, "showMagicianRank", true);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [default: " + prop.getDefault() + "]";
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, does not have to match client-side and server-side.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		showMagicianRank = prop.getBoolean(showMagicianRank);
 
 		prop = config.get(category, "caveborn", ConfigCaveborn.Type.DISABLED.ordinal());
 		prop.setMinValue(0).setMaxValue(ConfigCaveborn.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleInteger);

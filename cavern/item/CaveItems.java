@@ -70,6 +70,8 @@ public class CaveItems
 	public static final ItemShovelIce ICE_SHOVEL = new ItemShovelIce();
 	public static final ItemHoeIce ICE_HOE = new ItemHoeIce();
 	public static final ItemBowIce ICE_BOW = new ItemBowIce();
+	public static final ItemMagicalBook MAGICAL_BOOK = new ItemMagicalBook();
+	public static final ItemElixir ELIXIR = new ItemElixir();
 
 	public static List<Item> getItems()
 	{
@@ -108,6 +110,8 @@ public class CaveItems
 		registerItem(registry, ICE_SHOVEL.setRegistryName("ice_shovel"));
 		registerItem(registry, ICE_HOE.setRegistryName("ice_hoe"));
 		registerItem(registry, ICE_BOW.setRegistryName("ice_bow"));
+		registerItem(registry, MAGICAL_BOOK.setRegistryName("magical_book"));
+		registerItem(registry, ELIXIR.setRegistryName("elixir"));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -136,6 +140,9 @@ public class CaveItems
 		registerModel(ICE_SHOVEL, "ice_shovel");
 		registerModel(ICE_HOE, "ice_hoe");
 		registerModel(ICE_BOW, "ice_bow");
+		registerModelWithMeta(MAGICAL_BOOK, "magical_book_flame_breath", "magical_book_explosion", "magical_book_thunderbolt",
+			"magical_book_venom_blast", "magical_book_return", "magical_book_heal", "magical_book_holy_bless", "magical_book_storage", "magical_book_warp");
+		registerModelWithMeta(ELIXIR, "elixir", "elixir_medium", "elixir_high");
 	}
 
 	@SideOnly(Side.CLIENT)

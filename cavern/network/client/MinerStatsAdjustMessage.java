@@ -1,13 +1,15 @@
-package cavern.network;
+package cavern.network.client;
 
 import cavern.api.IMinerStats;
-import cavern.core.Cavern;
 import cavern.stats.MinerStats;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MinerStatsAdjustMessage implements IMessage, IMessageHandler<MinerStatsAdjustMessage, IMessage>
 {
@@ -40,27 +42,22 @@ public class MinerStatsAdjustMessage implements IMessage, IMessageHandler<MinerS
 		buf.writeInt(miningAssist);
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public IMessage onMessage(MinerStatsAdjustMessage message, MessageContext ctx)
 	{
-		EntityPlayer player;
-
-		if (ctx.side.isClient())
-		{
-			player = Cavern.proxy.getClientPlayer();
-		}
-		else
-		{
-			player = ctx.getServerHandler().playerEntity;
-		}
+		EntityPlayer player = FMLClientHandler.instance().getClientPlayerEntity();
 
 		if (player != null)
 		{
-			IMinerStats stats = MinerStats.get(player);
+			IMinerStats stats = MinerStats.get(player, true);
 
-			stats.setPoint(message.point);
-			stats.setRank(message.rank);
-			stats.setMiningAssist(message.miningAssist);
+			if (stats != null)
+			{
+				stats.setPoint(message.point, false);
+				stats.setRank(message.rank, false);
+				stats.setMiningAssist(message.miningAssist, false);
+			}
 		}
 
 		return null;

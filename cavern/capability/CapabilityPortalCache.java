@@ -11,7 +11,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 
 public class CapabilityPortalCache implements ICapabilitySerializable<NBTTagCompound>
 {
-	private final PortalCache cache;
+	private final IPortalCache cache;
 
 	public CapabilityPortalCache()
 	{

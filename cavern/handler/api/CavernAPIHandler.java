@@ -7,6 +7,7 @@ import cavern.api.ICavernAPI;
 import cavern.api.IFissureBreakEvent;
 import cavern.api.IHunterStats;
 import cavern.api.IIceEquipment;
+import cavern.api.IMagicianStats;
 import cavern.api.IMineBonus;
 import cavern.api.IMinerStats;
 import cavern.block.BlockCave;
@@ -19,6 +20,7 @@ import cavern.item.CaveItems;
 import cavern.item.IceEquipment;
 import cavern.item.ItemCave;
 import cavern.stats.HunterStats;
+import cavern.stats.MagicianStats;
 import cavern.stats.MinerStats;
 import cavern.util.WeightedItem;
 import cavern.world.WorldProviderIceCavern;
@@ -65,6 +67,12 @@ public class CavernAPIHandler implements ICavernAPI
 	public IHunterStats getHunterStats(EntityPlayer player)
 	{
 		return HunterStats.get(player);
+	}
+
+	@Override
+	public IMagicianStats getMagicianStats(EntityPlayer player)
+	{
+		return MagicianStats.get(player);
 	}
 
 	@Override

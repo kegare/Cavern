@@ -1,13 +1,15 @@
-package cavern.network;
+package cavern.network.client;
 
 import cavern.api.IHunterStats;
-import cavern.core.Cavern;
 import cavern.stats.HunterStats;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class HunterStatsAdjustMessage implements IMessage, IMessageHandler<HunterStatsAdjustMessage, IMessage>
 {
@@ -36,26 +38,21 @@ public class HunterStatsAdjustMessage implements IMessage, IMessageHandler<Hunte
 		buf.writeInt(rank);
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public IMessage onMessage(HunterStatsAdjustMessage message, MessageContext ctx)
 	{
-		EntityPlayer player;
-
-		if (ctx.side.isClient())
-		{
-			player = Cavern.proxy.getClientPlayer();
-		}
-		else
-		{
-			player = ctx.getServerHandler().playerEntity;
-		}
+		EntityPlayer player = FMLClientHandler.instance().getClientPlayerEntity();
 
 		if (player != null)
 		{
-			IHunterStats stats = HunterStats.get(player);
+			IHunterStats stats = HunterStats.get(player, true);
 
-			stats.setPoint(message.point);
-			stats.setRank(message.rank);
+			if (stats != null)
+			{
+				stats.setPoint(message.point, false);
+				stats.setRank(message.rank, false);
+			}
 		}
 
 		return null;

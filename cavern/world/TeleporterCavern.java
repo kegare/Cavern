@@ -79,7 +79,7 @@ public class TeleporterCavern extends Teleporter
 
 			if (cache.hasLastPos(getType(), entity.dimension))
 			{
-				setLocationAndAngles(entity, cache.getLastPos(getType(), entity.dimension));
+				CaveUtils.setLocationAndAngles(entity, cache.getLastPos(getType(), entity.dimension));
 
 				if (placeInExistingPortal(entity, rotationYaw))
 				{
@@ -87,7 +87,7 @@ public class TeleporterCavern extends Teleporter
 				}
 				else
 				{
-					setLocationAndAngles(entity, posX, posY, posZ);
+					CaveUtils.setLocationAndAngles(entity, posX, posY, posZ);
 				}
 			}
 		}
@@ -302,7 +302,7 @@ public class TeleporterCavern extends Teleporter
 				entity.rotationYaw = par2 - face0.getHorizontalIndex() * 90 + face.getHorizontalIndex() * 90;
 			}
 
-			setLocationAndAngles(entity, posX, posY, posZ);
+			CaveUtils.setLocationAndAngles(entity, posX, posY, posZ);
 
 			return true;
 		}
@@ -318,26 +318,6 @@ public class TeleporterCavern extends Teleporter
 	protected boolean isPortalBlock(IBlockState state)
 	{
 		return state != null && state.getBlock() == portal;
-	}
-
-	public void setLocationAndAngles(Entity entity, double posX, double posY, double posZ)
-	{
-		if (entity instanceof EntityPlayerMP)
-		{
-			((EntityPlayerMP)entity).connection.setPlayerLocation(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
-		}
-		else
-		{
-			entity.setLocationAndAngles(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
-		}
-	}
-
-	public void setLocationAndAngles(Entity entity, BlockPos pos)
-	{
-		if (pos != null)
-		{
-			setLocationAndAngles(entity, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
-		}
 	}
 
 	@Override

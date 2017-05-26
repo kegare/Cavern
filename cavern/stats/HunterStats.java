@@ -6,7 +6,7 @@ import cavern.capability.CaveCapabilities;
 import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
 import cavern.network.CaveNetworkRegistry;
-import cavern.network.HunterStatsAdjustMessage;
+import cavern.network.client.HunterStatsAdjustMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,20 +17,15 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class HunterStats implements IHunterStats
 {
-	public static int lastHuntPoint;
-
-	@SideOnly(Side.CLIENT)
-	public static long lastHuntTime;
-
 	private final EntityPlayer entityPlayer;
 
 	private int point;
 	private int rank;
+
+	private boolean clientAdjusted;
 
 	public HunterStats(EntityPlayer player)
 	{
@@ -56,9 +51,17 @@ public class HunterStats implements IHunterStats
 
 		point = Math.max(value, 0);
 
-		if (adjust && point != prev)
+		if (point != prev)
 		{
-			adjustData();
+			if (adjust)
+			{
+				adjustData();
+			}
+
+			if (entityPlayer != null && entityPlayer.world.isRemote)
+			{
+				clientAdjusted = true;
+			}
 		}
 	}
 
@@ -172,10 +175,24 @@ public class HunterStats implements IHunterStats
 
 		rank = MathHelper.clamp(value, 0, HunterRank.values().length - 1);
 
-		if (adjust && rank != prev)
+		if (rank != prev)
 		{
-			adjustData();
+			if (adjust)
+			{
+				adjustData();
+			}
+
+			if (entityPlayer != null && entityPlayer.world.isRemote)
+			{
+				clientAdjusted = true;
+			}
 		}
+	}
+
+	@Override
+	public boolean isClientAdjusted()
+	{
+		return clientAdjusted;
 	}
 
 	@Override
@@ -184,15 +201,6 @@ public class HunterStats implements IHunterStats
 		if (entityPlayer != null && entityPlayer instanceof EntityPlayerMP)
 		{
 			CaveNetworkRegistry.sendTo(new HunterStatsAdjustMessage(this), (EntityPlayerMP)entityPlayer);
-		}
-	}
-
-	@Override
-	public void adjustClientData()
-	{
-		if (entityPlayer != null)
-		{
-			CaveNetworkRegistry.sendToServer(new HunterStatsAdjustMessage(this));
 		}
 	}
 
@@ -212,18 +220,18 @@ public class HunterStats implements IHunterStats
 
 	public static IHunterStats get(EntityPlayer player)
 	{
+		return get(player, false);
+	}
+
+	public static IHunterStats get(EntityPlayer player, boolean nullable)
+	{
 		IHunterStats stats = CaveCapabilities.getCapability(player, CaveCapabilities.HUNTER_STATS);
 
 		if (stats == null)
 		{
-			return new HunterStats(player);
+			return nullable ? null : new HunterStats(player);
 		}
 
 		return stats;
-	}
-
-	public static void setLastHunt(int point)
-	{
-		lastHuntPoint = point;
 	}
 }

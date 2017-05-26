@@ -23,11 +23,6 @@ public class CommonProxy
 		return FMLCommonHandler.instance().getMinecraftServerInstance().isSinglePlayer();
 	}
 
-	public EntityPlayer getClientPlayer()
-	{
-		return null;
-	}
-
 	public boolean hasAchievementUnlocked(EntityPlayer player, Achievement achievement)
 	{
 		if (player != null && player instanceof EntityPlayerMP)

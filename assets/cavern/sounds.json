@@ -70,5 +70,23 @@
     "sounds": [
       "cavern:promote"
     ]
+  },
+  "magic.spelling": {
+    "category": "player",
+    "sounds": [
+      "cavern:spelling"
+    ]
+  },
+  "magic.spelling.end": {
+    "category": "player",
+    "sounds": [
+      "cavern:spelling_end"
+    ]
+  },
+  "magic.success": {
+    "category": "player",
+    "sounds": [
+      "cavern:magic_success"
+    ]
   }
 }

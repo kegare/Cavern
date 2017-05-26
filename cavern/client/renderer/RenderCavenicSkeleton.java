@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderCavenicSkeleton extends RenderSkeleton
 {
-	private static final ResourceLocation cavenicSkeletonTexture = new ResourceLocation("cavern", "textures/entity/cavenic_skeleton.png");
+	private static final ResourceLocation CAVENIC_SKELETON_TEXTURE = new ResourceLocation("cavern", "textures/entity/cavenic_skeleton.png");
 
 	public RenderCavenicSkeleton(RenderManager manager)
 	{
@@ -27,6 +27,6 @@ public class RenderCavenicSkeleton extends RenderSkeleton
 	@Override
 	protected ResourceLocation getEntityTexture(AbstractSkeleton entity)
 	{
-		return cavenicSkeletonTexture;
+		return CAVENIC_SKELETON_TEXTURE;
 	}
 }

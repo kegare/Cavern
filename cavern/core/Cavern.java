@@ -8,6 +8,8 @@ import cavern.client.CaveRenderingRegistry;
 import cavern.client.config.CaveConfigEntries;
 import cavern.client.handler.ClientEventHooks;
 import cavern.client.handler.HunterStatsHUDEventHooks;
+import cavern.client.handler.MagicSpellEventHooks;
+import cavern.client.handler.MagicianStatsHUDEventHooks;
 import cavern.client.handler.MinerStatsHUDEventHooks;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
@@ -21,12 +23,14 @@ import cavern.config.RuinsCavernConfig;
 import cavern.entity.CaveEntityRegistry;
 import cavern.handler.CaveEventHooks;
 import cavern.handler.CaveFuelHandler;
+import cavern.handler.CaveGuiHandler;
 import cavern.handler.CavebornEventHooks;
 import cavern.handler.CaveniaEventHooks;
 import cavern.handler.MiningAssistEventHooks;
 import cavern.handler.api.CavernAPIHandler;
 import cavern.handler.api.DimensionHandler;
 import cavern.item.CaveItems;
+import cavern.item.ItemMagicalBook;
 import cavern.network.CaveNetworkRegistry;
 import cavern.stats.MinerStats;
 import cavern.util.Version;
@@ -53,6 +57,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -158,6 +163,8 @@ public class Cavern
 
 		GameRegistry.registerFuelHandler(new CaveFuelHandler());
 
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new CaveGuiHandler());
+
 		CaveNetworkRegistry.registerMessages();
 
 		CaveCapabilities.registerCapabilities();
@@ -207,6 +214,8 @@ public class Cavern
 			MinecraftForge.EVENT_BUS.register(new ClientEventHooks());
 			MinecraftForge.EVENT_BUS.register(new MinerStatsHUDEventHooks());
 			MinecraftForge.EVENT_BUS.register(new HunterStatsHUDEventHooks());
+			MinecraftForge.EVENT_BUS.register(new MagicianStatsHUDEventHooks());
+			MinecraftForge.EVENT_BUS.register(new MagicSpellEventHooks());
 		}
 
 		MinecraftForge.EVENT_BUS.register(new CaveEventHooks());
@@ -226,6 +235,8 @@ public class Cavern
 		CavernAPIHandler.registerEvents(CavernAPI.apiHandler);
 
 		RuinsBlockData.init();
+
+		ItemMagicalBook.registerMagicItems();
 	}
 
 	@EventHandler
