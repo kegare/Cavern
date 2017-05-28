@@ -9,10 +9,14 @@ import cavern.config.property.ConfigCaveborn;
 import cavern.config.property.ConfigDisplayPos;
 import cavern.config.property.ConfigItems;
 import cavern.config.property.ConfigMiningPoints;
+import cavern.core.CaveAchievements;
 import cavern.core.Cavern;
 import cavern.util.CaveUtils;
 import cavern.util.ItemMeta;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.Achievement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
@@ -328,5 +332,47 @@ public class GeneralConfig
 		miningPoints.refreshPoints();
 
 		return true;
+	}
+
+	public static boolean canEscapeFromCaves(EntityPlayer player)
+	{
+		if (!cavernEscapeMission)
+		{
+			return true;
+		}
+
+		if (player == null)
+		{
+			return false;
+		}
+
+		if (player.world.isRemote)
+		{
+			for (Achievement achievement : CaveAchievements.ESCAPE_ACHIEVEMENTS)
+			{
+				if (!Cavern.proxy.hasAchievementClient(player, achievement))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		else if (player instanceof EntityPlayerMP)
+		{
+			EntityPlayerMP thePlayer = (EntityPlayerMP)player;
+
+			for (Achievement achievement : CaveAchievements.ESCAPE_ACHIEVEMENTS)
+			{
+				if (!thePlayer.getStatFile().hasAchievementUnlocked(achievement))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 }

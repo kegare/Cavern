@@ -18,7 +18,7 @@ public class MineBonusHaste implements IMineBonus
 	{
 		if (!isClient)
 		{
-			player.addPotionEffect(new PotionEffect(MobEffects.HASTE, (10 + combo / 4) * 20, 1, false, true));
+			player.addPotionEffect(new PotionEffect(MobEffects.HASTE, (10 + combo / 4) * 20, combo >= 20 ? 1 : 0, false, true));
 		}
 	}
 }

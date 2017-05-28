@@ -1,7 +1,6 @@
 package cavern.core;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -23,13 +22,8 @@ public class CommonProxy
 		return FMLCommonHandler.instance().getMinecraftServerInstance().isSinglePlayer();
 	}
 
-	public boolean hasAchievementUnlocked(EntityPlayer player, Achievement achievement)
+	public boolean hasAchievementClient(EntityPlayer player, Achievement achievement)
 	{
-		if (player != null && player instanceof EntityPlayerMP)
-		{
-			return ((EntityPlayerMP)player).getStatFile().hasAchievementUnlocked(achievement);
-		}
-
 		return false;
 	}
 }

@@ -6,7 +6,6 @@ import cavern.api.CavernAPI;
 import cavern.block.BlockPortalCavern;
 import cavern.block.CaveBlocks;
 import cavern.config.GeneralConfig;
-import cavern.item.ItemCave;
 import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
 import cavern.util.CaveUtils;
@@ -17,11 +16,9 @@ import net.minecraft.block.BlockPortal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -97,25 +94,6 @@ public class TeleporterCavern extends Teleporter
 			if (portal.getType() == CaveType.RUINS_CAVERN && portal.isEntityInCave(entity))
 			{
 				new TeleporterRuinsCavern(world).placeInPortal(entity, rotationYaw);
-
-				if (entity instanceof EntityPlayerMP)
-				{
-					EntityPlayerMP player = (EntityPlayerMP)entity;
-					ItemStack stack = ItemCave.EnumType.MINER_ORB.getItemStack();
-
-					if (!player.inventory.hasItemStack(stack))
-					{
-						BlockPos pos = player.getPosition();
-						double d0 = random.nextFloat() * 0.5F + 0.25D;
-						double d1 = random.nextFloat() * 0.5F + 0.25D;
-						double d2 = random.nextFloat() * 0.5F + 0.25D;
-						EntityItem entityItem = new EntityItem(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, stack);
-
-						entityItem.setPickupDelay(120);
-
-						world.spawnEntity(entityItem);
-					}
-				}
 
 				flag = true;
 			}

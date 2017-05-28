@@ -18,7 +18,7 @@ public class MineBonusResistance implements IMineBonus
 	{
 		if (!isClient)
 		{
-			player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 5 * 20, 1, false, true));
+			player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 5 * 20, combo >= 10 ? 1 : 0, false, true));
 		}
 	}
 }

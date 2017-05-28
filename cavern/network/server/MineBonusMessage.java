@@ -2,9 +2,10 @@ package cavern.network.server;
 
 import cavern.api.IMineBonus;
 import cavern.config.GeneralConfig;
+import cavern.core.CaveAchievements;
 import cavern.stats.MinerStats;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -37,7 +38,7 @@ public class MineBonusMessage implements IMessage, IMessageHandler<MineBonusMess
 	{
 		if (GeneralConfig.miningCombo)
 		{
-			EntityPlayer player = ctx.getServerHandler().playerEntity;
+			EntityPlayerMP player = ctx.getServerHandler().playerEntity;
 			int combo = message.combo;
 
 			for (IMineBonus bonus : MinerStats.MINE_BONUS)
@@ -46,6 +47,11 @@ public class MineBonusMessage implements IMessage, IMessageHandler<MineBonusMess
 				{
 					bonus.onMineBonus(false, combo, player);
 				}
+			}
+
+			if (combo > 50 && !player.getStatFile().hasAchievementUnlocked(CaveAchievements.GOOD_MINE))
+			{
+				player.addStat(CaveAchievements.GOOD_MINE);
 			}
 		}
 

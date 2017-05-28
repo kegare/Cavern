@@ -31,7 +31,7 @@ public class ClientProxy extends CommonProxy
 	}
 
 	@Override
-	public boolean hasAchievementUnlocked(EntityPlayer player, Achievement achievement)
+	public boolean hasAchievementClient(EntityPlayer player, Achievement achievement)
 	{
 		if (player != null && player instanceof EntityPlayerSP)
 		{

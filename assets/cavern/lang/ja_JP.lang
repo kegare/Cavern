@@ -440,3 +440,5 @@ book.cavebornEscapeMission.text6=果たしたならば、きっと
 book.cavebornEscapeMission.text7=洞窟から脱出できるだろう
 book.cavebornEscapeMission.text8=#LF
 book.cavebornEscapeMission.text9=健闘を祈る
+
+caveborn.escapeMission.bad.message=ミッションがまだ残っています

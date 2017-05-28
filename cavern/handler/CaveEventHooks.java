@@ -60,7 +60,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.AchievementEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -120,8 +119,9 @@ public class CaveEventHooks
 		if (event.player instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = (EntityPlayerMP)event.player;
+			WorldServer world = player.getServerWorld();
 
-			if (GeneralConfig.cavernEscapeMission)
+			if (GeneralConfig.cavernEscapeMission && !GeneralConfig.canEscapeFromCaves(player))
 			{
 				boolean fromCave = CavernAPI.dimension.isCaves(event.fromDim);
 				boolean toCave = CavernAPI.dimension.isCaves(event.toDim);
@@ -143,11 +143,15 @@ public class CaveEventHooks
 
 				if (!fromCave && toCave)
 				{
-					player.inventory.addItemStackToInventory(CaveItems.getBookEscapeMission());
+					ItemStack stack = CaveItems.getBookEscapeMission();
+
+					if (!player.inventory.hasItemStack(stack))
+					{
+						player.inventory.addItemStackToInventory(stack);
+					}
 				}
 			}
 
-			WorldServer world = player.getServerWorld();
 			String suffix = ".LastTeleportTime";
 
 			if (CavernAPI.dimension.isEntityInCavern(player))
@@ -244,33 +248,6 @@ public class CaveEventHooks
 				data.setLong(key, world.getTotalWorldTime());
 
 				player.addStat(CaveAchievements.CAVENIA);
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public void onEntityTravelToDimension(EntityTravelToDimensionEvent event)
-	{
-		if (GeneralConfig.cavernEscapeMission && event.getEntity() instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer)event.getEntity();
-
-			if (CavernAPI.dimension.isEntityInCaves(player) && !CavernAPI.dimension.isCaves(event.getDimension()))
-			{
-				boolean flag = true;
-
-				for (Achievement achievement : CaveAchievements.ESCAPE_ACHIEVEMENTS)
-				{
-					if (!Cavern.proxy.hasAchievementUnlocked(player, achievement))
-					{
-						flag = false;
-					}
-				}
-
-				if (!flag)
-				{
-					event.setCanceled(true);
-				}
 			}
 		}
 	}

@@ -8,7 +8,6 @@ import cavern.api.CavernAPI;
 import cavern.client.gui.GuiRegeneration;
 import cavern.config.CavernConfig;
 import cavern.config.GeneralConfig;
-import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
 import cavern.core.Cavern;
 import cavern.stats.IPortalCache;
@@ -34,12 +33,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -191,18 +190,10 @@ public class BlockPortalCavern extends BlockPortal
 					{
 						if (GeneralConfig.cavernEscapeMission && CavernAPI.dimension.isCaves(dimOld) && !CavernAPI.dimension.isCaves(dimNew))
 						{
-							boolean flag = true;
-
-							for (Achievement achievement : CaveAchievements.ESCAPE_ACHIEVEMENTS)
+							if (!GeneralConfig.canEscapeFromCaves(player))
 							{
-								if (!Cavern.proxy.hasAchievementUnlocked(player, achievement))
-								{
-									flag = false;
-								}
-							}
+								player.sendStatusMessage(new TextComponentTranslation("caveborn.escapeMission.bad.message"), true);
 
-							if (!flag)
-							{
 								return;
 							}
 						}
