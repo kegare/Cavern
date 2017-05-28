@@ -166,7 +166,7 @@ public class ItemElixir extends Item
 
 		public ItemStack getItemStack(int amount)
 		{
-			return new ItemStack(CaveItems.CAVE_ITEM, amount, getItemDamage());
+			return new ItemStack(CaveItems.ELIXIR, amount, getItemDamage());
 		}
 
 		public static EnumType byDamage(int damage)

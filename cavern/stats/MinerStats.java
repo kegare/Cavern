@@ -56,7 +56,7 @@ public class MinerStats implements IMinerStats
 
 	private final EntityPlayer entityPlayer;
 
-	private int point;
+	private int point = -1;
 	private int rank;
 	private int miningAssist;
 

@@ -22,9 +22,9 @@ public class MagicianStats implements IMagicianStats
 {
 	private final EntityPlayer entityPlayer;
 
-	private int point;
+	private int point = -1;
 	private int rank;
-	private int mp;
+	private int mp = -1;
 
 	private long refreshTime;
 	private boolean clientAdjusted;

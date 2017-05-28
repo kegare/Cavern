@@ -22,7 +22,7 @@ public class HunterStats implements IHunterStats
 {
 	private final EntityPlayer entityPlayer;
 
-	private int point;
+	private int point = -1;
 	private int rank;
 
 	private boolean clientAdjusted;
