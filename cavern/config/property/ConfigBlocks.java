@@ -7,6 +7,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
 import cavern.util.BlockMeta;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ConfigBlocks
 {
@@ -32,6 +35,49 @@ public class ConfigBlocks
 	public Set<BlockMeta> getBlocks()
 	{
 		return blocks;
+	}
+
+	public boolean isEmpty()
+	{
+		return blocks.isEmpty();
+	}
+
+	public boolean hasBlock(Block block, int meta)
+	{
+		if (block == null)
+		{
+			return false;
+		}
+
+		for (BlockMeta blockMeta : blocks)
+		{
+			if (blockMeta.getBlock() == block)
+			{
+				if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE)
+				{
+					return true;
+				}
+
+				if (blockMeta.getMeta() == meta)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public boolean hasBlockState(IBlockState state)
+	{
+		if (state == null)
+		{
+			return false;
+		}
+
+		Block block = state.getBlock();
+
+		return hasBlock(block, block.getMetaFromState(state));
 	}
 
 	public void refreshBlocks()

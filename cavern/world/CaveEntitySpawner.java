@@ -97,6 +97,7 @@ public class CaveEntitySpawner
 			for (EnumCreatureType type : EnumCreatureType.values())
 			{
 				int maxNumber = getMaxNumberOfCreature(world, spawnHostileMobs, spawnPeacefulMobs, spawnOnSetTickRate, type);
+				double range = getSpawnRange(world, spawnHostileMobs, spawnPeacefulMobs, spawnOnSetTickRate, type);
 
 				if (maxNumber > 0 && canSpawnCreature(world, spawnHostileMobs, spawnPeacefulMobs, spawnOnSetTickRate, type))
 				{
@@ -142,7 +143,7 @@ public class CaveEntitySpawner
 										float posX = x + 0.5F;
 										float posZ = z + 0.5F;
 
-										if (!world.isAnyPlayerWithinRangeAt(posX, y, posZ, 24.0D) && spawnPos.distanceSq(posX, y, posZ) >= 576.0D)
+										if (!world.isAnyPlayerWithinRangeAt(posX, y, posZ, range) && spawnPos.distanceSq(posX, y, posZ) >= range * range)
 										{
 											if (entry == null)
 											{
@@ -243,6 +244,21 @@ public class CaveEntitySpawner
 		return type.getMaxNumberOfCreature();
 	}
 
+	protected double getSpawnRange(WorldServer world, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate, EnumCreatureType type)
+	{
+		if (entitySpawner != null)
+		{
+			Double ret = entitySpawner.getSpawnRange(world, spawnHostileMobs, spawnPeacefulMobs, spawnOnSetTickRate, type);
+
+			if (ret != null)
+			{
+				return ret.doubleValue();
+			}
+		}
+
+		return 24.0D;
+	}
+
 	protected static BlockPos getRandomChunkPosition(World world, int x, int z)
 	{
 		Chunk chunk = world.getChunkFromChunkCoords(x, z);
@@ -264,5 +280,11 @@ public class CaveEntitySpawner
 
 		@Nullable
 		public Integer getMaxNumberOfCreature(WorldServer world, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate, EnumCreatureType type);
+
+		@Nullable
+		public default Double getSpawnRange(WorldServer world, boolean spawnHostileMobs, boolean spawnPeacefulMobs, boolean spawnOnSetTickRate, EnumCreatureType type)
+		{
+			return null;
+		}
 	}
 }

@@ -11,7 +11,6 @@ import cavern.config.property.ConfigMinerRank;
 import cavern.core.Cavern;
 import cavern.stats.MinerRank;
 import cavern.util.CaveUtils;
-import cavern.util.ItemMeta;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -185,21 +184,24 @@ public class MiningAssistConfig
 		return true;
 	}
 
-	public static boolean isEffectiveItem(ItemStack itemstack)
+	public static boolean isEffectiveItem(ItemStack stack)
 	{
-		if (effectiveItems == null || itemstack.isEmpty())
+		if (effectiveItems == null || stack.isEmpty())
 		{
 			return false;
 		}
 
-		if (effectiveItems.getItems().isEmpty())
+		if (effectiveItems.isEmpty())
 		{
-			return CaveUtils.isItemPickaxe(itemstack);
+			return CaveUtils.isItemPickaxe(stack);
 		}
 
-		ItemMeta itemMeta = new ItemMeta(itemstack.getItem(), itemstack.isItemStackDamageable() ? -1 : itemstack.getItemDamage());
+		if (effectiveItems.hasItemStack(stack))
+		{
+			return true;
+		}
 
-		return effectiveItems.getItems().contains(itemMeta);
+		return false;
 	}
 
 	public static void refreshTargetBlocks()

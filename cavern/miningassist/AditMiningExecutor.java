@@ -5,8 +5,8 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import cavern.config.MiningAssistConfig;
+import cavern.config.property.ConfigBlocks;
 import cavern.handler.MiningAssistEventHooks;
-import cavern.util.BlockMeta;
 import cavern.util.CaveUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -43,9 +43,9 @@ public class AditMiningExecutor implements IMiningAssistExecutor
 		return MiningAssist.ADIT;
 	}
 
-	public Set<BlockMeta> getTargetBlocks()
+	public ConfigBlocks getTargetBlocks()
 	{
-		return MiningAssistConfig.aditTargetBlocks.getBlocks();
+		return MiningAssistConfig.aditTargetBlocks;
 	}
 
 	@Override
@@ -156,7 +156,7 @@ public class AditMiningExecutor implements IMiningAssistExecutor
 				return held.canHarvestBlock(state);
 			}
 		}
-		else if (getTargetBlocks().contains(new BlockMeta(state)))
+		else if (getTargetBlocks().hasBlockState(state))
 		{
 			return true;
 		}

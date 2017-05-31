@@ -15,6 +15,7 @@ import com.google.common.collect.Sets;
 import cavern.api.IMinerStats;
 import cavern.client.CaveKeyBindings;
 import cavern.config.MiningAssistConfig;
+import cavern.config.property.ConfigBlocks;
 import cavern.core.Cavern;
 import cavern.miningassist.AditMiningExecutor;
 import cavern.miningassist.IMiningAssistExecutor;
@@ -25,7 +26,6 @@ import cavern.network.CaveNetworkRegistry;
 import cavern.network.server.MiningAssistMessage;
 import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
-import cavern.util.BlockMeta;
 import cavern.util.BreakSpeedCache;
 import cavern.util.CaveUtils;
 import net.minecraft.block.BlockOre;
@@ -107,23 +107,23 @@ public class MiningAssistEventHooks
 			if (stats.getMiningAssist() > MiningAssist.DISABLED.getType() && stats.getRank() >= MiningAssistConfig.minerRank.getValue())
 			{
 				MiningAssist type = MiningAssist.get(stats.getMiningAssist());
-				Set<BlockMeta> targets = null;
+				ConfigBlocks targetBlocks = null;
 
 				switch (type)
 				{
 					case QUICK:
-						targets = MiningAssistConfig.quickTargetBlocks.getBlocks();
+						targetBlocks = MiningAssistConfig.quickTargetBlocks;
 						break;
 					case RANGED:
-						targets = MiningAssistConfig.rangedTargetBlocks.getBlocks();
+						targetBlocks = MiningAssistConfig.rangedTargetBlocks;
 						break;
 					case ADIT:
-						targets = MiningAssistConfig.aditTargetBlocks.getBlocks();
+						targetBlocks = MiningAssistConfig.aditTargetBlocks;
 						break;
 					default:
 				}
 
-				if (targets == null || targets.isEmpty())
+				if (targetBlocks == null || targetBlocks.isEmpty())
 				{
 					switch (type)
 					{
@@ -138,7 +138,7 @@ public class MiningAssistEventHooks
 					return false;
 				}
 
-				return targets.contains(new BlockMeta(state));
+				return targetBlocks.hasBlockState(state);
 			}
 		}
 

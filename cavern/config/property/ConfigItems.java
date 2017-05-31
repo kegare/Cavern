@@ -9,6 +9,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
 import cavern.util.ItemMeta;
+import net.minecraft.item.ItemStack;
 
 public class ConfigItems
 {
@@ -34,6 +35,37 @@ public class ConfigItems
 	public Set<ItemMeta> getItems()
 	{
 		return items;
+	}
+
+	public boolean isEmpty()
+	{
+		return items.isEmpty();
+	}
+
+	public boolean hasItemStack(ItemStack stack)
+	{
+		if (stack.isEmpty())
+		{
+			return false;
+		}
+
+		for (ItemMeta itemMeta : items)
+		{
+			if (itemMeta.getItem() == stack.getItem())
+			{
+				if (stack.isItemStackDamageable())
+				{
+					return true;
+				}
+
+				if (itemMeta.getMeta() == stack.getItemDamage())
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	public void refreshItems()

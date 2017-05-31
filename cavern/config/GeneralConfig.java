@@ -12,7 +12,6 @@ import cavern.config.property.ConfigMiningPoints;
 import cavern.core.CaveAchievements;
 import cavern.core.Cavern;
 import cavern.util.CaveUtils;
-import cavern.util.ItemMeta;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -305,21 +304,24 @@ public class GeneralConfig
 		return true;
 	}
 
-	public static boolean isMiningPointItem(ItemStack itemstack)
+	public static boolean isMiningPointItem(ItemStack stack)
 	{
-		if (miningPointItems == null || itemstack.isEmpty())
+		if (miningPointItems == null || stack.isEmpty())
 		{
 			return false;
 		}
 
-		if (miningPointItems.getItems().isEmpty())
+		if (miningPointItems.isEmpty())
 		{
-			return CaveUtils.isItemPickaxe(itemstack);
+			return CaveUtils.isItemPickaxe(stack);
 		}
 
-		ItemMeta itemMeta = new ItemMeta(itemstack.getItem(), itemstack.isItemStackDamageable() ? -1 : itemstack.getItemDamage());
+		if (miningPointItems.hasItemStack(stack))
+		{
+			return true;
+		}
 
-		return miningPointItems.getItems().contains(itemMeta);
+		return false;
 	}
 
 	public static boolean refreshMiningPoints()

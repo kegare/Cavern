@@ -8,8 +8,8 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Queues;
 
 import cavern.config.MiningAssistConfig;
+import cavern.config.property.ConfigBlocks;
 import cavern.handler.MiningAssistEventHooks;
-import cavern.util.BlockMeta;
 import cavern.util.CaveUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -49,9 +49,9 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 		return MiningAssist.RANGED;
 	}
 
-	public Set<BlockMeta> getTargetBlocks()
+	public ConfigBlocks getTargetBlocks()
 	{
-		return MiningAssistConfig.rangedTargetBlocks.getBlocks();
+		return MiningAssistConfig.rangedTargetBlocks;
 	}
 
 	public int getRowRange()
@@ -227,7 +227,7 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 				return held.canHarvestBlock(state);
 			}
 		}
-		else if (getTargetBlocks().contains(new BlockMeta(state)))
+		else if (getTargetBlocks().hasBlockState(state))
 		{
 			return true;
 		}
