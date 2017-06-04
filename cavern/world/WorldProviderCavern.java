@@ -159,6 +159,12 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	}
 
 	@Override
+	public boolean isSurfaceWorld()
+	{
+		return false;
+	}
+
+	@Override
 	public boolean canCoordinateBeSpawn(int x, int z)
 	{
 		return true;

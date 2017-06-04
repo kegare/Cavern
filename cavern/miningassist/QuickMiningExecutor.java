@@ -79,10 +79,10 @@ public class QuickMiningExecutor implements IMiningAssistExecutor
 			MiningAssistEventHooks.captureDrops(true);
 			MiningAssistEventHooks.captureExps(true);
 
+			PlayerInteractionManager im = thePlayer.interactionManager;
+
 			if (harvestTargets != null)
 			{
-				PlayerInteractionManager im = thePlayer.interactionManager;
-
 				do
 				{
 					if (!harvestBlock(im, harvestTargets.pollFirst()))
@@ -102,7 +102,7 @@ public class QuickMiningExecutor implements IMiningAssistExecutor
 
 			int exp = MiningAssistEventHooks.captureExps(false);
 
-			if (exp > 0 && !player.capabilities.isCreativeMode && world.getGameRules().getBoolean("doTileDrops"))
+			if (exp > 0 && !im.isCreative() && world.getGameRules().getBoolean("doTileDrops"))
 			{
 				while (exp > 0)
 				{

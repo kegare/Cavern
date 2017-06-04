@@ -14,6 +14,7 @@ import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.management.PlayerInteractionManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -65,7 +66,9 @@ public class AditMiningExecutor implements IMiningAssistExecutor
 			MiningAssistEventHooks.captureDrops(true);
 			MiningAssistEventHooks.captureExps(true);
 
-			harvestBlock(thePlayer.interactionManager, harvestTarget);
+			PlayerInteractionManager im = thePlayer.interactionManager;
+
+			harvestBlock(im, harvestTarget);
 
 			Set<ItemStack> drops = MiningAssistEventHooks.captureDrops(false);
 
@@ -76,7 +79,7 @@ public class AditMiningExecutor implements IMiningAssistExecutor
 
 			int exp = MiningAssistEventHooks.captureExps(false);
 
-			if (exp > 0 && !player.capabilities.isCreativeMode && world.getGameRules().getBoolean("doTileDrops"))
+			if (exp > 0 && !im.isCreative() && world.getGameRules().getBoolean("doTileDrops"))
 			{
 				while (exp > 0)
 				{

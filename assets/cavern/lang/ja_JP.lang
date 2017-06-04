@@ -210,6 +210,8 @@ cavern.config.select.mob=モブを選択してください
 cavern.config.select.mob.selected=%dつのモブが選択済み
 cavern.config.select.entry.selected=%dつのエントリが選択済み
 
+cavern.message.sleep.still=まだ疲れていません。少なくとも、%d分は眠ることができません。
+
 cavern.minerrank.beginner=初心者
 cavern.minerrank.stoneMiner=石掘り
 cavern.minerrank.ironMiner=鉄掘り

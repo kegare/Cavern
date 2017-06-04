@@ -221,6 +221,8 @@ cavern.config.select.mob=Select the mobs
 cavern.config.select.mob.selected=%d mobs selected
 cavern.config.select.entry.selected=%d entries selected
 
+cavern.message.sleep.still=You are not tired. You cannot sleep until %d minutes at least.
+
 cavern.minerrank.beginner=Beginner
 cavern.minerrank.stoneMiner=Stone Miner
 cavern.minerrank.ironMiner=Iron Miner

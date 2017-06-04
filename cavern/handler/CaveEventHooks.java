@@ -40,6 +40,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayer.SleepResult;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -55,7 +56,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -65,6 +68,7 @@ import net.minecraftforge.event.entity.player.AchievementEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
@@ -500,6 +504,48 @@ public class CaveEventHooks
 		if (entity instanceof EntityPlayer)
 		{
 			MagicianStats.get((EntityPlayer)entity).onUpdate();
+		}
+	}
+
+	@SubscribeEvent
+	public void onSleepInBed(PlayerSleepInBedEvent event)
+	{
+		EntityPlayer player = event.getEntityPlayer();
+
+		if (CavernAPI.dimension.isEntityInCaves(player))
+		{
+			SleepResult result = null;
+			NBTTagCompound data = player.getEntityData();
+			World world = player.world;
+
+			if (!world.isRemote && data.hasKey("Cavern:SleepTime", NBT.TAG_ANY_NUMERIC))
+			{
+				long worldTime = world.getTotalWorldTime();
+				long sleepTime = data.getLong("Cavern:SleepTime");
+				long requireTime = 6000L;
+
+				if (sleepTime + requireTime > worldTime)
+				{
+					result = SleepResult.OTHER_PROBLEM;
+
+					long remainTime = requireTime - (worldTime - sleepTime);
+					int min = MathHelper.ceil(remainTime / 20 / 60 + 1);
+
+					player.sendStatusMessage(new TextComponentTranslation("cavern.message.sleep.still", min), true);
+				}
+			}
+
+			if (result == null)
+			{
+				result = CaveUtils.trySleep(player, event.getPos());
+			}
+
+			if (!world.isRemote && result == SleepResult.OK)
+			{
+				data.setLong("Cavern:SleepTime", world.getTotalWorldTime());
+			}
+
+			event.setResult(result);
 		}
 	}
 
