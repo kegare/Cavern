@@ -68,6 +68,10 @@ cavern.config.general.portalCache=ポータルキャッシュ
 cavern.config.general.portalCache.tooltip=洞窟ポータルでの移動時の座標のキャッシュを有効にします。
 cavern.config.general.slipperyIceCustomColor=滑りやすい氷のカスタムカラー
 cavern.config.general.slipperyIceCustomColor.tooltip=滑りやすい氷のカスタムカラーを有効にします。
+cavern.config.general.sleepWaitTime=睡眠の待機時間
+cavern.config.general.sleepWaitTime.tooltip=洞窟ディメンションでの睡眠の待機時間を秒数で指定します。
+cavern.config.general.sleepRefresh=睡眠時の回復
+cavern.config.general.sleepRefresh.tooltip=洞窟ディメンションで睡眠をしたときに体力を少し回復します。
 
 cavern.config.points=採掘ポイントのカスタマイズ
 cavern.config.points.block=ブロック
@@ -342,6 +346,8 @@ entity.CrazyCreeper.name=クレイジークリーパー
 entity.CrazyZombie.name=クレイジーゾンビ
 entity.CrazySpider.name=クレイジースパイダー
 entity.CavenicBear.name=ケイブニックベア
+
+death.attack.exhaust.mp=%1$sは無理に魔法を使おうとして死んでしまった
 
 achievement.cavern.cavern=洞窟の世界
 achievement.cavern.cavern.desc=Cavernへ行く

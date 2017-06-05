@@ -14,6 +14,11 @@ public class CaveFuelHandler implements IFuelHandler
 	{
 		Block block = Block.getBlockFromItem(fuel.getItem());
 
+		if (block == null)
+		{
+			return 0;
+		}
+
 		if (block instanceof BlockLogPerverted)
 		{
 			return 100;

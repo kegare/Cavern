@@ -1,6 +1,7 @@
 package cavern.network.server;
 
 import cavern.api.IMagicianStats;
+import cavern.core.CaveDamageSources;
 import cavern.item.ItemMagicalBook;
 import cavern.magic.IMagic;
 import cavern.magic.IMagic.IEntityMagic;
@@ -79,6 +80,7 @@ public class MagicExecuteMessage implements IMessage, IMessageHandler<MagicExecu
 		if (!player.capabilities.isCreativeMode && cost > 0 && mp < cost)
 		{
 			player.sendStatusMessage(new TextComponentTranslation("cavern.magicianstats.mp.short"), true);
+			player.attackEntityFrom(CaveDamageSources.EXHAUST_MP, 2 * magic.getMagicLevel());
 
 			return;
 		}

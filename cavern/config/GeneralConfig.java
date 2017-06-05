@@ -48,6 +48,9 @@ public class GeneralConfig
 	public static boolean portalCache;
 	public static boolean slipperyIceCustomColor;
 
+	public static int sleepWaitTime;
+	public static boolean sleepRefresh;
+
 	protected static final Side side = FMLLaunchHandler.side();
 
 	public static void syncConfig()
@@ -286,6 +289,26 @@ public class GeneralConfig
 			propOrder.add(prop.getName());
 			slipperyIceCustomColor = prop.getBoolean(slipperyIceCustomColor);
 		}
+
+		prop = config.get(category, "sleepWaitTime", 300);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [default: " + prop.getDefault() + "]";
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		sleepWaitTime = prop.getInt(sleepWaitTime);
+
+		prop = config.get(category, "sleepRefresh", true);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [default: " + prop.getDefault() + "]";
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		sleepRefresh = prop.getBoolean(sleepRefresh);
 
 		config.setCategoryPropertyOrder(category, propOrder);
 

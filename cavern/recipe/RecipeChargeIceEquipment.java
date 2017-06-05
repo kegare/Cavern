@@ -36,11 +36,16 @@ public class RecipeChargeIceEquipment implements IRecipe
 					continue;
 				}
 
-				ItemStack itemstack = crafting.getStackInRowAndColumn(row, column);
+				ItemStack stack = crafting.getStackInRowAndColumn(row, column);
 
-				if (!itemstack.isEmpty())
+				if (!stack.isEmpty())
 				{
-					Block block = Block.getBlockFromItem(itemstack.getItem());
+					Block block = Block.getBlockFromItem(stack.getItem());
+
+					if (block == null)
+					{
+						continue;
+					}
 
 					if (block instanceof BlockIce || block instanceof BlockPackedIce)
 					{
@@ -82,11 +87,16 @@ public class RecipeChargeIceEquipment implements IRecipe
 					continue;
 				}
 
-				ItemStack itemstack = crafting.getStackInRowAndColumn(row, column);
+				ItemStack stack = crafting.getStackInRowAndColumn(row, column);
 
-				if (!itemstack.isEmpty())
+				if (!stack.isEmpty())
 				{
-					Block block = Block.getBlockFromItem(itemstack.getItem());
+					Block block = Block.getBlockFromItem(stack.getItem());
+
+					if (block == null)
+					{
+						continue;
+					}
 
 					if (block instanceof BlockPackedIce)
 					{

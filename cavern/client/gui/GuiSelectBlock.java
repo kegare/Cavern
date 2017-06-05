@@ -69,12 +69,23 @@ public class GuiSelectBlock extends GuiScreen
 						BLOCKS.addIfAbsent(new BlockMeta(block, 0));
 					}
 				}
-				else for (ItemStack itemstack : list)
+				else for (ItemStack stack : list)
 				{
-					Block sub = Block.getBlockFromItem(itemstack.getItem());
-					int meta = itemstack.getItemDamage();
+					if (stack.isEmpty())
+					{
+						continue;
+					}
 
-					if (meta < 0 || meta > 15 || sub == Blocks.AIR || sub.hasTileEntity(sub.getStateFromMeta(meta)))
+					Block sub = Block.getBlockFromItem(stack.getItem());
+
+					if (sub == null || sub == Blocks.AIR)
+					{
+						continue;
+					}
+
+					int meta = stack.getItemDamage();
+
+					if (meta < 0 || meta > 15 || sub.hasTileEntity(sub.getStateFromMeta(meta)))
 					{
 						continue;
 					}

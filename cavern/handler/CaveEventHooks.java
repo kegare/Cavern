@@ -518,11 +518,23 @@ public class CaveEventHooks
 			NBTTagCompound data = player.getEntityData();
 			World world = player.world;
 
-			if (!world.isRemote && data.hasKey("Cavern:SleepTime", NBT.TAG_ANY_NUMERIC))
+			if (!world.isRemote)
 			{
 				long worldTime = world.getTotalWorldTime();
-				long sleepTime = data.getLong("Cavern:SleepTime");
-				long requireTime = 6000L;
+				long sleepTime;
+
+				if (data.hasKey("Cavern:SleepTime", NBT.TAG_ANY_NUMERIC))
+				{
+					sleepTime = data.getLong("Cavern:SleepTime");
+				}
+				else
+				{
+					sleepTime = worldTime;
+
+					data.setLong("Cavern:SleepTime", worldTime);
+				}
+
+				long requireTime = GeneralConfig.sleepWaitTime * 20;
 
 				if (sleepTime + requireTime > worldTime)
 				{
@@ -542,6 +554,16 @@ public class CaveEventHooks
 
 			if (!world.isRemote && result == SleepResult.OK)
 			{
+				if (GeneralConfig.sleepRefresh)
+				{
+					if (player.shouldHeal())
+					{
+						player.heal(player.getMaxHealth() * 0.5F);
+					}
+
+					MagicianStats.get(player).addMP(100);
+				}
+
 				data.setLong("Cavern:SleepTime", world.getTotalWorldTime());
 			}
 

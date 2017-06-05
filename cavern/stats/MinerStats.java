@@ -358,17 +358,26 @@ public class MinerStats implements IMinerStats
 	{
 		NonNullList<ItemStack> ores = OreDictionary.getOres(oredict);
 
-		if (!ores.isEmpty())
+		if (ores.isEmpty())
 		{
-			for (ItemStack entry : ores)
-			{
-				Block block = Block.getBlockFromItem(entry.getItem());
+			return;
+		}
 
-				if (block != Blocks.AIR)
-				{
-					setPointAmount(block, entry.getItemDamage(), amount);
-				}
+		for (ItemStack entry : ores)
+		{
+			if (entry.isEmpty())
+			{
+				continue;
 			}
+
+			Block block = Block.getBlockFromItem(entry.getItem());
+
+			if (block == null || block == Blocks.AIR)
+			{
+				continue;
+			}
+
+			setPointAmount(block, entry.getItemDamage(), amount);
 		}
 	}
 
