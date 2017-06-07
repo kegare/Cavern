@@ -9,6 +9,7 @@ import cavern.stats.MagicianStats;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -98,6 +99,19 @@ public class ItemElixir extends Item
 			}
 
 			player.addStat(StatList.getObjectUseStats(this));
+		}
+
+		if (player == null || !player.capabilities.isCreativeMode)
+		{
+			if (stack.isEmpty())
+			{
+				return new ItemStack(Items.GLASS_BOTTLE);
+			}
+
+			if (player != null)
+			{
+				player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+			}
 		}
 
 		return stack;

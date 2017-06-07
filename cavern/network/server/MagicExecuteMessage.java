@@ -16,6 +16,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -80,7 +82,7 @@ public class MagicExecuteMessage implements IMessage, IMessageHandler<MagicExecu
 		if (!player.capabilities.isCreativeMode && cost > 0 && mp < cost)
 		{
 			player.sendStatusMessage(new TextComponentTranslation("cavern.magicianstats.mp.short"), true);
-			player.attackEntityFrom(CaveDamageSources.EXHAUST_MP, 2 * magic.getMagicLevel());
+			player.attackEntityFrom(CaveDamageSources.EXHAUST_MP, MathHelper.clamp(3 * magic.getMagicLevel(), 1, 10));
 
 			return;
 		}
@@ -152,7 +154,12 @@ public class MagicExecuteMessage implements IMessage, IMessageHandler<MagicExecu
 		}
 		else
 		{
-			player.sendStatusMessage(magic.getFailedMessage(), true);
+			ITextComponent message = magic.getFailedMessage();
+
+			if (message != null)
+			{
+				player.sendStatusMessage(message, true);
+			}
 		}
 	}
 }

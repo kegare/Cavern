@@ -346,6 +346,7 @@ entity.CrazyCreeper.name=クレイジークリーパー
 entity.CrazyZombie.name=クレイジーゾンビ
 entity.CrazySpider.name=クレイジースパイダー
 entity.CavenicBear.name=ケイブニックベア
+entity.CavenicWitch.name=ケイブニックウィッチ
 
 death.attack.exhaust.mp=%1$sは無理に魔法を使おうとして死んでしまった
 
@@ -395,6 +396,8 @@ achievement.cavern.cavenicZombie=恐ろしいゾンビ
 achievement.cavern.cavenicZombie.desc=ケイブニックゾンビを倒す
 achievement.cavern.cavenicSpider=恐ろしいクモ
 achievement.cavern.cavenicSpider.desc=ケイブニックスパイダーを倒す
+achievement.cavern.cavenicWitch=恐ろしい魔女
+achievement.cavern.cavenicWitch.desc=ケイブニックウィッチを倒す
 achievement.cavern.cavenicBear=恐ろしいクマ
 achievement.cavern.cavenicBear.desc=ケイブニックベアを倒す
 achievement.cavern.lostOrb=失われたオーブを求めて

@@ -117,7 +117,7 @@ public class CaveItems
 	@SideOnly(Side.CLIENT)
 	public static void registerModels()
 	{
-		registerModelWithMeta(CAVE_ITEM, "aquamarine", "magnite_ingot", "hexcite", "ice_stick", "miner_orb", "cavenic_orb");
+		registerModels(CAVE_ITEM, "aquamarine", "magnite_ingot", "hexcite", "ice_stick", "miner_orb", "cavenic_orb");
 		registerModel(AQUAMARINE_PICKAXE, "aquamarine_pickaxe");
 		registerModel(AQUAMARINE_AXE, "aquamarine_axe");
 		registerModel(AQUAMARINE_SHOVEL, "aquamarine_shovel");
@@ -140,9 +140,10 @@ public class CaveItems
 		registerModel(ICE_SHOVEL, "ice_shovel");
 		registerModel(ICE_HOE, "ice_hoe");
 		registerModel(ICE_BOW, "ice_bow");
-		registerModelWithMeta(MAGICAL_BOOK, "magical_book_flame_breath", "magical_book_explosion", "magical_book_thunderbolt",
-			"magical_book_venom_blast", "magical_book_return", "magical_book_heal", "magical_book_holy_bless", "magical_book_storage", "magical_book_warp");
-		registerModelWithMeta(ELIXIR, "elixir", "elixir_medium", "elixir_high");
+		registerModels(MAGICAL_BOOK, "magical_book_flame_breath", "magical_book_explosion", "magical_book_thunderbolt",
+			"magical_book_venom_blast", "magical_book_return", "magical_book_heal", "magical_book_holy_bless", "magical_book_storage", "magical_book_warp",
+			"magical_book_unknown");
+		registerModels(ELIXIR, "elixir", "elixir_medium", "elixir_high");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -152,7 +153,7 @@ public class CaveItems
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerModelWithMeta(Item item, String... modelName)
+	public static void registerModels(Item item, String... modelName)
 	{
 		List<ModelResourceLocation> models = Lists.newArrayList();
 
@@ -176,7 +177,7 @@ public class CaveItems
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerVanillaModelWithMeta(Item item, String... modelName)
+	public static void registerVanillaModels(Item item, String... modelName)
 	{
 		List<ModelResourceLocation> models = Lists.newArrayList();
 

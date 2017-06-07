@@ -6,15 +6,15 @@ import cavern.core.CaveAchievements;
 import cavern.item.ItemCave;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public class EntityCavenicZombie extends EntityZombie implements ICavenicMob
+public class EntityCavenicWitch extends EntityWitch implements ICavenicMob
 {
-	public EntityCavenicZombie(World world)
+	public EntityCavenicWitch(World world)
 	{
 		super(world);
 		this.experienceValue = 12;
@@ -31,10 +31,8 @@ public class EntityCavenicZombie extends EntityZombie implements ICavenicMob
 	protected void applyMobAttributes()
 	{
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(50.0D);
-		getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(50.0D);
+		getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32.0D);
 		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
-		getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(5.0D);
-		getEntityAttribute(SPAWN_REINFORCEMENTS_CHANCE).setBaseValue(0.0D);
 	}
 
 	@Override
@@ -42,7 +40,7 @@ public class EntityCavenicZombie extends EntityZombie implements ICavenicMob
 	{
 		super.dropLoot(wasRecentlyHit, lootingModifier, source);
 
-		if (rand.nextInt(8) == 0)
+		if (rand.nextInt(5) == 0)
 		{
 			entityDropItem(ItemCave.EnumType.CAVENIC_ORB.getItemStack(), 0.5F);
 		}
@@ -68,7 +66,7 @@ public class EntityCavenicZombie extends EntityZombie implements ICavenicMob
 
 	protected Achievement getKillAchievement()
 	{
-		return CaveAchievements.CAVENIC_ZOMBIE;
+		return CaveAchievements.CAVENIC_WITCH;
 	}
 
 	@Override
@@ -79,7 +77,7 @@ public class EntityCavenicZombie extends EntityZombie implements ICavenicMob
 			damage *= 0.35F;
 		}
 
-		return !source.isFireDamage() && source.getEntity() != this && super.attackEntityFrom(source, damage);
+		return !source.isFireDamage() && source.getEntity() != this && source.getSourceOfDamage() != this && super.attackEntityFrom(source, damage);
 	}
 
 	@Override
@@ -91,12 +89,12 @@ public class EntityCavenicZombie extends EntityZombie implements ICavenicMob
 	@Override
 	public int getMaxSpawnedInChunk()
 	{
-		return CavernAPI.dimension.isEntityInCavenia(this) ? 5 : 1;
+		return CavernAPI.dimension.isEntityInCavenia(this) ? 4 : 1;
 	}
 
 	@Override
 	public int getHuntingPoint()
 	{
-		return 2;
+		return 3;
 	}
 }

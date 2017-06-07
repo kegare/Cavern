@@ -30,7 +30,6 @@ import cavern.handler.MiningAssistEventHooks;
 import cavern.handler.api.CavernAPIHandler;
 import cavern.handler.api.DimensionHandler;
 import cavern.item.CaveItems;
-import cavern.item.ItemMagicalBook;
 import cavern.network.CaveNetworkRegistry;
 import cavern.stats.MinerStats;
 import cavern.util.Version;
@@ -235,8 +234,6 @@ public class Cavern
 		CavernAPIHandler.registerEvents(CavernAPI.apiHandler);
 
 		RuinsBlockData.init();
-
-		ItemMagicalBook.registerMagicItems();
 	}
 
 	@EventHandler

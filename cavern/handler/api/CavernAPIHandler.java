@@ -19,6 +19,8 @@ import cavern.core.CaveAchievements;
 import cavern.item.CaveItems;
 import cavern.item.IceEquipment;
 import cavern.item.ItemCave;
+import cavern.item.ItemElixir;
+import cavern.item.ItemMagicalBook;
 import cavern.stats.HunterStats;
 import cavern.stats.MagicianStats;
 import cavern.stats.MinerStats;
@@ -268,7 +270,11 @@ public class CavernAPIHandler implements ICavernAPI
 		handler.addHibernateItem(Items.STICK, 4, 15);
 		handler.addHibernateItem(Items.COAL, 4, 15);
 		handler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()), 10);
-		handler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()), 3);
+		handler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()), 5);
+		handler.addHibernateItem(ItemElixir.EnumType.ELIXIR_NORMAL.getItemStack(), 20);
+		handler.addHibernateItem(ItemElixir.EnumType.ELIXIR_MEDIUM.getItemStack(), 15);
+		handler.addHibernateItem(ItemElixir.EnumType.ELIXIR_HIGH.getItemStack(), 8);
+		handler.addHibernateItem(ItemMagicalBook.EnumType.UNKNOWN.getItemStack(), 15);
 
 		handler.addRuinsChestItem(Blocks.DIRT, 64, 15);
 		handler.addRuinsChestItem(Blocks.SAND, 32, 10);

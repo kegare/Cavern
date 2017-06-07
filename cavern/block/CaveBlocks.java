@@ -110,11 +110,11 @@ public class CaveBlocks
 		registerModel(CAVELAND_PORTAL, "caveland_portal");
 		registerModel(ICE_CAVERN_PORTAL, "ice_cavern_portal");
 		registerModel(RUINS_CAVERN_PORTAL, "ruins_cavern_portal");
-		registerModelWithMeta(CAVE_BLOCK, "aquamarine_ore", "aquamarine_block", "magnite_ore", "magnite_block", "randomite_ore", "hexcite_ore", "hexcite_block", "fissured_stone", "fissured_packed_ice");
-		registerModelWithMeta(ACRESIA, "acresia_seeds", "acresia_fruits");
-		registerVanillaModelWithMeta(PERVERTED_LOG, "oak_log", "spruce_log", "birch_log", "jungle_log");
-		registerVanillaModelWithMeta(PERVERTED_LEAVES, "oak_leaves", "spruce_leaves", "birch_leaves", "jungle_leaves");
-		registerVanillaModelWithMeta(PERVERTED_SAPLING, "oak_sapling", "spruce_sapling", "birch_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling");
+		registerModels(CAVE_BLOCK, "aquamarine_ore", "aquamarine_block", "magnite_ore", "magnite_block", "randomite_ore", "hexcite_ore", "hexcite_block", "fissured_stone", "fissured_packed_ice");
+		registerModels(ACRESIA, "acresia_seeds", "acresia_fruits");
+		registerVanillaModels(PERVERTED_LOG, "oak_log", "spruce_log", "birch_log", "jungle_log");
+		registerVanillaModels(PERVERTED_LEAVES, "oak_leaves", "spruce_leaves", "birch_leaves", "jungle_leaves");
+		registerVanillaModels(PERVERTED_SAPLING, "oak_sapling", "spruce_sapling", "birch_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling");
 		registerModel(SLIPPERY_ICE, "slippery_ice");
 	}
 
@@ -125,9 +125,9 @@ public class CaveBlocks
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerModelWithMeta(Block block, String... modelName)
+	public static void registerModels(Block block, String... modelName)
 	{
-		CaveItems.registerModelWithMeta(Item.getItemFromBlock(block), modelName);
+		CaveItems.registerModels(Item.getItemFromBlock(block), modelName);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -137,9 +137,9 @@ public class CaveBlocks
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerVanillaModelWithMeta(Block block, String... modelName)
+	public static void registerVanillaModels(Block block, String... modelName)
 	{
-		CaveItems.registerVanillaModelWithMeta(Item.getItemFromBlock(block), modelName);
+		CaveItems.registerVanillaModels(Item.getItemFromBlock(block), modelName);
 	}
 
 	@SideOnly(Side.CLIENT)

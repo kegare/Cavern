@@ -4,12 +4,14 @@ import cavern.api.CavernAPI;
 import cavern.client.particle.ParticleCrazyMob;
 import cavern.core.CaveAchievements;
 import cavern.entity.ai.EntityAIAttackCavenicBow;
+import cavern.item.ItemMagicalBook;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.Achievement;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.World;
@@ -37,8 +39,19 @@ public class EntityCrazySkeleton extends EntityCavenicSkeleton
 	protected void applyMobAttributes()
 	{
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(2000.0D);
-		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(2.0D);
+		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+	}
+
+	@Override
+	protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source)
+	{
+		super.dropLoot(wasRecentlyHit, lootingModifier, source);
+
+		for (int i = 0; i < lootingModifier + 1; ++i)
+		{
+			entityDropItem(ItemMagicalBook.EnumType.UNKNOWN.getItemStack(), 0.5F);
+		}
 	}
 
 	@Override

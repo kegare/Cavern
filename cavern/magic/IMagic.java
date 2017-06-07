@@ -47,6 +47,7 @@ public interface IMagic
 		return CaveSounds.MAGIC_SUCCESS;
 	}
 
+	@Nullable
 	public default ITextComponent getFailedMessage()
 	{
 		return new TextComponentTranslation("cavern.magicianstats.magic.short");

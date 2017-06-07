@@ -40,6 +40,7 @@ public class CaveEntityRegistry
 		registerMob(EntityCavenicCreeper.class, "cavenic_creeper", "CavenicCreeper", 0xAAAAAA, 0x2E8B57);
 		registerMob(EntityCavenicZombie.class, "cavenic_zombie", "CavenicZombie", 0xAAAAAA, 0x00A0A0);
 		registerMob(EntityCavenicSpider.class, "cavenic_spider", "CavenicSpider", 0xAAAAAA, 0x811F1F);
+		registerMob(EntityCavenicWitch.class, "cavenic_witch", "CavenicWitch", 0xAAAAAA, 0x4A5348);
 		registerMob(EntityCrazySkeleton.class, "crazy_skeleton", "CrazySkeleton", 0x909090, 0xDDDDDD);
 		registerMob(EntityCrazyCreeper.class, "crazy_creeper", "CrazyCreeper", 0x909090, 0x2E8B57);
 		registerMob(EntityCrazyZombie.class, "crazy_zombie", "CrazyZombie", 0x909090, 0x00A0A0);
@@ -57,6 +58,7 @@ public class CaveEntityRegistry
 		EntityRegistry.addSpawn(EntityCavenicCreeper.class, 30, 1, 1, EnumCreatureType.MONSTER, biomeArray);
 		EntityRegistry.addSpawn(EntityCavenicZombie.class, 30, 2, 2, EnumCreatureType.MONSTER, biomeArray);
 		EntityRegistry.addSpawn(EntityCavenicSpider.class, 30, 1, 1, EnumCreatureType.MONSTER, biomeArray);
+		EntityRegistry.addSpawn(EntityCavenicWitch.class, 15, 1, 1, EnumCreatureType.MONSTER, biomeArray);
 		EntityRegistry.addSpawn(EntityCrazySkeleton.class, 1, 1, 1, EnumCreatureType.MONSTER, biomeArray);
 		EntityRegistry.addSpawn(EntityCrazyCreeper.class, 1, 1, 1, EnumCreatureType.MONSTER, biomeArray);
 		EntityRegistry.addSpawn(EntityCrazyZombie.class, 1, 1, 1, EnumCreatureType.MONSTER, biomeArray);

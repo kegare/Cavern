@@ -1,10 +1,12 @@
 package cavern.handler;
 
+import java.util.List;
 import java.util.Random;
 
 import com.google.common.base.Strings;
 
 import cavern.api.CavernAPI;
+import cavern.api.ICavenicMob;
 import cavern.api.IHunterStats;
 import cavern.api.IIceEquipment;
 import cavern.api.IMagicianStats;
@@ -19,6 +21,7 @@ import cavern.item.CaveItems;
 import cavern.item.IAquaTool;
 import cavern.item.IceEquipment;
 import cavern.item.ItemCave;
+import cavern.item.ItemElixir;
 import cavern.item.ItemMagicalBook;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.CaveMusicMessage;
@@ -39,6 +42,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayer.SleepResult;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -63,6 +67,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.AchievementEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -380,24 +385,6 @@ public class CaveEventHooks
 						{
 							Block.spawnAsEntity(world, pos, new ItemStack(Blocks.PACKED_ICE));
 						}
-						else if (RANDOM.nextDouble() < 0.01D)
-						{
-							WeightedItem randomItem = WeightedRandom.getRandomItem(RANDOM, ItemMagicalBook.MAGIC_ITEMS);
-							ItemStack stack = randomItem.getItem();
-
-							if (stack.getItem() instanceof ItemMagicalBook)
-							{
-								ItemMagicalBook magicalBook = (ItemMagicalBook)stack.getItem();
-								int rank = MagicianStats.get(thePlayer).getRank();
-
-								if (magicalBook.getMagicLevel(stack) > rank + 1)
-								{
-									magicalBook.setMagicLevel(stack, 1);
-								}
-							}
-
-							Block.spawnAsEntity(world, pos, stack);
-						}
 					}
 				}
 			}
@@ -504,6 +491,73 @@ public class CaveEventHooks
 		if (entity instanceof EntityPlayer)
 		{
 			MagicianStats.get((EntityPlayer)entity).onUpdate();
+		}
+	}
+
+	@SubscribeEvent
+	public void onLivingDrops(LivingDropsEvent event)
+	{
+		EntityLivingBase entity = event.getEntityLiving();
+		World world = entity.world;
+
+		if (CavernAPI.dimension.isEntityInCaves(entity) && world.getGameRules().getBoolean("doMobLoot"))
+		{
+			double bookChance = 0.005D;
+			double elixirChance = 0.01D;
+
+			if (entity instanceof EntityWitch)
+			{
+				bookChance = 0.7D;
+				elixirChance = 1.0D;
+			}
+			else if (entity instanceof ICavenicMob)
+			{
+				if (entity.isNonBoss())
+				{
+					bookChance = 0.25D;
+					elixirChance = 0.3D;
+				}
+				else
+				{
+					bookChance = 0.45D;
+					elixirChance = 0.5D;
+				}
+			}
+
+			if (bookChance <= 0.0D && elixirChance <= 0.0D)
+			{
+				return;
+			}
+
+			int looting = event.getLootingLevel();
+			List<EntityItem> drops = event.getDrops();
+			double posX = entity.posX;
+			double posY = entity.posY + 0.5D;
+			double posZ = entity.posZ;
+
+			for (int i = 0; i < looting + 1; ++i)
+			{
+				if (bookChance >= 1.0D || bookChance > 0.0D && RANDOM.nextDouble() < bookChance)
+				{
+					drops.add(new EntityItem(world, posX, posY, posZ, ItemMagicalBook.EnumType.UNKNOWN.getItemStack()));
+				}
+				else if (elixirChance >= 1.0D || elixirChance > 0.0D && RANDOM.nextDouble() < elixirChance)
+				{
+					int elixirRank = 1;
+
+					if (RANDOM.nextDouble() < 0.5D)
+					{
+						++elixirRank;
+					}
+
+					if (RANDOM.nextDouble() < 0.125D)
+					{
+						++elixirRank;
+					}
+
+					drops.add(new EntityItem(world, posX, posY, posZ, ItemElixir.EnumType.byDamage(elixirRank - 1).getItemStack()));
+				}
+			}
 		}
 	}
 

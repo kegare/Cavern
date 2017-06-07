@@ -3,12 +3,14 @@ package cavern.entity;
 import cavern.api.CavernAPI;
 import cavern.client.particle.ParticleCrazyMob;
 import cavern.core.CaveAchievements;
+import cavern.item.ItemMagicalBook;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.Achievement;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
@@ -32,9 +34,20 @@ public class EntityCrazyZombie extends EntityCavenicZombie
 	{
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(2000.0D);
 		getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(50.0D);
-		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(3.0D);
+		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
 		getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(7.5D);
 		getEntityAttribute(SPAWN_REINFORCEMENTS_CHANCE).setBaseValue(0.0D);
+	}
+
+	@Override
+	protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source)
+	{
+		super.dropLoot(wasRecentlyHit, lootingModifier, source);
+
+		for (int i = 0; i < lootingModifier + 1; ++i)
+		{
+			entityDropItem(ItemMagicalBook.EnumType.UNKNOWN.getItemStack(), 0.5F);
+		}
 	}
 
 	@Override

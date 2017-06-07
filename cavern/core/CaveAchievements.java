@@ -10,6 +10,7 @@ import cavern.entity.EntityCavenicBear;
 import cavern.entity.EntityCavenicCreeper;
 import cavern.entity.EntityCavenicSkeleton;
 import cavern.entity.EntityCavenicSpider;
+import cavern.entity.EntityCavenicWitch;
 import cavern.entity.EntityCavenicZombie;
 import cavern.entity.EntityCrazyCreeper;
 import cavern.entity.EntityCrazySkeleton;
@@ -58,6 +59,7 @@ public class CaveAchievements
 	public static final Achievement CAVENIC_CREEPER = CaveAchievement.of("cavenicCreeper", -3, 7, CaveUtils.getSpawnEgg(EntityCavenicCreeper.class), CAVERN);
 	public static final Achievement CAVENIC_ZOMBIE = CaveAchievement.of("cavenicZombie", 1, 7, CaveUtils.getSpawnEgg(EntityCavenicZombie.class), CAVERN);
 	public static final Achievement CAVENIC_SPIDER = CaveAchievement.of("cavenicSpider", 3, 7, CaveUtils.getSpawnEgg(EntityCavenicSpider.class), CAVERN);
+	public static final Achievement CAVENIC_WITCH = CaveAchievement.of("cavenicWitch", 5, 7, CaveUtils.getSpawnEgg(EntityCavenicWitch.class), CAVERN);
 	public static final Achievement CAVENIC_BEAR = CaveAchievement.of("cavenicBear", -8, 0, CaveUtils.getSpawnEgg(EntityCavenicBear.class), ICE_CAVERN);
 	public static final Achievement LOST_ORB = CaveAchievement.of("lostOrb", 4, -2, ItemCave.EnumType.MINER_ORB.getItemStack(), RUINS_CAVERN);
 	public static final Achievement CAVENIA = CaveAchievement.of("cavenia", 0, 9, ItemCave.EnumType.CAVENIC_ORB.getItemStack(), null);

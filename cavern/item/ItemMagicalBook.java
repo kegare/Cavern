@@ -8,7 +8,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
@@ -22,10 +21,10 @@ import cavern.magic.MagicHolyBless;
 import cavern.magic.MagicReturn;
 import cavern.magic.MagicStorage;
 import cavern.magic.MagicThunderbolt;
+import cavern.magic.MagicUnknown;
 import cavern.magic.MagicVenomBlast;
 import cavern.magic.MagicWarp;
 import cavern.util.Roman;
-import cavern.util.WeightedItem;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -40,8 +39,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemMagicalBook extends Item
 {
-	public static final List<WeightedItem> MAGIC_ITEMS = Lists.newArrayList();
-
 	public ItemMagicalBook()
 	{
 		super();
@@ -62,8 +59,13 @@ public class ItemMagicalBook extends Item
 	{
 		String bookName = super.getItemStackDisplayName(stack);
 		String name = Cavern.proxy.translate(Cavern.proxy.translate(getUnlocalizedName()) + ".name").trim();
+		EnumType type = EnumType.byItemStack(stack);
 
-		if (EnumType.byItemStack(stack).getMaxLevel() > 1)
+		if (type == EnumType.UNKNOWN)
+		{
+			bookName = "???";
+		}
+		else if (type.getMaxLevel() > 1)
 		{
 			bookName += " " + Roman.toRoman(getMagicLevel(stack));
 		}
@@ -106,7 +108,7 @@ public class ItemMagicalBook extends Item
 		{
 			for (int i = 1; i <= type.getMaxLevel(); ++i)
 			{
-				subItems.add(setMagicLevel(new ItemStack(item, 1, type.getItemDamage()), i));
+				subItems.add(type.getItemStack(i));
 			}
 		}
 	}
@@ -137,6 +139,8 @@ public class ItemMagicalBook extends Item
 				return new MagicStorage(level, type.getMagicSpellTime(level), stack);
 			case WARP:
 				return new MagicWarp(level, type.getMagicSpellTime(level), stack);
+			case UNKNOWN:
+				return new MagicUnknown(level, type.getMagicSpellTime(level), stack);
 			default:
 		}
 
@@ -217,7 +221,7 @@ public class ItemMagicalBook extends Item
 	public boolean showDurabilityBar(ItemStack stack)
 	{
 		return MagicSpellEventHooks.spellingProgress > 0.0D &&
-			MagicSpellEventHooks.spellingBook != null && ItemStack.areItemStacksEqual(stack, MagicSpellEventHooks.spellingBook);
+			MagicSpellEventHooks.spellingBook != null && MagicSpellEventHooks.spellingBook == stack;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -236,15 +240,16 @@ public class ItemMagicalBook extends Item
 
 	public enum EnumType
 	{
-		FLAME_BREATH(0, "flameBreath", 4, 3500L, 5.0D),
-		EXPLOSION(1, "explosion", 4, 3000L, 0.0D),
-		THUNDERBOLT(2, "thunderbolt", 4, 3500L, 5.0D),
-		VENOM_BLAST(3, "venomBlast", 4, 3500L, 5.0D),
-		RETURN(4, "return", 2, 20000L, 3.0D),
-		HEAL(5, "heal", 3, 5000L, 5.0D),
-		HOLY_BLESS(6, "holyBless", 4, 10000L, 10.0D),
-		STORAGE(7, "storage", 4, 1000L, 0.0D),
-		WARP(8, "warp", 4, 20000L, 0.0D);
+		FLAME_BREATH(0, "flameBreath", 4, 3500L, 5.0D, 0.25D),
+		EXPLOSION(1, "explosion", 4, 3000L, 0.0D, 0.2D),
+		THUNDERBOLT(2, "thunderbolt", 4, 3500L, 5.0D, 0.2D),
+		VENOM_BLAST(3, "venomBlast", 4, 3500L, 5.0D, 0.2D),
+		RETURN(4, "return", 2, 20000L, 3.0D, 0.1D),
+		HEAL(5, "heal", 3, 5000L, 5.0D, 0.2D),
+		HOLY_BLESS(6, "holyBless", 4, 10000L, 10.0D, 0.2D),
+		STORAGE(7, "storage", 4, 1000L, 0.0D, 0.2D),
+		WARP(8, "warp", 4, 20000L, 0.0D, 0.1D),
+		UNKNOWN(9, "unknown", 1, 5000L, 0.0D, 0.0D);
 
 		private static final EnumType[] DAMAGE_LOOKUP = new EnumType[values().length];
 
@@ -253,14 +258,16 @@ public class ItemMagicalBook extends Item
 		private final int maxLevel;
 		private final long magicSpellTime;
 		private final double magicRange;
+		private final double magicRarity;
 
-		private EnumType(int damage, String name, int level, long time, double range)
+		private EnumType(int damage, String name, int level, long time, double range, double rarity)
 		{
 			this.itemDamage = damage;
 			this.unlocalizedName = name;
 			this.maxLevel = level;
 			this.magicSpellTime = time;
 			this.magicRange = range;
+			this.magicRarity = rarity;
 		}
 
 		public int getItemDamage()
@@ -298,14 +305,19 @@ public class ItemMagicalBook extends Item
 			return level <= 1 ? magicRange : magicRange * (1.0D + 0.5D * level);
 		}
 
+		public double getMagicRarity()
+		{
+			return magicRarity;
+		}
+
 		public ItemStack getItemStack()
 		{
 			return getItemStack(1);
 		}
 
-		public ItemStack getItemStack(int amount)
+		public ItemStack getItemStack(int level)
 		{
-			return new ItemStack(CaveItems.MAGICAL_BOOK, amount, getItemDamage());
+			return CaveItems.MAGICAL_BOOK.setMagicLevel(new ItemStack(CaveItems.MAGICAL_BOOK, 1, getItemDamage()), level);
 		}
 
 		public static EnumType byDamage(int damage)
@@ -348,24 +360,5 @@ public class ItemMagicalBook extends Item
 		}
 
 		return false;
-	}
-
-	public static void registerMagicItems()
-	{
-		for (EnumType type : EnumType.values())
-		{
-			int max = type.getMaxLevel();
-
-			for (int i = 1; i <= max; ++i)
-			{
-				ItemStack stack = CaveItems.MAGICAL_BOOK.setMagicLevel(new ItemStack(CaveItems.MAGICAL_BOOK, 1, type.getItemDamage()), i);
-
-				MAGIC_ITEMS.add(new WeightedItem(stack, (max + 1 - i) * 10 - i));
-			}
-		}
-
-		MAGIC_ITEMS.add(new WeightedItem(ItemElixir.EnumType.ELIXIR_NORMAL.getItemStack(), 30));
-		MAGIC_ITEMS.add(new WeightedItem(ItemElixir.EnumType.ELIXIR_MEDIUM.getItemStack(), 10));
-		MAGIC_ITEMS.add(new WeightedItem(ItemElixir.EnumType.ELIXIR_HIGH.getItemStack(), 3));
 	}
 }
