@@ -4,6 +4,8 @@ import cavern.magic.IMagic.IPlayerMagic;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 public class MagicReturn implements IPlayerMagic
@@ -11,6 +13,8 @@ public class MagicReturn implements IPlayerMagic
 	private final int magicLevel;
 	private final long magicSpellTime;
 	private final double magicRange;
+
+	private int errorCode;
 
 	public MagicReturn(int level, long time, double range)
 	{
@@ -46,7 +50,7 @@ public class MagicReturn implements IPlayerMagic
 	@Override
 	public int getMagicPoint()
 	{
-		return 10 * getMagicLevel();
+		return 5 * getMagicLevel();
 	}
 
 	@Override
@@ -56,12 +60,26 @@ public class MagicReturn implements IPlayerMagic
 	}
 
 	@Override
+	public ITextComponent getFailedMessage()
+	{
+		switch (errorCode)
+		{
+			case 1:
+				return new TextComponentTranslation("item.magicalBook.return.no");
+		}
+
+		return IPlayerMagic.super.getFailedMessage();
+	}
+
+	@Override
 	public boolean execute(EntityPlayer player, EntityPlayer targetPlayer)
 	{
 		BlockPos spawnPos = player.getBedLocation();
 
 		if (spawnPos == null)
 		{
+			errorCode = 1;
+
 			return false;
 		}
 
@@ -73,6 +91,8 @@ public class MagicReturn implements IPlayerMagic
 
 			return true;
 		}
+
+		errorCode = 0;
 
 		return false;
 	}

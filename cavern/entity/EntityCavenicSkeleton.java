@@ -37,7 +37,7 @@ public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 
 	protected void initCustomValues()
 	{
-		aiArrowAttack = new EntityAIAttackCavenicBow(this, 0.975D, 5.0F);
+		aiArrowAttack = new EntityAIAttackCavenicBow(this, 0.975D, 5.0F, 2);
 	}
 
 	protected void applyCustomValues()
@@ -131,6 +131,27 @@ public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 	}
 
 	@Override
+	public boolean isEntityInvulnerable(DamageSource source)
+	{
+		if (super.isEntityInvulnerable(source))
+		{
+			return true;
+		}
+
+		if (source.getEntity() == this)
+		{
+			return true;
+		}
+
+		if (source.getSourceOfDamage() == this)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
 	public boolean attackEntityFrom(DamageSource source, float damage)
 	{
 		if (source == DamageSource.FALL)
@@ -138,7 +159,7 @@ public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 			damage *= 0.35F;
 		}
 
-		return !source.isFireDamage() && source.getEntity() != this && source.getSourceOfDamage() != this && super.attackEntityFrom(source, damage);
+		return !source.isFireDamage() && super.attackEntityFrom(source, damage);
 	}
 
 	@Override

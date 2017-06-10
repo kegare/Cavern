@@ -20,7 +20,9 @@ import cavern.magic.MagicHeal;
 import cavern.magic.MagicHolyBless;
 import cavern.magic.MagicReturn;
 import cavern.magic.MagicStorage;
+import cavern.magic.MagicSummon;
 import cavern.magic.MagicThunderbolt;
+import cavern.magic.MagicTorch;
 import cavern.magic.MagicUnknown;
 import cavern.magic.MagicVenomBlast;
 import cavern.magic.MagicWarp;
@@ -141,6 +143,10 @@ public class ItemMagicalBook extends Item
 				return new MagicWarp(level, type.getMagicSpellTime(level), stack);
 			case UNKNOWN:
 				return new MagicUnknown(level, type.getMagicSpellTime(level), stack);
+			case TORCH:
+				return new MagicTorch(level, type.getMagicSpellTime(level), type.getMagicRange(level));
+			case SUMMON:
+				return new MagicSummon(level, type.getMagicSpellTime(level <= 2 ? 1 : 2));
 			default:
 		}
 
@@ -240,7 +246,7 @@ public class ItemMagicalBook extends Item
 
 	public enum EnumType
 	{
-		FLAME_BREATH(0, "flameBreath", 4, 3500L, 5.0D, 0.25D),
+		FLAME_BREATH(0, "flameBreath", 4, 3500L, 5.0D, 0.235D),
 		EXPLOSION(1, "explosion", 4, 3000L, 0.0D, 0.2D),
 		THUNDERBOLT(2, "thunderbolt", 4, 3500L, 5.0D, 0.2D),
 		VENOM_BLAST(3, "venomBlast", 4, 3500L, 5.0D, 0.2D),
@@ -249,7 +255,9 @@ public class ItemMagicalBook extends Item
 		HOLY_BLESS(6, "holyBless", 4, 10000L, 10.0D, 0.2D),
 		STORAGE(7, "storage", 4, 1000L, 0.0D, 0.2D),
 		WARP(8, "warp", 4, 20000L, 0.0D, 0.1D),
-		UNKNOWN(9, "unknown", 1, 5000L, 0.0D, 0.0D);
+		UNKNOWN(9, "unknown", 1, 5000L, 0.0D, 0.0D),
+		TORCH(10, "torch", 3, 3000L, 7.0D, 0.2D),
+		SUMMON(11, "summon", 4, 4500L, 0.0D, 0.15D);
 
 		private static final EnumType[] DAMAGE_LOOKUP = new EnumType[values().length];
 

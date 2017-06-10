@@ -65,7 +65,7 @@ public class MagicWarp implements IPlainMagic
 	@Override
 	public int getMagicPoint()
 	{
-		return 10 * getMagicLevel();
+		return 2 * getMagicLevel();
 	}
 
 	@Override

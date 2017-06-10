@@ -19,6 +19,7 @@ import cavern.entity.EntityCrazyZombie;
 import cavern.item.CaveItems;
 import cavern.item.ItemAcresia;
 import cavern.item.ItemCave;
+import cavern.item.ItemMagicalBook;
 import cavern.stats.HunterRank;
 import cavern.stats.MagicianRank;
 import cavern.stats.MinerRank;
@@ -75,6 +76,7 @@ public class CaveAchievements
 	public static final Achievement MAGICIAN = CaveAchievement.of("magician", 5, 9, MagicianRank.MAGICIAN.getItemStack(), NOVICE_MAGICIAN);
 	public static final Achievement MAGE = CaveAchievement.of("mage", 7, 9, MagicianRank.MAGE.getItemStack(), MAGICIAN);
 	public static final Achievement GRAND_MAGE = CaveAchievement.of("grandMage", 9, 9, MagicianRank.GRAND_MAGE.getItemStack(), MAGE).setSpecial();
+	public static final Achievement SUMMONER = CaveAchievement.of("summoner", 5, 11, ItemMagicalBook.EnumType.SUMMON.getItemStack(), NOVICE_MAGICIAN);
 
 	public static final List<Achievement> ESCAPE_ACHIEVEMENTS = Lists.newArrayList();
 

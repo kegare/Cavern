@@ -14,6 +14,7 @@ import cavern.client.renderer.RenderCrazyCreeper;
 import cavern.client.renderer.RenderCrazySkeleton;
 import cavern.client.renderer.RenderCrazySpider;
 import cavern.client.renderer.RenderCrazyZombie;
+import cavern.client.renderer.RenderMagicTorcher;
 import cavern.entity.EntityCavenicBear;
 import cavern.entity.EntityCavenicCreeper;
 import cavern.entity.EntityCavenicSkeleton;
@@ -24,7 +25,14 @@ import cavern.entity.EntityCrazyCreeper;
 import cavern.entity.EntityCrazySkeleton;
 import cavern.entity.EntityCrazySpider;
 import cavern.entity.EntityCrazyZombie;
+import cavern.entity.EntityMagicTorcher;
+import cavern.entity.EntitySummonCavenicSkeleton;
+import cavern.entity.EntitySummonCavenicZombie;
+import cavern.entity.EntitySummonSkeleton;
+import cavern.entity.EntitySummonZombie;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.entity.RenderSkeleton;
+import net.minecraft.client.renderer.entity.RenderZombie;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -47,6 +55,11 @@ public class CaveRenderingRegistry
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrazyZombie.class, RenderCrazyZombie::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrazySpider.class, RenderCrazySpider::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityCavenicBear.class, RenderCavenicBear::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityMagicTorcher.class, RenderMagicTorcher::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntitySummonZombie.class, RenderZombie::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntitySummonSkeleton.class, RenderSkeleton::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntitySummonCavenicZombie.class, RenderCavenicZombie::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntitySummonCavenicSkeleton.class, RenderCavenicSkeleton::new);
 	}
 
 	public static void registerRenderBlocks()

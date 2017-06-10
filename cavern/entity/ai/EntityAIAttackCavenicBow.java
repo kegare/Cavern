@@ -12,20 +12,23 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 	private final EntitySkeleton entity;
 	private final double moveSpeedAmp;
 	private final float maxAttackDistance;
+	private final int attackSpeed;
 
 	private int seeTime;
 	private int attackTime;
 	private int attackCooldown;
+	private int attackRapid;
 	private boolean strafingClockwise;
 	private boolean strafingBackwards;
 	private int strafingTime = -1;
 
-	public EntityAIAttackCavenicBow(EntitySkeleton skeleton, double speedAmplifier, float maxDistance)
+	public EntityAIAttackCavenicBow(EntitySkeleton skeleton, double speedAmplifier, float maxDistance, int attackSpeed)
 	{
 		super(skeleton, speedAmplifier, 0, maxDistance);
 		this.entity = skeleton;
 		this.moveSpeedAmp = speedAmplifier;
 		this.maxAttackDistance = maxDistance * maxDistance;
+		this.attackSpeed = attackSpeed;
 		this.setMutexBits(3);
 	}
 
@@ -150,7 +153,12 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 				}
 				else if (canSee && --attackCooldown <= 0)
 				{
-					entity.attackEntityWithRangedAttack(target, ItemBow.getArrowVelocity(5));
+					if (++attackRapid >= attackSpeed)
+					{
+						entity.attackEntityWithRangedAttack(target, ItemBow.getArrowVelocity(5));
+
+						attackRapid = 0;
+					}
 
 					++attackTime;
 				}

@@ -32,7 +32,7 @@ public class EntityCrazySkeleton extends EntityCavenicSkeleton
 	@Override
 	protected void initCustomValues()
 	{
-		aiArrowAttack = new EntityAIAttackCavenicBow(this, 0.99D, 6.0F);
+		aiArrowAttack = new EntityAIAttackCavenicBow(this, 0.99D, 6.0F, 1);
 	}
 
 	@Override

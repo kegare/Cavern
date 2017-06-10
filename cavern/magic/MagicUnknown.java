@@ -54,7 +54,7 @@ public class MagicUnknown implements IPlainMagic
 	@Override
 	public int getMagicPoint()
 	{
-		return 10;
+		return 3;
 	}
 
 	@Override

@@ -335,6 +335,7 @@ item.magicalBook.explosion.name=Explosion
 item.magicalBook.thunderbolt.name=Thunderbolt
 item.magicalBook.venomBlast.name=Venom Blast
 item.magicalBook.return.name=Return
+item.magicalBook.return.no=Your respawn point does not exist
 item.magicalBook.heal.name=Heal
 item.magicalBook.holyBless.name=Holy Bless
 item.magicalBook.storage.name=Storage
@@ -343,6 +344,11 @@ item.magicalBook.warp.name=Warp
 item.magicalBook.warp.point=Warp Point
 item.magicalBook.warp.point.set=Warp Point has been set
 item.magicalBook.warp.point.far=Warp Point is too far
+item.magicalBook.torch.name=Torch
+item.magicalBook.torch.lack=You do not have enough Torches
+item.magicalBook.torch.exist=You are already performing the torch magic
+item.magicalBook.torch.finish=Torch magic has been disappeared
+item.magicalBook.summon.name=Summon
 item.elixir.name=Elixir
 item.elixirMedium.name=Medium Elixir
 item.elixirHigh.name=High Elixir
@@ -358,6 +364,7 @@ entity.CrazyZombie.name=Crazy Zombie
 entity.CrazySpider.name=Crazy Spider
 entity.CavenicBear.name=Cavenic Bear
 entity.CavenicWitch.name=Cavenic Witch
+entity.summon.name=Summoned
 
 death.attack.exhaust.mp=%1$s exhausted MP to death
 
@@ -441,6 +448,8 @@ achievement.cavern.mage=Mage
 achievement.cavern.mage.desc=Become a Mage
 achievement.cavern.grandMage=Grand Mage
 achievement.cavern.grandMage.desc=Become a Grand Mage
+achievement.cavern.summoner=Summoner
+achievement.cavern.summoner.desc=Success a Summon Magic
 
 key.cavern.miningAssist=Toggle Mining Assist
 
