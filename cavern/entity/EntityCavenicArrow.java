@@ -6,19 +6,19 @@ import net.minecraft.world.World;
 
 public class EntityCavenicArrow extends EntityTippedArrow
 {
-	public EntityCavenicArrow(World worldIn)
+	public EntityCavenicArrow(World world)
 	{
-		super(worldIn);
+		super(world);
 	}
 
-	public EntityCavenicArrow(World worldIn, double x, double y, double z)
+	public EntityCavenicArrow(World world, double x, double y, double z)
 	{
-		super(worldIn, x, y, z);
+		super(world, x, y, z);
 	}
 
-	public EntityCavenicArrow(World worldIn, EntityLivingBase shooter)
+	public EntityCavenicArrow(World world, EntityLivingBase shooter)
 	{
-		super(worldIn, shooter);
+		super(world, shooter);
 	}
 
 	@Override

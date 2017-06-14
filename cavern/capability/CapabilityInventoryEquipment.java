@@ -13,9 +13,9 @@ public class CapabilityInventoryEquipment implements ICapabilitySerializable<NBT
 {
 	private final IInventoryEquipment equip;
 
-	public CapabilityInventoryEquipment(String title)
+	public CapabilityInventoryEquipment()
 	{
-		this.equip = new InventoryEquipment(title);
+		this.equip = new InventoryEquipment();
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class CapabilityInventoryEquipment implements ICapabilitySerializable<NBT
 					instance.readFromNBT((NBTTagCompound)nbt);
 				}
 			},
-			() -> new InventoryEquipment(null)
+			() -> new InventoryEquipment()
 		);
 	}
 }

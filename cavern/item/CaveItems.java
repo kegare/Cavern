@@ -72,6 +72,7 @@ public class CaveItems
 	public static final ItemBowIce ICE_BOW = new ItemBowIce();
 	public static final ItemMagicalBook MAGICAL_BOOK = new ItemMagicalBook();
 	public static final ItemElixir ELIXIR = new ItemElixir();
+	public static final ItemCavenicBow CAVENIC_BOW = new ItemCavenicBow();
 
 	public static List<Item> getItems()
 	{
@@ -112,6 +113,7 @@ public class CaveItems
 		registerItem(registry, ICE_BOW.setRegistryName("ice_bow"));
 		registerItem(registry, MAGICAL_BOOK.setRegistryName("magical_book"));
 		registerItem(registry, ELIXIR.setRegistryName("elixir"));
+		registerItem(registry, CAVENIC_BOW.setRegistryName("cavenic_bow"));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -142,8 +144,9 @@ public class CaveItems
 		registerModel(ICE_BOW, "ice_bow");
 		registerModels(MAGICAL_BOOK, "magical_book_flame_breath", "magical_book_explosion", "magical_book_thunderbolt",
 			"magical_book_venom_blast", "magical_book_return", "magical_book_heal", "magical_book_holy_bless", "magical_book_storage", "magical_book_warp",
-			"magical_book_unknown", "magical_book_torch", "magical_book_summon");
+			"magical_book_unknown", "magical_book_torch", "magical_book_summon", "magical_book_compositing");
 		registerModels(ELIXIR, "elixir", "elixir_medium", "elixir_high");
+		registerModel(CAVENIC_BOW, "cavenic_bow");
 	}
 
 	@SideOnly(Side.CLIENT)

@@ -1,6 +1,6 @@
 package cavern.client.gui;
 
-import cavern.inventory.ContainerStorage;
+import cavern.inventory.ContainerCompositing;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,26 +11,26 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiStorage extends GuiContainer
+public class GuiCompositing extends GuiContainer
 {
 	private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
 
 	private final IInventory playerInventory;
 	private final int inventoryRows;
 
-	public GuiStorage(IInventory playerInventory, IInventory storageInventory, EntityPlayer player)
+	public GuiCompositing(IInventory playerInventory, IInventory materialInventory, EntityPlayer player)
 	{
-		super(new ContainerStorage(playerInventory, storageInventory, player));
+		super(new ContainerCompositing(playerInventory, materialInventory, player));
 		this.playerInventory = playerInventory;
 		this.allowUserInput = false;
-		this.inventoryRows = storageInventory.getSizeInventory() / 9;
+		this.inventoryRows = materialInventory.getSizeInventory() / 9;
 		this.ySize = 114 + inventoryRows * 18;
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		fontRendererObj.drawString(new TextComponentTranslation("item.magicalBook.storage.name").getUnformattedText(), 8, 6, 4210752);
+		fontRendererObj.drawString(new TextComponentTranslation("item.magicalBook.compositing.name").getUnformattedText(), 8, 6, 4210752);
 		fontRendererObj.drawString(playerInventory.getDisplayName().getUnformattedText(), 8, ySize - 96 + 2, 4210752);
 	}
 

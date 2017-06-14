@@ -61,7 +61,7 @@ public class BlockPortalCavern extends BlockPortal
 	}
 
 	@Override
-	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {}
+	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand) {}
 
 	@Override
 	public boolean trySpawnPortal(World world, BlockPos pos)
@@ -326,7 +326,7 @@ public class BlockPortalCavern extends BlockPortal
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void randomDisplayTick(IBlockState state, World worldIn, BlockPos pos, Random rand) {}
+	public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random rand) {}
 
 	@Override
 	public ItemStack getItem(World world, BlockPos pos, IBlockState state)
@@ -336,11 +336,11 @@ public class BlockPortalCavern extends BlockPortal
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list)
+	public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list)
 	{
 		if (!isDimensionDisabled())
 		{
-			super.getSubBlocks(itemIn, tab, list);
+			super.getSubBlocks(item, tab, list);
 		}
 	}
 

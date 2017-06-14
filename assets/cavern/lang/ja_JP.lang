@@ -338,10 +338,17 @@ item.magicalBook.torch.lack=松明を持っていません
 item.magicalBook.torch.exist=トーチの魔法が既に存在します
 item.magicalBook.torch.finish=トーチの魔法が消滅しました
 item.magicalBook.summon.name=サモン
+item.magicalBook.compositing.name=コンポジット
 item.elixir.name=エリクサー
 item.elixirMedium.name=中級エリクサー
 item.elixirHigh.name=上級エリクサー
 item.elixir.tooltip.mp=MP回復量
+item.bowCavenic.name=ケイブニックボウ
+item.bowCavenic.mode=モード
+item.bowCavenic.normal=ノーマル
+item.bowCavenic.rapid=速射
+item.bowCavenic.snipe=射撃
+item.bowCavenic.torch=松明
 
 entity.CavenicSkeleton.name=ケイブニックスケルトン
 entity.CavenicCreeper.name=ケイブニッククリーパー
@@ -354,6 +361,7 @@ entity.CrazySpider.name=クレイジースパイダー
 entity.CavenicBear.name=ケイブニックベア
 entity.CavenicWitch.name=ケイブニックウィッチ
 entity.summon.name=召喚された
+entity.Caveman.name=ケイブマン
 
 death.attack.exhaust.mp=%1$sは無理に魔法を使おうとして死んでしまった
 

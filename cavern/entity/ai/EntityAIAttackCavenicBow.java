@@ -1,5 +1,6 @@
 package cavern.entity.ai;
 
+import cavern.item.ItemCavenicBow;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAttackRangedBow;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -49,6 +50,18 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 		return !held.isEmpty() && held.getItem() instanceof ItemBow;
 	}
 
+	protected int getAttackSpeed()
+	{
+		ItemStack held = entity.getHeldItemMainhand();
+
+		if (!held.isEmpty() && held.getItem() instanceof ItemCavenicBow)
+		{
+			return Math.max(attackSpeed / 2, 1);
+		}
+
+		return attackSpeed;
+	}
+
 	@Override
 	public boolean continueExecuting()
 	{
@@ -59,6 +72,7 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 	public void startExecuting()
 	{
 		super.startExecuting();
+
 		entity.setSwingingArms(true);
 	}
 
@@ -66,6 +80,7 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 	public void resetTask()
 	{
 		super.resetTask();
+
 		entity.setSwingingArms(false);
 		seeTime = 0;
 		attackTime = 0;
@@ -153,7 +168,7 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 				}
 				else if (canSee && --attackCooldown <= 0)
 				{
-					if (++attackRapid >= attackSpeed)
+					if (++attackRapid >= getAttackSpeed())
 					{
 						entity.attackEntityWithRangedAttack(target, ItemBow.getArrowVelocity(5));
 

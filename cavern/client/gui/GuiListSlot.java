@@ -171,7 +171,7 @@ public abstract class GuiListSlot extends GuiSlot
 
 		for (int i = 0; i < b0; ++i)
 		{
-            float f = 1.0F / (i + 1);
+			float f = 1.0F / (i + 1);
 			int j = width;
 			int k = height;
 			float f1 = (i - b0 / 2) / 256.0F;

@@ -15,6 +15,7 @@ import cavern.config.MiningAssistConfig;
 import cavern.config.RuinsCavernConfig;
 import cavern.core.Cavern;
 import cavern.item.ItemBowIce;
+import cavern.item.ItemCavenicBow;
 import cavern.miningassist.MiningAssist;
 import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
@@ -396,11 +397,22 @@ public class ClientEventHooks
 	public void onFOVUpdate(FOVUpdateEvent event)
 	{
 		EntityPlayer player = event.getEntity();
+
+		if (!player.isHandActive())
+		{
+			return;
+		}
+
 		ItemStack using = player.getActiveItemStack();
 
-		if (!using.isEmpty() && using.getItem() instanceof ItemBowIce)
+		if (using.isEmpty())
 		{
-			float f = using.getMaxItemUseDuration() / 20.0F;
+			return;
+		}
+
+		if (using.getItem() instanceof ItemBowIce)
+		{
+			float f = player.getItemInUseMaxCount() / 8.0F;
 
 			if (f > 1.0F)
 			{
@@ -412,6 +424,30 @@ public class ClientEventHooks
 			}
 
 			event.setNewfov(event.getFov() * (1.0F - f * 0.15F));
+		}
+
+		if (using.getItem() instanceof ItemCavenicBow)
+		{
+			ItemCavenicBow.BowMode mode = ItemCavenicBow.BowMode.byItemStack(using);
+			float zoom = mode.getZoomScale();
+
+			if (zoom <= 0.0F)
+			{
+				return;
+			}
+
+			float f = player.getItemInUseMaxCount() / mode.getPullingSpeed();
+
+			if (f > 1.0F)
+			{
+				f = 1.0F;
+			}
+			else
+			{
+				f *= f;
+			}
+
+			event.setNewfov(event.getFov() * (1.0F - f * zoom));
 		}
 	}
 }

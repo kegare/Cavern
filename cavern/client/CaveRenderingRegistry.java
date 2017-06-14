@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
+import cavern.client.renderer.RenderCaveman;
 import cavern.client.renderer.RenderCavenicBear;
 import cavern.client.renderer.RenderCavenicCreeper;
 import cavern.client.renderer.RenderCavenicSkeleton;
@@ -15,6 +16,7 @@ import cavern.client.renderer.RenderCrazySkeleton;
 import cavern.client.renderer.RenderCrazySpider;
 import cavern.client.renderer.RenderCrazyZombie;
 import cavern.client.renderer.RenderMagicTorcher;
+import cavern.entity.EntityCaveman;
 import cavern.entity.EntityCavenicBear;
 import cavern.entity.EntityCavenicCreeper;
 import cavern.entity.EntityCavenicSkeleton;
@@ -60,6 +62,7 @@ public class CaveRenderingRegistry
 		RenderingRegistry.registerEntityRenderingHandler(EntitySummonSkeleton.class, RenderSkeleton::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntitySummonCavenicZombie.class, RenderCavenicZombie::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntitySummonCavenicSkeleton.class, RenderCavenicSkeleton::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityCaveman.class, RenderCaveman::new);
 	}
 
 	public static void registerRenderBlocks()

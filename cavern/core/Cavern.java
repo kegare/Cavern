@@ -31,6 +31,7 @@ import cavern.handler.api.CavernAPIHandler;
 import cavern.handler.api.DimensionHandler;
 import cavern.item.CaveItems;
 import cavern.network.CaveNetworkRegistry;
+import cavern.recipe.CompositingManager;
 import cavern.stats.MinerStats;
 import cavern.util.Version;
 import cavern.world.CaveType;
@@ -92,6 +93,7 @@ public class Cavern
 
 		CavernAPI.apiHandler = new CavernAPIHandler();
 		CavernAPI.dimension = new DimensionHandler();
+		CavernAPI.compositing = new CompositingManager();
 
 		if (event.getSide().isClient())
 		{
@@ -182,6 +184,8 @@ public class Cavern
 
 		CaveBlocks.registerRecipes();
 		CaveItems.registerRecipes();
+
+		CompositingManager.registerRecipes(CavernAPI.compositing);
 
 		CaveEntityRegistry.registerEntities();
 

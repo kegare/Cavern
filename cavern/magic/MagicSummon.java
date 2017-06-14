@@ -11,6 +11,7 @@ import cavern.magic.IMagic.IPlainMagic;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -60,11 +61,25 @@ public class MagicSummon implements IPlainMagic
 	@Override
 	public boolean execute(EntityPlayer player)
 	{
-		BlockPos center = player.getPosition();
+		EnumFacing frontFace = player.getHorizontalFacing();
+		BlockPos origin = player.getPosition();
+		BlockPos summonPos;
 
-		for (BlockPos pos : BlockPos.getAllInBoxMutable(center.add(2, 0, 2), center.add(-2, 0, -2)))
+		for (int i = 0; i < 3; ++i)
 		{
-			BlockPos summonPos = getSummonPos(player, pos);
+			summonPos = getSummonPos(player, origin.offset(frontFace, i));
+
+			if (summonPos != null)
+			{
+				summon(player, summonPos);
+
+				return true;
+			}
+		}
+
+		for (BlockPos pos : BlockPos.getAllInBoxMutable(origin.add(2, 0, 2), origin.add(-2, 0, -2)))
+		{
+			summonPos = getSummonPos(player, pos);
 
 			if (summonPos != null)
 			{

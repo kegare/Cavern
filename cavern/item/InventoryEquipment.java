@@ -11,15 +11,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 public class InventoryEquipment implements IInventoryEquipment
 {
-	private String inventoryTitle;
 	private IInventory inventory;
-
-	private int inventorySize;
-
-	public InventoryEquipment(String title)
-	{
-		this.inventoryTitle = title;
-	}
 
 	@Override
 	public IInventory getInventory()
@@ -28,13 +20,9 @@ public class InventoryEquipment implements IInventoryEquipment
 	}
 
 	@Override
-	public void setSize(int size)
+	public void setInventory(IInventory inv)
 	{
-		if (inventory == null)
-		{
-			inventory = new InventoryBasic(inventoryTitle, false, 9 * size);
-			inventorySize = size;
-		}
+		inventory = inv;
 	}
 
 	@Override
@@ -45,7 +33,7 @@ public class InventoryEquipment implements IInventoryEquipment
 			return;
 		}
 
-		nbt.setInteger("Size", inventorySize);
+		nbt.setInteger("Size", inventory.getSizeInventory() / 9);
 
 		NBTTagList list = new NBTTagList();
 
@@ -68,11 +56,18 @@ public class InventoryEquipment implements IInventoryEquipment
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		if (nbt.hasKey("Size", NBT.TAG_ANY_NUMERIC))
+		if (inventory == null)
 		{
-			setSize(nbt.getInteger("Size"));
+			int size;
+
+			if (nbt.hasKey("Size", NBT.TAG_ANY_NUMERIC))
+			{
+				size = 9 * nbt.getInteger("Size");
+			}
+			else return;
+
+			inventory = new InventoryBasic("Items", false, size);
 		}
-		else return;
 
 		NBTTagList list = nbt.getTagList("Items", NBT.TAG_COMPOUND);
 
@@ -88,24 +83,15 @@ public class InventoryEquipment implements IInventoryEquipment
 		}
 	}
 
-	public static IInventoryEquipment get(ItemStack item)
+	public static IInventoryEquipment get(ItemStack stack)
 	{
-		IInventoryEquipment equip = CaveCapabilities.getCapability(item, CaveCapabilities.INVENTORY_EQUIP);
+		IInventoryEquipment equip = CaveCapabilities.getCapability(stack, CaveCapabilities.INVENTORY_EQUIP);
 
 		if (equip == null)
 		{
-			return new InventoryEquipment(item.getUnlocalizedName());
+			return new InventoryEquipment();
 		}
 
 		return equip;
-	}
-
-	public static IInventory getInventory(ItemStack item, int size)
-	{
-		IInventoryEquipment equip = get(item);
-
-		equip.setSize(size);
-
-		return equip.getInventory();
 	}
 }

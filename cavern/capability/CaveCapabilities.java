@@ -98,7 +98,7 @@ public class CaveCapabilities
 
 		if (item instanceof ItemMagicalBook)
 		{
-			event.addCapability(INVENTORY_EQUIP_ID, new CapabilityInventoryEquipment("item.magicalBook.storage.name"));
+			event.addCapability(INVENTORY_EQUIP_ID, new CapabilityInventoryEquipment());
 		}
 	}
 

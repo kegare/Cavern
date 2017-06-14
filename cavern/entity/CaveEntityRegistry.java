@@ -52,6 +52,7 @@ public class CaveEntityRegistry
 		registerMob(EntitySummonSkeleton.class, "summon_skeleton", "Skeleton");
 		registerMob(EntitySummonCavenicZombie.class, "summon_cavenic_zombie", "CavenicZombie");
 		registerMob(EntitySummonCavenicSkeleton.class, "summon_cavenic_skeleton", "CavenicSkeleton");
+		registerMob(EntityCaveman.class, "caveman", "Caveman", 0xAAAAAA, 0xCCCCCC);
 	}
 
 	public static void addSpawns()
@@ -69,6 +70,7 @@ public class CaveEntityRegistry
 		EntityRegistry.addSpawn(EntityCrazyZombie.class, 1, 1, 1, EnumCreatureType.MONSTER, biomeArray);
 		EntityRegistry.addSpawn(EntityCrazySpider.class, 1, 1, 1, EnumCreatureType.MONSTER, biomeArray);
 		EntityRegistry.addSpawn(EntityCavenicBear.class, 30, 1, 1, EnumCreatureType.MONSTER, biomeArray);
+		EntityRegistry.addSpawn(EntityCaveman.class, 30, 1, 1, EnumCreatureType.MONSTER, biomeArray);
 		EntityRegistry.addSpawn(EntityAquaSquid.class, 100, 4, 4, EnumCreatureType.WATER_CREATURE, biomeArray);
 	}
 }

@@ -4,16 +4,21 @@ import cavern.api.CavernAPI;
 import cavern.client.particle.ParticleCrazyMob;
 import cavern.core.CaveAchievements;
 import cavern.entity.ai.EntityAIAttackCavenicBow;
+import cavern.item.CaveItems;
 import cavern.item.ItemMagicalBook;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,9 +35,27 @@ public class EntityCrazySkeleton extends EntityCavenicSkeleton
 	}
 
 	@Override
-	protected void initCustomValues()
+	protected void initCustomAI()
 	{
 		aiArrowAttack = new EntityAIAttackCavenicBow(this, 0.99D, 6.0F, 1);
+		aiAttackOnCollide = new EntityAIAttackMelee(this, 1.35D, false)
+		{
+			@Override
+			public void resetTask()
+			{
+				super.resetTask();
+
+				EntityCrazySkeleton.this.setSwingingArms(false);
+			}
+
+			@Override
+			public void startExecuting()
+			{
+				super.startExecuting();
+
+				EntityCrazySkeleton.this.setSwingingArms(true);
+			}
+		};
 	}
 
 	@Override
@@ -41,6 +64,14 @@ public class EntityCrazySkeleton extends EntityCavenicSkeleton
 		getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(2000.0D);
 		getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0D);
 		getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
+	}
+
+	@Override
+	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty)
+	{
+		super.setEquipmentBasedOnDifficulty(difficulty);
+
+		setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(CaveItems.CAVENIC_BOW));
 	}
 
 	@Override

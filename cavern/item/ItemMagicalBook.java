@@ -14,6 +14,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import cavern.client.handler.MagicSpellEventHooks;
 import cavern.core.Cavern;
 import cavern.magic.IMagic;
+import cavern.magic.MagicCompositing;
 import cavern.magic.MagicExplosion;
 import cavern.magic.MagicFlameBreath;
 import cavern.magic.MagicHeal;
@@ -147,6 +148,8 @@ public class ItemMagicalBook extends Item
 				return new MagicTorch(level, type.getMagicSpellTime(level), type.getMagicRange(level));
 			case SUMMON:
 				return new MagicSummon(level, type.getMagicSpellTime(level <= 2 ? 1 : 2));
+			case COMPOSITING:
+				return new MagicCompositing(level, type.getMagicSpellTime(level), stack);
 			default:
 		}
 
@@ -257,7 +260,8 @@ public class ItemMagicalBook extends Item
 		WARP(8, "warp", 4, 20000L, 0.0D, 0.1D),
 		UNKNOWN(9, "unknown", 1, 5000L, 0.0D, 0.0D),
 		TORCH(10, "torch", 3, 3000L, 7.0D, 0.2D),
-		SUMMON(11, "summon", 4, 4500L, 0.0D, 0.15D);
+		SUMMON(11, "summon", 4, 4500L, 0.0D, 0.15D),
+		COMPOSITING(12, "compositing", 1, 30000L, 0.0D, 0.1D);
 
 		private static final EnumType[] DAMAGE_LOOKUP = new EnumType[values().length];
 

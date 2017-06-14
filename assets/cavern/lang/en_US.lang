@@ -349,10 +349,17 @@ item.magicalBook.torch.lack=You do not have enough Torches
 item.magicalBook.torch.exist=You are already performing the torch magic
 item.magicalBook.torch.finish=Torch magic has been disappeared
 item.magicalBook.summon.name=Summon
+item.magicalBook.compositing.name=Compositing
 item.elixir.name=Elixir
 item.elixirMedium.name=Medium Elixir
 item.elixirHigh.name=High Elixir
 item.elixir.tooltip.mp=Heal MP
+item.bowCavenic.name=Cavenic Bow
+item.bowCavenic.mode=Mode
+item.bowCavenic.normal=NORMAL
+item.bowCavenic.rapid=RAPID
+item.bowCavenic.snipe=SNIPE
+item.bowCavenic.torch=TORCH
 
 entity.CavenicSkeleton.name=Cavenic Skeleton
 entity.CavenicCreeper.name=Cavenic Creeper
@@ -365,6 +372,7 @@ entity.CrazySpider.name=Crazy Spider
 entity.CavenicBear.name=Cavenic Bear
 entity.CavenicWitch.name=Cavenic Witch
 entity.summon.name=Summoned
+entity.Caveman.name=Caveman
 
 death.attack.exhaust.mp=%1$s exhausted MP to death
 

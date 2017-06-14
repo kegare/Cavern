@@ -4,45 +4,61 @@ import cavern.api.CavernAPI;
 import cavern.api.ICavenicMob;
 import cavern.core.CaveAchievements;
 import cavern.entity.ai.EntityAIAttackCavenicBow;
+import cavern.item.CaveItems;
 import cavern.item.ItemCave;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIAttackRangedBow;
-import net.minecraft.entity.monster.AbstractSkeleton;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemBow;
+import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 {
 	protected EntityAIAttackRangedBow aiArrowAttack;
+	protected EntityAIAttackMelee aiAttackOnCollide;
 
 	public EntityCavenicSkeleton(World world)
 	{
 		super(world);
 		this.experienceValue = 13;
 		this.setSize(0.68F, 2.0F);
-		this.initCustomValues();
-		this.applyCustomValues();
 	}
 
-	protected void initCustomValues()
+	protected void initCustomAI()
 	{
-		aiArrowAttack = new EntityAIAttackCavenicBow(this, 0.975D, 5.0F, 2);
-	}
+		aiArrowAttack = new EntityAIAttackCavenicBow(this, 0.975D, 5.0F, 4);
+		aiAttackOnCollide = new EntityAIAttackMelee(this, 1.25D, false)
+		{
+			@Override
+			public void resetTask()
+			{
+				super.resetTask();
 
-	protected void applyCustomValues()
-	{
-		ObfuscationReflectionHelper.setPrivateValue(AbstractSkeleton.class, this, aiArrowAttack, "aiArrowAttack", "field_85037_d");
+				EntityCavenicSkeleton.this.setSwingingArms(false);
+			}
+
+			@Override
+			public void startExecuting()
+			{
+				super.startExecuting();
+
+				EntityCavenicSkeleton.this.setSwingingArms(true);
+			}
+		};
 	}
 
 	@Override
@@ -61,6 +77,17 @@ public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 	}
 
 	@Override
+	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty)
+	{
+		super.setEquipmentBasedOnDifficulty(difficulty);
+
+		if (rand.nextDouble() < 0.45D)
+		{
+			setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(CaveItems.CAVENIC_BOW));
+		}
+	}
+
+	@Override
 	protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source)
 	{
 		super.dropLoot(wasRecentlyHit, lootingModifier, source);
@@ -68,6 +95,30 @@ public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 		if (rand.nextInt(5) == 0)
 		{
 			entityDropItem(ItemCave.EnumType.CAVENIC_ORB.getItemStack(), 0.5F);
+		}
+	}
+
+	@Override
+	public void setCombatTask()
+	{
+		if (aiArrowAttack == null || aiAttackOnCollide == null)
+		{
+			initCustomAI();
+		}
+
+		if (world != null && !world.isRemote)
+		{
+			tasks.removeTask(aiAttackOnCollide);
+			tasks.removeTask(aiArrowAttack);
+
+			if (getHeldItemMainhand().getItem() instanceof ItemBow)
+			{
+				tasks.addTask(4, aiArrowAttack);
+			}
+			else
+			{
+				tasks.addTask(4, aiAttackOnCollide);
+			}
 		}
 	}
 

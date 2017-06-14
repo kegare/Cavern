@@ -1,5 +1,6 @@
 package cavern.item;
 
+import cavern.block.CaveBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -188,6 +189,16 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 		public String getUnlocalizedName()
 		{
 			return unlocalizedName;
+		}
+
+		public ItemStack getItemStack()
+		{
+			return getItemStack(1);
+		}
+
+		public ItemStack getItemStack(int amount)
+		{
+			return new ItemStack(CaveBlocks.ACRESIA, amount, getItemDamage());
 		}
 
 		public static EnumType byDamage(int damage)
