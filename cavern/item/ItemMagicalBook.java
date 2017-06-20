@@ -209,11 +209,11 @@ public class ItemMagicalBook extends Item
 
 		for (int i = 0; i < inventory.getSizeInventory(); ++i)
 		{
-			ItemStack itemstack = inventory.getStackInSlot(i);
+			ItemStack stack = inventory.getStackInSlot(i);
 
-			if (!itemstack.isEmpty())
+			if (!stack.isEmpty())
 			{
-				set.add(itemstack.getDisplayName());
+				set.add(stack.getDisplayName());
 
 				if (set.size() >= limit)
 				{
@@ -240,7 +240,6 @@ public class ItemMagicalBook extends Item
 		return 1.0D - MathHelper.clamp(MagicSpellEventHooks.spellingProgress, 0.0D, 1.0D);
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRGBDurabilityForDisplay(ItemStack stack)
 	{
@@ -261,7 +260,7 @@ public class ItemMagicalBook extends Item
 		UNKNOWN(9, "unknown", 1, 5000L, 0.0D, 0.0D),
 		TORCH(10, "torch", 3, 3000L, 7.0D, 0.2D),
 		SUMMON(11, "summon", 4, 4500L, 0.0D, 0.15D),
-		COMPOSITING(12, "compositing", 1, 30000L, 0.0D, 0.1D);
+		COMPOSITING(12, "compositing", 1, 20000L, 0.0D, 0.1D);
 
 		private static final EnumType[] DAMAGE_LOOKUP = new EnumType[values().length];
 
@@ -354,23 +353,5 @@ public class ItemMagicalBook extends Item
 				DAMAGE_LOOKUP[type.getItemDamage()] = type;
 			}
 		}
-	}
-
-	public static boolean heldMagicItem(EntityPlayer player)
-	{
-		if (player == null)
-		{
-			return false;
-		}
-
-		for (ItemStack held : player.getHeldEquipment())
-		{
-			if (!held.isEmpty())
-			{
-				return held.getItem() instanceof ItemMagicalBook || held.getItem() instanceof ItemElixir;
-			}
-		}
-
-		return false;
 	}
 }

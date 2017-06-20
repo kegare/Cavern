@@ -7,7 +7,7 @@ public enum MiningAssist
 	RANGED(2, "ranged"),
 	ADIT(3, "adit");
 
-	private static final MiningAssist[] ASSIST_LOOKUP = new MiningAssist[values().length];
+	private static final MiningAssist[] TYPE_LOOKUP = new MiningAssist[values().length];
 
 	private final int type;
 	private final String name;
@@ -33,28 +33,21 @@ public enum MiningAssist
 		return "cavern.miningassist." + name;
 	}
 
-	public static MiningAssist get(int type)
+	public static MiningAssist byType(int type)
 	{
-		if (type < 0)
+		if (type < 0 || type >= TYPE_LOOKUP.length)
 		{
 			type = 0;
 		}
 
-		int max = ASSIST_LOOKUP.length - 1;
-
-		if (type > max)
-		{
-			type = max;
-		}
-
-		return ASSIST_LOOKUP[type];
+		return TYPE_LOOKUP[type];
 	}
 
 	static
 	{
 		for (MiningAssist assist : values())
 		{
-			ASSIST_LOOKUP[assist.getType()] = assist;
+			TYPE_LOOKUP[assist.getType()] = assist;
 		}
 	}
 }

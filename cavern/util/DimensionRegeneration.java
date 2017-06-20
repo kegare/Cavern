@@ -24,6 +24,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -48,7 +49,7 @@ public class DimensionRegeneration
 			}
 		}
 
-		WorldServer world = server.worldServerForDimension(dim);
+		WorldServer world = server.getWorld(dim);
 		DimensionType type = world.provider.getDimensionType();
 		File dir = new File(DimensionManager.getCurrentSaveRootDirectory(), world.provider.getSaveFolder());
 		ITextComponent name, text;
@@ -70,6 +71,7 @@ public class DimensionRegeneration
 
 		try
 		{
+			world.disableLevelSaving = false;
 			world.saveAllChunks(true, null);
 		}
 		catch (Exception e)
@@ -79,10 +81,10 @@ public class DimensionRegeneration
 			return false;
 		}
 
+		MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(world));
+
 		world.flush();
 		world.getWorldInfo().setDimensionData(type.getId(), null);
-
-		MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(world));
 
 		DimensionManager.setWorld(dim, null, server);
 
@@ -90,7 +92,7 @@ public class DimensionRegeneration
 		{
 			if (backup)
 			{
-				backup(dim);
+				backup(world);
 			}
 
 			try
@@ -109,15 +111,23 @@ public class DimensionRegeneration
 		{
 			DimensionManager.initDimension(dim);
 
-			world = server.worldServerForDimension(dim);
+			world = server.getWorld(dim);
 
 			try
 			{
+				boolean prevSaving = world.disableLevelSaving;
+
+				world.disableLevelSaving = false;
 				world.saveAllChunks(true, null);
+				world.disableLevelSaving = prevSaving;
 			}
 			catch (Exception e) {}
 
-			world.flush();
+			boolean prevSaving = world.disableLevelSaving;
+
+			world.disableLevelSaving = false;
+			world.flushToDisk();
+			world.disableLevelSaving = prevSaving;
 		}
 
 		text = new TextComponentTranslation("cavern.regeneration.regenerated", name);
@@ -130,10 +140,9 @@ public class DimensionRegeneration
 		return true;
 	}
 
-	public static boolean backup(int dim)
+	public static boolean backup(World world)
 	{
 		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-		WorldServer world = server.worldServerForDimension(dim);
 		File dir = new File(DimensionManager.getCurrentSaveRootDirectory(), world.provider.getSaveFolder());
 
 		if (!dir.exists())

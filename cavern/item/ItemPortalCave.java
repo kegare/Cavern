@@ -25,12 +25,12 @@ public class ItemPortalCave extends ItemBlock
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		BlockPos blockpos = pos.offset(side);
+		BlockPos offset = pos.offset(side);
 		ItemStack held = player.getHeldItem(hand);
 
-		if (((BlockPortal)block).trySpawnPortal(world, blockpos))
+		if (((BlockPortal)block).trySpawnPortal(world, offset))
 		{
-			world.playSound(null, blockpos.getX() + 0.5D, blockpos.getY() + 0.5D, blockpos.getZ() + 0.5D, SoundEvents.BLOCK_GLASS_PLACE, SoundCategory.BLOCKS, 1.0F, 2.0F);
+			world.playSound(null, offset.getX() + 0.5D, offset.getY() + 0.5D, offset.getZ() + 0.5D, SoundEvents.BLOCK_GLASS_PLACE, SoundCategory.BLOCKS, 1.0F, 2.0F);
 
 			if (!player.capabilities.isCreativeMode)
 			{

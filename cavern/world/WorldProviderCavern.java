@@ -41,7 +41,6 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	@Override
 	protected void init()
 	{
-		hasNoSky = true;
 		hasSkyLight = false;
 		dataManager = new CaveDataManager(world.getWorldInfo().getDimensionData(getDimensionType().getId()).getCompoundTag("WorldData"));
 
@@ -317,12 +316,6 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	}
 
 	@Override
-	public boolean hasNoSky()
-	{
-		return true;
-	}
-
-	@Override
 	public boolean canDoLightning(Chunk chunk)
 	{
 		return false;
@@ -360,7 +353,7 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 		{
 			WorldServer worldServer = (WorldServer)world;
 
-			if (worldServer.getGameRules().getBoolean("doMobSpawning") && worldServer.getWorldInfo().getTerrainType() != WorldType.DEBUG_WORLD)
+			if (worldServer.getGameRules().getBoolean("doMobSpawning") && worldServer.getWorldInfo().getTerrainType() != WorldType.DEBUG_ALL_BLOCK_STATES)
 			{
 				MinecraftServer server = worldServer.getMinecraftServer();
 				boolean spawnHostileMobs = worldServer.getDifficulty() != EnumDifficulty.PEACEFUL;

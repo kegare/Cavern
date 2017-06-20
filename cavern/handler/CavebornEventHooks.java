@@ -60,73 +60,67 @@ public class CavebornEventHooks
 
 				if (caveborn == ConfigCaveborn.Type.RUINS_CAVERN && !CavernAPI.dimension.isRuinsCavernDisabled())
 				{
-					server.addScheduledTask(() ->
+					int dim = RuinsCavernConfig.dimensionId;
+					Teleporter teleporter = new TeleporterRuinsCavern(server.getWorld(dim));
+
+					server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
+
+					WorldServer world = player.getServerWorld();
+
+					world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_STONE_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+
+					player.setSpawnPoint(BlockPos.ORIGIN.up(80), true);
+
+					if (!RuinsCavernConfig.decorateTorches)
 					{
-						int dim = RuinsCavernConfig.dimensionId;
-						Teleporter teleporter = new TeleporterRuinsCavern(server.worldServerForDimension(dim));
+						BlockPos pos = player.getPosition();
+						double d0 = world.rand.nextFloat() * 0.5F + 0.25D;
+						double d1 = world.rand.nextFloat() * 0.5F + 0.25D;
+						double d2 = world.rand.nextFloat() * 0.5F + 0.25D;
+						EntityItem entityItem = new EntityItem(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, new ItemStack(Blocks.TORCH, 64));
 
-						server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
+						entityItem.setPickupDelay(85);
 
-						WorldServer world = player.getServerWorld();
-
-						world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_STONE_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-
-						player.setSpawnPoint(BlockPos.ORIGIN.up(80), true);
-
-						if (!RuinsCavernConfig.decorateTorches)
-						{
-							BlockPos pos = player.getPosition();
-							double d0 = world.rand.nextFloat() * 0.5F + 0.25D;
-							double d1 = world.rand.nextFloat() * 0.5F + 0.25D;
-							double d2 = world.rand.nextFloat() * 0.5F + 0.25D;
-							EntityItem entityItem = new EntityItem(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, new ItemStack(Blocks.TORCH, 64));
-
-							entityItem.setPickupDelay(85);
-
-							world.spawnEntity(entityItem);
-						}
-					});
+						world.spawnEntity(entityItem);
+					}
 				}
 				else
 				{
-					server.addScheduledTask(() ->
+					BlockPortalCavern portal = caveborn.getPortalBlock();
+
+					if (portal != null && !portal.isDimensionDisabled())
 					{
-						BlockPortalCavern portal = caveborn.getPortalBlock();
+						int dim = portal.getDimension();
+						Teleporter teleporter = new TeleporterCavern(server.getWorld(dim), portal);
 
-						if (portal != null && !portal.isDimensionDisabled())
+						boolean force = player.forceSpawn;
+
+						player.forceSpawn = true;
+						player.timeUntilPortal = player.getPortalCooldown();
+
+						server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
+
+						player.forceSpawn = force;
+
+						WorldServer world = player.getServerWorld();
+						BlockPos pos = player.getPosition();
+
+						for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
 						{
-							int dim = portal.getDimension();
-							Teleporter teleporter = new TeleporterCavern(server.worldServerForDimension(dim), portal);
-
-							boolean force = player.forceSpawn;
-
-							player.forceSpawn = true;
-							player.timeUntilPortal = player.getPortalCooldown();
-
-							server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
-
-							player.forceSpawn = force;
-
-							WorldServer world = player.getServerWorld();
-							BlockPos pos = player.getPosition();
-
-							for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
+							if (world.getBlockState(blockpos).getBlock() == portal)
 							{
-								if (world.getBlockState(blockpos).getBlock() == portal)
-								{
-									world.setBlockToAir(blockpos);
+								world.setBlockToAir(blockpos);
 
-									break;
-								}
+								break;
 							}
-
-							double x = player.posX;
-							double y = player.posY + player.getEyeHeight();
-							double z = player.posZ;
-
-							world.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0F, 0.65F);
 						}
-					});
+
+						double x = player.posX;
+						double y = player.posY + player.getEyeHeight();
+						double z = player.posZ;
+
+						world.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0F, 0.65F);
+					}
 				}
 			}
 		}

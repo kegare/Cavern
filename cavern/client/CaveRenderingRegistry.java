@@ -16,6 +16,7 @@ import cavern.client.renderer.RenderCrazySkeleton;
 import cavern.client.renderer.RenderCrazySpider;
 import cavern.client.renderer.RenderCrazyZombie;
 import cavern.client.renderer.RenderMagicTorcher;
+import cavern.client.renderer.RenderMagicalArrow;
 import cavern.entity.EntityCaveman;
 import cavern.entity.EntityCavenicBear;
 import cavern.entity.EntityCavenicCreeper;
@@ -28,6 +29,7 @@ import cavern.entity.EntityCrazySkeleton;
 import cavern.entity.EntityCrazySpider;
 import cavern.entity.EntityCrazyZombie;
 import cavern.entity.EntityMagicTorcher;
+import cavern.entity.EntityMagicalArrow;
 import cavern.entity.EntitySummonCavenicSkeleton;
 import cavern.entity.EntitySummonCavenicZombie;
 import cavern.entity.EntitySummonSkeleton;
@@ -63,6 +65,7 @@ public class CaveRenderingRegistry
 		RenderingRegistry.registerEntityRenderingHandler(EntitySummonCavenicZombie.class, RenderCavenicZombie::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntitySummonCavenicSkeleton.class, RenderCavenicSkeleton::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityCaveman.class, RenderCaveman::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityMagicalArrow.class, RenderMagicalArrow::new);
 	}
 
 	public static void registerRenderBlocks()

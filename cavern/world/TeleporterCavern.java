@@ -1,7 +1,5 @@
 package cavern.world;
 
-import java.util.Random;
-
 import cavern.api.CavernAPI;
 import cavern.block.BlockPortalCavern;
 import cavern.block.CaveBlocks;
@@ -9,8 +7,6 @@ import cavern.config.GeneralConfig;
 import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
 import cavern.util.CaveUtils;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.block.BlockPortal;
 import net.minecraft.block.state.IBlockState;
@@ -33,17 +29,11 @@ public class TeleporterCavern extends Teleporter
 	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
 	protected static final IBlockState MOSSY_COBBLESTONE = Blocks.MOSSY_COBBLESTONE.getDefaultState();
 
-	private final WorldServer world;
-	private final Random random;
 	private final BlockPortalCavern portal;
-
-	private final Long2ObjectMap<PortalPosition> coordCache = new Long2ObjectOpenHashMap<>(4096);
 
 	public TeleporterCavern(WorldServer worldServer, BlockPortalCavern portal)
 	{
 		super(worldServer);
-		this.world = worldServer;
-		this.random = new Random(worldServer.getSeed());
 		this.portal = portal;
 	}
 
@@ -133,9 +123,9 @@ public class TeleporterCavern extends Teleporter
 		BlockPos pos = BlockPos.ORIGIN;
 		long coord = ChunkPos.asLong(x, z);
 
-		if (coordCache.containsKey(coord))
+		if (destinationCoordinateCache.containsKey(coord))
 		{
-			PortalPosition portalpos = coordCache.get(coord);
+			PortalPosition portalpos = destinationCoordinateCache.get(coord);
 			d0 = 0.0D;
 			pos = portalpos;
 			portalpos.lastUpdateTime = world.getTotalWorldTime();
@@ -179,7 +169,7 @@ public class TeleporterCavern extends Teleporter
 		{
 			if (flag)
 			{
-				coordCache.put(coord, new PortalPosition(pos, world.getTotalWorldTime()));
+				destinationCoordinateCache.put(coord, new PortalPosition(pos, world.getTotalWorldTime()));
 			}
 
 			double posX = pos.getX() + 0.5D;
@@ -509,7 +499,7 @@ public class TeleporterCavern extends Teleporter
 	{
 		if (time % 100L == 0L)
 		{
-			ObjectIterator<PortalPosition> iterator = coordCache.values().iterator();
+			ObjectIterator<PortalPosition> iterator = destinationCoordinateCache.values().iterator();
 			long i = time - 300L;
 
 			while (iterator.hasNext())

@@ -86,8 +86,8 @@ public class GuiSelectMob extends GuiScreen
 			doneButton = new GuiButtonExt(0, 0, 0, 145, 20, I18n.format("gui.done"));
 		}
 
-		doneButton.xPosition = width / 2 + 10;
-		doneButton.yPosition = height - doneButton.height - 4;
+		doneButton.x = width / 2 + 10;
+		doneButton.y = height - doneButton.height - 4;
 
 		if (detailInfo == null)
 		{
@@ -95,15 +95,15 @@ public class GuiSelectMob extends GuiScreen
 		}
 
 		detailInfo.setIsChecked(CaveConfigGui.detailInfo);
-		detailInfo.xPosition = width / 2 + 95;
+		detailInfo.x = width / 2 + 95;
 
 		if (instantFilter == null)
 		{
-			instantFilter = new GuiCheckBox(2, 0, detailInfo.yPosition + detailInfo.height + 2, I18n.format(Config.LANG_KEY + "instant"), true);
+			instantFilter = new GuiCheckBox(2, 0, detailInfo.y + detailInfo.height + 2, I18n.format(Config.LANG_KEY + "instant"), true);
 		}
 
 		instantFilter.setIsChecked(CaveConfigGui.instantFilter);
-		instantFilter.xPosition = detailInfo.xPosition;
+		instantFilter.x = detailInfo.x;
 
 		buttonList.clear();
 		buttonList.add(doneButton);
@@ -112,12 +112,12 @@ public class GuiSelectMob extends GuiScreen
 
 		if (filterTextField == null)
 		{
-			filterTextField = new GuiTextField(0, fontRendererObj, 0, 0, 150, 16);
+			filterTextField = new GuiTextField(0, fontRenderer, 0, 0, 150, 16);
 			filterTextField.setMaxStringLength(100);
 		}
 
-		filterTextField.xPosition = width / 2 - filterTextField.width - 5;
-		filterTextField.yPosition = height - filterTextField.height - 6;
+		filterTextField.x = width / 2 - filterTextField.width - 5;
+		filterTextField.y = height - filterTextField.height - 6;
 
 		detailHoverChecker = new HoverChecker(detailInfo, 800);
 		instantHoverChecker = new HoverChecker(instantFilter, 800);
@@ -165,7 +165,7 @@ public class GuiSelectMob extends GuiScreen
 	{
 		mobList.drawScreen(mouseX, mouseY, ticks);
 
-		drawCenteredString(fontRendererObj, I18n.format(Config.LANG_KEY + "select.mob"), width / 2, 15, 0xFFFFFF);
+		drawCenteredString(fontRenderer, I18n.format(Config.LANG_KEY + "select.mob"), width / 2, 15, 0xFFFFFF);
 
 		super.drawScreen(mouseX, mouseY, ticks);
 
@@ -173,17 +173,17 @@ public class GuiSelectMob extends GuiScreen
 
 		if (detailHoverChecker.checkHover(mouseX, mouseY))
 		{
-			drawHoveringText(fontRendererObj.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "detail.hover"), 300), mouseX, mouseY);
+			drawHoveringText(fontRenderer.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "detail.hover"), 300), mouseX, mouseY);
 		}
 		else if (instantHoverChecker.checkHover(mouseX, mouseY))
 		{
-			drawHoveringText(fontRendererObj.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "instant.hover"), 300), mouseX, mouseY);
+			drawHoveringText(fontRenderer.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "instant.hover"), 300), mouseX, mouseY);
 		}
 		else if (!mobList.selected.isEmpty())
 		{
 			if (mouseX <= 100 && mouseY <= 20)
 			{
-				drawString(fontRendererObj, I18n.format(Config.LANG_KEY + "select.mob.selected", mobList.selected.size()), 5, 5, 0xEFEFEF);
+				drawString(fontRenderer, I18n.format(Config.LANG_KEY + "select.mob.selected", mobList.selected.size()), 5, 5, 0xEFEFEF);
 			}
 
 			if (detailInfo.isChecked() && selectedHoverChecker.checkHover(mouseX, mouseY))
@@ -419,7 +419,7 @@ public class GuiSelectMob extends GuiScreen
 				break;
 			}
 
-			drawCenteredString(fontRendererObj, name, width / 2, par3 + 1, 0xFFFFFF);
+			drawCenteredString(fontRenderer, name, width / 2, par3 + 1, 0xFFFFFF);
 		}
 
 		@Override

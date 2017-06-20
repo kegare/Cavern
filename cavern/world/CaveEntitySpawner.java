@@ -78,7 +78,7 @@ public class CaveEntitySpawner
 
 								if (!flag && world.getWorldBorder().contains(pos))
 								{
-									PlayerChunkMapEntry entry = world.getPlayerChunkMap().getEntry(pos.chunkXPos, pos.chunkZPos);
+									PlayerChunkMapEntry entry = world.getPlayerChunkMap().getEntry(pos.x, pos.z);
 
 									if (entry != null && entry.isSentToPlayers())
 									{
@@ -113,7 +113,7 @@ public class CaveEntitySpawner
 
 						outside: for (ChunkPos chunkpos : shuffled)
 						{
-							BlockPos blockpos = getRandomChunkPosition(world, chunkpos.chunkXPos, chunkpos.chunkZPos);
+							BlockPos blockpos = getRandomChunkPosition(world, chunkpos.x, chunkpos.z);
 							int originX = blockpos.getX();
 							int originY = blockpos.getY();
 							int originZ = blockpos.getZ();

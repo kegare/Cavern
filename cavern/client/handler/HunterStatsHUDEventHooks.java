@@ -4,7 +4,7 @@ import cavern.api.CavernAPI;
 import cavern.api.IHunterStats;
 import cavern.config.GeneralConfig;
 import cavern.config.property.ConfigDisplayPos;
-import cavern.item.ItemMagicalBook;
+import cavern.item.CaveItems;
 import cavern.network.server.StatsAdjustRequestMessage;
 import cavern.stats.HunterRank;
 import cavern.stats.HunterStats;
@@ -52,7 +52,7 @@ public class HunterStatsHUDEventHooks
 			return false;
 		}
 
-		if (getDisplayType() == GeneralConfig.magicianPointPosition.getType() && ItemMagicalBook.heldMagicItem(mc.player))
+		if (getDisplayType() == GeneralConfig.magicianPointPosition.getType() && CaveItems.hasMagicalItem(mc.player, true))
 		{
 			return false;
 		}
@@ -176,7 +176,7 @@ public class HunterStatsHUDEventHooks
 		int y = posY;
 
 		RenderItem renderItem = mc.getRenderItem();
-		FontRenderer renderer = mc.fontRendererObj;
+		FontRenderer renderer = mc.fontRenderer;
 
 		renderItem.renderItemIntoGUI(hunterRank.getItemStack(), x, y);
 

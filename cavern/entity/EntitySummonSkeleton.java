@@ -81,7 +81,7 @@ public class EntitySummonSkeleton extends EntitySkeleton implements ISummonMob
 			return true;
 		}
 
-		Entity entity = source.getEntity();
+		Entity entity = source.getTrueSource();
 
 		if (entity != null && entity instanceof EntityPlayer)
 		{
@@ -93,7 +93,7 @@ public class EntitySummonSkeleton extends EntitySkeleton implements ISummonMob
 			return true;
 		}
 
-		entity = source.getSourceOfDamage();
+		entity = source.getImmediateSource();
 
 		if (entity != null && entity instanceof EntityPlayer)
 		{

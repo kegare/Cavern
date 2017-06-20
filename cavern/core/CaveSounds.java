@@ -12,6 +12,7 @@ public class CaveSounds
 	public static final CaveSoundEvent SPELLING = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "magic.spelling"));
 	public static final CaveSoundEvent SPELLING_END = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "magic.spelling.end"));
 	public static final CaveSoundEvent MAGIC_SUCCESS = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "magic.success"));
+	public static final CaveSoundEvent MAGIC_SUCCESS_SHORT = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "magic.success.short"));
 
 	public static final CaveSoundEvent MUSIC_CAVE = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.cave"));
 	public static final CaveSoundEvent MUSIC_UNREST = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.unrest"));
@@ -28,6 +29,7 @@ public class CaveSounds
 		registry.register(SPELLING);
 		registry.register(SPELLING_END);
 		registry.register(MAGIC_SUCCESS);
+		registry.register(MAGIC_SUCCESS_SHORT);
 
 		registry.register(MUSIC_CAVE);
 		registry.register(MUSIC_UNREST);

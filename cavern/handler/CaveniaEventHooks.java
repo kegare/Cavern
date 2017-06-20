@@ -62,11 +62,11 @@ public class CaveniaEventHooks
 			{
 				int point = ((ICavenicMob)entity).getHuntingPoint();
 				DamageSource source = event.getSource();
-				Entity sourceEntity = source.getEntity();
+				Entity sourceEntity = source.getTrueSource();
 
 				if (sourceEntity == null || !(sourceEntity instanceof EntityPlayer))
 				{
-					sourceEntity = source.getSourceOfDamage();
+					sourceEntity = source.getImmediateSource();
 				}
 
 				if (sourceEntity != null && sourceEntity instanceof EntityPlayer)
@@ -124,11 +124,11 @@ public class CaveniaEventHooks
 
 			if (!world.isRemote)
 			{
-				ItemStack item = ItemCave.EnumType.CAVENIC_ORB.getItemStack();
+				ItemStack stack = ItemCave.EnumType.CAVENIC_ORB.getItemStack();
 
-				if (!player.inventory.hasItemStack(item))
+				if (!player.inventory.hasItemStack(stack))
 				{
-					player.entityDropItem(item, 0.5F);
+					player.entityDropItem(stack, 0.5F);
 				}
 			}
 		}
@@ -149,11 +149,11 @@ public class CaveniaEventHooks
 				return;
 			}
 
-			Entity sourceEntity = source.getEntity();
+			Entity sourceEntity = source.getTrueSource();
 
 			if (sourceEntity == null || !(sourceEntity instanceof EntityPlayer))
 			{
-				sourceEntity = source.getSourceOfDamage();
+				sourceEntity = source.getImmediateSource();
 			}
 
 			if (sourceEntity != null && sourceEntity instanceof EntityPlayer)

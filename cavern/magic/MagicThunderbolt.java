@@ -1,5 +1,6 @@
 package cavern.magic;
 
+import cavern.api.ISummonMob;
 import cavern.magic.IMagic.IEntityMagic;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
@@ -53,7 +54,7 @@ public class MagicThunderbolt implements IEntityMagic
 	@Override
 	public boolean isTarget(EntityPlayer player, Entity entity)
 	{
-		return entity instanceof IMob;
+		return entity instanceof IMob && !(entity instanceof ISummonMob);
 	}
 
 	@Override

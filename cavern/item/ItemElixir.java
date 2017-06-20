@@ -46,7 +46,7 @@ public class ItemElixir extends Item
 	{
 		for (EnumType type : EnumType.values())
 		{
-			subItems.add(new ItemStack(item, 1, type.getItemDamage()));
+			subItems.add(type.getItemStack());
 		}
 	}
 

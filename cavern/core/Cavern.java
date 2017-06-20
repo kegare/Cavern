@@ -68,7 +68,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 	modid = Cavern.MODID,
 	guiFactory = "cavern.client.config.CaveGuiFactory",
 	updateJSON = "https://raw.githubusercontent.com/kegare/Cavern/master/cavern.json",
-	dependencies = "required-after:Forge@[13.20.0.2262,)"
+	dependencies = "required-after:Forge@[13.20.0.2311,)"
 )
 @EventBusSubscriber
 public class Cavern
@@ -156,6 +156,11 @@ public class Cavern
 		CaveBlocks.registerOreDicts();
 		CaveItems.registerOreDicts();
 
+		CaveBlocks.registerRecipes();
+		CaveItems.registerRecipes();
+
+		CompositingManager.registerRecipes(CavernAPI.compositing);
+
 		CaveItems.registerEquipments();
 
 		GeneralConfig.syncConfig();
@@ -181,11 +186,6 @@ public class Cavern
 			CaveBlocks.registerBlockColors();
 			CaveBlocks.registerItemBlockColors();
 		}
-
-		CaveBlocks.registerRecipes();
-		CaveItems.registerRecipes();
-
-		CompositingManager.registerRecipes(CavernAPI.compositing);
 
 		CaveEntityRegistry.registerEntities();
 

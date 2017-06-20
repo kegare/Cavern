@@ -39,13 +39,13 @@ public class InventoryEquipment implements IInventoryEquipment
 
 		for (int i = 0; i < inventory.getSizeInventory(); ++i)
 		{
-			ItemStack itemstack = inventory.getStackInSlot(i);
+			ItemStack stack = inventory.getStackInSlot(i);
 
-			if (!itemstack.isEmpty())
+			if (!stack.isEmpty())
 			{
 				NBTTagCompound compound = new NBTTagCompound();
 				compound.setByte("Slot", (byte)i);
-				itemstack.writeToNBT(compound);
+				stack.writeToNBT(compound);
 				list.appendTag(compound);
 			}
 		}

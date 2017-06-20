@@ -163,11 +163,11 @@ public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 	{
 		super.onDeath(cause);
 
-		Entity entity = cause.getEntity();
+		Entity entity = cause.getTrueSource();
 
 		if (entity == null)
 		{
-			entity = cause.getSourceOfDamage();
+			entity = cause.getImmediateSource();
 		}
 
 		if (entity != null && entity instanceof EntityPlayer)
@@ -189,12 +189,12 @@ public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 			return true;
 		}
 
-		if (source.getEntity() == this)
+		if (source.getTrueSource() == this)
 		{
 			return true;
 		}
 
-		if (source.getSourceOfDamage() == this)
+		if (source.getImmediateSource() == this)
 		{
 			return true;
 		}

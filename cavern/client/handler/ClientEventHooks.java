@@ -290,7 +290,7 @@ public class ClientEventHooks
 
 		if (MiningAssistConfig.miningAssistNotify)
 		{
-			MiningAssist assist = MiningAssist.get(MinerStats.get(player).getMiningAssist());
+			MiningAssist assist = MiningAssist.byType(MinerStats.get(player).getMiningAssist());
 
 			if (assist != MiningAssist.DISABLED)
 			{

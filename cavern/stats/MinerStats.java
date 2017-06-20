@@ -31,7 +31,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -207,7 +206,7 @@ public class MinerStats implements IMinerStats
 	{
 		int prev = rank;
 
-		rank = MathHelper.clamp(value, 0, MinerRank.values().length - 1);
+		rank = MinerRank.get(value).getRank();
 
 		if (rank != prev)
 		{
@@ -240,7 +239,7 @@ public class MinerStats implements IMinerStats
 	{
 		int prev = miningAssist;
 
-		miningAssist = MathHelper.clamp(type, 0, MiningAssist.values().length - 1);
+		miningAssist = MiningAssist.byType(type).getType();
 
 		if (miningAssist != prev)
 		{
@@ -259,14 +258,7 @@ public class MinerStats implements IMinerStats
 	@Override
 	public void toggleMiningAssist()
 	{
-		int type = ++miningAssist;
-
-		if (type > MiningAssist.values().length - 1)
-		{
-			type = 0;
-		}
-
-		setMiningAssist(type);
+		setMiningAssist(miningAssist + 1);
 	}
 
 	@Override
@@ -439,6 +431,7 @@ public class MinerStats implements IMinerStats
 		MinerStats.setPointAmount("oreMagnite", 1);
 		MinerStats.setPointAmount("oreRandomite", 2);
 		MinerStats.setPointAmount("oreHexcite", 4);
+		MinerStats.setPointAmount("oreManalite", 4);
 		MinerStats.setPointAmount(CaveBlocks.CAVE_BLOCK, BlockCave.EnumType.FISSURED_STONE.getMetadata(), 3);
 		MinerStats.setPointAmount(CaveBlocks.CAVE_BLOCK, BlockCave.EnumType.FISSURED_PACKED_ICE.getMetadata(), 3);
 	}

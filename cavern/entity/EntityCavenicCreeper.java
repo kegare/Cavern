@@ -62,11 +62,11 @@ public class EntityCavenicCreeper extends EntityCreeper implements ICavenicMob
 	{
 		super.onDeath(cause);
 
-		Entity entity = cause.getEntity();
+		Entity entity = cause.getTrueSource();
 
 		if (entity == null)
 		{
-			entity = cause.getSourceOfDamage();
+			entity = cause.getImmediateSource();
 		}
 
 		if (entity != null && entity instanceof EntityPlayer)
@@ -88,7 +88,7 @@ public class EntityCavenicCreeper extends EntityCreeper implements ICavenicMob
 			damage *= 0.35F;
 		}
 
-		return !source.isFireDamage() && source.getEntity() != this && super.attackEntityFrom(source, damage);
+		return !source.isFireDamage() && super.attackEntityFrom(source, damage);
 	}
 
 	@Override

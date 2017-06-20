@@ -48,6 +48,7 @@ import net.minecraft.entity.player.EntityPlayer.SleepResult;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -138,7 +139,7 @@ public class CaveEventHooks
 				if (fromCave && !toCave)
 				{
 					MinecraftServer server = player.mcServer;
-					WorldServer worldNew = server.worldServerForDimension(event.fromDim);
+					WorldServer worldNew = server.getWorld(event.fromDim);
 
 					if (worldNew != null)
 					{
@@ -310,7 +311,7 @@ public class CaveEventHooks
 
 			if (portal != Items.AIR)
 			{
-				EnumActionResult result = portal.onItemUse(player, world, pos, hand, side, (float)hit.xCoord, (float)hit.yCoord, (float)hit.zCoord);
+				EnumActionResult result = portal.onItemUse(player, world, pos, hand, side, (float)hit.x, (float)hit.y, (float)hit.z);
 
 				if (result == EnumActionResult.SUCCESS)
 				{
@@ -453,7 +454,7 @@ public class CaveEventHooks
 
 					if (stats.getRank() >= MinerRank.AQUA_MINER.getRank())
 					{
-						if (!player.canBreatheUnderwater() && player.ticksExisted % 20 == 0)
+						if (!player.canBreatheUnderwater() && !player.isPotionActive(MobEffects.WATER_BREATHING) && player.ticksExisted % 20 == 0)
 						{
 							player.setAir(300);
 						}
@@ -502,7 +503,7 @@ public class CaveEventHooks
 
 		if (CavernAPI.dimension.isEntityInCaves(entity) && world.getGameRules().getBoolean("doMobLoot"))
 		{
-			double bookChance = 0.005D;
+			double bookChance = 0.0025D;
 			double elixirChance = 0.01D;
 
 			if (entity instanceof EntityWitch)
@@ -643,13 +644,13 @@ public class CaveEventHooks
 
 			if (thrower == null)
 			{
-				ItemStack itemstack = entityItem.getEntityItem();
+				ItemStack stack = entityItem.getItem();
 
-				if (!itemstack.isEmpty())
+				if (!stack.isEmpty())
 				{
-					if (itemstack.getItem() == CaveItems.CAVE_ITEM)
+					if (stack.getItem() == CaveItems.CAVE_ITEM)
 					{
-						switch (ItemCave.EnumType.byItemStack(itemstack))
+						switch (ItemCave.EnumType.byItemStack(stack))
 						{
 							case AQUAMARINE:
 								player.addStat(CaveAchievements.AQUAMARINE);
@@ -660,10 +661,13 @@ public class CaveEventHooks
 							case MINER_ORB:
 								player.addStat(CaveAchievements.MINER_ORB);
 								break;
+							case MANALITE:
+								player.addStat(CaveAchievements.MANALITE);
+								break;
 							default:
 						}
 					}
-					else if (itemstack.getItem() == Item.getItemFromBlock(CaveBlocks.PERVERTED_LOG))
+					else if (stack.getItem() == Item.getItemFromBlock(CaveBlocks.PERVERTED_LOG))
 					{
 						player.addStat(AchievementList.MINE_WOOD);
 					}
@@ -676,14 +680,14 @@ public class CaveEventHooks
 	public void onItemCrafted(ItemCraftedEvent event)
 	{
 		EntityPlayer player = event.player;
-		ItemStack itemstack = event.crafting;
+		ItemStack stack = event.crafting;
 		World world = player.world;
 
-		if (!world.isRemote && !itemstack.isEmpty())
+		if (!world.isRemote && !stack.isEmpty())
 		{
-			if (IceEquipment.isIceEquipment(itemstack))
+			if (IceEquipment.isIceEquipment(stack))
 			{
-				int charge = IceEquipment.get(itemstack).getCharge();
+				int charge = IceEquipment.get(stack).getCharge();
 
 				if (charge > 0)
 				{
@@ -697,14 +701,14 @@ public class CaveEventHooks
 	public void onItemSmelted(ItemSmeltedEvent event)
 	{
 		EntityPlayer player = event.player;
-		ItemStack itemstack = event.smelting;
+		ItemStack stack = event.smelting;
 		World world = player.world;
 
-		if (!world.isRemote && !itemstack.isEmpty())
+		if (!world.isRemote && !stack.isEmpty())
 		{
-			if (itemstack.getItem() == CaveItems.CAVE_ITEM)
+			if (stack.getItem() == CaveItems.CAVE_ITEM)
 			{
-				switch (ItemCave.EnumType.byItemStack(itemstack))
+				switch (ItemCave.EnumType.byItemStack(stack))
 				{
 					case MAGNITE_INGOT:
 						player.addStat(CaveAchievements.MAGNITE);
@@ -718,13 +722,16 @@ public class CaveEventHooks
 	@SubscribeEvent
 	public void onItemTooltip(ItemTooltipEvent event)
 	{
-		ItemStack itemstack = event.getItemStack();
+		ItemStack stack = event.getItemStack();
 
-		if (IceEquipment.isIceEquipment(itemstack))
+		if (IceEquipment.isIceEquipment(stack))
 		{
-			IIceEquipment equip = IceEquipment.get(itemstack);
+			IIceEquipment equip = IceEquipment.get(stack);
 
-			event.getToolTip().add(Cavern.proxy.translateFormat("tooltip.iceEquipment.charge", equip.getCharge()));
+			if (!equip.isHiddenTooltip())
+			{
+				event.getToolTip().add(Cavern.proxy.translateFormat("tooltip.iceEquipment.charge", equip.getCharge()));
+			}
 		}
 	}
 

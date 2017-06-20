@@ -23,7 +23,7 @@ public class StatsAdjustRequestMessage implements IMessage, IMessageHandler<Stat
 	@Override
 	public IMessage onMessage(StatsAdjustRequestMessage message, MessageContext ctx)
 	{
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP player = ctx.getServerHandler().player;
 
 		CaveEventHooks.adjustPlayerStats(player);
 

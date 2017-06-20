@@ -51,13 +51,13 @@ public class ContainerCompositing extends Container
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index)
 	{
-		ItemStack itemstack = ItemStack.EMPTY;
+		ItemStack result = ItemStack.EMPTY;
 		Slot slot = inventorySlots.get(index);
 
 		if (slot != null && slot.getHasStack())
 		{
 			ItemStack stack = slot.getStack();
-			itemstack = stack.copy();
+			result = stack.copy();
 
 			if (index < numRows * 9)
 			{
@@ -81,7 +81,7 @@ public class ContainerCompositing extends Container
 			}
 		}
 
-		return itemstack;
+		return result;
 	}
 
 	 @Override

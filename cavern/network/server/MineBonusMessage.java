@@ -38,7 +38,7 @@ public class MineBonusMessage implements IMessage, IMessageHandler<MineBonusMess
 	{
 		if (GeneralConfig.miningCombo)
 		{
-			EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+			EntityPlayerMP player = ctx.getServerHandler().player;
 			int combo = message.combo;
 
 			for (IMineBonus bonus : MinerStats.MINE_BONUS)

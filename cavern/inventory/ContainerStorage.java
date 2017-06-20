@@ -1,11 +1,14 @@
 package cavern.inventory;
 
+import invtweaks.api.container.ChestContainer;
+import invtweaks.api.container.ChestContainer.RowSizeCallback;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+@ChestContainer
 public class ContainerStorage extends Container
 {
 	private final IInventory storageInventory;
@@ -51,13 +54,13 @@ public class ContainerStorage extends Container
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index)
 	{
-		ItemStack itemstack = ItemStack.EMPTY;
+		ItemStack result = ItemStack.EMPTY;
 		Slot slot = inventorySlots.get(index);
 
 		if (slot != null && slot.getHasStack())
 		{
 			ItemStack stack = slot.getStack();
-			itemstack = stack.copy();
+			result = stack.copy();
 
 			if (index < numRows * 9)
 			{
@@ -81,7 +84,7 @@ public class ContainerStorage extends Container
 			}
 		}
 
-		return itemstack;
+		return result;
 	}
 
 	 @Override
@@ -91,4 +94,10 @@ public class ContainerStorage extends Container
 
 		storageInventory.closeInventory(player);
 	}
+
+	 @RowSizeCallback
+	 public int getRowSize()
+	 {
+		 return numRows + 3;
+	 }
 }

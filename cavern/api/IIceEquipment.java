@@ -13,4 +13,9 @@ public interface IIceEquipment
 	public void writeToNBT(NBTTagCompound nbt);
 
 	public void readFromNBT(NBTTagCompound nbt);
+
+	public default boolean isHiddenTooltip()
+	{
+		return false;
+	}
 }

@@ -7,11 +7,11 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 import cavern.block.BlockCave;
-import cavern.block.CaveBlocks;
 import cavern.core.Cavern;
 import cavern.recipe.RecipeChargeIceEquipment;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -39,13 +39,16 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class CaveItems
 {
 	private static final List<Item> ITEMS = Lists.newArrayList();
+	private static final List<Item> MAGICAL_ITEMS = Lists.newArrayList();
 
 	public static final ToolMaterial AQUAMARINE = EnumHelper.addToolMaterial("AQUAMARINE", 2, 200, 8.0F, 1.5F, 15);
 	public static final ToolMaterial MAGNITE = EnumHelper.addToolMaterial("MAGNITE", 3, 10, 100.0F, 11.0F, 50);
 	public static final ToolMaterial HEXCITE = EnumHelper.addToolMaterial("HEXCITE", 3, 1041, 10.0F, 5.0F, 15);
-	public static final ToolMaterial ICE = EnumHelper.addToolMaterial("ice", 1, 120, 5.0F, 1.0F, 0);
+	public static final ToolMaterial ICE = EnumHelper.addToolMaterial("ICE", 1, 120, 5.0F, 1.0F, 0);
+	public static final ToolMaterial MANALITE = EnumHelper.addToolMaterial("MANALITE", 3, 583, 6.0F, 2.0F, 8);
 
-	public static final ArmorMaterial HEXCITE_ARMOR = EnumHelper.addArmorMaterial("HEXCITE", "hexcite", 22, new int[] {4, 7, 9, 4}, 15, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F);
+	public static final ArmorMaterial HEXCITE_ARMOR = EnumHelper.addArmorMaterial("HEXCITE", "hexcite", 22,
+		new int[] {4, 7, 9, 4}, 15, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F);
 
 	public static final Item CAVE_ITEM = new ItemCave();
 	public static final ItemPickaxeAquamarine AQUAMARINE_PICKAXE = new ItemPickaxeAquamarine();
@@ -73,10 +76,18 @@ public class CaveItems
 	public static final ItemMagicalBook MAGICAL_BOOK = new ItemMagicalBook();
 	public static final ItemElixir ELIXIR = new ItemElixir();
 	public static final ItemCavenicBow CAVENIC_BOW = new ItemCavenicBow();
+	public static final ItemSwordManalite MANALITE_SWORD = new ItemSwordManalite();
+	public static final ItemAxeManalite MANALITE_AXE = new ItemAxeManalite();
+	public static final ItemBowManalite MANALITE_BOW = new ItemBowManalite();
 
 	public static List<Item> getItems()
 	{
 		return Collections.unmodifiableList(ITEMS);
+	}
+
+	public static List<Item> getMagicalItems()
+	{
+		return MAGICAL_ITEMS;
 	}
 
 	public static void registerItem(IForgeRegistry<Item> registry, Item item)
@@ -114,12 +125,15 @@ public class CaveItems
 		registerItem(registry, MAGICAL_BOOK.setRegistryName("magical_book"));
 		registerItem(registry, ELIXIR.setRegistryName("elixir"));
 		registerItem(registry, CAVENIC_BOW.setRegistryName("cavenic_bow"));
+		registerItem(registry, MANALITE_SWORD.setRegistryName("manalite_sword"));
+		registerItem(registry, MANALITE_AXE.setRegistryName("manalite_axe"));
+		registerItem(registry, MANALITE_BOW.setRegistryName("manalite_bow"));
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void registerModels()
 	{
-		registerModels(CAVE_ITEM, "aquamarine", "magnite_ingot", "hexcite", "ice_stick", "miner_orb", "cavenic_orb");
+		registerModels(CAVE_ITEM, "aquamarine", "magnite_ingot", "hexcite", "ice_stick", "miner_orb", "cavenic_orb", "manalite");
 		registerModel(AQUAMARINE_PICKAXE, "aquamarine_pickaxe");
 		registerModel(AQUAMARINE_AXE, "aquamarine_axe");
 		registerModel(AQUAMARINE_SHOVEL, "aquamarine_shovel");
@@ -147,6 +161,9 @@ public class CaveItems
 			"magical_book_unknown", "magical_book_torch", "magical_book_summon", "magical_book_compositing");
 		registerModels(ELIXIR, "elixir", "elixir_medium", "elixir_high");
 		registerModel(CAVENIC_BOW, "cavenic_bow");
+		registerModel(MANALITE_SWORD, "manalite_sword");
+		registerModel(MANALITE_AXE, "manalite_axe");
+		registerModel(MANALITE_BOW, "manalite_bow");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -203,6 +220,7 @@ public class CaveItems
 		OreDictionary.registerOre("ingotMagnite", ItemCave.EnumType.MAGNITE_INGOT.getItemStack());
 		OreDictionary.registerOre("gemHexcite", ItemCave.EnumType.HEXCITE.getItemStack());
 		OreDictionary.registerOre("stickIce", ItemCave.EnumType.ICE_STICK.getItemStack());
+		OreDictionary.registerOre("gemManalite", ItemCave.EnumType.MANALITE.getItemStack());
 	}
 
 	public static void registerEquipments()
@@ -213,214 +231,163 @@ public class CaveItems
 		IceEquipment.register(ICE_SHOVEL);
 		IceEquipment.register(ICE_HOE);
 		IceEquipment.register(ICE_BOW);
+
+		MAGICAL_ITEMS.add(MAGICAL_BOOK);
+		MAGICAL_ITEMS.add(ELIXIR);
+		MAGICAL_ITEMS.add(MANALITE_SWORD);
+		MAGICAL_ITEMS.add(MANALITE_AXE);
+		MAGICAL_ITEMS.add(MANALITE_BOW);
 	}
 
 	public static void registerRecipes()
 	{
-		GameRegistry.addShapelessRecipe(ItemCave.EnumType.AQUAMARINE.getItemStack(9),
-			new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.AQUAMARINE_BLOCK.getMetadata()));
-
-		GameRegistry.addShapelessRecipe(ItemCave.EnumType.MAGNITE_INGOT.getItemStack(9),
-			new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.MAGNITE_BLOCK.getMetadata()));
-
-		GameRegistry.addShapelessRecipe(ItemCave.EnumType.HEXCITE.getItemStack(9),
-				new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_BLOCK.getMetadata()));
-
-		GameRegistry.addRecipe(ItemCave.EnumType.ICE_STICK.getItemStack(2),
-			"I", "I",
-			'I', Blocks.ICE
-		);
-		GameRegistry.addRecipe(ItemCave.EnumType.ICE_STICK.getItemStack(8),
-			"I", "I",
-			'I', Blocks.PACKED_ICE
-		);
-
-		ItemStack material = ItemCave.EnumType.AQUAMARINE.getItemStack();
-		ItemStack subMaterial;
+		GameRegistry.addShapelessRecipe(ItemCave.EnumType.AQUAMARINE.getItemStack(9), BlockCave.EnumType.AQUAMARINE_BLOCK.getItemStack());
+		GameRegistry.addShapelessRecipe(ItemCave.EnumType.MAGNITE_INGOT.getItemStack(9), BlockCave.EnumType.MAGNITE_BLOCK.getItemStack());
+		GameRegistry.addShapelessRecipe(ItemCave.EnumType.HEXCITE.getItemStack(9), BlockCave.EnumType.HEXCITE_BLOCK.getItemStack());
+		GameRegistry.addShapelessRecipe(ItemCave.EnumType.MANALITE.getItemStack(9), BlockCave.EnumType.MANALITE_BLOCK.getItemStack());
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(AQUAMARINE_PICKAXE,
-			"AAA", " S ", " S ",
-			'A', material.copy(),
-			'S', "stickWood"
-		));
-
+			"###", " X ", " X ",
+			'#', ItemCave.EnumType.AQUAMARINE.getItemStack(),
+			'X', "stickWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(AQUAMARINE_AXE,
-			"AA", "AS", " S",
-			'A', material.copy(),
-			'S', "stickWood"
-		));
-
+			"##", "#X", " X",
+			'#', ItemCave.EnumType.AQUAMARINE.getItemStack(),
+			'X', "stickWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(AQUAMARINE_SHOVEL,
-			"A", "S", "S",
-			'A', material.copy(),
-			'S', "stickWood"
-		));
-
-		material = ItemCave.EnumType.MAGNITE_INGOT.getItemStack();
+			"#", "X", "X",
+			'#', ItemCave.EnumType.AQUAMARINE.getItemStack(),
+			'X', "stickWood"));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(MAGNITE_SWORD,
-			"M", "M", "S",
-			'M', material.copy(),
-			'S', "stickWood"
-		));
-
+			"#", "#", "X",
+			'#', ItemCave.EnumType.MAGNITE_INGOT.getItemStack(),
+			'X', "stickWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(MAGNITE_PICKAXE,
-			"MMM", " S ", " S ",
-			'M', material.copy(),
-			'S', "stickWood"
-		));
-
+			"###", " X ", " X ",
+			'#', ItemCave.EnumType.MAGNITE_INGOT.getItemStack(),
+			'X', "stickWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(MAGNITE_AXE,
-			"MM", "MS", " S",
-			'M', material.copy(),
-			'S', "stickWood"
-		));
-
+			"##", "#X", " X",
+			'#', ItemCave.EnumType.MAGNITE_INGOT.getItemStack(),
+			'X', "stickWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(MAGNITE_SHOVEL,
-			"M", "S", "S",
-			'M', material.copy(),
-			'S', "stickWood"
-		));
-
-		material = ItemCave.EnumType.HEXCITE.getItemStack();
+			"#", "X", "X",
+			'#', ItemCave.EnumType.MAGNITE_INGOT.getItemStack(),
+			'X', "stickWood"));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe(HEXCITE_SWORD,
-			"H", "H", "S",
-			'H', material.copy(),
-			'S', "stickWood"
-		));
-
+			"#", "#", "X",
+			'#', ItemCave.EnumType.HEXCITE.getItemStack(),
+			'X', "stickWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(HEXCITE_PICKAXE,
-			"HHH", " S ", " S ",
-			'H', material.copy(),
-			'S', "stickWood"
-		));
-
+			"###", " X ", " X ",
+			'#', ItemCave.EnumType.HEXCITE.getItemStack(),
+			'X', "stickWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(HEXCITE_AXE,
-			"HH", "HS", " S",
-			'H', material.copy(),
-			'S', "stickWood"
-		));
-
+			"##", "#X", " X",
+			'#', ItemCave.EnumType.HEXCITE.getItemStack(),
+			'X', "stickWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(HEXCITE_SHOVEL,
-			"H", "S", "S",
-			'H', material.copy(),
-			'S', "stickWood"
-		));
-
+			"#", "X", "X",
+			'#', ItemCave.EnumType.HEXCITE.getItemStack(),
+			'X', "stickWood"));
 		GameRegistry.addRecipe(new ShapedOreRecipe(HEXCITE_HOE,
-			"HH", " S", " S",
-			'H', material.copy(),
-			'S', "stickWood"
-		));
+			"##", " X", " X",
+			'#', ItemCave.EnumType.HEXCITE.getItemStack(),
+			'X', "stickWood"));
+		GameRegistry.addShapedRecipe(new ItemStack(HEXCITE_HELMET),
+			"###", "# #",
+			'#', ItemCave.EnumType.HEXCITE.getItemStack());
+		GameRegistry.addShapedRecipe(new ItemStack(HEXCITE_CHESTPLATE),
+			"# #", "###", "###",
+			'#', ItemCave.EnumType.HEXCITE.getItemStack());
+		GameRegistry.addShapedRecipe(new ItemStack(HEXCITE_LEGGINGS),
+			"###", "# #", "# #",
+			'#', ItemCave.EnumType.HEXCITE.getItemStack());
+		GameRegistry.addShapedRecipe(new ItemStack(HEXCITE_BOOTS),
+			"# #", "# #",
+			'#', ItemCave.EnumType.HEXCITE.getItemStack());
 
-		GameRegistry.addRecipe(new ItemStack(HEXCITE_HELMET),
-			"HHH", "H H",
-			'H', material.copy()
-		);
+		GameRegistry.addShapedRecipe(ItemCave.EnumType.ICE_STICK.getItemStack(2),
+			"X", "X",
+			'X', Blocks.ICE);
+		GameRegistry.addShapedRecipe(ItemCave.EnumType.ICE_STICK.getItemStack(8),
+			"X", "X",
+			'X', Blocks.PACKED_ICE);
 
-		GameRegistry.addRecipe(new ItemStack(HEXCITE_CHESTPLATE),
-			"H H", "HHH", "HHH",
-			'H', material.copy()
-		);
+		GameRegistry.addRecipe(new ShapedOreRecipe(IceEquipment.getChargedItem(ICE_SWORD, 3),
+			"#", "#", "X",
+			'#', Blocks.ICE,
+			'X', "stickIce"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(IceEquipment.getChargedItem(ICE_PICKAXE, 4),
+			"###", " X ", " X ",
+			'#', Blocks.ICE,
+			'X', "stickIce"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(IceEquipment.getChargedItem(ICE_AXE, 4),
+			"##", "#X", " X",
+			'#', Blocks.ICE,
+			'X', "stickIce"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(IceEquipment.getChargedItem(ICE_SHOVEL, 2),
+			"#", "X", "X",
+			'#', Blocks.ICE,
+			'X', "stickIce"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(IceEquipment.getChargedItem(ICE_HOE, 3),
+			"##", " X", " X",
+			'#', Blocks.ICE,
+			'X', "stickIce"));
 
-		GameRegistry.addRecipe(new ItemStack(HEXCITE_LEGGINGS),
-			"HHH", "H H", "H H",
-			'H', material.copy()
-		);
+		GameRegistry.addRecipe(new ShapedOreRecipe(IceEquipment.getChargedItem(ICE_SWORD, 19),
+			"#", "#", "X",
+			'#', Blocks.PACKED_ICE,
+			'X', "stickIce"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(IceEquipment.getChargedItem(ICE_PICKAXE, 28),
+			"###", " X ", " X ",
+			'#', Blocks.PACKED_ICE,
+			'X', "stickIce"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(IceEquipment.getChargedItem(ICE_AXE, 28),
+			"##", "#X", " X",
+			'#', Blocks.PACKED_ICE,
+			'X', "stickIce"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(IceEquipment.getChargedItem(ICE_SHOVEL, 10),
+			"#", "X", "X",
+			'#', Blocks.PACKED_ICE,
+			'X', "stickIce"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(IceEquipment.getChargedItem(ICE_HOE, 19),
+			"##", " X", " X",
+			'#', Blocks.PACKED_ICE,
+			'X', "stickIce"));
 
-		GameRegistry.addRecipe(new ItemStack(HEXCITE_BOOTS),
-			"H H", "H H",
-			'H', material.copy()
-		);
-
-		material = new ItemStack(Blocks.ICE);
-		subMaterial = ItemCave.EnumType.ICE_STICK.getItemStack();
-
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_SWORD, 3),
-			"I", "I", "S",
-			'I', material.copy(),
-			'S', subMaterial.copy()
-		);
-
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_PICKAXE, 4),
-			"III", " S ", " S ",
-			'I', material.copy(),
-			'S', subMaterial.copy()
-		);
-
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_AXE, 4),
-			"II", "IS", " S",
-			'I', material.copy(),
-			'S', subMaterial.copy()
-		);
-
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_SHOVEL, 2),
-			"I", "S", "S",
-			'I', material.copy(),
-			'S', subMaterial.copy()
-		);
-
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_HOE, 3),
-			"II", " S", " S",
-			'I', material.copy(),
-			'S', subMaterial.copy()
-		);
-
-		material = new ItemStack(Blocks.PACKED_ICE);
-
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_SWORD, 19),
-			"I", "I", "S",
-			'I', material.copy(),
-			'S', subMaterial.copy()
-		);
-
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_PICKAXE, 28),
-			"III", " S ", " S ",
-			'I', material.copy(),
-			'S', subMaterial.copy()
-		);
-
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_AXE, 28),
-			"II", "IS", " S",
-			'I', material.copy(),
-			'S', subMaterial.copy()
-		);
-
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_SHOVEL, 10),
-			"I", "S", "S",
-			'I', material.copy(),
-			'S', subMaterial.copy()
-		);
-
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_HOE, 19),
-			"II", " S", " S",
-			'I', material.copy(),
-			'S', subMaterial.copy()
-		);
-
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_BOW, 1),
-			"SI ", "S I", "SI ",
-			'I', subMaterial.copy(),
-			'S', Items.STRING
-		);
-
-		material = new ItemStack(Items.BOW, 1, OreDictionary.WILDCARD_VALUE);
-
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_BOW, 4),
-			" I ", "IBI", " I ",
-			'I', Blocks.ICE,
-			'B', material.copy()
-		);
-		GameRegistry.addRecipe(IceEquipment.getChargedItem(ICE_BOW, 36),
-			" I ", "IBI", " I ",
-			'I', Blocks.PACKED_ICE,
-			'B', material.copy()
-		);
+		GameRegistry.addShapedRecipe(IceEquipment.getChargedItem(ICE_BOW, 1),
+			"X# ", "X #", "X# ",
+			'#', ItemCave.EnumType.ICE_STICK.getItemStack(),
+			'X', Items.STRING);
+		GameRegistry.addShapedRecipe(IceEquipment.getChargedItem(ICE_BOW, 4),
+			" # ", "#X#", " # ",
+			'#', Blocks.ICE,
+			'X', new ItemStack(Items.BOW, 1, OreDictionary.WILDCARD_VALUE));
+		GameRegistry.addShapedRecipe(IceEquipment.getChargedItem(ICE_BOW, 36),
+			" # ", "#X#", " # ",
+			'#', Blocks.PACKED_ICE,
+			'X', new ItemStack(Items.BOW, 1, OreDictionary.WILDCARD_VALUE));
 
 		GameRegistry.addRecipe(new RecipeChargeIceEquipment());
 
-		RecipeSorter.register(Cavern.MODID + ":charge_ice_equip", RecipeChargeIceEquipment.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
+		GameRegistry.addRecipe(new ShapedOreRecipe(MANALITE_SWORD,
+			"X", "X", "#",
+			'X', ItemCave.EnumType.MANALITE.getItemStack(),
+			'#', "stickWood"));
+		GameRegistry.addRecipe(new ShapedOreRecipe(MANALITE_AXE,
+			"XX", "X#", " #",
+			'X', ItemCave.EnumType.MANALITE.getItemStack(),
+			'#', "stickWood"));
+		GameRegistry.addShapedRecipe(new ItemStack(MANALITE_BOW),
+			" X ", "X#X", " X ",
+			'X', ItemCave.EnumType.MANALITE.getItemStack(),
+			'#', new ItemStack(Items.BOW, 1, OreDictionary.WILDCARD_VALUE));
+
+		RecipeSorter.register(Cavern.MODID + ":charge_ice_equip", RecipeChargeIceEquipment.class,
+			RecipeSorter.Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
 	}
 
 	public static ItemStack getBookEscapeMission()
@@ -458,5 +425,33 @@ public class CaveItems
 		item.setTagCompound(tag);
 
 		return item;
+	}
+
+	public static boolean hasMagicalItem(EntityPlayer player, boolean handOnly)
+	{
+		if (handOnly)
+		{
+			for (ItemStack held : player.getHeldEquipment())
+			{
+				if (!held.isEmpty() && MAGICAL_ITEMS.contains(held.getItem()))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		for (int i = 0; i < player.inventory.getSizeInventory(); ++i)
+		{
+			ItemStack stack = player.inventory.getStackInSlot(i);
+
+			if (!stack.isEmpty() && MAGICAL_ITEMS.contains(stack.getItem()))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

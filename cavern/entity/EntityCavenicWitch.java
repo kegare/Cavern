@@ -51,11 +51,11 @@ public class EntityCavenicWitch extends EntityWitch implements ICavenicMob
 	{
 		super.onDeath(cause);
 
-		Entity entity = cause.getEntity();
+		Entity entity = cause.getTrueSource();
 
 		if (entity == null)
 		{
-			entity = cause.getSourceOfDamage();
+			entity = cause.getImmediateSource();
 		}
 
 		if (entity != null && entity instanceof EntityPlayer)
@@ -77,7 +77,7 @@ public class EntityCavenicWitch extends EntityWitch implements ICavenicMob
 			damage *= 0.35F;
 		}
 
-		return !source.isFireDamage() && source.getEntity() != this && source.getSourceOfDamage() != this && super.attackEntityFrom(source, damage);
+		return !source.isFireDamage() && super.attackEntityFrom(source, damage);
 	}
 
 	@Override

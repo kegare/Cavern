@@ -16,12 +16,9 @@ import net.minecraft.world.WorldServer;
 
 public class TeleporterCavenia extends Teleporter
 {
-	private final WorldServer world;
-
 	public TeleporterCavenia(WorldServer worldServer)
 	{
 		super(worldServer);
-		this.world = worldServer;
 	}
 
 	@Override

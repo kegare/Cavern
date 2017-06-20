@@ -110,23 +110,23 @@ public class GuiRegeneration extends GuiScreen
 			regenButton = new GuiButtonExt(0, 0, 0, I18n.format("cavern.regeneration.gui.regenerate"));
 		}
 
-		regenButton.xPosition = width / 2 - 100;
-		regenButton.yPosition = height / 4 + regenButton.height + 65;
+		regenButton.x = width / 2 - 100;
+		regenButton.y = height / 4 + regenButton.height + 65;
 
 		if (cancelButton == null)
 		{
 			cancelButton = new GuiButtonExt(1, 0, 0, I18n.format("gui.cancel"));
 		}
 
-		cancelButton.xPosition = regenButton.xPosition;
-		cancelButton.yPosition = regenButton.yPosition + regenButton.height + 5;
+		cancelButton.x = regenButton.x;
+		cancelButton.y = regenButton.y + regenButton.height + 5;
 
 		if (backupCheckBox == null)
 		{
 			backupCheckBox = new GuiCheckBox(2, 10, 0, I18n.format("cavern.regeneration.gui.backup"), DimensionRegeneration.backup);
 		}
 
-		backupCheckBox.yPosition = height - 20;
+		backupCheckBox.y = height - 20;
 
 		if (cavernCheckBox == null)
 		{
@@ -137,7 +137,7 @@ public class GuiRegeneration extends GuiScreen
 
 		if (aquaCavernCheckBox == null)
 		{
-			aquaCavernCheckBox = new GuiCheckBox(4, 10, before.yPosition + before.height + 5, "Aqua Cavern", aquaCavern);
+			aquaCavernCheckBox = new GuiCheckBox(4, 10, before.y + before.height + 5, "Aqua Cavern", aquaCavern);
 		}
 
 		if (CavernAPI.dimension.isAquaCavernDisabled())
@@ -153,7 +153,7 @@ public class GuiRegeneration extends GuiScreen
 
 		if (cavelandCheckBox == null)
 		{
-			cavelandCheckBox = new GuiCheckBox(5, 10, before.yPosition + before.height + 5, "Caveland", caveland);
+			cavelandCheckBox = new GuiCheckBox(5, 10, before.y + before.height + 5, "Caveland", caveland);
 		}
 
 		if (CavernAPI.dimension.isCavelandDisabled())
@@ -169,7 +169,7 @@ public class GuiRegeneration extends GuiScreen
 
 		if (iceCavernCheckBox == null)
 		{
-			iceCavernCheckBox = new GuiCheckBox(6, 10, before.yPosition + before.height + 5, "Ice Cavern", iceCavern);
+			iceCavernCheckBox = new GuiCheckBox(6, 10, before.y + before.height + 5, "Ice Cavern", iceCavern);
 		}
 
 		if (CavernAPI.dimension.isIceCavernDisabled())
@@ -185,7 +185,7 @@ public class GuiRegeneration extends GuiScreen
 
 		if (ruinsCavernCheckBox == null)
 		{
-			ruinsCavernCheckBox = new GuiCheckBox(7, 10, before.yPosition + before.height + 5, "Ruins Cavern", ruinsCavern);
+			ruinsCavernCheckBox = new GuiCheckBox(7, 10, before.y + before.height + 5, "Ruins Cavern", ruinsCavern);
 		}
 
 		if (CavernAPI.dimension.isRuinsCavernDisabled())
@@ -201,7 +201,7 @@ public class GuiRegeneration extends GuiScreen
 
 		if (caveniaCheckBox == null)
 		{
-			caveniaCheckBox = new GuiCheckBox(8, 10, before.yPosition + before.height + 5, "Cavenia", cavenia);
+			caveniaCheckBox = new GuiCheckBox(8, 10, before.y + before.height + 5, "Cavenia", cavenia);
 		}
 
 		if (CavernAPI.dimension.isCaveniaDisabled())
@@ -285,16 +285,16 @@ public class GuiRegeneration extends GuiScreen
 
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(2.0F, 2.0F, 2.0F);
-		drawCenteredString(fontRendererObj, I18n.format("cavern.regeneration.gui.title"), width / 4, 30, 0xFFFFFF);
+		drawCenteredString(fontRenderer, I18n.format("cavern.regeneration.gui.title"), width / 4, 30, 0xFFFFFF);
 		GlStateManager.popMatrix();
 
-		drawCenteredString(fontRendererObj, I18n.format("cavern.regeneration.gui.info"), width / 2, 100, 0xEEEEEE);
+		drawCenteredString(fontRenderer, I18n.format("cavern.regeneration.gui.info"), width / 2, 100, 0xEEEEEE);
 
 		super.drawScreen(mouseX, mouseY, ticks);
 
 		if (backupHoverChecker.checkHover(mouseX, mouseY))
 		{
-			drawHoveringText(fontRendererObj.listFormattedStringToWidth(I18n.format("cavern.regeneration.gui.backup.tooltip"), 300), mouseX, mouseY);
+			drawHoveringText(fontRenderer.listFormattedStringToWidth(I18n.format("cavern.regeneration.gui.backup.tooltip"), 300), mouseX, mouseY);
 		}
 	}
 

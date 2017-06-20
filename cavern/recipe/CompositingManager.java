@@ -66,6 +66,7 @@ public class CompositingManager implements ICompositingManager
 	public static void registerRecipes(ICompositingManager manager)
 	{
 		manager.addRecipe(new CompositingRecipeUpgradeMagicalBook());
+		manager.addRecipe(new CompositingRecipeRepair());
 
 		manager.addRecipe(ItemElixir.EnumType.ELIXIR_NORMAL.getItemStack(), 1.0D, 50,
 			PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER),

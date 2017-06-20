@@ -160,7 +160,7 @@ public class BlockMeta implements Comparable<BlockMeta>
 
 		if (i == 0 && o != null)
 		{
-			i = CaveUtils.blockComparator.compare(getBlock(), o.getBlock());
+			i = CaveUtils.BLOCK_COMPARATOR.compare(getBlock(), o.getBlock());
 
 			if (i == 0 && getBlock() != null && o.getBlock() != null)
 			{
@@ -171,9 +171,9 @@ public class BlockMeta implements Comparable<BlockMeta>
 		return i;
 	}
 
-	public static final Pattern numberPattern = Pattern.compile("^[0-9]+$");
+	public static final Pattern NUMBER_PATTERN = Pattern.compile("^[0-9]+$");
 
-	private static final LoadingCache<Pair<Block, String>, Integer> stringMetaCache = CacheBuilder.newBuilder().build(new CacheLoader<Pair<Block, String>, Integer>()
+	private static final LoadingCache<Pair<Block, String>, Integer> STRING_META_CACHE = CacheBuilder.newBuilder().build(new CacheLoader<Pair<Block, String>, Integer>()
 	{
 		@Override
 		public Integer load(Pair<Block, String> key) throws Exception
@@ -188,7 +188,7 @@ public class BlockMeta implements Comparable<BlockMeta>
 
 			str = str.trim();
 
-			if (numberPattern.matcher(str).matches())
+			if (NUMBER_PATTERN.matcher(str).matches())
 			{
 				try
 				{
@@ -246,7 +246,7 @@ public class BlockMeta implements Comparable<BlockMeta>
 		};
 	});
 
-	private static final LoadingCache<Pair<Block, Integer>, String> metaStringCache = CacheBuilder.newBuilder().build(new CacheLoader<Pair<Block, Integer>, String>()
+	private static final LoadingCache<Pair<Block, Integer>, String> META_STRING_CACHE = CacheBuilder.newBuilder().build(new CacheLoader<Pair<Block, Integer>, String>()
 	{
 		@Override
 		public String load(Pair<Block, Integer> key) throws Exception
@@ -315,14 +315,14 @@ public class BlockMeta implements Comparable<BlockMeta>
 
 	public static int getMetaFromString(Block block, String str)
 	{
-		return stringMetaCache.getUnchecked(Pair.of(block, str));
+		return STRING_META_CACHE.getUnchecked(Pair.of(block, str));
 	}
 
 	public static String getMetaName(Block block, int meta)
 	{
 		if (block.getRegistryName().getResourceDomain().equals("minecraft"))
 		{
-			return metaStringCache.getUnchecked(Pair.of(block, meta));
+			return META_STRING_CACHE.getUnchecked(Pair.of(block, meta));
 		}
 
 		return Integer.toString(meta);

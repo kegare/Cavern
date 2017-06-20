@@ -175,7 +175,7 @@ public class MagicianStats implements IMagicianStats
 	{
 		int prev = rank;
 
-		rank = MathHelper.clamp(value, 0, MagicianRank.values().length - 1);
+		rank = MagicianRank.get(value).getRank();
 
 		if (rank != prev)
 		{

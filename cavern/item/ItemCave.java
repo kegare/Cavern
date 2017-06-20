@@ -48,7 +48,7 @@ public class ItemCave extends Item
 	{
 		for (EnumType type : EnumType.values())
 		{
-			subItems.add(new ItemStack(item, 1, type.getItemDamage()));
+			subItems.add(type.getItemStack());
 		}
 	}
 
@@ -94,8 +94,8 @@ public class ItemCave extends Item
 		MinecraftServer server = player.mcServer;
 		int dimOld = player.dimension;
 		int dimNew = CavernAPI.dimension.isEntityInCavenia(player) ? cache.getLastDim(CAVENIA) : CaveniaConfig.dimensionId;
-		WorldServer worldOld = server.worldServerForDimension(dimOld);
-		WorldServer worldNew = server.worldServerForDimension(dimNew);
+		WorldServer worldOld = server.getWorld(dimOld);
+		WorldServer worldNew = server.getWorld(dimNew);
 		BlockPos prevPos = player.getPosition();
 
 		double x = player.posX;
@@ -130,7 +130,8 @@ public class ItemCave extends Item
 		HEXCITE(2, "hexcite"),
 		ICE_STICK(3, "stickIce"),
 		MINER_ORB(4, "orbMiner"),
-		CAVENIC_ORB(5, "orbCavenic");
+		CAVENIC_ORB(5, "orbCavenic"),
+		MANALITE(6, "manalite");
 
 		private static final EnumType[] DAMAGE_LOOKUP = new EnumType[values().length];
 

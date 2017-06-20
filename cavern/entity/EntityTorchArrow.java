@@ -58,7 +58,7 @@ public class EntityTorchArrow extends EntityTippedArrow
 
 			BlockPos pos = rayTrace.getBlockPos();
 			EnumActionResult result = player.getHeldItemMainhand().getItem().onItemUse(player, world, pos, EnumHand.MAIN_HAND, rayTrace.sideHit,
-				(float)rayTrace.hitVec.xCoord, (float)rayTrace.hitVec.yCoord, (float)rayTrace.hitVec.zCoord);
+				(float)rayTrace.hitVec.x, (float)rayTrace.hitVec.y, (float)rayTrace.hitVec.z);
 
 			player.setHeldItem(EnumHand.MAIN_HAND, prevHeldItem);
 

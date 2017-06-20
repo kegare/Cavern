@@ -225,11 +225,11 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 			return;
 		}
 
-		for (EntityItem entityItem : world.getEntitiesWithinAABB(EntityItem.class, getEntityBoundingBox().expandXyz(0.65D)))
+		for (EntityItem entityItem : world.getEntitiesWithinAABB(EntityItem.class, getEntityBoundingBox().grow(0.65D)))
 		{
-			if (entityItem.isEntityAlive() && entityItem.onGround)
+			if (entityItem != null && entityItem.isEntityAlive() && entityItem.onGround)
 			{
-				ItemStack stack = entityItem.getEntityItem();
+				ItemStack stack = entityItem.getItem();
 
 				if (stack != null && !stack.isEmpty())
 				{
@@ -243,7 +243,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 					}
 					else
 					{
-						entityItem.setEntityItemStack(stack);
+						entityItem.setItem(stack);
 					}
 				}
 
@@ -385,7 +385,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 		if (!world.isRemote)
 		{
 			boolean drop = false;
-			Entity entity = cause.getEntity();
+			Entity entity = cause.getTrueSource();
 
 			if (entity != null && entity instanceof EntityPlayer)
 			{
@@ -394,7 +394,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 
 			if (!drop)
 			{
-				entity = cause.getSourceOfDamage();
+				entity = cause.getImmediateSource();
 
 				if (entity != null && entity instanceof EntityPlayer)
 				{

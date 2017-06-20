@@ -74,7 +74,7 @@ public class WorldProviderAquaCavern extends WorldProviderCavern
 		{
 			WorldServer worldServer = (WorldServer)world;
 
-			if (worldServer.getWorldInfo().getTerrainType() != WorldType.DEBUG_WORLD)
+			if (worldServer.getWorldInfo().getTerrainType() != WorldType.DEBUG_ALL_BLOCK_STATES)
 			{
 				entitySpawner.findChunksForSpawning(worldServer, false, true, worldServer.getWorldInfo().getWorldTotalTime() % 400L == 0L);
 			}

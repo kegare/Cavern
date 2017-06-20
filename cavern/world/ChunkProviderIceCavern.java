@@ -120,7 +120,7 @@ public class ChunkProviderIceCavern implements IChunkGenerator
 	}
 
 	@Override
-	public Chunk provideChunk(int chunkX, int chunkZ)
+	public Chunk generateChunk(int chunkX, int chunkZ)
 	{
 		rand.setSeed(chunkX * 341873128712L + chunkZ * 132897987541L);
 
@@ -164,7 +164,7 @@ public class ChunkProviderIceCavern implements IChunkGenerator
 		int worldZ = chunkZ * 16;
 		BlockPos blockPos = new BlockPos(worldX, 0, worldZ);
 		Biome biome = world.getBiome(blockPos.add(16, 0, 16));
-		BiomeDecorator decorator = biome.theBiomeDecorator;
+		BiomeDecorator decorator = biome.decorator;
 		int worldHeight = world.provider.getActualHeight();
 
 		ForgeEventFactory.onChunkPopulate(true, this, world, rand, chunkX, chunkZ, false);
@@ -206,7 +206,7 @@ public class ChunkProviderIceCavern implements IChunkGenerator
 
 		MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Post(world, rand, blockPos));
 
-		if (decorator.generateLakes)
+		if (decorator.generateFalls)
 		{
 			if (TerrainGen.decorate(world, rand, blockPos, Decorate.EventType.LAKE_WATER))
 			{
@@ -243,7 +243,7 @@ public class ChunkProviderIceCavern implements IChunkGenerator
 	}
 
 	@Override
-	public BlockPos getStrongholdGen(World worldIn, String structureName, BlockPos pos, boolean flag)
+	public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos pos, boolean flag)
 	{
 		return null;
 	}

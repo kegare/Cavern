@@ -45,9 +45,10 @@ public class CaveAchievements
 	public static final Achievement AQUAMARINE = CaveAchievement.of("aquamarine", -2, -2, ItemCave.EnumType.AQUAMARINE.getItemStack(), CAVERN);
 	public static final Achievement MAGNITE = CaveAchievement.of("magnite", 0, -4, ItemCave.EnumType.MAGNITE_INGOT.getItemStack(), CAVERN);
 	public static final Achievement ACRESIA = CaveAchievement.of("acresia", 2, -2, ItemAcresia.EnumType.FRUITS.getItemStack(), CAVELAND);
-	public static final Achievement RANDOMITE = CaveAchievement.of("randomite", 3, 3, new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.RANDOMITE_ORE.getMetadata()), CAVERN);
-	public static final Achievement FISSURE = CaveAchievement.of("fissure", 5, 2, new ItemStack(CaveBlocks.CAVE_BLOCK, 1, BlockCave.EnumType.FISSURED_STONE.getMetadata()), CAVERN);
+	public static final Achievement RANDOMITE = CaveAchievement.of("randomite", 3, 3, BlockCave.EnumType.RANDOMITE_ORE.getItemStack(), CAVERN);
+	public static final Achievement FISSURE = CaveAchievement.of("fissure", 5, 2, BlockCave.EnumType.FISSURED_STONE.getItemStack(), CAVERN);
 	public static final Achievement HEXCITE = CaveAchievement.of("hexcite", -3, 4, ItemCave.EnumType.HEXCITE.getItemStack(), CAVERN);
+	public static final Achievement MANALITE = CaveAchievement.of("manalite", -5, 5, ItemCave.EnumType.MANALITE.getItemStack(), CAVERN);
 	public static final Achievement GOOD_MINE = CaveAchievement.of("goodMine", 0, 2, Items.IRON_PICKAXE, CAVERN);
 	public static final Achievement SLIP_ICE = CaveAchievement.of("slipIce", -4, -2, CaveBlocks.SLIPPERY_ICE, ICE_CAVERN);
 	public static final Achievement ICE_CHARGE = CaveAchievement.of("iceCharge", -6, -2, CaveItems.ICE_PICKAXE, ICE_CAVERN);
@@ -119,9 +120,9 @@ public class CaveAchievements
 
 	public static class CaveAchievement extends Achievement
 	{
-		private CaveAchievement(String name, int column, int row, ItemStack itemstack, Achievement parent)
+		private CaveAchievement(String name, int column, int row, ItemStack stack, Achievement parent)
 		{
-			super("achievement.cavern." + name, "cavern." + name, column, row, itemstack, parent);
+			super("achievement.cavern." + name, "cavern." + name, column, row, stack, parent);
 		}
 
 		public static CaveAchievement of(String name, int column, int row, Block block, Achievement parent)
@@ -134,14 +135,14 @@ public class CaveAchievements
 			return of(name, column, row, new ItemStack(item), parent);
 		}
 
-		public static CaveAchievement of(String name, int column, int row, ItemStack itemstack, Achievement parent)
+		public static CaveAchievement of(String name, int column, int row, ItemStack stack, Achievement parent)
 		{
-			if (itemstack.isEmpty())
+			if (stack.isEmpty())
 			{
-				itemstack = new ItemStack(Blocks.STONE);
+				stack = new ItemStack(Blocks.STONE);
 			}
 
-			CaveAchievement achievement = new CaveAchievement(name, column, row, itemstack, parent);
+			CaveAchievement achievement = new CaveAchievement(name, column, row, stack, parent);
 
 			achievement.registerStat();
 

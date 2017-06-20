@@ -26,6 +26,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.WeightedRandom;
@@ -125,11 +126,18 @@ public class BlockCave extends Block
 
 	@SideOnly(Side.CLIENT)
 	@Override
+	public BlockRenderLayer getBlockLayer()
+	{
+		return BlockRenderLayer.CUTOUT_MIPPED;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list)
 	{
 		for (EnumType type : EnumType.values())
 		{
-			list.add(new ItemStack(item, 1, type.getMetadata()));
+			list.add(type.getItemStack());
 		}
 	}
 
@@ -210,6 +218,7 @@ public class BlockCave extends Block
 		{
 			case AQUAMARINE_ORE:
 			case HEXCITE_ORE:
+			case MANALITE_ORE:
 				return CaveItems.CAVE_ITEM;
 			case RANDOMITE_ORE:
 			case FISSURED_STONE:
@@ -230,6 +239,8 @@ public class BlockCave extends Block
 				return ItemCave.EnumType.AQUAMARINE.getItemDamage();
 			case HEXCITE_ORE:
 				return ItemCave.EnumType.HEXCITE.getItemDamage();
+			case MANALITE_ORE:
+				return ItemCave.EnumType.MANALITE.getItemDamage();
 			default:
 		}
 
@@ -253,6 +264,7 @@ public class BlockCave extends Block
 			{
 				case AQUAMARINE_ORE:
 				case HEXCITE_ORE:
+				case MANALITE_ORE:
 					return ret * (Math.max(random.nextInt(fortune + 2) - 1, 0) + 1);
 				default:
 			}
@@ -295,7 +307,9 @@ public class BlockCave extends Block
 		HEXCITE_ORE(5, "hexcite_ore", "oreHexcite", MapColor.SNOW, Material.ROCK, SoundType.STONE, 3.0F, 2),
 		HEXCITE_BLOCK(6, "hexcite_block", "blockHexcite", MapColor.SNOW, Material.IRON, SoundType.METAL, 3.5F, 2),
 		FISSURED_STONE(7, "fissured_stone", "stone.stone", MapColor.STONE, Material.ROCK, SoundType.STONE, 1.0F, 0),
-		FISSURED_PACKED_ICE(8, "fissured_packed_ice", "icePacked", MapColor.ICE, Material.ICE, SoundType.GLASS, 1.0F, 0);
+		FISSURED_PACKED_ICE(8, "fissured_packed_ice", "icePacked", MapColor.ICE, Material.ICE, SoundType.GLASS, 1.0F, 0),
+		MANALITE_ORE(9, "manalite_ore", "oreManalite", MapColor.DIAMOND, Material.ROCK, SoundType.STONE, 3.5F, 2),
+		MANALITE_BLOCK(10, "manalite_block", "blockManalite", MapColor.DIAMOND, Material.IRON, SoundType.METAL, 4.0F, 2);
 
 		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
 
@@ -356,16 +370,6 @@ public class BlockCave extends Block
 			return name;
 		}
 
-		public static EnumType byMetadata(int meta)
-		{
-			if (meta < 0 || meta >= META_LOOKUP.length)
-			{
-				meta = 0;
-			}
-
-			return META_LOOKUP[meta];
-		}
-
 		@Override
 		public String getName()
 		{
@@ -375,6 +379,26 @@ public class BlockCave extends Block
 		public String getUnlocalizedName()
 		{
 			return unlocalizedName;
+		}
+
+		public ItemStack getItemStack()
+		{
+			return getItemStack(1);
+		}
+
+		public ItemStack getItemStack(int amount)
+		{
+			return new ItemStack(CaveBlocks.CAVE_BLOCK, amount, getMetadata());
+		}
+
+		public static EnumType byMetadata(int meta)
+		{
+			if (meta < 0 || meta >= META_LOOKUP.length)
+			{
+				meta = 0;
+			}
+
+			return META_LOOKUP[meta];
 		}
 
 		static

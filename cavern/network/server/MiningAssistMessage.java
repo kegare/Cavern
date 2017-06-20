@@ -25,7 +25,7 @@ public class MiningAssistMessage implements IMessage, IMessageHandler<MiningAssi
 	@Override
 	public IMessage onMessage(MiningAssistMessage message, MessageContext ctx)
 	{
-		EntityPlayer player = ctx.getServerHandler().playerEntity;
+		EntityPlayer player = ctx.getServerHandler().player;
 		IMinerStats stats = MinerStats.get(player);
 
 		if (stats.getRank() < MiningAssistConfig.minerRank.getValue())
@@ -42,7 +42,7 @@ public class MiningAssistMessage implements IMessage, IMessageHandler<MiningAssi
 			stats.toggleMiningAssist();
 			stats.adjustData();
 
-			ITextComponent component = new TextComponentTranslation(MiningAssist.get(stats.getMiningAssist()).getUnlocalizedName());
+			ITextComponent component = new TextComponentTranslation(MiningAssist.byType(stats.getMiningAssist()).getUnlocalizedName());
 			component.getStyle().setColor(TextFormatting.GRAY).setItalic(Boolean.valueOf(true));
 			component = new TextComponentTranslation("cavern.miningassist.toggle.message", component);
 

@@ -22,7 +22,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -110,7 +109,8 @@ public class CaveBlocks
 		registerModel(CAVELAND_PORTAL, "caveland_portal");
 		registerModel(ICE_CAVERN_PORTAL, "ice_cavern_portal");
 		registerModel(RUINS_CAVERN_PORTAL, "ruins_cavern_portal");
-		registerModels(CAVE_BLOCK, "aquamarine_ore", "aquamarine_block", "magnite_ore", "magnite_block", "randomite_ore", "hexcite_ore", "hexcite_block", "fissured_stone", "fissured_packed_ice");
+		registerModels(CAVE_BLOCK, "aquamarine_ore", "aquamarine_block", "magnite_ore", "magnite_block", "randomite_ore",
+			"hexcite_ore", "hexcite_block", "fissured_stone", "fissured_packed_ice", "manalite_ore", "manalite_block");
 		registerModels(ACRESIA, "acresia_seeds", "acresia_fruits");
 		registerVanillaModels(PERVERTED_LOG, "oak_log", "spruce_log", "birch_log", "jungle_log");
 		registerVanillaModels(PERVERTED_LEAVES, "oak_leaves", "spruce_leaves", "birch_leaves", "jungle_leaves");
@@ -145,8 +145,8 @@ public class CaveBlocks
 	@SideOnly(Side.CLIENT)
 	public static void registerBlockColors()
 	{
-		final Minecraft mc = FMLClientHandler.instance().getClient();
-		final BlockColors colors = mc.getBlockColors();
+		Minecraft mc = FMLClientHandler.instance().getClient();
+		BlockColors colors = mc.getBlockColors();
 
 		colors.registerBlockColorHandler((state, world, pos, tintIndex) ->
 		{
@@ -154,59 +154,76 @@ public class CaveBlocks
 
 			BlockPlanks.EnumType type = state.getValue(BlockOldLeaf.VARIANT);
 
-			return type == BlockPlanks.EnumType.SPRUCE ? ColorizerFoliage.getFoliageColorPine() : type == BlockPlanks.EnumType.BIRCH ? ColorizerFoliage.getFoliageColorBirch() : world != null && pos != null ? BiomeColorHelper.getFoliageColorAtPos(world, pos) : ColorizerFoliage.getFoliageColorBasic();
-		}, PERVERTED_LEAVES);
+			switch (type)
+			{
+				case SPRUCE:
+					return ColorizerFoliage.getFoliageColorPine();
+				case BIRCH:
+					return ColorizerFoliage.getFoliageColorBirch();
+				default:
+			}
+
+			if (world != null && pos != null)
+			{
+				BiomeColorHelper.getFoliageColorAtPos(world, pos);
+			}
+
+			return ColorizerFoliage.getFoliageColorBasic();
+		},
+		PERVERTED_LEAVES);
 
 		colors.registerBlockColorHandler((state, world, pos, tintIndex) ->
 		{
 			return GeneralConfig.slipperyIceCustomColor ? 0xEFFAFF : -1;
-		}, SLIPPERY_ICE);
+		},
+		SLIPPERY_ICE);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void registerItemBlockColors()
 	{
-		final Minecraft mc = FMLClientHandler.instance().getClient();
-		final BlockColors blockColors = mc.getBlockColors();
-		final ItemColors colors = mc.getItemColors();
+		Minecraft mc = FMLClientHandler.instance().getClient();
+		BlockColors blockColors = mc.getBlockColors();
+		ItemColors colors = mc.getItemColors();
 
-		colors.registerItemColorHandler((IItemColor) (stack, tintIndex) ->
+		colors.registerItemColorHandler((stack, tintIndex) ->
 		{
 			IBlockState state = ((ItemBlock)stack.getItem()).getBlock().getStateFromMeta(stack.getMetadata());
 
 			return blockColors.colorMultiplier(state, null, null, tintIndex);
-		}, PERVERTED_LEAVES, SLIPPERY_ICE);
+		},
+		PERVERTED_LEAVES, SLIPPERY_ICE);
 	}
 
 	public static void registerOreDicts()
 	{
-		OreDictionary.registerOre("oreAquamarine", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.AQUAMARINE_ORE.getMetadata()));
-		OreDictionary.registerOre("blockAquamarine", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.AQUAMARINE_BLOCK.getMetadata()));
-		OreDictionary.registerOre("oreMagnite", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.MAGNITE_ORE.getMetadata()));
-		OreDictionary.registerOre("blockMagnite", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.MAGNITE_BLOCK.getMetadata()));
-		OreDictionary.registerOre("oreRandomite", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.RANDOMITE_ORE.getMetadata()));
-		OreDictionary.registerOre("oreHexcite", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_ORE.getMetadata()));
-		OreDictionary.registerOre("blockHexcite", new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_BLOCK.getMetadata()));
+		OreDictionary.registerOre("oreAquamarine", BlockCave.EnumType.AQUAMARINE_ORE.getItemStack());
+		OreDictionary.registerOre("blockAquamarine", BlockCave.EnumType.AQUAMARINE_BLOCK.getItemStack());
+		OreDictionary.registerOre("oreMagnite", BlockCave.EnumType.MAGNITE_ORE.getItemStack());
+		OreDictionary.registerOre("blockMagnite", BlockCave.EnumType.MAGNITE_BLOCK.getItemStack());
+		OreDictionary.registerOre("oreRandomite", BlockCave.EnumType.RANDOMITE_ORE.getItemStack());
+		OreDictionary.registerOre("oreHexcite", BlockCave.EnumType.HEXCITE_ORE.getItemStack());
+		OreDictionary.registerOre("blockHexcite", BlockCave.EnumType.HEXCITE_BLOCK.getItemStack());
+		OreDictionary.registerOre("oreManalite", BlockCave.EnumType.MANALITE_ORE.getItemStack());
+		OreDictionary.registerOre("blockManalite", BlockCave.EnumType.MANALITE_BLOCK.getItemStack());
 		OreDictionary.registerOre("treeLeaves", new ItemStack(PERVERTED_LEAVES, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("treeSapling", new ItemStack(PERVERTED_SAPLING, 1, OreDictionary.WILDCARD_VALUE));
 	}
 
 	public static void registerRecipes()
 	{
-		GameRegistry.addShapedRecipe(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.AQUAMARINE_BLOCK.getMetadata()),
-			"AAA", "AAA", "AAA",
-			'A', ItemCave.EnumType.AQUAMARINE.getItemStack()
-		);
-
-		GameRegistry.addShapedRecipe(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.MAGNITE_BLOCK.getMetadata()),
-			"MMM", "MMM", "MMM",
-			'M', ItemCave.EnumType.MAGNITE_INGOT.getItemStack()
-		);
-
-		GameRegistry.addShapedRecipe(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_BLOCK.getMetadata()),
-			"HHH", "HHH", "HHH",
-			'H', ItemCave.EnumType.HEXCITE.getItemStack()
-		);
+		GameRegistry.addShapedRecipe(BlockCave.EnumType.AQUAMARINE_BLOCK.getItemStack(),
+			"XXX", "XXX", "XXX",
+			'X', ItemCave.EnumType.AQUAMARINE.getItemStack());
+		GameRegistry.addShapedRecipe(BlockCave.EnumType.MAGNITE_BLOCK.getItemStack(),
+			"XXX", "XXX", "XXX",
+			'X', ItemCave.EnumType.MAGNITE_INGOT.getItemStack());
+		GameRegistry.addShapedRecipe(BlockCave.EnumType.HEXCITE_BLOCK.getItemStack(),
+			"XXX", "XXX", "XXX",
+			'X', ItemCave.EnumType.HEXCITE.getItemStack());
+		GameRegistry.addShapedRecipe(BlockCave.EnumType.MANALITE_BLOCK.getItemStack(),
+			"XXX", "XXX", "XXX",
+			'X', ItemCave.EnumType.MANALITE.getItemStack());
 
 		GameRegistry.addShapelessRecipe(new ItemStack(Items.STICK, 8), new ItemStack(PERVERTED_LOG, 1, OreDictionary.WILDCARD_VALUE));
 
@@ -215,30 +232,24 @@ public class CaveBlocks
 			int meta = type.getMetadata();
 
 			GameRegistry.addShapedRecipe(new ItemStack(Blocks.PLANKS, 4, meta),
-				"LL", "LL",
-				'L', new ItemStack(PERVERTED_LOG, 1, meta)
-			);
+				"XX", "XX",
+				'X', new ItemStack(PERVERTED_LOG, 1, meta));
 
-			GameRegistry.addShapelessRecipe(new ItemStack(PERVERTED_SAPLING, 1, meta), new ItemStack(Blocks.SAPLING, 1, meta), Items.FERMENTED_SPIDER_EYE);
+			GameRegistry.addShapelessRecipe(new ItemStack(PERVERTED_SAPLING, 1, meta),
+				new ItemStack(Blocks.SAPLING, 1, meta), Items.FERMENTED_SPIDER_EYE);
 		}
 
-		GameRegistry.addSmelting(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.AQUAMARINE_ORE.getMetadata()),
-			ItemCave.EnumType.AQUAMARINE.getItemStack(), 1.0F);
-
-		GameRegistry.addSmelting(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.MAGNITE_ORE.getMetadata()),
-			ItemCave.EnumType.MAGNITE_INGOT.getItemStack(), 0.7F);
-
-		GameRegistry.addSmelting(new ItemStack(CAVE_BLOCK, 1, BlockCave.EnumType.HEXCITE_ORE.getMetadata()),
-			ItemCave.EnumType.HEXCITE.getItemStack(), 1.0F);
-
-		GameRegistry.addSmelting(new ItemStack(PERVERTED_LOG, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.COAL, 1, 1), 0.0F);
-
+		GameRegistry.addRecipe(new ItemStack(SLIPPERY_ICE),
+			"XXX", "X#X", "XXX",
+			'X', Blocks.ICE,
+			'#', Items.WATER_BUCKET);
 		GameRegistry.addShapelessRecipe(new ItemStack(SLIPPERY_ICE), Blocks.PACKED_ICE, Items.WATER_BUCKET);
 
-		GameRegistry.addRecipe(new ItemStack(SLIPPERY_ICE),
-			"III", "IWI", "III",
-			'I', Blocks.ICE,
-			'W', Items.WATER_BUCKET
-		);
+		GameRegistry.addSmelting(BlockCave.EnumType.AQUAMARINE_ORE.getItemStack(), ItemCave.EnumType.AQUAMARINE.getItemStack(), 1.0F);
+		GameRegistry.addSmelting(BlockCave.EnumType.MAGNITE_ORE.getItemStack(), ItemCave.EnumType.MAGNITE_INGOT.getItemStack(), 0.7F);
+		GameRegistry.addSmelting(BlockCave.EnumType.HEXCITE_ORE.getItemStack(), ItemCave.EnumType.HEXCITE.getItemStack(), 1.0F);
+		GameRegistry.addSmelting(BlockCave.EnumType.MANALITE_ORE.getItemStack(), ItemCave.EnumType.MANALITE.getItemStack(), 1.0F);
+
+		GameRegistry.addSmelting(new ItemStack(PERVERTED_LOG, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.COAL, 1, 1), 0.0F);
 	}
 }

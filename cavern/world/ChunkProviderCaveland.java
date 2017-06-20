@@ -134,7 +134,7 @@ public class ChunkProviderCaveland implements IChunkGenerator
 	}
 
 	@Override
-	public Chunk provideChunk(int chunkX, int chunkZ)
+	public Chunk generateChunk(int chunkX, int chunkZ)
 	{
 		rand.setSeed(chunkX * 341873128712L + chunkZ * 132897987541L);
 
@@ -175,7 +175,7 @@ public class ChunkProviderCaveland implements IChunkGenerator
 		int worldZ = chunkZ * 16;
 		BlockPos blockPos = new BlockPos(worldX, 0, worldZ);
 		Biome biome = world.getBiome(blockPos.add(16, 0, 16));
-		BiomeDecorator decorator = biome.theBiomeDecorator;
+		BiomeDecorator decorator = biome.decorator;
 		int worldHeight = world.provider.getActualHeight();
 
 		ForgeEventFactory.onChunkPopulate(true, this, world, rand, chunkX, chunkZ, false);
@@ -289,7 +289,7 @@ public class ChunkProviderCaveland implements IChunkGenerator
 					y = rand.nextInt(worldHeight - 5);
 					z = rand.nextInt(16) + 8;
 
-					decorator.yellowFlowerGen.generate(world, rand, blockPos.add(x, y, z));
+					decorator.flowerGen.generate(world, rand, blockPos.add(x, y, z));
 				}
 			}
 
@@ -358,7 +358,7 @@ public class ChunkProviderCaveland implements IChunkGenerator
 				}
 			}
 
-			if (decorator.generateLakes)
+			if (decorator.generateFalls)
 			{
 				if (BiomeDictionary.hasType(biome, Type.WATER))
 				{
@@ -425,7 +425,7 @@ public class ChunkProviderCaveland implements IChunkGenerator
 	}
 
 	@Override
-	public BlockPos getStrongholdGen(World world, String structureName, BlockPos pos, boolean flag)
+	public BlockPos getNearestStructurePos(World world, String structureName, BlockPos pos, boolean flag)
 	{
 		return null;
 	}

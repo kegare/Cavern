@@ -92,7 +92,7 @@ public class EntitySummonZombie extends EntityZombie implements ISummonMob
 			return true;
 		}
 
-		Entity entity = source.getEntity();
+		Entity entity = source.getTrueSource();
 
 		if (entity != null && entity instanceof EntityPlayer)
 		{
@@ -104,7 +104,7 @@ public class EntitySummonZombie extends EntityZombie implements ISummonMob
 			return true;
 		}
 
-		entity = source.getSourceOfDamage();
+		entity = source.getImmediateSource();
 
 		if (entity != null && entity instanceof EntityPlayer)
 		{

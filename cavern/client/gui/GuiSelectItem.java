@@ -73,15 +73,15 @@ public class GuiSelectItem extends GuiScreen
 			{
 				ITEMS.addIfAbsent(new ItemMeta(item, -1));
 			}
-			else for (ItemStack itemstack : list)
+			else for (ItemStack stack : list)
 			{
-				if (itemstack.getItemDamage() == 0 && itemstack.isItemStackDamageable())
+				if (stack.getItemDamage() == 0 && stack.isItemStackDamageable())
 				{
-					ITEMS.addIfAbsent(new ItemMeta(itemstack.getItem(), -1));
+					ITEMS.addIfAbsent(new ItemMeta(stack.getItem(), -1));
 				}
 				else
 				{
-					ITEMS.addIfAbsent(new ItemMeta(itemstack));
+					ITEMS.addIfAbsent(new ItemMeta(stack));
 				}
 			}
 		}
@@ -172,8 +172,8 @@ public class GuiSelectItem extends GuiScreen
 			doneButton = new GuiButtonExt(0, 0, 0, 145, 20, I18n.format("gui.done"));
 		}
 
-		doneButton.xPosition = width / 2 + 10;
-		doneButton.yPosition = height - doneButton.height - 4;
+		doneButton.x = width / 2 + 10;
+		doneButton.y = height - doneButton.height - 4;
 
 		if (detailInfo == null)
 		{
@@ -181,15 +181,15 @@ public class GuiSelectItem extends GuiScreen
 		}
 
 		detailInfo.setIsChecked(CaveConfigGui.detailInfo);
-		detailInfo.xPosition = width / 2 + 95;
+		detailInfo.x = width / 2 + 95;
 
 		if (instantFilter == null)
 		{
-			instantFilter = new GuiCheckBox(2, 0, detailInfo.yPosition + detailInfo.height + 2, I18n.format(Config.LANG_KEY + "instant"), true);
+			instantFilter = new GuiCheckBox(2, 0, detailInfo.y + detailInfo.height + 2, I18n.format(Config.LANG_KEY + "instant"), true);
 		}
 
 		instantFilter.setIsChecked(CaveConfigGui.instantFilter);
-		instantFilter.xPosition = detailInfo.xPosition;
+		instantFilter.x = detailInfo.x;
 
 		buttonList.clear();
 		buttonList.add(doneButton);
@@ -198,12 +198,12 @@ public class GuiSelectItem extends GuiScreen
 
 		if (filterTextField == null)
 		{
-			filterTextField = new GuiTextField(0, fontRendererObj, 0, 0, 150, 16);
+			filterTextField = new GuiTextField(0, fontRenderer, 0, 0, 150, 16);
 			filterTextField.setMaxStringLength(100);
 		}
 
-		filterTextField.xPosition = width / 2 - filterTextField.width - 5;
-		filterTextField.yPosition = height - filterTextField.height - 6;
+		filterTextField.x = width / 2 - filterTextField.width - 5;
+		filterTextField.y = height - filterTextField.height - 6;
 
 		selectedHoverChecker = new HoverChecker(0, 20, 0, 100, 800);
 		detailHoverChecker = new HoverChecker(detailInfo, 800);
@@ -235,9 +235,9 @@ public class GuiSelectItem extends GuiScreen
 
 							for (ItemMeta itemMeta : itemList.selected)
 							{
-								ItemStack itemstack = itemMeta.getItemStack();
+								ItemStack stack = itemMeta.getItemStack();
 
-								if (itemstack.isItemStackDamageable())
+								if (stack.isItemStackDamageable())
 								{
 									values.add(itemMeta.getItemName());
 								}
@@ -333,7 +333,7 @@ public class GuiSelectItem extends GuiScreen
 
 		if (!Strings.isNullOrEmpty(name))
 		{
-			drawCenteredString(fontRendererObj, name, width / 2, 15, 0xFFFFFF);
+			drawCenteredString(fontRenderer, name, width / 2, 15, 0xFFFFFF);
 		}
 
 		super.drawScreen(mouseX, mouseY, ticks);
@@ -342,18 +342,18 @@ public class GuiSelectItem extends GuiScreen
 
 		if (detailHoverChecker.checkHover(mouseX, mouseY))
 		{
-			drawHoveringText(fontRendererObj.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "detail.hover"), 300), mouseX, mouseY);
+			drawHoveringText(fontRenderer.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "detail.hover"), 300), mouseX, mouseY);
 		}
 		else if (instantHoverChecker.checkHover(mouseX, mouseY))
 		{
-			drawHoveringText(fontRendererObj.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "instant.hover"), 300), mouseX, mouseY);
+			drawHoveringText(fontRenderer.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "instant.hover"), 300), mouseX, mouseY);
 		}
 
 		if (!single && !itemList.selected.isEmpty())
 		{
 			if (mouseX <= 100 && mouseY <= 20)
 			{
-				drawString(fontRendererObj, I18n.format(Config.LANG_KEY + "select.item.selected", itemList.selected.size()), 5, 5, 0xEFEFEF);
+				drawString(fontRenderer, I18n.format(Config.LANG_KEY + "select.item.selected", itemList.selected.size()), 5, 5, 0xEFEFEF);
 			}
 
 			if (selectedHoverChecker.checkHover(mouseX, mouseY))
@@ -597,16 +597,16 @@ public class GuiSelectItem extends GuiScreen
 			return contents.size();
 		}
 
-		public String getItemMetaTypeName(ItemMeta itemMeta, ItemStack itemstack)
+		public String getItemMetaTypeName(ItemMeta itemMeta, ItemStack stack)
 		{
 			if (itemMeta == null)
 			{
 				return null;
 			}
 
-			if (itemstack.isEmpty())
+			if (stack.isEmpty())
 			{
-				itemstack = itemMeta.getItemStack();
+				stack = itemMeta.getItemStack();
 			}
 
 			String name = null;
@@ -620,11 +620,11 @@ public class GuiSelectItem extends GuiScreen
 				else switch (nameType)
 				{
 					case 2:
-						name = itemstack.getUnlocalizedName();
+						name = stack.getUnlocalizedName();
 						name = name.substring(name.indexOf(".") + 1);
 						break;
 					default:
-						name = itemstack.getDisplayName();
+						name = stack.getDisplayName();
 						break;
 				}
 			}
@@ -657,12 +657,12 @@ public class GuiSelectItem extends GuiScreen
 				return;
 			}
 
-			ItemStack itemstack = itemMeta.getItemStack();
-			String name = getItemMetaTypeName(itemMeta, itemstack);
+			ItemStack stack = itemMeta.getItemStack();
+			String name = getItemMetaTypeName(itemMeta, stack);
 
 			if (!Strings.isNullOrEmpty(name))
 			{
-				drawCenteredString(fontRendererObj, name, width / 2, par3 + 1, 0xFFFFFF);
+				drawCenteredString(fontRenderer, name, width / 2, par3 + 1, 0xFFFFFF);
 			}
 
 			if (detailInfo.isChecked())
@@ -671,7 +671,7 @@ public class GuiSelectItem extends GuiScreen
 				{
 					GlStateManager.enableRescaleNormal();
 					RenderHelper.enableGUIStandardItemLighting();
-					itemRender.renderItemIntoGUI(itemstack, width / 2 - 100, par3 - 1);
+					itemRender.renderItemIntoGUI(stack, width / 2 - 100, par3 - 1);
 					RenderHelper.disableStandardItemLighting();
 					GlStateManager.disableRescaleNormal();
 				}

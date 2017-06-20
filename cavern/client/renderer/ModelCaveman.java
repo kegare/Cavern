@@ -101,10 +101,10 @@ public class ModelCaveman extends ModelBiped
 	}
 
 	@Override
-	public void setInvisible(boolean invisible)
+	public void setVisible(boolean visible)
 	{
-		super.setInvisible(invisible);
+		super.setVisible(visible);
 
-		bipedBack.showModel = invisible;
+		bipedBack.showModel = visible;
 	}
 }

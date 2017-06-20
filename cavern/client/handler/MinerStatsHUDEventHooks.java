@@ -6,7 +6,7 @@ import cavern.client.CaveRenderingRegistry;
 import cavern.config.GeneralConfig;
 import cavern.config.MiningAssistConfig;
 import cavern.config.property.ConfigDisplayPos;
-import cavern.item.ItemMagicalBook;
+import cavern.item.CaveItems;
 import cavern.miningassist.MiningAssist;
 import cavern.network.server.StatsAdjustRequestMessage;
 import cavern.stats.MinerRank;
@@ -63,7 +63,7 @@ public class MinerStatsHUDEventHooks
 			return false;
 		}
 
-		if (getDisplayType() == GeneralConfig.magicianPointPosition.getType() && ItemMagicalBook.heldMagicItem(mc.player))
+		if (getDisplayType() == GeneralConfig.magicianPointPosition.getType() && CaveItems.hasMagicalItem(mc.player, true))
 		{
 			return false;
 		}
@@ -195,7 +195,7 @@ public class MinerStatsHUDEventHooks
 		}
 
 		MinerRank minerRank = MinerRank.get(stats.getRank());
-		MiningAssist miningAssist = MiningAssist.get(stats.getMiningAssist());
+		MiningAssist miningAssist = MiningAssist.byType(stats.getMiningAssist());
 
 		String point = Integer.toString(stats.getPoint());
 		String rank = I18n.format(minerRank.getUnlocalizedName());
@@ -211,7 +211,7 @@ public class MinerStatsHUDEventHooks
 		int y = posY;
 
 		RenderItem renderItem = mc.getRenderItem();
-		FontRenderer renderer = mc.fontRendererObj;
+		FontRenderer renderer = mc.fontRenderer;
 		boolean flag = false;
 		long processTime = Minecraft.getSystemTime() - MinerStats.lastMineTime;
 

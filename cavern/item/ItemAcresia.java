@@ -49,7 +49,7 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 	{
 		for (EnumType type : EnumType.values())
 		{
-			subItems.add(new ItemStack(item, 1, type.getItemDamage()));
+			subItems.add(type.getItemStack());
 		}
 	}
 

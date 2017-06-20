@@ -93,7 +93,7 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 	}
 
 	@Override
-	public Chunk provideChunk(int chunkX, int chunkZ)
+	public Chunk generateChunk(int chunkX, int chunkZ)
 	{
 		rand.setSeed(chunkX * 341873128712L + chunkZ * 132897987541L);
 
@@ -187,7 +187,7 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 	}
 
 	@Override
-	public BlockPos getStrongholdGen(World world, String structureName, BlockPos pos, boolean flag)
+	public BlockPos getNearestStructurePos(World world, String structureName, BlockPos pos, boolean flag)
 	{
 		return null;
 	}

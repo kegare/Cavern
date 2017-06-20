@@ -80,7 +80,7 @@ public class CaveUtils
 		return mod;
 	}
 
-	public static final Comparator<Block> blockComparator = (o1, o2) ->
+	public static final Comparator<Block> BLOCK_COMPARATOR = (o1, o2) ->
 	{
 		int i = compareWithNull(o1, o2);
 
@@ -110,7 +110,7 @@ public class CaveUtils
 		return i;
 	};
 
-	public static final Comparator<Biome> biomeComparator = (o1, o2) ->
+	public static final Comparator<Biome> BIOME_COMPARATOR = (o1, o2) ->
 	{
 		int i = compareWithNull(o1, o2);
 
@@ -152,21 +152,21 @@ public class CaveUtils
 		return i;
 	};
 
-	public static boolean isItemPickaxe(ItemStack itemstack)
+	public static boolean isItemPickaxe(ItemStack stack)
 	{
-		if (itemstack.isEmpty())
+		if (stack.isEmpty())
 		{
 			return false;
 		}
 
-		Item item = itemstack.getItem();
+		Item item = stack.getItem();
 
 		if (item instanceof ItemPickaxe)
 		{
 			return true;
 		}
 
-		if (item.getToolClasses(itemstack).contains("pickaxe"))
+		if (item.getToolClasses(stack).contains("pickaxe"))
 		{
 			return true;
 		}
@@ -293,8 +293,13 @@ public class CaveUtils
 		return getSpawnEgg(entityName);
 	}
 
-	public static void setLocationAndAngles(Entity entity, double posX, double posY, double posZ)
+	public static void setLocationAndAngles(@Nullable Entity entity, double posX, double posY, double posZ)
 	{
+		if (entity == null)
+		{
+			return;
+		}
+
 		if (entity instanceof EntityPlayerMP)
 		{
 			((EntityPlayerMP)entity).connection.setPlayerLocation(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
@@ -305,12 +310,14 @@ public class CaveUtils
 		}
 	}
 
-	public static void setLocationAndAngles(Entity entity, BlockPos pos)
+	public static void setLocationAndAngles(@Nullable Entity entity, @Nullable BlockPos pos)
 	{
-		if (pos != null)
+		if (pos == null)
 		{
-			setLocationAndAngles(entity, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+			return;
 		}
+
+		setLocationAndAngles(entity, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 	}
 
 	public static SleepResult trySleep(EntityPlayer player, BlockPos pos)
@@ -330,7 +337,8 @@ public class CaveUtils
 				return SleepResult.TOO_FAR_AWAY;
 			}
 
-			List<EntityMob> list = world.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(pos.getX() - 8.0D, pos.getY() - 5.0D, pos.getZ() - 8.0D, pos.getX() + 8.0D, pos.getY() + 5.0D, pos.getZ() + 8.0D));
+			List<EntityMob> list = world.getEntitiesWithinAABB(EntityMob.class,
+				new AxisAlignedBB(pos.getX() - 8.0D, pos.getY() - 5.0D, pos.getZ() - 8.0D, pos.getX() + 8.0D, pos.getY() + 5.0D, pos.getZ() + 8.0D));
 
 			if (!list.isEmpty())
 			{

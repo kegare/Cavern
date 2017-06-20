@@ -43,21 +43,21 @@ public class ItemBowIce extends ItemBow
 	}
 
 	@Override
-	public int getMaxDamage(ItemStack itemstack)
+	public int getMaxDamage(ItemStack stack)
 	{
-		int max = super.getMaxDamage(itemstack);
+		int max = super.getMaxDamage(stack);
 
-		return max + max / 8 * IceEquipment.get(itemstack).getCharge();
+		return max + max / 8 * IceEquipment.get(stack).getCharge();
 	}
 
 	@Override
-	public int getMaxItemUseDuration(ItemStack itemstack)
+	public int getMaxItemUseDuration(ItemStack stack)
 	{
-		int duration = super.getMaxItemUseDuration(itemstack);
+		int duration = super.getMaxItemUseDuration(stack);
 		int min = duration / 2;
 		int max = duration / 3;
 
-		return MathHelper.clamp(min - duration / 8 * IceEquipment.get(itemstack).getCharge(), min, max);
+		return MathHelper.clamp(min - duration / 8 * IceEquipment.get(stack).getCharge(), min, max);
 	}
 
 	@Override

@@ -3,14 +3,14 @@ package cavern.entity.ai;
 import cavern.item.ItemCavenicBow;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAttackRangedBow;
-import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.AbstractSkeleton;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 
 public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 {
-	private final EntitySkeleton entity;
+	private final AbstractSkeleton entity;
 	private final double moveSpeedAmp;
 	private final float maxAttackDistance;
 	private final int attackSpeed;
@@ -23,7 +23,7 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 	private boolean strafingBackwards;
 	private int strafingTime = -1;
 
-	public EntityAIAttackCavenicBow(EntitySkeleton skeleton, double speedAmplifier, float maxDistance, int attackSpeed)
+	public EntityAIAttackCavenicBow(AbstractSkeleton skeleton, double speedAmplifier, float maxDistance, int attackSpeed)
 	{
 		super(skeleton, speedAmplifier, 0, maxDistance);
 		this.entity = skeleton;
@@ -63,7 +63,7 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 	}
 
 	@Override
-	public boolean continueExecuting()
+	public boolean shouldContinueExecuting()
 	{
 		return (shouldExecute() || !entity.getNavigator().noPath()) && isBowInMainhand();
 	}

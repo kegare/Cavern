@@ -109,8 +109,8 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 			doneButton = new GuiButtonExt(0, 0, 0, 65, 20, I18n.format("gui.done"));
 		}
 
-		doneButton.xPosition = width / 2 + 135;
-		doneButton.yPosition = height - doneButton.height - 4;
+		doneButton.x = width / 2 + 135;
+		doneButton.y = height - doneButton.height - 4;
 
 		if (editButton == null)
 		{
@@ -118,8 +118,8 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 			editButton.enabled = false;
 		}
 
-		editButton.xPosition = doneButton.xPosition - doneButton.width - 3;
-		editButton.yPosition = doneButton.yPosition;
+		editButton.x = doneButton.x - doneButton.width - 3;
+		editButton.y = doneButton.y;
 		editButton.enabled = biomeList.selected != null;
 		editButton.visible = !editMode;
 
@@ -128,8 +128,8 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 			cancelButton = new GuiButtonExt(2, 0, 0, editButton.width, editButton.height, I18n.format("gui.cancel"));
 		}
 
-		cancelButton.xPosition = editButton.xPosition;
-		cancelButton.yPosition = editButton.yPosition;
+		cancelButton.x = editButton.x;
+		cancelButton.y = editButton.y;
 		cancelButton.visible = editMode;
 
 		if (removeButton == null)
@@ -137,8 +137,8 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 			removeButton = new GuiButtonExt(4, 0, 0, doneButton.width, doneButton.height, I18n.format("gui.remove"));
 		}
 
-		removeButton.xPosition = editButton.xPosition - editButton.width - 3;
-		removeButton.yPosition = doneButton.yPosition;
+		removeButton.x = editButton.x - editButton.width - 3;
+		removeButton.y = doneButton.y;
 		removeButton.visible =  !editMode;
 
 		if (addButton == null)
@@ -146,8 +146,8 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 			addButton = new GuiButtonExt(3, 0, 0, doneButton.width, doneButton.height, I18n.format("gui.add"));
 		}
 
-		addButton.xPosition = removeButton.xPosition - removeButton.width - 3;
-		addButton.yPosition = doneButton.yPosition;
+		addButton.x = removeButton.x - removeButton.width - 3;
+		addButton.y = doneButton.y;
 		addButton.visible = !editMode;
 
 		if (clearButton == null)
@@ -155,8 +155,8 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 			clearButton = new GuiButtonExt(5, 0, 0, removeButton.width, removeButton.height, I18n.format("gui.clear"));
 		}
 
-		clearButton.xPosition = removeButton.xPosition;
-		clearButton.yPosition = removeButton.yPosition;
+		clearButton.x = removeButton.x;
+		clearButton.y = removeButton.y;
 		clearButton.visible = false;
 
 		if (detailInfo == null)
@@ -165,15 +165,15 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 		}
 
 		detailInfo.setIsChecked(CaveConfigGui.detailInfo);
-		detailInfo.xPosition = width / 2 + 95;
+		detailInfo.x = width / 2 + 95;
 
 		if (instantFilter == null)
 		{
-			instantFilter = new GuiCheckBox(7, 0, detailInfo.yPosition + detailInfo.height + 2, I18n.format(Config.LANG_KEY + "instant"), true);
+			instantFilter = new GuiCheckBox(7, 0, detailInfo.y + detailInfo.height + 2, I18n.format(Config.LANG_KEY + "instant"), true);
 		}
 
 		instantFilter.setIsChecked(CaveConfigGui.instantFilter);
-		instantFilter.xPosition = detailInfo.xPosition;
+		instantFilter.x = detailInfo.x;
 
 		buttonList.clear();
 		buttonList.add(doneButton);
@@ -195,12 +195,12 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 
 		if (filterTextField == null)
 		{
-			filterTextField = new GuiTextField(0, fontRendererObj, 0, 0, 122, 16);
+			filterTextField = new GuiTextField(0, fontRenderer, 0, 0, 122, 16);
 			filterTextField.setMaxStringLength(500);
 		}
 
-		filterTextField.xPosition = width / 2 - 200;
-		filterTextField.yPosition = height - filterTextField.height - 6;
+		filterTextField.x = width / 2 - 200;
+		filterTextField.y = height - filterTextField.height - 6;
 
 		detailHoverChecker = new HoverChecker(detailInfo, 800);
 		instantHoverChecker = new HoverChecker(instantFilter, 800);
@@ -214,58 +214,58 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 
 		for (String key : editLabelList)
 		{
-			maxLabelWidth = Math.max(maxLabelWidth, fontRendererObj.getStringWidth(key));
+			maxLabelWidth = Math.max(maxLabelWidth, fontRenderer.getStringWidth(key));
 		}
 
 		if (weightField == null)
 		{
-			weightField = new GuiTextField(1, fontRendererObj, 0, 0, 0, 15);
+			weightField = new GuiTextField(1, fontRenderer, 0, 0, 0, 15);
 			weightField.setMaxStringLength(3);
 		}
 
 		int i = maxLabelWidth + 8 + width / 2;
-		weightField.xPosition = width / 2 - i / 2 + maxLabelWidth + 10;
-		weightField.yPosition = biomeList.bottom + 1 + 20;
-		weightField.width = width / 2 + i / 2 - 45 - weightField.xPosition + 40;
+		weightField.x = width / 2 - i / 2 + maxLabelWidth + 10;
+		weightField.y = biomeList.bottom + 1 + 20;
+		weightField.width = width / 2 + i / 2 - 45 - weightField.x + 40;
 
 		if (terrainBlockField == null)
 		{
-			terrainBlockField = new GuiTextField(2, fontRendererObj, 0, 0, 0, weightField.height);
+			terrainBlockField = new GuiTextField(2, fontRenderer, 0, 0, 0, weightField.height);
 			terrainBlockField.setMaxStringLength(100);
 		}
 
-		terrainBlockField.xPosition = weightField.xPosition;
-		terrainBlockField.yPosition = weightField.yPosition + weightField.height + 5;
+		terrainBlockField.x = weightField.x;
+		terrainBlockField.y = weightField.y + weightField.height + 5;
 		terrainBlockField.width = weightField.width / 4 + weightField.width / 2 - 1;
 
 		if (terrainBlockMetaField == null)
 		{
-			terrainBlockMetaField = new GuiTextField(3, fontRendererObj, 0, 0, 0, terrainBlockField.height);
+			terrainBlockMetaField = new GuiTextField(3, fontRenderer, 0, 0, 0, terrainBlockField.height);
 			terrainBlockMetaField.setMaxStringLength(100);
 		}
 
-		terrainBlockMetaField.xPosition = terrainBlockField.xPosition + terrainBlockField.width + 3;
-		terrainBlockMetaField.yPosition = terrainBlockField.yPosition;
+		terrainBlockMetaField.x = terrainBlockField.x + terrainBlockField.width + 3;
+		terrainBlockMetaField.y = terrainBlockField.y;
 		terrainBlockMetaField.width = weightField.width / 4 - 1;
 
 		if (topBlockField == null)
 		{
-			topBlockField = new GuiTextField(4, fontRendererObj, 0, 0, 0, terrainBlockField.height);
+			topBlockField = new GuiTextField(4, fontRenderer, 0, 0, 0, terrainBlockField.height);
 			topBlockField.setMaxStringLength(100);
 		}
 
-		topBlockField.xPosition = terrainBlockField.xPosition;
-		topBlockField.yPosition = terrainBlockMetaField.yPosition + terrainBlockMetaField.height + 5;
+		topBlockField.x = terrainBlockField.x;
+		topBlockField.y = terrainBlockMetaField.y + terrainBlockMetaField.height + 5;
 		topBlockField.width = terrainBlockField.width;
 
 		if (topBlockMetaField == null)
 		{
-			topBlockMetaField = new GuiTextField(5, fontRendererObj, 0, 0, 0, topBlockField.height);
+			topBlockMetaField = new GuiTextField(5, fontRenderer, 0, 0, 0, topBlockField.height);
 			topBlockMetaField.setMaxStringLength(100);
 		}
 
-		topBlockMetaField.xPosition = terrainBlockMetaField.xPosition;
-		topBlockMetaField.yPosition = topBlockField.yPosition;
+		topBlockMetaField.x = terrainBlockMetaField.x;
+		topBlockMetaField.y = topBlockField.y;
 		topBlockMetaField.width = terrainBlockMetaField.width;
 
 		editFieldList.clear();
@@ -279,9 +279,9 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 			editFieldList.add(topBlockMetaField);
 		}
 
-		weightHoverChecker = new HoverChecker(weightField.yPosition - 1, weightField.yPosition + weightField.height, weightField.xPosition - maxLabelWidth - 12, weightField.xPosition - 10, 800);
-		terrainBlockHoverChecker = new HoverChecker(terrainBlockField.yPosition - 1, terrainBlockField.yPosition + terrainBlockField.height, terrainBlockField.xPosition - maxLabelWidth - 12, terrainBlockField.xPosition - 10, 800);
-		topBlockHoverChecker = new HoverChecker(topBlockField.yPosition - 1, topBlockField.yPosition + topBlockField.height, topBlockField.xPosition - maxLabelWidth - 12, topBlockField.xPosition - 10, 800);
+		weightHoverChecker = new HoverChecker(weightField.y - 1, weightField.y + weightField.height, weightField.x - maxLabelWidth - 12, weightField.x - 10, 800);
+		terrainBlockHoverChecker = new HoverChecker(terrainBlockField.y - 1, terrainBlockField.y + terrainBlockField.height, terrainBlockField.x - maxLabelWidth - 12, terrainBlockField.x - 10, 800);
+		topBlockHoverChecker = new HoverChecker(topBlockField.y - 1, topBlockField.y + topBlockField.height, topBlockField.x - maxLabelWidth - 12, topBlockField.x - 10, 800);
 	}
 
 	@Override
@@ -497,7 +497,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 	{
 		biomeList.drawScreen(mouseX, mouseY, ticks);
 
-		drawCenteredString(fontRendererObj, I18n.format(Config.LANG_KEY + "biomes"), width / 2, 15, 0xFFFFFF);
+		drawCenteredString(fontRenderer, I18n.format(Config.LANG_KEY + "biomes"), width / 2, 15, 0xFFFFFF);
 
 		super.drawScreen(mouseX, mouseY, ticks);
 
@@ -510,7 +510,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 				textField = editFieldList.get(i);
 				textField.drawTextBox();
 
-				drawString(fontRendererObj, editLabelList.get(i), textField.xPosition - maxLabelWidth - 10, textField.yPosition + 3, 0xBBBBBB);
+				drawString(fontRenderer, editLabelList.get(i), textField.x - maxLabelWidth - 10, textField.y + 3, 0xBBBBBB);
 			}
 
 			if (weightHoverChecker.checkHover(mouseX, mouseY))
@@ -519,7 +519,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 				String key = Config.LANG_KEY + "biomes.weight";
 
 				hover.add(TextFormatting.GRAY + I18n.format(key));
-				hover.addAll(fontRendererObj.listFormattedStringToWidth(I18n.format(key + ".tooltip"), 300));
+				hover.addAll(fontRenderer.listFormattedStringToWidth(I18n.format(key + ".tooltip"), 300));
 
 				drawHoveringText(hover, mouseX, mouseY);
 			}
@@ -529,7 +529,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 				String key = Config.LANG_KEY + "biomes.terrainBlock";
 
 				hover.add(TextFormatting.GRAY + I18n.format(key));
-				hover.addAll(fontRendererObj.listFormattedStringToWidth(I18n.format(key + ".tooltip"), 300));
+				hover.addAll(fontRenderer.listFormattedStringToWidth(I18n.format(key + ".tooltip"), 300));
 
 				drawHoveringText(hover, mouseX, mouseY);
 			}
@@ -539,7 +539,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 				String key = Config.LANG_KEY + "biomes.topBlock";
 
 				hover.add(TextFormatting.GRAY + I18n.format(key));
-				hover.addAll(fontRendererObj.listFormattedStringToWidth(I18n.format(key + ".tooltip"), 300));
+				hover.addAll(fontRenderer.listFormattedStringToWidth(I18n.format(key + ".tooltip"), 300));
 
 				drawHoveringText(hover, mouseX, mouseY);
 			}
@@ -551,11 +551,11 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 
 		if (detailHoverChecker.checkHover(mouseX, mouseY))
 		{
-			drawHoveringText(fontRendererObj.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "detail.hover"), 300), mouseX, mouseY);
+			drawHoveringText(fontRenderer.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "detail.hover"), 300), mouseX, mouseY);
 		}
 		else if (instantHoverChecker.checkHover(mouseX, mouseY))
 		{
-			drawHoveringText(fontRendererObj.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "instant.hover"), 300), mouseX, mouseY);
+			drawHoveringText(fontRenderer.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "instant.hover"), 300), mouseX, mouseY);
 		}
 		else if (biomeList.isMouseYWithinSlotBounds(mouseY) && isCtrlKeyDown())
 		{
@@ -576,7 +576,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 
 		if (biomeList.selected.size() > 1 && mouseX <= 100 && mouseY <= 20)
 		{
-			drawString(fontRendererObj, I18n.format(Config.LANG_KEY + "select.entry.selected", biomeList.selected.size()), 5, 5, 0xEFEFEF);
+			drawString(fontRenderer, I18n.format(Config.LANG_KEY + "select.entry.selected", biomeList.selected.size()), 5, 5, 0xEFEFEF);
 		}
 	}
 
@@ -864,7 +864,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 
 			if (!Strings.isNullOrEmpty(text))
 			{
-				drawCenteredString(fontRendererObj, biome.getBiomeName(), width / 2, par3 + 3, 0xFFFFFF);
+				drawCenteredString(fontRenderer, biome.getBiomeName(), width / 2, par3 + 3, 0xFFFFFF);
 			}
 
 			if (detailInfo.isChecked() || Keyboard.isKeyDown(Keyboard.KEY_TAB))
@@ -872,14 +872,14 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 				BlockMeta blockMeta = caveBiome.getTerrainBlock();
 				Block block = blockMeta.getBlock();
 				int meta = blockMeta.getMeta();
-				ItemStack itemstack = new ItemStack(block, 1, meta);
+				ItemStack stack = new ItemStack(block, 1, meta);
 
 				try
 				{
 					GlStateManager.enableRescaleNormal();
 					RenderHelper.enableGUIStandardItemLighting();
-					itemRender.renderItemIntoGUI(itemstack, width / 2 - 100, par3 + 1);
-					itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 - 100, par3 + 1, Integer.toString(Biome.getIdForBiome(biome)));
+					itemRender.renderItemIntoGUI(stack, width / 2 - 100, par3 + 1);
+					itemRender.renderItemOverlayIntoGUI(fontRenderer, stack, width / 2 - 100, par3 + 1, Integer.toString(Biome.getIdForBiome(biome)));
 					RenderHelper.disableStandardItemLighting();
 					GlStateManager.disableRescaleNormal();
 				}
@@ -888,14 +888,14 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 				blockMeta = caveBiome.getTopBlock();
 				block = blockMeta.getBlock();
 				meta = blockMeta.getMeta();
-				itemstack = new ItemStack(block, 1, meta);
+				stack = new ItemStack(block, 1, meta);
 
 				try
 				{
 					GlStateManager.enableRescaleNormal();
 					RenderHelper.enableGUIStandardItemLighting();
-					itemRender.renderItemIntoGUI(itemstack, width / 2 + 90, par3 + 1);
-					itemRender.renderItemOverlayIntoGUI(fontRendererObj, itemstack, width / 2 + 90, par3 + 1, Integer.toString(caveBiome.getWeight()));
+					itemRender.renderItemIntoGUI(stack, width / 2 + 90, par3 + 1);
+					itemRender.renderItemOverlayIntoGUI(fontRenderer, stack, width / 2 + 90, par3 + 1, Integer.toString(caveBiome.getWeight()));
 					RenderHelper.disableStandardItemLighting();
 					GlStateManager.disableRescaleNormal();
 				}

@@ -13,19 +13,19 @@ public class ItemAxeIce extends ItemAxeCave
 	}
 
 	@Override
-	public int getMaxDamage(ItemStack itemstack)
+	public int getMaxDamage(ItemStack stack)
 	{
-		int max = super.getMaxDamage(itemstack);
+		int max = super.getMaxDamage(stack);
 
-		return max + max / 8 * IceEquipment.get(itemstack).getCharge();
+		return max + max / 8 * IceEquipment.get(stack).getCharge();
 	}
 
 	@Override
-	public int getHarvestLevel(ItemStack itemstack, String toolClass, EntityPlayer player, IBlockState state)
+	public int getHarvestLevel(ItemStack stack, String toolClass, EntityPlayer player, IBlockState state)
 	{
-		int level = super.getHarvestLevel(itemstack, toolClass, player, state);
+		int level = super.getHarvestLevel(stack, toolClass, player, state);
 
-		if (IceEquipment.get(itemstack).getCharge() >= 150)
+		if (IceEquipment.get(stack).getCharge() >= 150)
 		{
 			++level;
 		}

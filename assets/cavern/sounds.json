@@ -88,5 +88,11 @@
     "sounds": [
       "cavern:magic_success"
     ]
+  },
+  "magic.success.short": {
+    "category": "player",
+    "sounds": [
+      "cavern:magic_success_short"
+    ]
   }
 }

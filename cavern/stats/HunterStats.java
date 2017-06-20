@@ -12,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -173,7 +172,7 @@ public class HunterStats implements IHunterStats
 	{
 		int prev = rank;
 
-		rank = MathHelper.clamp(value, 0, HunterRank.values().length - 1);
+		rank = HunterRank.get(value).getRank();
 
 		if (rank != prev)
 		{

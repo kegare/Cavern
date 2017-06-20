@@ -169,8 +169,8 @@ public class BlockPortalCavern extends BlockPortal
 					dimNew = 0;
 				}
 
-				WorldServer worldOld = server.worldServerForDimension(dimOld);
-				WorldServer worldNew = server.worldServerForDimension(dimNew);
+				WorldServer worldOld = server.getWorld(dimOld);
+				WorldServer worldNew = server.getWorld(dimNew);
 
 				if (worldOld == null || worldNew == null)
 				{

@@ -3,7 +3,7 @@ package cavern.client.handler;
 import cavern.api.IMagicianStats;
 import cavern.config.GeneralConfig;
 import cavern.config.property.ConfigDisplayPos;
-import cavern.item.ItemMagicalBook;
+import cavern.item.CaveItems;
 import cavern.network.server.StatsAdjustRequestMessage;
 import cavern.stats.MagicianRank;
 import cavern.stats.MagicianStats;
@@ -52,7 +52,7 @@ public class MagicianStatsHUDEventHooks
 			return false;
 		}
 
-		return ItemMagicalBook.heldMagicItem(mc.player);
+		return CaveItems.hasMagicalItem(mc.player, true);
 	}
 
 	protected void setDisplayPos(ConfigDisplayPos.Type type, Minecraft mc, int scaledWidth, int scaledHeight)
@@ -171,7 +171,7 @@ public class MagicianStatsHUDEventHooks
 		int y = posY;
 
 		RenderItem renderItem = mc.getRenderItem();
-		FontRenderer renderer = mc.fontRendererObj;
+		FontRenderer renderer = mc.fontRenderer;
 
 		renderItem.renderItemIntoGUI(magicianRank.getItemStack(), x, y);
 

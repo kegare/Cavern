@@ -71,4 +71,8 @@ public interface ICavernAPI
 	public void addEscapeMissionAchievement(Achievement achievement);
 
 	public List<Achievement> getEscapeMissionAchievements();
+
+	public void addMagicalItem(Item item);
+
+	public List<Item> getMagicalItems();
 }

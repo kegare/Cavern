@@ -1,0 +1,6 @@
+{
+    "parent": "cavern:item/manalite_bow",
+    "textures": {
+        "layer0": "cavern:items/manalite_bow_pulling_2"
+    }
+}

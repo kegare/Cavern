@@ -80,7 +80,7 @@ public class EntitySummonCavenicSkeleton extends EntityCavenicSkeleton implement
 			return true;
 		}
 
-		Entity entity = source.getEntity();
+		Entity entity = source.getTrueSource();
 
 		if (entity != null && entity instanceof EntityPlayer)
 		{
@@ -92,7 +92,7 @@ public class EntitySummonCavenicSkeleton extends EntityCavenicSkeleton implement
 			return true;
 		}
 
-		entity = source.getSourceOfDamage();
+		entity = source.getImmediateSource();
 
 		if (entity != null && entity instanceof EntityPlayer)
 		{

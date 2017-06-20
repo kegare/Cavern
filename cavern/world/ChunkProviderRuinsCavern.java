@@ -91,7 +91,7 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 	}
 
 	@Override
-	public Chunk provideChunk(int chunkX, int chunkZ)
+	public Chunk generateChunk(int chunkX, int chunkZ)
 	{
 		ChunkPrimer primer = new ChunkPrimer();
 
@@ -189,7 +189,7 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 	}
 
 	@Override
-	public BlockPos getStrongholdGen(World worldIn, String structureName, BlockPos pos, boolean flag)
+	public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos pos, boolean flag)
 	{
 		return null;
 	}

@@ -50,7 +50,7 @@ public class MagicExecuteMessage implements IMessage, IMessageHandler<MagicExecu
 	@Override
 	public IMessage onMessage(MagicExecuteMessage message, MessageContext ctx)
 	{
-		EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+		EntityPlayerMP player = ctx.getServerHandler().player;
 		EnumHand hand =  message.heldMain ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
 		ItemStack held = player.getHeldItem(hand);
 
@@ -96,7 +96,7 @@ public class MagicExecuteMessage implements IMessage, IMessageHandler<MagicExecu
 			IEntityMagic entityMagic = (IEntityMagic)magic;
 			int count = 0;
 
-			for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expandXyz(range)))
+			for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().grow(range)))
 			{
 				if (entity != null && player.canEntityBeSeen(entity) && entityMagic.isTarget(player, entity) && entityMagic.execute(player, entity))
 				{
@@ -115,7 +115,7 @@ public class MagicExecuteMessage implements IMessage, IMessageHandler<MagicExecu
 			IPlayerMagic playerMagic = (IPlayerMagic)magic;
 			int count = 0;
 
-			for (EntityPlayer targetPlayer : world.getEntitiesWithinAABB(EntityPlayer.class, player.getEntityBoundingBox().expandXyz(range)))
+			for (EntityPlayer targetPlayer : world.getEntitiesWithinAABB(EntityPlayer.class, player.getEntityBoundingBox().grow(range)))
 			{
 				if (targetPlayer != null && player.canEntityBeSeen(targetPlayer) && playerMagic.isTarget(player, targetPlayer) && playerMagic.execute(player, targetPlayer))
 				{
@@ -151,6 +151,8 @@ public class MagicExecuteMessage implements IMessage, IMessageHandler<MagicExecu
 			{
 				world.playSound(null, player.posX, player.posY, player.posZ, sound, SoundCategory.PLAYERS, 0.35F, 1.0F);
 			}
+
+			player.swingArm(hand);
 		}
 		else
 		{

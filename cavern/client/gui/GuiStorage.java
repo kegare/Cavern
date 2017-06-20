@@ -30,8 +30,8 @@ public class GuiStorage extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		fontRendererObj.drawString(new TextComponentTranslation("item.magicalBook.storage.name").getUnformattedText(), 8, 6, 4210752);
-		fontRendererObj.drawString(playerInventory.getDisplayName().getUnformattedText(), 8, ySize - 96 + 2, 4210752);
+		fontRenderer.drawString(new TextComponentTranslation("item.magicalBook.storage.name").getUnformattedText(), 8, 6, 4210752);
+		fontRenderer.drawString(playerInventory.getDisplayName().getUnformattedText(), 8, ySize - 96 + 2, 4210752);
 	}
 
 	@Override

@@ -106,7 +106,7 @@ public class MiningAssistEventHooks
 
 			if (stats.getMiningAssist() > MiningAssist.DISABLED.getType() && stats.getRank() >= MiningAssistConfig.minerRank.getValue())
 			{
-				MiningAssist type = MiningAssist.get(stats.getMiningAssist());
+				MiningAssist type = MiningAssist.byType(stats.getMiningAssist());
 				ConfigBlocks targetBlocks = null;
 
 				switch (type)
@@ -150,7 +150,7 @@ public class MiningAssistEventHooks
 	{
 		if (type == null)
 		{
-			type = MiningAssist.get(MinerStats.get(player).getMiningAssist());
+			type = MiningAssist.byType(MinerStats.get(player).getMiningAssist());
 		}
 
 		switch (type)

@@ -215,6 +215,18 @@ public class CavernAPIHandler implements ICavernAPI
 		return CaveAchievements.ESCAPE_ACHIEVEMENTS;
 	}
 
+	@Override
+	public void addMagicalItem(Item item)
+	{
+		getMagicalItems().add(item);
+	}
+
+	@Override
+	public List<Item> getMagicalItems()
+	{
+		return CaveItems.getMagicalItems();
+	}
+
 	public static void registerItems(ICavernAPI handler)
 	{
 		handler.addRandomiteItem(Blocks.DIRT, 6, 15);
@@ -270,8 +282,8 @@ public class CavernAPIHandler implements ICavernAPI
 		handler.addHibernateItem(Blocks.REEDS, 4, 12);
 		handler.addHibernateItem(Items.STICK, 4, 15);
 		handler.addHibernateItem(Items.COAL, 4, 15);
-		handler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()), 10);
-		handler.addHibernateItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.HEXCITE.getItemDamage()), 5);
+		handler.addHibernateItem(ItemCave.EnumType.AQUAMARINE.getItemStack(), 10);
+		handler.addHibernateItem(ItemCave.EnumType.HEXCITE.getItemStack(), 5);
 		handler.addHibernateItem(ItemElixir.EnumType.ELIXIR_NORMAL.getItemStack(), 20);
 		handler.addHibernateItem(ItemElixir.EnumType.ELIXIR_MEDIUM.getItemStack(), 15);
 		handler.addHibernateItem(ItemElixir.EnumType.ELIXIR_HIGH.getItemStack(), 8);
@@ -292,8 +304,8 @@ public class CavernAPIHandler implements ICavernAPI
 		handler.addRuinsChestItem(Items.COAL, 16, 15);
 		handler.addRuinsChestItem(Items.IRON_INGOT, 3, 13);
 		handler.addRuinsChestItem(Items.GOLD_INGOT, 3, 5);
-		handler.addRuinsChestItem(new ItemStack(CaveItems.CAVE_ITEM, 1, ItemCave.EnumType.AQUAMARINE.getItemDamage()), 10);
-		handler.addRuinsChestItem(new ItemStack(CaveItems.CAVE_ITEM, 3, ItemCave.EnumType.MAGNITE_INGOT.getItemDamage()), 12);
+		handler.addRuinsChestItem(ItemCave.EnumType.AQUAMARINE.getItemStack(), 10);
+		handler.addRuinsChestItem(ItemCave.EnumType.MAGNITE_INGOT.getItemStack(3), 12);
 	}
 
 	public static void registerEvents(ICavernAPI handler)

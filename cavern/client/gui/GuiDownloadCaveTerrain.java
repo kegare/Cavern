@@ -217,12 +217,12 @@ public class GuiDownloadCaveTerrain extends GuiDownloadTerrain
 
 		if (time > 500L)
 		{
-			drawCenteredString(fontRendererObj, getInfoText(), width / 2, height / 2 + 40, 0xFFFFFF);
+			drawCenteredString(fontRenderer, getInfoText(), width / 2, height / 2 + 40, 0xFFFFFF);
 		}
 
 		if (time > 2000L)
 		{
-			drawCenteredString(fontRendererObj, getSubText(), width / 2, height / 2 + 65, 0xCCCCCC);
+			drawCenteredString(fontRenderer, getSubText(), width / 2, height / 2 + 65, 0xCCCCCC);
 		}
 	}
 
