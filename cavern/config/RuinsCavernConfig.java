@@ -16,6 +16,8 @@ public class RuinsCavernConfig
 	public static int dimensionId;
 	public static int worldHeight;
 
+	public static boolean generateCaves;
+
 	public static double caveBrightness;
 
 	public static boolean decorateTorches;
@@ -61,6 +63,16 @@ public class RuinsCavernConfig
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		worldHeight = prop.getInt(worldHeight);
+
+		prop = config.get(category, "generateCaves", true);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [default: " + prop.getDefault() + "]";
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		generateCaves = prop.getBoolean(generateCaves);
 
 		prop = config.get(category, "caveBrightness", 0.075D);
 		prop.setMinValue(0.0D).setMaxValue(1.0D);

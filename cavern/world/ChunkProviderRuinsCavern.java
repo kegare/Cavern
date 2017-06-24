@@ -7,6 +7,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import cavern.config.RuinsCavernConfig;
 import cavern.util.WeightedItem;
+import cavern.world.gen.MapGenRuinsCaves;
+import net.minecraft.block.BlockDirt;
+import net.minecraft.block.BlockDirt.DirtType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;
@@ -24,15 +27,19 @@ import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.MapGenBase;
 
 public class ChunkProviderRuinsCavern implements IChunkGenerator
 {
 	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
 	protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
 	protected static final IBlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
+	protected static final IBlockState PODZOL = Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, DirtType.PODZOL);
 
 	private final World world;
 	private final Random rand;
+
+	private MapGenBase caveGenerator = new MapGenRuinsCaves();
 
 	public ChunkProviderRuinsCavern(World world)
 	{
@@ -56,6 +63,37 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 
 	public void replaceBiomeBlocks(int chunkX, int chunkZ, ChunkPrimer primer)
 	{
+		int worldHeight = world.provider.getActualHeight();
+		int blockHeight = worldHeight - 1;
+
+		for (int x = 0; x < 16; ++x)
+		{
+			for (int z = 0; z < 16; ++z)
+			{
+				primer.setBlockState(x, 0, z, BEDROCK);
+				primer.setBlockState(x, blockHeight, z, BEDROCK);
+
+				if (RuinsCavernConfig.generateCaves)
+				{
+					for (int y = 1; y <= blockHeight - 1; ++y)
+					{
+						if (primer.getBlockState(x, y, z).getBlock() == Blocks.STONE && primer.getBlockState(x, y + 1, z).getBlock() == Blocks.AIR)
+						{
+							primer.setBlockState(x, y, z, PODZOL);
+						}
+					}
+				}
+
+				if (blockHeight < 255)
+				{
+					for (int y = blockHeight + 1; y < 256; ++y)
+					{
+						primer.setBlockState(x, y, z, AIR);
+					}
+				}
+			}
+		}
+
 		ChunkPos chunkPos = new ChunkPos(chunkX, chunkZ);
 		List<Pair<BlockPos, IBlockState>> list = RuinsBlockData.BLOCKS_MAP.get(chunkPos);
 
@@ -68,26 +106,6 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 				primer.setBlockState(pos.getX(), pos.getY(), pos.getZ(), data.getRight());
 			}
 		}
-
-		int worldHeight = world.provider.getActualHeight();
-		int blockHeight = worldHeight - 1;
-
-		for (int x = 0; x < 16; ++x)
-		{
-			for (int z = 0; z < 16; ++z)
-			{
-				primer.setBlockState(x, 0, z, BEDROCK);
-				primer.setBlockState(x, blockHeight, z, BEDROCK);
-
-				if (blockHeight < 255)
-				{
-					for (int y = blockHeight + 1; y < 256; ++y)
-					{
-						primer.setBlockState(x, y, z, AIR);
-					}
-				}
-			}
-		}
 	}
 
 	@Override
@@ -96,6 +114,11 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 		ChunkPrimer primer = new ChunkPrimer();
 
 		setBlocksInChunk(primer);
+
+		if (RuinsCavernConfig.generateCaves)
+		{
+			caveGenerator.generate(world, chunkX, chunkZ, primer);
+		}
 
 		replaceBiomeBlocks(chunkX, chunkZ, primer);
 

@@ -503,7 +503,7 @@ public class CaveEventHooks
 
 		if (CavernAPI.dimension.isEntityInCaves(entity) && world.getGameRules().getBoolean("doMobLoot"))
 		{
-			double bookChance = 0.0025D;
+			double bookChance = 0.001D;
 			double elixirChance = 0.01D;
 
 			if (entity instanceof EntityWitch)
@@ -515,8 +515,8 @@ public class CaveEventHooks
 			{
 				if (entity.isNonBoss())
 				{
-					bookChance = 0.25D;
-					elixirChance = 0.3D;
+					bookChance = 0.1D;
+					elixirChance = 0.35D;
 				}
 				else
 				{

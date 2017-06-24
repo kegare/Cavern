@@ -10,10 +10,10 @@ import net.minecraft.util.math.MathHelper;
 public enum MagicianRank
 {
 	BEGINNER(0, 0, 50, 1.75F, 20, "beginner", new ItemStack(Items.FEATHER)),
-	NOVICE_MAGICIAN(1, 5, 100, 1.15F, 10, "noviceMagician", new ItemStack(Items.STICK)),
+	NOVICE_MAGICIAN(1, 5, 100, 1.25F, 10, "noviceMagician", new ItemStack(Items.STICK)),
 	MAGICIAN(2, 50, 200, 1.0F, 8, "magician", new ItemStack(Items.BOOK)),
 	MAGE(3, 300, 300, 0.75F, 7, "mage", new ItemStack(Items.WRITABLE_BOOK)),
-	GRAND_MAGE(4, 1000, 500, 0.5F, 5, "grandMage", new ItemStack(Items.WRITTEN_BOOK));
+	GRAND_MAGE(4, 1000, 500, 0.55F, 6, "grandMage", new ItemStack(Items.WRITTEN_BOOK));
 
 	private static final MagicianRank[] RANK_LOOKUP = new MagicianRank[values().length];
 

@@ -15,6 +15,7 @@ import cavern.config.MiningAssistConfig;
 import cavern.config.RuinsCavernConfig;
 import cavern.core.Cavern;
 import cavern.item.ItemBowIce;
+import cavern.item.ItemBowManalite;
 import cavern.item.ItemCavenicBow;
 import cavern.miningassist.MiningAssist;
 import cavern.stats.MinerRank;
@@ -448,6 +449,22 @@ public class ClientEventHooks
 			}
 
 			event.setNewfov(event.getFov() * (1.0F - f * zoom));
+		}
+
+		if (using.getItem() instanceof ItemBowManalite)
+		{
+			float f = player.getItemInUseMaxCount() / 20.0F;
+
+			if (f > 1.0F)
+			{
+				f = 1.0F;
+			}
+			else
+			{
+				f *= f;
+			}
+
+			event.setNewfov(event.getFov() * (1.0F - f * 0.15F));
 		}
 	}
 }

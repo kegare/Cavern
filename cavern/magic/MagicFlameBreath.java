@@ -2,11 +2,14 @@ package cavern.magic;
 
 import java.util.Random;
 
+import cavern.api.ISummonMob;
 import cavern.magic.IMagic.IPlainMagic;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -89,6 +92,34 @@ public class MagicFlameBreath implements IPlainMagic
 					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 
 					++count;
+				}
+			}
+		}
+
+		if (count > 0)
+		{
+			int i = 0;
+
+			for (EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, player.getEntityBoundingBox().grow(range * 0.5F)))
+			{
+				if (entity instanceof EntityPlayer)
+				{
+					continue;
+				}
+
+				if (entity instanceof ISummonMob)
+				{
+					continue;
+				}
+
+				if (entity.isEntityAlive() && !entity.isImmuneToFire())
+				{
+					entity.attackEntityFrom(DamageSource.MAGIC, 1.0F * level);
+
+					if (++i >= 10)
+					{
+						break;
+					}
 				}
 			}
 		}

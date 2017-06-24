@@ -2,6 +2,8 @@ package cavern.magic;
 
 import cavern.magic.IMagic.IPlainMagic;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class MagicExplosion implements IPlainMagic
@@ -51,11 +53,19 @@ public class MagicExplosion implements IPlainMagic
 	public boolean execute(EntityPlayer player)
 	{
 		World world = player.world;
+		EnumFacing front = player.getHorizontalFacing();
+		BlockPos pos = player.getPosition().up();
+		int i = 0;
 
-		if (!world.isRemote)
+		do
 		{
-			world.newExplosion(player, player.posX, player.posY + 2.0D, player.posZ, 3.0F + 2.5F * getMagicLevel(), false, true);
+			pos = pos.offset(front);
+
+			++i;
 		}
+		while (i < 2 + getMagicLevel() * 2 && world.isAirBlock(pos));
+
+		MagicalExplosion.createExplosion(world, player, pos.getX() + 0.5D, pos.getY() + 0.25D, pos.getZ() + 0.5D, 3.0F + 2.5F * getMagicLevel(), true);
 
 		return true;
 	}

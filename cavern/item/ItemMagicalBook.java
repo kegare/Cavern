@@ -248,35 +248,35 @@ public class ItemMagicalBook extends Item
 
 	public enum EnumType
 	{
-		FLAME_BREATH(0, "flameBreath", 4, 3500L, 5.0D, 0.235D),
-		EXPLOSION(1, "explosion", 4, 3000L, 0.0D, 0.2D),
-		THUNDERBOLT(2, "thunderbolt", 4, 3500L, 5.0D, 0.2D),
-		VENOM_BLAST(3, "venomBlast", 4, 3500L, 5.0D, 0.2D),
-		RETURN(4, "return", 2, 20000L, 3.0D, 0.1D),
-		HEAL(5, "heal", 3, 5000L, 5.0D, 0.2D),
-		HOLY_BLESS(6, "holyBless", 4, 10000L, 10.0D, 0.2D),
-		STORAGE(7, "storage", 4, 1000L, 0.0D, 0.2D),
-		WARP(8, "warp", 4, 20000L, 0.0D, 0.1D),
-		UNKNOWN(9, "unknown", 1, 5000L, 0.0D, 0.0D),
-		TORCH(10, "torch", 3, 3000L, 7.0D, 0.2D),
-		SUMMON(11, "summon", 4, 4500L, 0.0D, 0.15D),
-		COMPOSITING(12, "compositing", 1, 20000L, 0.0D, 0.1D);
+		FLAME_BREATH(0, "flameBreath", 4, null, 5.0D, 0.235D),
+		EXPLOSION(1, "explosion", 4, null, 0.0D, 0.2D),
+		THUNDERBOLT(2, "thunderbolt", 4, null, 5.0D, 0.2D),
+		VENOM_BLAST(3, "venomBlast", 4, null, 5.0D, 0.2D),
+		RETURN(4, "return", 2, new long[] {17000L, 25000L}, 3.0D, 0.1D),
+		HEAL(5, "heal", 3, new long[] {5000L, 6500L, 8000L}, 5.0D, 0.2D),
+		HOLY_BLESS(6, "holyBless", 4, new long[] {6000L, 8000L, 10000L, 12000L}, 10.0D, 0.2D),
+		STORAGE(7, "storage", 4, new long[] {1000L, 1500L, 2500L, 3000L}, 0.0D, 0.2D),
+		WARP(8, "warp", 4, new long[] {15000L, 20000L, 22000L, 25000L}, 0.0D, 0.1D),
+		UNKNOWN(9, "unknown", 1, new long[] {5000L}, 0.0D, 0.0D),
+		TORCH(10, "torch", 3, null, 7.0D, 0.2D),
+		SUMMON(11, "summon", 4, null, 0.0D, 0.15D),
+		COMPOSITING(12, "compositing", 1, new long[] {15000L}, 0.0D, 0.1D);
 
 		private static final EnumType[] DAMAGE_LOOKUP = new EnumType[values().length];
 
 		private final int itemDamage;
 		private final String unlocalizedName;
 		private final int maxLevel;
-		private final long magicSpellTime;
+		private final long[] magicSpellTimes;
 		private final double magicRange;
 		private final double magicRarity;
 
-		private EnumType(int damage, String name, int level, long time, double range, double rarity)
+		private EnumType(int damage, String name, int level, @Nullable long[] times, double range, double rarity)
 		{
 			this.itemDamage = damage;
 			this.unlocalizedName = name;
 			this.maxLevel = level;
-			this.magicSpellTime = time;
+			this.magicSpellTimes = times == null ? new long[] {3000L, 5000L, 7000L, 10000L} : times;
 			this.magicRange = range;
 			this.magicRarity = rarity;
 		}
@@ -298,12 +298,29 @@ public class ItemMagicalBook extends Item
 
 		public long getMagicSpellTime()
 		{
-			return magicSpellTime;
+			return magicSpellTimes == null ? 10000L : magicSpellTimes[0];
 		}
 
 		public long getMagicSpellTime(int level)
 		{
-			return level <= 1 ? magicSpellTime : magicSpellTime * ((level - 1) * 2);
+			if (level <= 1)
+			{
+				return getMagicSpellTime();
+			}
+
+			if (magicSpellTimes == null)
+			{
+				return 10000L + 1000L* level;
+			}
+
+			int max = magicSpellTimes.length - 1;
+
+			if (level >= max)
+			{
+				return magicSpellTimes[max];
+			}
+
+			return magicSpellTimes[level];
 		}
 
 		public double getMagicRange()
@@ -313,7 +330,7 @@ public class ItemMagicalBook extends Item
 
 		public double getMagicRange(int level)
 		{
-			return level <= 1 ? magicRange : magicRange * (1.0D + 0.5D * level);
+			return level <= 1 ? magicRange : magicRange * (1.0D + 0.45D * level);
 		}
 
 		public double getMagicRarity()
