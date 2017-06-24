@@ -11,7 +11,7 @@ import cavern.util.WeightedItem;
 import net.minecraft.init.Biomes;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.biome.BiomeProviderSingle;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 
 public class WorldProviderIceCavern extends WorldProviderCavern
 {
@@ -28,7 +28,7 @@ public class WorldProviderIceCavern extends WorldProviderCavern
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkProviderIceCavern(world);
+		return new ChunkGeneratorIceCavern(world);
 	}
 
 	@Override

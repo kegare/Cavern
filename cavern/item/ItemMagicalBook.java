@@ -28,8 +28,8 @@ import cavern.magic.MagicUnknown;
 import cavern.magic.MagicVenomBlast;
 import cavern.magic.MagicWarp;
 import cavern.util.Roman;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -37,6 +37,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -105,8 +106,13 @@ public class ItemMagicalBook extends Item
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems)
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
 	{
+		if (!isInCreativeTab(tab))
+		{
+			return;
+		}
+
 		for (EnumType type : EnumType.values())
 		{
 			for (int i = 1; i <= type.getMaxLevel(); ++i)
@@ -158,7 +164,7 @@ public class ItemMagicalBook extends Item
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag)
 	{
 		EnumType type = EnumType.byItemStack(stack);
 

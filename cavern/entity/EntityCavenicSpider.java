@@ -2,18 +2,15 @@ package cavern.entity;
 
 import cavern.api.CavernAPI;
 import cavern.api.ICavenicMob;
-import cavern.core.CaveAchievements;
 import cavern.item.ItemCave;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntitySpider;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -103,29 +100,6 @@ public class EntityCavenicSpider extends EntitySpider implements ICavenicMob
 		}
 
 		return false;
-	}
-
-	@Override
-	public void onDeath(DamageSource cause)
-	{
-		super.onDeath(cause);
-
-		Entity entity = cause.getTrueSource();
-
-		if (entity == null)
-		{
-			entity = cause.getImmediateSource();
-		}
-
-		if (entity != null && entity instanceof EntityPlayer)
-		{
-			((EntityPlayer)entity).addStat(getKillAchievement());
-		}
-	}
-
-	protected Achievement getKillAchievement()
-	{
-		return CaveAchievements.CAVENIC_SPIDER;
 	}
 
 	@Override

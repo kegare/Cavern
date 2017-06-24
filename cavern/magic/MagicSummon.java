@@ -2,7 +2,6 @@ package cavern.magic;
 
 import javax.annotation.Nullable;
 
-import cavern.core.CaveAchievements;
 import cavern.entity.EntitySummonCavenicSkeleton;
 import cavern.entity.EntitySummonCavenicZombie;
 import cavern.entity.EntitySummonSkeleton;
@@ -178,9 +177,6 @@ public class MagicSummon implements IPlainMagic
 			((EntityLiving)entity).onInitialSpawn(world.getDifficultyForLocation(pos), null);
 		}
 
-		if (world.spawnEntity(entity))
-		{
-			player.addStat(CaveAchievements.SUMMONER);
-		}
+		world.spawnEntity(entity);
 	}
 }

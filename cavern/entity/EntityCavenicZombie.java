@@ -2,13 +2,9 @@ package cavern.entity;
 
 import cavern.api.CavernAPI;
 import cavern.api.ICavenicMob;
-import cavern.core.CaveAchievements;
 import cavern.item.ItemCave;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
@@ -46,29 +42,6 @@ public class EntityCavenicZombie extends EntityZombie implements ICavenicMob
 		{
 			entityDropItem(ItemCave.EnumType.CAVENIC_ORB.getItemStack(), 0.5F);
 		}
-	}
-
-	@Override
-	public void onDeath(DamageSource cause)
-	{
-		super.onDeath(cause);
-
-		Entity entity = cause.getTrueSource();
-
-		if (entity == null)
-		{
-			entity = cause.getImmediateSource();
-		}
-
-		if (entity != null && entity instanceof EntityPlayer)
-		{
-			((EntityPlayer)entity).addStat(getKillAchievement());
-		}
-	}
-
-	protected Achievement getKillAchievement()
-	{
-		return CaveAchievements.CAVENIC_ZOMBIE;
 	}
 
 	@Override

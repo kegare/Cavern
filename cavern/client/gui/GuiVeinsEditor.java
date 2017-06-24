@@ -1181,7 +1181,7 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 		}
 
 		@Override
-		protected void drawSlot(int slot, int par2, int par3, int par4, int mouseX, int mouseY)
+		protected void drawSlot(int slot, int par2, int par3, int par4, int mouseX, int mouseY, float partialTicks)
 		{
 			CaveVein vein = contents.get(slot, null);
 

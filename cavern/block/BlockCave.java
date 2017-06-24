@@ -6,7 +6,6 @@ import java.util.Random;
 import com.google.common.collect.Lists;
 
 import cavern.block.bonus.FissureBreakEvent;
-import cavern.core.CaveAchievements;
 import cavern.core.Cavern;
 import cavern.item.CaveItems;
 import cavern.item.ItemCave;
@@ -83,7 +82,7 @@ public class BlockCave extends Block
 	}
 
 	@Override
-	public MapColor getMapColor(IBlockState state)
+	public MapColor getMapColor(IBlockState state, IBlockAccess blockAccess, BlockPos pos)
 	{
 		return getType(state).getMapColor();
 	}
@@ -133,7 +132,7 @@ public class BlockCave extends Block
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list)
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
 		for (EnumType type : EnumType.values())
 		{
@@ -184,11 +183,6 @@ public class BlockCave extends Block
 						spawnAsEntity(world, pos, stack);
 					}
 
-					if (player != null)
-					{
-						player.addStat(CaveAchievements.RANDOMITE);
-					}
-
 					break;
 				case FISSURED_STONE:
 				case FISSURED_PACKED_ICE:
@@ -197,11 +191,6 @@ public class BlockCave extends Block
 					if (event != null)
 					{
 						event.get().onBreakBlock(world, pos, state, chance, fortune, harvesters.get(), RANDOM);
-					}
-
-					if (player != null)
-					{
-						player.addStat(CaveAchievements.FISSURE);
 					}
 
 					break;

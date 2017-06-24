@@ -12,7 +12,7 @@ import net.minecraft.init.Biomes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.biome.BiomeProviderSingle;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 
 public class WorldProviderRuinsCavern extends WorldProviderCavern
 {
@@ -29,7 +29,7 @@ public class WorldProviderRuinsCavern extends WorldProviderCavern
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkProviderRuinsCavern(world);
+		return new ChunkGeneratorRuinsCavern(world);
 	}
 
 	@Override

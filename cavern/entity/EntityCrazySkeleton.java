@@ -2,7 +2,6 @@ package cavern.entity;
 
 import cavern.api.CavernAPI;
 import cavern.client.particle.ParticleCrazyMob;
-import cavern.core.CaveAchievements;
 import cavern.entity.ai.EntityAIAttackCavenicBow;
 import cavern.item.CaveItems;
 import cavern.item.ItemMagicalBook;
@@ -14,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
@@ -113,12 +111,6 @@ public class EntityCrazySkeleton extends EntityCavenicSkeleton
 	public boolean getCanSpawnHere()
 	{
 		return CavernAPI.dimension.isEntityInCavenia(this) && super.getCanSpawnHere();
-	}
-
-	@Override
-	protected Achievement getKillAchievement()
-	{
-		return CaveAchievements.CRAZY_SKELETON;
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import javax.annotation.Nullable;
 import cavern.api.IMagicianStats;
 import cavern.api.event.MagicianStatsEvent;
 import cavern.capability.CaveCapabilities;
-import cavern.core.CaveAchievements;
 import cavern.core.CaveDamageSources;
 import cavern.core.CaveSounds;
 import cavern.magic.IMagic;
@@ -146,23 +145,6 @@ public class MagicianStats implements IMagicianStats
 				double z = player.posZ;
 
 				player.getServerWorld().playSound(null, x, y, z, CaveSounds.RANK_PROMOTE, SoundCategory.MASTER, 0.85F, 1.0F);
-
-				switch (current)
-				{
-					case NOVICE_MAGICIAN:
-						player.addStat(CaveAchievements.NOVICE_MAGICIAN);
-						break;
-					case MAGICIAN:
-						player.addStat(CaveAchievements.MAGICIAN);
-						break;
-					case MAGE:
-						player.addStat(CaveAchievements.MAGE);
-						break;
-					case GRAND_MAGE:
-						player.addStat(CaveAchievements.GRAND_MAGE);
-						break;
-					default:
-				}
 			}
 
 			MinecraftForge.EVENT_BUS.post(new MagicianStatsEvent.PromoteRank(entityPlayer, this));

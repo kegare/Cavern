@@ -39,12 +39,13 @@ import cavern.world.RuinsBlockData;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.Mod.Metadata;
@@ -58,19 +59,19 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod
 (
 	modid = Cavern.MODID,
 	guiFactory = "cavern.client.config.CaveGuiFactory",
 	updateJSON = "https://raw.githubusercontent.com/kegare/Cavern/master/cavern.json",
-	dependencies = "required-after:Forge@[13.20.0.2311,)"
+	dependencies = "required-after:Forge@[14.21.0.2348,)"
 )
-@EventBusSubscriber
 public class Cavern
 {
 	public static final String MODID = "cavern";
@@ -99,6 +100,8 @@ public class Cavern
 		{
 			clientConstruct();
 		}
+
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -114,8 +117,16 @@ public class Cavern
 		CaveConfigEntries.initEntries();
 	}
 
+	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public static void registerBlocks(RegistryEvent.Register<Block> event)
+	public void registerModels(ModelRegistryEvent event)
+	{
+		CaveBlocks.registerModels();
+		CaveItems.registerModels();
+	}
+
+	@SubscribeEvent
+	public void registerBlocks(RegistryEvent.Register<Block> event)
 	{
 		IForgeRegistry<Block> registry = event.getRegistry();
 
@@ -123,20 +134,36 @@ public class Cavern
 	}
 
 	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event)
+	public void registerItems(RegistryEvent.Register<Item> event)
 	{
 		IForgeRegistry<Item> registry = event.getRegistry();
 
 		CaveBlocks.registerItemBlocks(registry);
+
 		CaveItems.registerItems(registry);
 	}
 
 	@SubscribeEvent
-	public static void registerSounds(RegistryEvent.Register<SoundEvent> event)
+	public void registerSounds(RegistryEvent.Register<SoundEvent> event)
 	{
 		IForgeRegistry<SoundEvent> registry = event.getRegistry();
 
 		CaveSounds.registerSounds(registry);
+	}
+
+	@SubscribeEvent
+	public void registerEntityEntries(RegistryEvent.Register<EntityEntry> event)
+	{
+		CaveEntityRegistry.registerEntities();
+	}
+
+	@SubscribeEvent
+	public void registerRecipes(RegistryEvent.Register<IRecipe> event)
+	{
+		IForgeRegistry<IRecipe> registry = event.getRegistry();
+
+		CaveBlocks.registerRecipes(registry);
+		CaveItems.registerRecipes(registry);
 	}
 
 	@EventHandler
@@ -144,24 +171,11 @@ public class Cavern
 	{
 		if (event.getSide().isClient())
 		{
-			CaveBlocks.registerModels();
-			CaveItems.registerModels();
-
 			CaveRenderingRegistry.registerRenderers();
 			CaveRenderingRegistry.registerRenderBlocks();
 
 			CaveKeyBindings.registerKeyBindings();
 		}
-
-		CaveBlocks.registerOreDicts();
-		CaveItems.registerOreDicts();
-
-		CaveBlocks.registerRecipes();
-		CaveItems.registerRecipes();
-
-		CompositingManager.registerRecipes(CavernAPI.compositing);
-
-		CaveItems.registerEquipments();
 
 		GeneralConfig.syncConfig();
 
@@ -181,13 +195,14 @@ public class Cavern
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		if (event.getSide().isClient())
-		{
-			CaveBlocks.registerBlockColors();
-			CaveBlocks.registerItemBlockColors();
-		}
+		CaveBlocks.registerOreDicts();
+		CaveItems.registerOreDicts();
 
-		CaveEntityRegistry.registerEntities();
+		CaveBlocks.registerSmeltingRecipes();
+
+		CompositingManager.registerRecipes(CavernAPI.compositing);
+
+		CaveItems.registerEquipments();
 
 		CavernConfig.syncConfig();
 		CavernConfig.syncBiomesConfig();
@@ -210,8 +225,6 @@ public class Cavern
 
 		CaveType.registerDimensions();
 
-		CaveAchievements.registerAchievements();
-
 		if (event.getSide().isClient())
 		{
 			MinecraftForge.EVENT_BUS.register(new ClientEventHooks());
@@ -230,6 +243,12 @@ public class Cavern
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
+		if (event.getSide().isClient())
+		{
+			CaveBlocks.registerBlockColors();
+			CaveBlocks.registerItemBlockColors();
+		}
+
 		CaveEntityRegistry.addSpawns();
 
 		MinerStats.registerPointAmounts();

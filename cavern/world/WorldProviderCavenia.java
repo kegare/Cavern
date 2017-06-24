@@ -8,7 +8,7 @@ import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.CaveMusicMessage;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.DimensionType;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 
 public class WorldProviderCavenia extends WorldProviderCavern
 {
@@ -17,7 +17,7 @@ public class WorldProviderCavenia extends WorldProviderCavern
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkProviderCavenia(world);
+		return new ChunkGeneratorCavenia(world);
 	}
 
 	@Override

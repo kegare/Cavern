@@ -22,7 +22,4 @@ public class RenderCavenicSpider extends RenderSpider<EntitySpider>
 	{
 		return CAVENIC_SPIDER_TEXTURE;
 	}
-
-	@Override
-	public void setLightmap(EntitySpider entity, float partialTicks) {}
 }

@@ -10,9 +10,9 @@ import cavern.util.PanoramaPaths;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiSlot;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
@@ -77,7 +77,7 @@ public abstract class GuiListSlot extends GuiSlot
 	private void drawPanorama(float ticks)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
+		BufferBuilder buffer = tessellator.getBuffer();
 		GlStateManager.matrixMode(GL11.GL_PROJECTION);
 		GlStateManager.pushMatrix();
 		GlStateManager.loadIdentity();
@@ -164,7 +164,7 @@ public abstract class GuiListSlot extends GuiSlot
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.colorMask(true, true, true, false);
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
+		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		GlStateManager.disableAlpha();
 		byte b0 = 3;
@@ -206,7 +206,7 @@ public abstract class GuiListSlot extends GuiSlot
 		int k = width;
 		int l = height;
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
+		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		buffer.pos(0.0D, l, 0.0D).tex(0.5F - f2, 0.5F + f3).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
 		buffer.pos(k, l, 0.0D).tex(0.5F - f2, 0.5F - f3).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();

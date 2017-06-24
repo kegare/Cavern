@@ -12,6 +12,7 @@ import cavern.item.ItemBlockCave;
 import cavern.item.ItemBlockPerverted;
 import cavern.item.ItemCave;
 import cavern.item.ItemPortalCave;
+import cavern.recipe.RecipeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockOldLeaf;
@@ -28,15 +29,16 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class CaveBlocks
 {
@@ -210,41 +212,38 @@ public class CaveBlocks
 		OreDictionary.registerOre("treeSapling", new ItemStack(PERVERTED_SAPLING, 1, OreDictionary.WILDCARD_VALUE));
 	}
 
-	public static void registerRecipes()
+	public static void registerRecipes(IForgeRegistry<IRecipe> registry)
 	{
-		GameRegistry.addShapedRecipe(BlockCave.EnumType.AQUAMARINE_BLOCK.getItemStack(),
-			"XXX", "XXX", "XXX",
-			'X', ItemCave.EnumType.AQUAMARINE.getItemStack());
-		GameRegistry.addShapedRecipe(BlockCave.EnumType.MAGNITE_BLOCK.getItemStack(),
-			"XXX", "XXX", "XXX",
-			'X', ItemCave.EnumType.MAGNITE_INGOT.getItemStack());
-		GameRegistry.addShapedRecipe(BlockCave.EnumType.HEXCITE_BLOCK.getItemStack(),
-			"XXX", "XXX", "XXX",
-			'X', ItemCave.EnumType.HEXCITE.getItemStack());
-		GameRegistry.addShapedRecipe(BlockCave.EnumType.MANALITE_BLOCK.getItemStack(),
-			"XXX", "XXX", "XXX",
-			'X', ItemCave.EnumType.MANALITE.getItemStack());
+		registry.register(RecipeHelper.getSquareRecipe("aquamarine_block",
+			BlockCave.EnumType.AQUAMARINE_BLOCK.getItemStack(), ItemCave.EnumType.AQUAMARINE.getItemStack()));
+		registry.register(RecipeHelper.getSquareRecipe("magnite_block",
+			BlockCave.EnumType.MAGNITE_BLOCK.getItemStack(), ItemCave.EnumType.MAGNITE_INGOT.getItemStack()));
+		registry.register(RecipeHelper.getSquareRecipe("hexcite_block",
+			BlockCave.EnumType.HEXCITE_BLOCK.getItemStack(), ItemCave.EnumType.HEXCITE.getItemStack()));
+		registry.register(RecipeHelper.getSquareRecipe("manalite_block",
+			BlockCave.EnumType.MANALITE_BLOCK.getItemStack(), ItemCave.EnumType.MANALITE.getItemStack()));
 
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.STICK, 8), new ItemStack(PERVERTED_LOG, 1, OreDictionary.WILDCARD_VALUE));
+		registry.register(RecipeHelper.getShapelessRecipe("stick_perverted",
+			new ItemStack(Items.STICK, 8), new ItemStack(PERVERTED_LOG, 1, OreDictionary.WILDCARD_VALUE)));
 
 		for (BlockPlanks.EnumType type : BlockOldLog.VARIANT.getAllowedValues())
 		{
 			int meta = type.getMetadata();
 
-			GameRegistry.addShapedRecipe(new ItemStack(Blocks.PLANKS, 4, meta),
-				"XX", "XX",
-				'X', new ItemStack(PERVERTED_LOG, 1, meta));
-
-			GameRegistry.addShapelessRecipe(new ItemStack(PERVERTED_SAPLING, 1, meta),
-				new ItemStack(Blocks.SAPLING, 1, meta), Items.FERMENTED_SPIDER_EYE);
+			registry.register(RecipeHelper.getSmallSquareRecipe("planks_perverted", "planks_perverted_" + type.getName(),
+				new ItemStack(Blocks.PLANKS, 4, meta), new ItemStack(PERVERTED_LOG, 1, meta)));
+			registry.register(RecipeHelper.getShapelessRecipe("sapling_perverted", "sapling_perverted_" + type.getName(),
+				new ItemStack(PERVERTED_SAPLING, 1, meta), new ItemStack(Blocks.SAPLING, 1, meta), new ItemStack(Items.FERMENTED_SPIDER_EYE)));
 		}
 
-		GameRegistry.addRecipe(new ItemStack(SLIPPERY_ICE),
-			"XXX", "X#X", "XXX",
-			'X', Blocks.ICE,
-			'#', Items.WATER_BUCKET);
-		GameRegistry.addShapelessRecipe(new ItemStack(SLIPPERY_ICE), Blocks.PACKED_ICE, Items.WATER_BUCKET);
+		registry.register(RecipeHelper.getSurroundRecipe("slippery_ice",
+			new ItemStack(SLIPPERY_ICE), new ItemStack(Items.WATER_BUCKET), new ItemStack(Blocks.ICE)));
+		registry.register(RecipeHelper.getShapelessRecipe("slippery_ice", "slippery_ice_packed", new ItemStack(SLIPPERY_ICE),
+			new ItemStack(Blocks.PACKED_ICE), new ItemStack(Items.WATER_BUCKET)));
+	}
 
+	public static void registerSmeltingRecipes()
+	{
 		GameRegistry.addSmelting(BlockCave.EnumType.AQUAMARINE_ORE.getItemStack(), ItemCave.EnumType.AQUAMARINE.getItemStack(), 1.0F);
 		GameRegistry.addSmelting(BlockCave.EnumType.MAGNITE_ORE.getItemStack(), ItemCave.EnumType.MAGNITE_INGOT.getItemStack(), 0.7F);
 		GameRegistry.addSmelting(BlockCave.EnumType.HEXCITE_ORE.getItemStack(), ItemCave.EnumType.HEXCITE.getItemStack(), 1.0F);

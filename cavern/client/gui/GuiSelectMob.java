@@ -396,7 +396,7 @@ public class GuiSelectMob extends GuiScreen
 		}
 
 		@Override
-		protected void drawSlot(int index, int par2, int par3, int par4, int mouseX, int mouseY)
+		protected void drawSlot(int index, int par2, int par3, int par4, int mouseX, int mouseY, float partialTicks)
 		{
 			String entry = contents.get(index, null);
 

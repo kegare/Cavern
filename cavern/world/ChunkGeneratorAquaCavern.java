@@ -18,7 +18,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.common.MinecraftForge;
@@ -28,7 +28,7 @@ import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType;
 import net.minecraftforge.event.terraingen.TerrainGen;
 
-public class ChunkProviderAquaCavern implements IChunkGenerator
+public class ChunkGeneratorAquaCavern implements IChunkGenerator
 {
 	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
 	protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
@@ -44,7 +44,7 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 
 	private WorldGenerator dungeonGen = new WorldGenAquaDungeons();
 
-	public ChunkProviderAquaCavern(World world)
+	public ChunkGeneratorAquaCavern(World world)
 	{
 		this.world = world;
 		this.rand = new Random(world.getSeed());
@@ -187,7 +187,13 @@ public class ChunkProviderAquaCavern implements IChunkGenerator
 	}
 
 	@Override
-	public BlockPos getNearestStructurePos(World world, String structureName, BlockPos pos, boolean flag)
+	public boolean isInsideStructure(World world, String structureName, BlockPos pos)
+	{
+		return false;
+	}
+
+	@Override
+	public BlockPos getNearestStructurePos(World world, String structureName, BlockPos pos, boolean findUnexplored)
 	{
 		return null;
 	}

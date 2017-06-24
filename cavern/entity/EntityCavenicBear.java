@@ -2,9 +2,7 @@ package cavern.entity;
 
 import cavern.api.CavernAPI;
 import cavern.api.ICavenicMob;
-import cavern.core.CaveAchievements;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,7 +20,6 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityPolarBear;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
@@ -83,29 +80,6 @@ public class EntityCavenicBear extends EntityPolarBear implements ICavenicMob, I
 		{
 			setDead();
 		}
-	}
-
-	@Override
-	public void onDeath(DamageSource cause)
-	{
-		super.onDeath(cause);
-
-		Entity entity = cause.getTrueSource();
-
-		if (entity == null)
-		{
-			entity = cause.getImmediateSource();
-		}
-
-		if (entity != null && entity instanceof EntityPlayer)
-		{
-			((EntityPlayer)entity).addStat(getKillAchievement());
-		}
-	}
-
-	protected Achievement getKillAchievement()
-	{
-		return CaveAchievements.CAVENIC_BEAR;
 	}
 
 	@Override

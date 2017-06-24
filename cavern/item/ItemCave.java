@@ -44,8 +44,13 @@ public class ItemCave extends Item
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems)
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
 	{
+		if (!isInCreativeTab(tab))
+		{
+			return;
+		}
+
 		for (EnumType type : EnumType.values())
 		{
 			subItems.add(type.getItemStack());

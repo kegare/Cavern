@@ -26,10 +26,10 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkPrimer;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraft.world.gen.MapGenBase;
 
-public class ChunkProviderRuinsCavern implements IChunkGenerator
+public class ChunkGeneratorRuinsCavern implements IChunkGenerator
 {
 	protected static final IBlockState AIR = Blocks.AIR.getDefaultState();
 	protected static final IBlockState STONE = Blocks.STONE.getDefaultState();
@@ -41,7 +41,7 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 
 	private MapGenBase caveGenerator = new MapGenRuinsCaves();
 
-	public ChunkProviderRuinsCavern(World world)
+	public ChunkGeneratorRuinsCavern(World world)
 	{
 		this.world = world;
 		this.rand = new Random();
@@ -212,7 +212,13 @@ public class ChunkProviderRuinsCavern implements IChunkGenerator
 	}
 
 	@Override
-	public BlockPos getNearestStructurePos(World worldIn, String structureName, BlockPos pos, boolean flag)
+	public boolean isInsideStructure(World world, String structureName, BlockPos pos)
+	{
+		return false;
+	}
+
+	@Override
+	public BlockPos getNearestStructurePos(World world, String structureName, BlockPos pos, boolean findUnexplored)
 	{
 		return null;
 	}

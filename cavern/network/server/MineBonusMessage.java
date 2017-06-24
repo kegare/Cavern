@@ -2,7 +2,6 @@ package cavern.network.server;
 
 import cavern.api.IMineBonus;
 import cavern.config.GeneralConfig;
-import cavern.core.CaveAchievements;
 import cavern.stats.MinerStats;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -47,11 +46,6 @@ public class MineBonusMessage implements IMessage, IMessageHandler<MineBonusMess
 				{
 					bonus.onMineBonus(false, combo, player);
 				}
-			}
-
-			if (combo > 50 && !player.getStatFile().hasAchievementUnlocked(CaveAchievements.GOOD_MINE))
-			{
-				player.addStat(CaveAchievements.GOOD_MINE);
 			}
 		}
 

@@ -15,7 +15,6 @@ import cavern.block.bonus.FissureBreakEvent;
 import cavern.block.bonus.FissureEventBreathing;
 import cavern.block.bonus.FissureEventExplosion;
 import cavern.block.bonus.FissureEventPotion;
-import cavern.core.CaveAchievements;
 import cavern.item.CaveItems;
 import cavern.item.IceEquipment;
 import cavern.item.ItemCave;
@@ -34,7 +33,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.Achievement;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -201,18 +199,6 @@ public class CavernAPIHandler implements ICavernAPI
 	public void addRuinsChestItem(Block block, int amount, int weight)
 	{
 		addRuinsChestItem(new ItemStack(block, amount), weight);
-	}
-
-	@Override
-	public void addEscapeMissionAchievement(Achievement achievement)
-	{
-		getEscapeMissionAchievements().add(achievement);
-	}
-
-	@Override
-	public List<Achievement> getEscapeMissionAchievements()
-	{
-		return CaveAchievements.ESCAPE_ACHIEVEMENTS;
 	}
 
 	@Override

@@ -10,8 +10,9 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class RecipeChargeIceEquipment implements IRecipe
+public class RecipeChargeIceEquipment extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
 {
 	private ItemStack resultItem = ItemStack.EMPTY;
 
@@ -135,9 +136,9 @@ public class RecipeChargeIceEquipment implements IRecipe
 	}
 
 	@Override
-	public int getRecipeSize()
+	public boolean canFit(int width, int height)
 	{
-		return 9;
+		return width * height > 1;
 	}
 
 	@Override

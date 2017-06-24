@@ -3,7 +3,6 @@ package cavern.stats;
 import cavern.api.IHunterStats;
 import cavern.api.event.HunterStatsEvent;
 import cavern.capability.CaveCapabilities;
-import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.HunterStatsAdjustMessage;
@@ -132,23 +131,6 @@ public class HunterStats implements IHunterStats
 				double z = player.posZ;
 
 				player.getServerWorld().playSound(null, x, y, z, CaveSounds.RANK_PROMOTE, SoundCategory.MASTER, 0.85F, 1.0F);
-
-				switch (current)
-				{
-					case HUNTER:
-						player.addStat(CaveAchievements.HUNTER);
-						break;
-					case CAVENIC_HUNTER:
-						player.addStat(CaveAchievements.CAVENIC_HUNTER);
-						break;
-					case CRAZY_HUNTER:
-						player.addStat(CaveAchievements.CRAZY_HUNTER);
-						break;
-					case CRAZY_RANGER:
-						player.addStat(CaveAchievements.CRAZY_RANGER);
-						break;
-					default:
-				}
 			}
 
 			MinecraftForge.EVENT_BUS.post(new HunterStatsEvent.PromoteRank(entityPlayer, this));

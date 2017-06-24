@@ -14,7 +14,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -88,11 +87,11 @@ public class BlockSaplingPerverted extends BlockSapling
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> list)
+	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
 		for (EnumType type : BlockOldLog.VARIANT.getAllowedValues())
 		{
-			list.add(new ItemStack(item, 1, type.getMetadata()));
+			list.add(new ItemStack(this, 1, type.getMetadata()));
 		}
 	}
 }

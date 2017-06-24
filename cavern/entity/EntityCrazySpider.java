@@ -2,14 +2,12 @@ package cavern.entity;
 
 import cavern.api.CavernAPI;
 import cavern.client.particle.ParticleCrazyMob;
-import cavern.core.CaveAchievements;
 import cavern.item.ItemMagicalBook;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.Achievement;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
@@ -103,12 +101,6 @@ public class EntityCrazySpider extends EntityCavenicSpider
 	public boolean getCanSpawnHere()
 	{
 		return CavernAPI.dimension.isEntityInCavenia(this) && super.getCanSpawnHere();
-	}
-
-	@Override
-	protected Achievement getKillAchievement()
-	{
-		return CaveAchievements.CRAZY_SPIDER;
 	}
 
 	@Override

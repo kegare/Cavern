@@ -9,14 +9,14 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.WorldType;
-import net.minecraft.world.chunk.IChunkGenerator;
+import net.minecraft.world.gen.IChunkGenerator;
 
 public class WorldProviderAquaCavern extends WorldProviderCavern
 {
 	@Override
 	public IChunkGenerator createChunkGenerator()
 	{
-		return new ChunkProviderAquaCavern(world);
+		return new ChunkGeneratorAquaCavern(world);
 	}
 
 	@Override

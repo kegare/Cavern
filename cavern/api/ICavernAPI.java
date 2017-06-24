@@ -7,7 +7,6 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stats.Achievement;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -67,10 +66,6 @@ public interface ICavernAPI
 	public void addRuinsChestItem(Block block, int weight);
 
 	public void addRuinsChestItem(Block block, int amount, int weight);
-
-	public void addEscapeMissionAchievement(Achievement achievement);
-
-	public List<Achievement> getEscapeMissionAchievements();
 
 	public void addMagicalItem(Item item);
 

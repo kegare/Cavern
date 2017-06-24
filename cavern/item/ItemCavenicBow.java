@@ -9,6 +9,7 @@ import cavern.entity.EntityRapidArrow;
 import cavern.entity.EntityTorchArrow;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTorch;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -322,7 +323,7 @@ public class ItemCavenicBow extends ItemBow
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced)
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag)
 	{
 		tooltip.add(getBowModeMessage(stack).getUnformattedText());
 	}

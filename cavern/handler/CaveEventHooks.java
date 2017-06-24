@@ -3,8 +3,6 @@ package cavern.handler;
 import java.util.List;
 import java.util.Random;
 
-import com.google.common.base.Strings;
-
 import cavern.api.CavernAPI;
 import cavern.api.ICavenicMob;
 import cavern.api.IHunterStats;
@@ -14,7 +12,6 @@ import cavern.api.IMinerStats;
 import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
 import cavern.config.GeneralConfig;
-import cavern.core.CaveAchievements;
 import cavern.core.CaveSounds;
 import cavern.core.Cavern;
 import cavern.item.CaveItems;
@@ -33,7 +30,6 @@ import cavern.stats.MinerStats;
 import cavern.util.BlockMeta;
 import cavern.util.CaveUtils;
 import cavern.util.WeightedItem;
-import cavern.world.TeleporterRepatriation;
 import cavern.world.WorldProviderIceCavern;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
@@ -52,9 +48,6 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.stats.Achievement;
-import net.minecraft.stats.AchievementList;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -70,23 +63,17 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.player.AchievementEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemSmeltedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 
 public class CaveEventHooks
 {
 	protected static final Random RANDOM = new Random();
-
-	private static final String NBT_LOST_ORB = "Cavern:LostOrb";
 
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)
@@ -130,38 +117,6 @@ public class CaveEventHooks
 		{
 			EntityPlayerMP player = (EntityPlayerMP)event.player;
 			WorldServer world = player.getServerWorld();
-
-			if (GeneralConfig.cavernEscapeMission && !GeneralConfig.canEscapeFromCaves(player))
-			{
-				boolean fromCave = CavernAPI.dimension.isCaves(event.fromDim);
-				boolean toCave = CavernAPI.dimension.isCaves(event.toDim);
-
-				if (fromCave && !toCave)
-				{
-					MinecraftServer server = player.mcServer;
-					WorldServer worldNew = server.getWorld(event.fromDim);
-
-					if (worldNew != null)
-					{
-						player.timeUntilPortal = player.getPortalCooldown();
-
-						server.getPlayerList().transferPlayerToDimension(player, event.fromDim, new TeleporterRepatriation(worldNew));
-
-						return;
-					}
-				}
-
-				if (!fromCave && toCave)
-				{
-					ItemStack stack = CaveItems.getBookEscapeMission();
-
-					if (!player.inventory.hasItemStack(stack))
-					{
-						player.inventory.addItemStackToInventory(stack);
-					}
-				}
-			}
-
 			String suffix = ".LastTeleportTime";
 
 			if (CavernAPI.dimension.isEntityInCavern(player))
@@ -186,8 +141,6 @@ public class CaveEventHooks
 				}
 
 				data.setLong(key, world.getTotalWorldTime());
-
-				player.addStat(CaveAchievements.CAVERN);
 			}
 			else if (CavernAPI.dimension.isEntityInAquaCavern(player))
 			{
@@ -200,8 +153,6 @@ public class CaveEventHooks
 				}
 
 				data.setLong(key, world.getTotalWorldTime());
-
-				player.addStat(CaveAchievements.AQUA_CAVERN);
 			}
 			else if (CavernAPI.dimension.isEntityInCaveland(player))
 			{
@@ -214,8 +165,6 @@ public class CaveEventHooks
 				}
 
 				data.setLong(key, world.getTotalWorldTime());
-
-				player.addStat(CaveAchievements.CAVELAND);
 			}
 			else if (CavernAPI.dimension.isEntityInIceCavern(player))
 			{
@@ -228,8 +177,6 @@ public class CaveEventHooks
 				}
 
 				data.setLong(key, world.getTotalWorldTime());
-
-				player.addStat(CaveAchievements.ICE_CAVERN);
 			}
 			else if (CavernAPI.dimension.isEntityInRuinsCavern(player))
 			{
@@ -242,8 +189,6 @@ public class CaveEventHooks
 				}
 
 				data.setLong(key, world.getTotalWorldTime());
-
-				player.addStat(CaveAchievements.RUINS_CAVERN);
 			}
 			else if (CavernAPI.dimension.isEntityInCavenia(player))
 			{
@@ -256,8 +201,6 @@ public class CaveEventHooks
 				}
 
 				data.setLong(key, world.getTotalWorldTime());
-
-				player.addStat(CaveAchievements.CAVENIA);
 			}
 		}
 	}
@@ -479,13 +422,6 @@ public class CaveEventHooks
 						}
 					}
 				}
-
-				if (player.ticksExisted % 100 == 0 && player.getEntityData().hasKey(NBT_LOST_ORB))
-				{
-					player.addStat(CaveAchievements.LOST_ORB);
-
-					player.getEntityData().removeTag(NBT_LOST_ORB);
-				}
 			}
 		}
 
@@ -627,99 +563,6 @@ public class CaveEventHooks
 	}
 
 	@SubscribeEvent
-	public void onItemPickup(ItemPickupEvent event)
-	{
-		EntityPlayer player = event.player;
-		EntityItem entityItem = event.pickedUp;
-		World world = entityItem.world;
-
-		if (!world.isRemote)
-		{
-			EntityPlayer thrower = null;
-
-			if (!Strings.isNullOrEmpty(entityItem.getThrower()))
-			{
-				thrower = world.getPlayerEntityByName(entityItem.getThrower());
-			}
-
-			if (thrower == null)
-			{
-				ItemStack stack = entityItem.getItem();
-
-				if (!stack.isEmpty())
-				{
-					if (stack.getItem() == CaveItems.CAVE_ITEM)
-					{
-						switch (ItemCave.EnumType.byItemStack(stack))
-						{
-							case AQUAMARINE:
-								player.addStat(CaveAchievements.AQUAMARINE);
-								break;
-							case HEXCITE:
-								player.addStat(CaveAchievements.HEXCITE);
-								break;
-							case MINER_ORB:
-								player.addStat(CaveAchievements.MINER_ORB);
-								break;
-							case MANALITE:
-								player.addStat(CaveAchievements.MANALITE);
-								break;
-							default:
-						}
-					}
-					else if (stack.getItem() == Item.getItemFromBlock(CaveBlocks.PERVERTED_LOG))
-					{
-						player.addStat(AchievementList.MINE_WOOD);
-					}
-				}
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public void onItemCrafted(ItemCraftedEvent event)
-	{
-		EntityPlayer player = event.player;
-		ItemStack stack = event.crafting;
-		World world = player.world;
-
-		if (!world.isRemote && !stack.isEmpty())
-		{
-			if (IceEquipment.isIceEquipment(stack))
-			{
-				int charge = IceEquipment.get(stack).getCharge();
-
-				if (charge > 0)
-				{
-					player.addStat(CaveAchievements.ICE_CHARGE);
-				}
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public void onItemSmelted(ItemSmeltedEvent event)
-	{
-		EntityPlayer player = event.player;
-		ItemStack stack = event.smelting;
-		World world = player.world;
-
-		if (!world.isRemote && !stack.isEmpty())
-		{
-			if (stack.getItem() == CaveItems.CAVE_ITEM)
-			{
-				switch (ItemCave.EnumType.byItemStack(stack))
-				{
-					case MAGNITE_INGOT:
-						player.addStat(CaveAchievements.MAGNITE);
-						break;
-					default:
-				}
-			}
-		}
-	}
-
-	@SubscribeEvent
 	public void onItemTooltip(ItemTooltipEvent event)
 	{
 		ItemStack stack = event.getItemStack();
@@ -732,18 +575,6 @@ public class CaveEventHooks
 			{
 				event.getToolTip().add(Cavern.proxy.translateFormat("tooltip.iceEquipment.charge", equip.getCharge()));
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public void onAchievement(AchievementEvent event)
-	{
-		EntityPlayer player = event.getEntityPlayer();
-		Achievement achievement = event.getAchievement();
-
-		if (achievement == CaveAchievements.RUINS_CAVERN && !player.hasAchievement(CaveAchievements.LOST_ORB))
-		{
-			player.getEntityData().setBoolean(NBT_LOST_ORB, true);
 		}
 	}
 }

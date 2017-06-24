@@ -758,7 +758,7 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 		}
 
 		@Override
-		protected void drawSlot(int index, int par2, int par3, int par4, int mouseX, int mouseY)
+		protected void drawSlot(int index, int par2, int par3, int par4, int mouseX, int mouseY, float partialTicks)
 		{
 			PointEntry entry = contents.get(index, null);
 

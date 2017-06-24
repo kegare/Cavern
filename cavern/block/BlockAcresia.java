@@ -5,7 +5,6 @@ import java.util.Random;
 
 import com.google.common.collect.Lists;
 
-import cavern.core.CaveAchievements;
 import cavern.core.Cavern;
 import cavern.item.ItemAcresia;
 import net.minecraft.block.Block;
@@ -224,8 +223,6 @@ public class BlockAcresia extends BlockCrops
 					heldItem.damageItem(1, player);
 
 					drop.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.25F);
-
-					player.addStat(CaveAchievements.ACRESIA);
 				}
 
 				return true;

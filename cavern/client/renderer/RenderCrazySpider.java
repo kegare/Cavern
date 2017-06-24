@@ -22,7 +22,4 @@ public class RenderCrazySpider extends RenderSpider<EntitySpider>
 	{
 		return CRAZY_SPIDER_TEXTURE;
 	}
-
-	@Override
-	public void setLightmap(EntitySpider entity, float partialTicks) {}
 }

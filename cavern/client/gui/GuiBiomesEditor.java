@@ -840,7 +840,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 		}
 
 		@Override
-		protected void drawSlot(int slot, int par2, int par3, int par4, int mouseX, int mouseY)
+		protected void drawSlot(int slot, int par2, int par3, int par4, int mouseX, int mouseY, float partialTicks)
 		{
 			CaveBiome caveBiome = contents.get(slot, null);
 
