@@ -25,16 +25,15 @@ public class ItemBlockCave extends ItemBlock
 	@Override
 	public String getUnlocalizedName(ItemStack stack)
 	{
-		return "tile." + EnumType.byMetadata(stack.getItemDamage()).getUnlocalizedName();
+		return "tile." + EnumType.byItemStack(stack).getUnlocalizedName();
 	}
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack)
 	{
 		String name = super.getItemStackDisplayName(stack);
-		EnumType type = EnumType.byMetadata(stack.getItemDamage());
 
-		switch (type)
+		switch (EnumType.byItemStack(stack))
 		{
 			case FISSURED_STONE:
 			case FISSURED_PACKED_ICE:

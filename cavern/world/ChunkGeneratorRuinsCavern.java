@@ -6,7 +6,7 @@ import java.util.Random;
 import org.apache.commons.lang3.tuple.Pair;
 
 import cavern.config.RuinsCavernConfig;
-import cavern.util.WeightedItem;
+import cavern.util.WeightedItemStack;
 import cavern.world.gen.MapGenRuinsCaves;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockDirt.DirtType;
@@ -171,24 +171,24 @@ public class ChunkGeneratorRuinsCavern implements IChunkGenerator
 
 					for (int i = 0; i < 18; ++i)
 					{
-						WeightedItem randomItem = WeightedRandom.getRandomItem(rand, WorldProviderRuinsCavern.RUINS_CHEST_ITEMS);
+						WeightedItemStack randomItem = WeightedRandom.getRandomItem(rand, WorldProviderRuinsCavern.RUINS_CHEST_ITEMS);
 
 						if (randomItem != null)
 						{
-							ItemStack item = randomItem.getItem();
+							ItemStack stack = randomItem.getItemStack();
 
-							if (item != null)
+							if (stack != null)
 							{
-								int count = item.getCount();
+								int count = stack.getCount();
 
 								if (count > 1)
 								{
 									int min = count / 2;
 
-									item.setCount(Math.max(rand.nextInt(count) + 1, min));
+									stack.setCount(Math.max(rand.nextInt(count) + 1, min));
 								}
 
-								chest.setInventorySlotContents(i, item);
+								chest.setInventorySlotContents(i, stack);
 							}
 						}
 					}

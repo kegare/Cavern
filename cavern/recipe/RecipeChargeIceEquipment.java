@@ -7,9 +7,7 @@ import net.minecraft.block.BlockPackedIce;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class RecipeChargeIceEquipment extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
@@ -127,12 +125,6 @@ public class RecipeChargeIceEquipment extends IForgeRegistryEntry.Impl<IRecipe> 
 	public ItemStack getCraftingResult(InventoryCrafting crafting)
 	{
 		return resultItem.copy();
-	}
-
-	@Override
-	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv)
-	{
-		return ForgeHooks.defaultRecipeGetRemainingItems(inv);
 	}
 
 	@Override

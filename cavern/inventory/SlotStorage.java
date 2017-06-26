@@ -34,7 +34,7 @@ public class SlotStorage extends Slot
 	{
 		if (!stack.isEmpty() && stack.getItem() instanceof ItemMagicalBook)
 		{
-			if (stack.getItemDamage() == ItemMagicalBook.EnumType.STORAGE.getItemDamage())
+			if (stack.getMetadata() == ItemMagicalBook.EnumType.STORAGE.getMeta())
 			{
 				return false;
 			}

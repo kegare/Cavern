@@ -351,7 +351,7 @@ public class MinerStats implements IMinerStats
 				continue;
 			}
 
-			setPointAmount(block, entry.getItemDamage(), amount);
+			setPointAmount(block, entry.getMetadata(), amount);
 		}
 	}
 

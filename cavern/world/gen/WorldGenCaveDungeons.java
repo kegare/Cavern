@@ -3,17 +3,15 @@ package cavern.world.gen;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
-import com.google.common.base.Strings;
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Lists;
 
 import cavern.util.CaveLog;
 import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
@@ -25,53 +23,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenDungeons;
 import net.minecraft.world.storage.loot.LootTableList;
 
-public class WorldGenAquaDungeons extends WorldGenDungeons
+public class WorldGenCaveDungeons extends WorldGenDungeons
 {
-	private static final List<ResourceLocation> MOBS = Lists.newArrayList();
+	private final Collection<ResourceLocation> spawnerMobs;
 
-	public static boolean addDungeonMob(ResourceLocation name)
+	public WorldGenCaveDungeons(Collection<ResourceLocation> mobs)
 	{
-		return name != null && EntityList.isRegistered(name) && MOBS.add(name);
-	}
-
-	public static boolean addDungeonMob(Class<? extends Entity> clazz)
-	{
-		ResourceLocation name = EntityList.getKey(clazz);
-
-		return name != null && MOBS.add(name);
-	}
-
-	public static void addDungeonMobs(Collection<String> names)
-	{
-		Set<ResourceLocation> nameSet = EntityList.getEntityNameList();
-
-		for (String name : names)
-		{
-			if (!Strings.isNullOrEmpty(name))
-			{
-				ResourceLocation entryName = new ResourceLocation(name);
-
-				if (nameSet.contains(entryName))
-				{
-					MOBS.add(entryName);
-				}
-			}
-		}
-	}
-
-	public static boolean removeDungeonMob(ResourceLocation name)
-	{
-		return name != null && MOBS.remove(name);
-	}
-
-	public static boolean removeDungeonMob(Class<? extends Entity> clazz)
-	{
-		return removeDungeonMob(EntityList.getKey(clazz));
-	}
-
-	public static void clearDungeonMobs()
-	{
-		MOBS.clear();
+		this.spawnerMobs = mobs;
 	}
 
 	@Override
@@ -123,7 +81,7 @@ public class WorldGenAquaDungeons extends WorldGenDungeons
 			{
 				case 1:
 					state1 = Blocks.STONEBRICK.getDefaultState();
-					state2 = Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.CHISELED);
+					state2 = Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.MOSSY);
 				default:
 					state1 = Blocks.COBBLESTONE.getDefaultState();
 					state2 = Blocks.MOSSY_COBBLESTONE.getDefaultState();
@@ -220,18 +178,21 @@ public class WorldGenAquaDungeons extends WorldGenDungeons
 		return false;
 	}
 
+	@Nullable
 	public ResourceLocation pickMobSpawner(Random random)
 	{
-		if (!MOBS.isEmpty())
+		if (!spawnerMobs.isEmpty())
 		{
-			if (MOBS.size() > 1)
+			List<ResourceLocation> list = Lists.newArrayList(spawnerMobs);
+
+			if (list.size() > 1)
 			{
-				return MOBS.get(random.nextInt(MOBS.size() - 1));
+				int index = random.nextInt(list.size() - 1);
+
+				return list.get(index);
 			}
-			else
-			{
-				return MOBS.get(0);
-			}
+
+			return list.get(0);
 		}
 
 		return null;

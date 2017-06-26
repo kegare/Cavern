@@ -174,20 +174,20 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 		SEEDS(0, "seedsAcresia"),
 		FRUITS(1, "fruitsAcresia");
 
-		private static final EnumType[] DAMAGE_LOOKUP = new EnumType[values().length];
+		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
 
-		private final int itemDamage;
+		private final int meta;
 		private final String unlocalizedName;
 
-		private EnumType(int damage, String name)
+		private EnumType(int meta, String name)
 		{
-			this.itemDamage = damage;
+			this.meta = meta;
 			this.unlocalizedName = name;
 		}
 
-		public int getItemDamage()
+		public int getMetadata()
 		{
-			return itemDamage;
+			return meta;
 		}
 
 		public String getUnlocalizedName()
@@ -202,29 +202,29 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 
 		public ItemStack getItemStack(int amount)
 		{
-			return new ItemStack(CaveBlocks.ACRESIA, amount, getItemDamage());
+			return new ItemStack(CaveBlocks.ACRESIA, amount, getMetadata());
 		}
 
-		public static EnumType byDamage(int damage)
+		public static EnumType byMetadata(int meta)
 		{
-			if (damage < 0 || damage >= DAMAGE_LOOKUP.length)
+			if (meta < 0 || meta >= META_LOOKUP.length)
 			{
-				damage = 0;
+				meta = 0;
 			}
 
-			return DAMAGE_LOOKUP[damage];
+			return META_LOOKUP[meta];
 		}
 
-		public static EnumType byItemStack(ItemStack itemstack)
+		public static EnumType byItemStack(ItemStack stack)
 		{
-			return byDamage(itemstack == null ? 0 : itemstack.getItemDamage());
+			return byMetadata(stack.isEmpty() ? 0 : stack.getMetadata());
 		}
 
 		static
 		{
 			for (EnumType type : values())
 			{
-				DAMAGE_LOOKUP[type.getItemDamage()] = type;
+				META_LOOKUP[type.getMetadata()] = type;
 			}
 		}
 	}

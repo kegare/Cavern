@@ -70,7 +70,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 	modid = Cavern.MODID,
 	guiFactory = "cavern.client.config.CaveGuiFactory",
 	updateJSON = "https://raw.githubusercontent.com/kegare/Cavern/master/cavern.json",
-	dependencies = "required-after:Forge@[14.21.0.2348,)"
+	dependencies = "required-after:Forge@[14.21.0.2373,)"
 )
 public class Cavern
 {
@@ -111,18 +111,10 @@ public class Cavern
 
 		if (mc.isJava64bit() && Runtime.getRuntime().maxMemory() >= 2000000000L)
 		{
-			Config.highDefault = true;
+			Config.highProfiles = true;
 		}
 
 		CaveConfigEntries.initEntries();
-	}
-
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public void registerModels(ModelRegistryEvent event)
-	{
-		CaveBlocks.registerModels();
-		CaveItems.registerModels();
 	}
 
 	@SubscribeEvent
@@ -139,8 +131,15 @@ public class Cavern
 		IForgeRegistry<Item> registry = event.getRegistry();
 
 		CaveBlocks.registerItemBlocks(registry);
-
 		CaveItems.registerItems(registry);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void registerModels(ModelRegistryEvent event)
+	{
+		CaveBlocks.registerModels();
+		CaveItems.registerModels();
 	}
 
 	@SubscribeEvent
@@ -169,14 +168,6 @@ public class Cavern
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		if (event.getSide().isClient())
-		{
-			CaveRenderingRegistry.registerRenderers();
-			CaveRenderingRegistry.registerRenderBlocks();
-
-			CaveKeyBindings.registerKeyBindings();
-		}
-
 		GeneralConfig.syncConfig();
 
 		MiningAssistConfig.syncConfig();
@@ -189,7 +180,29 @@ public class Cavern
 
 		CaveCapabilities.registerCapabilities();
 
+		CavernAPIHandler.registerItems(CavernAPI.apiHandler);
+		CavernAPIHandler.registerEvents(CavernAPI.apiHandler);
+
 		MinerStats.registerMineBonus();
+
+		if (event.getSide().isClient())
+		{
+			CaveRenderingRegistry.registerRenderers();
+			CaveRenderingRegistry.registerRenderBlocks();
+
+			CaveKeyBindings.registerKeyBindings();
+
+			MinecraftForge.EVENT_BUS.register(new ClientEventHooks());
+			MinecraftForge.EVENT_BUS.register(new MinerStatsHUDEventHooks());
+			MinecraftForge.EVENT_BUS.register(new HunterStatsHUDEventHooks());
+			MinecraftForge.EVENT_BUS.register(new MagicianStatsHUDEventHooks());
+			MinecraftForge.EVENT_BUS.register(new MagicSpellEventHooks());
+		}
+
+		MinecraftForge.EVENT_BUS.register(new CaveEventHooks());
+		MinecraftForge.EVENT_BUS.register(new CavebornEventHooks());
+		MinecraftForge.EVENT_BUS.register(new MiningAssistEventHooks());
+		MinecraftForge.EVENT_BUS.register(new CaveniaEventHooks());
 	}
 
 	@EventHandler
@@ -198,11 +211,13 @@ public class Cavern
 		CaveBlocks.registerOreDicts();
 		CaveItems.registerOreDicts();
 
+		CaveItems.registerEquipments();
+
 		CaveBlocks.registerSmeltingRecipes();
 
 		CompositingManager.registerRecipes(CavernAPI.compositing);
 
-		CaveItems.registerEquipments();
+		CaveEntityRegistry.addSpawns();
 
 		CavernConfig.syncConfig();
 		CavernConfig.syncBiomesConfig();
@@ -224,20 +239,6 @@ public class Cavern
 		CaveniaConfig.syncVeinsConfig();
 
 		CaveType.registerDimensions();
-
-		if (event.getSide().isClient())
-		{
-			MinecraftForge.EVENT_BUS.register(new ClientEventHooks());
-			MinecraftForge.EVENT_BUS.register(new MinerStatsHUDEventHooks());
-			MinecraftForge.EVENT_BUS.register(new HunterStatsHUDEventHooks());
-			MinecraftForge.EVENT_BUS.register(new MagicianStatsHUDEventHooks());
-			MinecraftForge.EVENT_BUS.register(new MagicSpellEventHooks());
-		}
-
-		MinecraftForge.EVENT_BUS.register(new CaveEventHooks());
-		MinecraftForge.EVENT_BUS.register(new CavebornEventHooks());
-		MinecraftForge.EVENT_BUS.register(new MiningAssistEventHooks());
-		MinecraftForge.EVENT_BUS.register(new CaveniaEventHooks());
 	}
 
 	@EventHandler
@@ -249,12 +250,7 @@ public class Cavern
 			CaveBlocks.registerItemBlockColors();
 		}
 
-		CaveEntityRegistry.addSpawns();
-
 		MinerStats.registerPointAmounts();
-
-		CavernAPIHandler.registerItems(CavernAPI.apiHandler);
-		CavernAPIHandler.registerEvents(CavernAPI.apiHandler);
 
 		RuinsBlockData.init();
 	}
@@ -262,7 +258,7 @@ public class Cavern
 	@EventHandler
 	public void loaded(FMLLoadCompleteEvent event)
 	{
-		if (GeneralConfig.miningPoints.hasInit())
+		if (GeneralConfig.miningPoints.shouldInit())
 		{
 			GeneralConfig.miningPoints.init();
 		}

@@ -69,8 +69,8 @@ public class CaveConfiguration extends Configuration implements Comparator<Strin
 
 		if (result == 0 && o1 != null && o2 != null)
 		{
-			boolean flag1 = NumberUtils.isNumber(o1);
-			boolean flag2 = NumberUtils.isNumber(o2);
+			boolean flag1 = NumberUtils.isCreatable(o1);
+			boolean flag2 = NumberUtils.isCreatable(o2);
 			result = Boolean.compare(flag1, flag2);
 
 			if (result == 0)

@@ -5,26 +5,24 @@ import cavern.api.ICavenicMob;
 import cavern.entity.ai.EntityAIAttackCavenicBow;
 import cavern.item.CaveItems;
 import cavern.item.ItemCave;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIAttackRangedBow;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Enchantments;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.projectile.EntitySpectralArrow;
+import net.minecraft.entity.projectile.EntityTippedArrow;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
 public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 {
-	protected EntityAIAttackRangedBow aiArrowAttack;
+	protected EntityAIAttackRangedBow<EntityCavenicSkeleton> aiArrowAttack;
 	protected EntityAIAttackMelee aiAttackOnCollide;
 
 	public EntityCavenicSkeleton(World world)
@@ -36,7 +34,7 @@ public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 
 	protected void initCustomAI()
 	{
-		aiArrowAttack = new EntityAIAttackCavenicBow(this, 0.975D, 5.0F, 4);
+		aiArrowAttack = new EntityAIAttackCavenicBow<>(this, 0.975D, 5.0F, 4);
 		aiAttackOnCollide = new EntityAIAttackMelee(this, 1.25D, false)
 		{
 			@Override
@@ -107,7 +105,9 @@ public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 			tasks.removeTask(aiAttackOnCollide);
 			tasks.removeTask(aiArrowAttack);
 
-			if (getHeldItemMainhand().getItem() instanceof ItemBow)
+			ItemStack heldMain = getHeldItemMainhand();
+
+			if (!heldMain.isEmpty() && heldMain.getItem() instanceof ItemBow)
 			{
 				tasks.addTask(4, aiArrowAttack);
 			}
@@ -119,60 +119,35 @@ public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 	}
 
 	@Override
-	public void attackEntityWithRangedAttack(EntityLivingBase target, float dist)
+	protected EntityArrow getArrow(float dist)
 	{
-		EntityArrow arrow = new EntityCavenicArrow(world, this);
-		double d0 = target.posX - posX;
-		double d1 = target.getEntityBoundingBox().minY + target.height / 3.0F - arrow.posY;
-		double d2 = target.posZ - posZ;
-		double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
-		arrow.setThrowableHeading(d0, d1 + d3 * 0.20000000298023224D, d2, 1.6F, 14 - world.getDifficulty().getDifficultyId() * 4);
-		int i = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.POWER, this);
-		int j = EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.PUNCH, this);
-		arrow.setDamage(dist * 2.0F + rand.nextGaussian() * 0.25D + world.getDifficulty().getDifficultyId() * 0.11F);
+		ItemStack heldOff = getItemStackFromSlot(EntityEquipmentSlot.OFFHAND);
 
-		if (i > 0)
+		if (heldOff.getItem() == Items.SPECTRAL_ARROW)
 		{
-			arrow.setDamage(arrow.getDamage() + i * 0.45D + 0.5D);
-		}
+			EntitySpectralArrow arrow = new EntitySpectralArrow(this.world, this);
+			arrow.setEnchantmentEffectsFromEntity(this, dist);
 
-		if (j > 0)
+			return arrow;
+		}
+		else
 		{
-			arrow.setKnockbackStrength(j);
+			EntityArrow arrow = new EntityCavenicArrow(world, this);
+			arrow.setEnchantmentEffectsFromEntity(this, dist);
+
+			if (heldOff.getItem() == Items.TIPPED_ARROW && arrow instanceof EntityTippedArrow)
+			{
+				((EntityTippedArrow)arrow).setPotionEffect(heldOff);
+			}
+
+			return arrow;
 		}
-
-		boolean flag = isBurning() && rand.nextBoolean();
-		flag = flag || EnchantmentHelper.getMaxEnchantmentLevel(Enchantments.FLAME, this) > 0;
-
-		if (flag)
-		{
-			arrow.setFire(50);
-		}
-
-		playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (getRNG().nextFloat() * 0.4F + 0.8F));
-
-		world.spawnEntity(arrow);
 	}
 
 	@Override
 	public boolean isEntityInvulnerable(DamageSource source)
 	{
-		if (super.isEntityInvulnerable(source))
-		{
-			return true;
-		}
-
-		if (source.getTrueSource() == this)
-		{
-			return true;
-		}
-
-		if (source.getImmediateSource() == this)
-		{
-			return true;
-		}
-
-		return false;
+		return super.isEntityInvulnerable(source) || source.getImmediateSource() == this || source.getImmediateSource() == this;
 	}
 
 	@Override

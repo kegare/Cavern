@@ -3,9 +3,9 @@ package cavern.entity;
 import java.util.List;
 
 import cavern.core.Cavern;
+import cavern.util.CaveUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -14,24 +14,24 @@ public class CaveEntityRegistry
 {
 	private static int entityId;
 
-	public static void registerEntity(Class<? extends Entity> entityClass, String registryName, String entityName, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
+	public static void registerEntity(Class<? extends Entity> entityClass, String key, String name, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates)
 	{
-		EntityRegistry.registerModEntity(new ResourceLocation(Cavern.MODID, registryName), entityClass, entityName, entityId++, Cavern.instance, trackingRange, updateFrequency, sendsVelocityUpdates);
+		EntityRegistry.registerModEntity(CaveUtils.getKey(key), entityClass, name, entityId++, Cavern.instance, trackingRange, updateFrequency, sendsVelocityUpdates);
 	}
 
-	public static void registerEntity(Class<? extends Entity> entityClass, String registryName, String entityName, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates, int primaryColor, int secondaryColor)
+	public static void registerEntity(Class<? extends Entity> entityClass, String key, String name, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates, int primaryColor, int secondaryColor)
 	{
-		EntityRegistry.registerModEntity(new ResourceLocation(Cavern.MODID, registryName), entityClass, entityName, entityId++, Cavern.instance, trackingRange, updateFrequency, sendsVelocityUpdates, primaryColor, secondaryColor);
+		EntityRegistry.registerModEntity(CaveUtils.getKey(key), entityClass, name, entityId++, Cavern.instance, trackingRange, updateFrequency, sendsVelocityUpdates, primaryColor, secondaryColor);
 	}
 
-	public static void registerMob(Class<? extends Entity> entityClass, String registryName, String entityName)
+	public static void registerMob(Class<? extends Entity> entityClass, String key, String name)
 	{
-		registerEntity(entityClass, registryName, entityName, 128, 3, true);
+		registerEntity(entityClass, key, name, 128, 3, true);
 	}
 
-	public static void registerMob(Class<? extends Entity> entityClass, String registryName, String entityName, int primaryColor, int secondaryColor)
+	public static void registerMob(Class<? extends Entity> entityClass, String key, String name, int primaryColor, int secondaryColor)
 	{
-		registerEntity(entityClass, registryName, entityName, 128, 3, true, primaryColor, secondaryColor);
+		registerEntity(entityClass, key, name, 128, 3, true, primaryColor, secondaryColor);
 	}
 
 	public static void registerEntities()

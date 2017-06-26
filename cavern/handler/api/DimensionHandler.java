@@ -1,116 +1,142 @@
 package cavern.handler.api;
 
 import cavern.api.IDimension;
-import cavern.config.AquaCavernConfig;
-import cavern.config.CavelandConfig;
-import cavern.config.CaveniaConfig;
-import cavern.config.CavernConfig;
-import cavern.config.IceCavernConfig;
-import cavern.config.RuinsCavernConfig;
+import cavern.world.CaveType;
 import net.minecraft.entity.Entity;
+import net.minecraft.world.DimensionType;
 
 public class DimensionHandler implements IDimension
 {
 	@Override
-	public int getCavernDimension()
+	public DimensionType getCavernDimension()
 	{
-		return CavernConfig.dimensionId;
+		return CaveType.DIM_CAVERN;
 	}
 
 	@Override
-	public int getAquaCavernDimension()
+	public DimensionType getAquaCavernDimension()
 	{
-		return AquaCavernConfig.dimensionId;
+		return CaveType.DIM_AQUA_CAVERN;
 	}
 
 	@Override
-	public int getCavelandDimension()
+	public DimensionType getCavelandDimension()
 	{
-		return CavelandConfig.dimensionId;
+		return CaveType.DIM_CAVELAND;
 	}
 
 	@Override
-	public int getIceCavernDimension()
+	public DimensionType getIceCavernDimension()
 	{
-		return IceCavernConfig.dimensionId;
+		return CaveType.DIM_ICE_CAVERN;
 	}
 
 	@Override
-	public int getRuinsCavernDimension()
+	public DimensionType getRuinsCavernDimension()
 	{
-		return RuinsCavernConfig.dimensionId;
+		return CaveType.DIM_RUINS_CAVERN;
 	}
 
 	@Override
-	public int getCaveniaDimension()
+	public DimensionType getCaveniaDimension()
 	{
-		return CaveniaConfig.dimensionId;
+		return CaveType.DIM_CAVENIA;
 	}
 
 	@Override
 	public boolean isAquaCavernDisabled()
 	{
-		return AquaCavernConfig.dimensionDisabled;
+		return getAquaCavernDimension() == null;
 	}
 
 	@Override
 	public boolean isCavelandDisabled()
 	{
-		return CavelandConfig.dimensionDisabled;
+		return getCavelandDimension() == null;
 	}
 
 	@Override
 	public boolean isIceCavernDisabled()
 	{
-		return IceCavernConfig.dimensionDisabled;
+		return getIceCavernDimension() == null;
 	}
 
 	@Override
 	public boolean isRuinsCavernDisabled()
 	{
-		return RuinsCavernConfig.dimensionDisabled;
+		return getRuinsCavernDimension() == null;
 	}
 
 	@Override
 	public boolean isCaveniaDisabled()
 	{
-		return CaveniaConfig.dimensionDisabled;
+		return getCaveniaDimension() == null;
 	}
 
 	@Override
 	public boolean isEntityInCavern(Entity entity)
 	{
-		return entity != null && entity.dimension == getCavernDimension();
+		if (entity == null)
+		{
+			return false;
+		}
+
+		return entity.dimension == getCavernDimension().getId();
 	}
 
 	@Override
 	public boolean isEntityInAquaCavern(Entity entity)
 	{
-		return !isAquaCavernDisabled() && entity != null && entity.dimension == getAquaCavernDimension();
+		if (entity == null || isAquaCavernDisabled())
+		{
+			return false;
+		}
+
+		return entity.dimension == getAquaCavernDimension().getId();
 	}
 
 	@Override
 	public boolean isEntityInCaveland(Entity entity)
 	{
-		return !isCavelandDisabled() && entity != null && entity.dimension == getCavelandDimension();
+		if (entity == null || isCavelandDisabled())
+		{
+			return false;
+		}
+
+		return entity.dimension == getCavelandDimension().getId();
 	}
 
 	@Override
 	public boolean isEntityInIceCavern(Entity entity)
 	{
-		return !isIceCavernDisabled() && entity != null && entity.dimension == getIceCavernDimension();
+		if (entity == null || isIceCavernDisabled())
+		{
+			return false;
+		}
+
+		return entity.dimension == getIceCavernDimension().getId();
 	}
 
 	@Override
 	public boolean isEntityInRuinsCavern(Entity entity)
 	{
-		return !isRuinsCavernDisabled() && entity != null && entity.dimension == getRuinsCavernDimension();
+		if (entity == null || isRuinsCavernDisabled())
+		{
+			return false;
+		}
+
+		return entity.dimension == getRuinsCavernDimension().getId();
 	}
 
 	@Override
 	public boolean isEntityInCavenia(Entity entity)
 	{
-		return !isCaveniaDisabled() && entity != null && entity.dimension == getCaveniaDimension();
+		if (entity == null || isCaveniaDisabled())
+		{
+			return false;
+		}
+
+		return entity.dimension == getCaveniaDimension().getId();
 	}
 
 	@Override
@@ -120,44 +146,74 @@ public class DimensionHandler implements IDimension
 	}
 
 	@Override
-	public boolean isCavern(int dimension)
+	public boolean isCavern(DimensionType type)
 	{
-		return getCavernDimension() == dimension;
+		if (type == null)
+		{
+			return false;
+		}
+
+		return type == getCavernDimension();
 	}
 
 	@Override
-	public boolean isAquaCavern(int dimension)
+	public boolean isAquaCavern(DimensionType type)
 	{
-		return !isAquaCavernDisabled() && getAquaCavernDimension() == dimension;
+		if (type == null || isAquaCavernDisabled())
+		{
+			return false;
+		}
+
+		return type == getAquaCavernDimension();
 	}
 
 	@Override
-	public boolean isCaveland(int dimension)
+	public boolean isCaveland(DimensionType type)
 	{
-		return !isCavelandDisabled() && getCavelandDimension() == dimension;
+		if (type == null || isCavelandDisabled())
+		{
+			return false;
+		}
+
+		return type == getCavelandDimension();
 	}
 
 	@Override
-	public boolean isIceCavern(int dimension)
+	public boolean isIceCavern(DimensionType type)
 	{
-		return !isIceCavernDisabled() && getIceCavernDimension() == dimension;
+		if (type == null || isIceCavernDisabled())
+		{
+			return false;
+		}
+
+		return type == getIceCavernDimension();
 	}
 
 	@Override
-	public boolean isRuinsCavern(int dimension)
+	public boolean isRuinsCavern(DimensionType type)
 	{
-		return !isRuinsCavernDisabled() && getRuinsCavernDimension() == dimension;
+		if (type == null || isRuinsCavernDisabled())
+		{
+			return false;
+		}
+
+		return type == getRuinsCavernDimension();
 	}
 
 	@Override
-	public boolean isCavenia(int dimension)
+	public boolean isCavenia(DimensionType type)
 	{
-		return !isCaveniaDisabled() && getCaveniaDimension() == dimension;
+		if (type == null || isCaveniaDisabled())
+		{
+			return false;
+		}
+
+		return type == getCaveniaDimension();
 	}
 
 	@Override
-	public boolean isCaves(int dimension)
+	public boolean isCaves(DimensionType type)
 	{
-		return isCavern(dimension) || isAquaCavern(dimension) || isCaveland(dimension) || isIceCavern(dimension) || isRuinsCavern(dimension) || isCavenia(dimension);
+		return isCavern(type) || isAquaCavern(type) || isCaveland(type) || isIceCavern(type) || isRuinsCavern(type) || isCavenia(type);
 	}
 }

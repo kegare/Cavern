@@ -21,7 +21,7 @@ public class ItemMeta
 
 	public ItemMeta(ItemStack itemstack)
 	{
-		this(itemstack.getItem(), itemstack.getItemDamage());
+		this(itemstack.getItem(), itemstack.getMetadata());
 	}
 
 	public ItemMeta(String name, int meta)

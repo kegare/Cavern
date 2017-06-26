@@ -2,15 +2,16 @@ package cavern.entity.ai;
 
 import cavern.item.ItemCavenicBow;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.ai.EntityAIAttackRangedBow;
-import net.minecraft.entity.monster.AbstractSkeleton;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 
-public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
+public class EntityAIAttackCavenicBow<T extends EntityMob & IRangedAttackMob> extends EntityAIAttackRangedBow<T>
 {
-	private final AbstractSkeleton entity;
+	private final T attacker;
 	private final double moveSpeedAmp;
 	private final float maxAttackDistance;
 	private final int attackSpeed;
@@ -23,10 +24,10 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 	private boolean strafingBackwards;
 	private int strafingTime = -1;
 
-	public EntityAIAttackCavenicBow(AbstractSkeleton skeleton, double speedAmplifier, float maxDistance, int attackSpeed)
+	public EntityAIAttackCavenicBow(T attacker, double speedAmplifier, float maxDistance, int attackSpeed)
 	{
-		super(skeleton, speedAmplifier, 0, maxDistance);
-		this.entity = skeleton;
+		super(attacker, speedAmplifier, 0, maxDistance);
+		this.attacker = attacker;
 		this.moveSpeedAmp = speedAmplifier;
 		this.maxAttackDistance = maxDistance * maxDistance;
 		this.attackSpeed = attackSpeed;
@@ -39,20 +40,20 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 	@Override
 	public boolean shouldExecute()
 	{
-		return entity.getAttackTarget() == null ? false : isBowInMainhand();
+		return attacker.getAttackTarget() == null ? false : isBowInMainhand();
 	}
 
 	@Override
 	protected boolean isBowInMainhand()
 	{
-		ItemStack held = entity.getHeldItemMainhand();
+		ItemStack held = attacker.getHeldItemMainhand();
 
 		return !held.isEmpty() && held.getItem() instanceof ItemBow;
 	}
 
 	protected int getAttackSpeed()
 	{
-		ItemStack held = entity.getHeldItemMainhand();
+		ItemStack held = attacker.getHeldItemMainhand();
 
 		if (!held.isEmpty() && held.getItem() instanceof ItemCavenicBow)
 		{
@@ -65,7 +66,7 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 	@Override
 	public boolean shouldContinueExecuting()
 	{
-		return (shouldExecute() || !entity.getNavigator().noPath()) && isBowInMainhand();
+		return (shouldExecute() || !attacker.getNavigator().noPath()) && isBowInMainhand();
 	}
 
 	@Override
@@ -73,7 +74,7 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 	{
 		super.startExecuting();
 
-		entity.setSwingingArms(true);
+		attacker.setSwingingArms(true);
 	}
 
 	@Override
@@ -81,21 +82,21 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 	{
 		super.resetTask();
 
-		entity.setSwingingArms(false);
+		attacker.setSwingingArms(false);
 		seeTime = 0;
 		attackTime = 0;
-		entity.resetActiveHand();
+		attacker.resetActiveHand();
 	}
 
 	@Override
 	public void updateTask()
 	{
-		EntityLivingBase target = entity.getAttackTarget();
+		EntityLivingBase target = attacker.getAttackTarget();
 
 		if (target != null)
 		{
-			double dist = entity.getDistanceSq(target.posX, target.getEntityBoundingBox().minY, target.posZ);
-			boolean canSee = entity.getEntitySenses().canSee(target);
+			double dist = attacker.getDistanceSq(target.posX, target.getEntityBoundingBox().minY, target.posZ);
+			boolean canSee = attacker.getEntitySenses().canSee(target);
 			boolean seeing = seeTime > 0;
 
 			if (canSee != seeing)
@@ -114,23 +115,23 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 
 			if (dist <= maxAttackDistance && seeTime >= 15)
 			{
-				entity.getNavigator().clearPathEntity();
+				attacker.getNavigator().clearPathEntity();
 				++strafingTime;
 			}
 			else
 			{
-				entity.getNavigator().tryMoveToEntityLiving(target, moveSpeedAmp);
+				attacker.getNavigator().tryMoveToEntityLiving(target, moveSpeedAmp);
 				strafingTime = -1;
 			}
 
 			if (strafingTime >= 5)
 			{
-				if (entity.getRNG().nextFloat() < 0.3D)
+				if (attacker.getRNG().nextFloat() < 0.3D)
 				{
 					strafingClockwise = !strafingClockwise;
 				}
 
-				if (entity.getRNG().nextFloat() < 0.3D)
+				if (attacker.getRNG().nextFloat() < 0.3D)
 				{
 					strafingBackwards = !strafingBackwards;
 				}
@@ -149,19 +150,19 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 					strafingBackwards = true;
 				}
 
-				entity.getMoveHelper().strafe(strafingBackwards ? -0.5F : 0.5F, strafingClockwise ? 0.5F : -0.5F);
-				entity.faceEntity(target, 30.0F, 30.0F);
+				attacker.getMoveHelper().strafe(strafingBackwards ? -0.5F : 0.5F, strafingClockwise ? 0.5F : -0.5F);
+				attacker.faceEntity(target, 30.0F, 30.0F);
 			}
 			else
 			{
-				entity.getLookHelper().setLookPositionWithEntity(target, 30.0F, 30.0F);
+				attacker.getLookHelper().setLookPositionWithEntity(target, 30.0F, 30.0F);
 			}
 
-			if (entity.isHandActive())
+			if (attacker.isHandActive())
 			{
 				if (!canSee && seeTime < -20 || attackTime > 200)
 				{
-					entity.resetActiveHand();
+					attacker.resetActiveHand();
 
 					attackTime = 0;
 					attackCooldown = 50;
@@ -170,7 +171,7 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 				{
 					if (++attackRapid >= getAttackSpeed())
 					{
-						entity.attackEntityWithRangedAttack(target, ItemBow.getArrowVelocity(5));
+						attacker.attackEntityWithRangedAttack(target, ItemBow.getArrowVelocity(5));
 
 						attackRapid = 0;
 					}
@@ -180,7 +181,7 @@ public class EntityAIAttackCavenicBow extends EntityAIAttackRangedBow
 			}
 			else if (seeTime >= -20)
 			{
-				entity.setActiveHand(EnumHand.MAIN_HAND);
+				attacker.setActiveHand(EnumHand.MAIN_HAND);
 
 				attackTime = 0;
 			}

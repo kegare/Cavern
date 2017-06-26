@@ -2,10 +2,11 @@ package cavern.config;
 
 import java.io.File;
 
+import javax.annotation.Nullable;
+
 import org.apache.logging.log4j.Level;
 
 import cavern.util.CaveLog;
-import cavern.util.CaveUtils;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
@@ -17,7 +18,7 @@ public class Config
 
 	protected static final Side SIDE = FMLLaunchHandler.side();
 
-	public static boolean highDefault;
+	public static boolean highProfiles;
 
 	public static File getConfigDir()
 	{
@@ -100,14 +101,11 @@ public class Config
 		return config;
 	}
 
-	public static void saveConfig(Configuration config)
+	public static void saveConfig(@Nullable Configuration config)
 	{
-		if (config.hasChanged())
+		if (config != null && config.hasChanged())
 		{
-			CaveUtils.getPool().execute(() ->
-			{
-				config.save();
-			});
+			config.save();
 		}
 	}
 }

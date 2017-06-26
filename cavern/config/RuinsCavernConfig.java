@@ -53,7 +53,7 @@ public class RuinsCavernConfig
 		propOrder.add(prop.getName());
 		dimensionId = prop.getInt(dimensionId);
 
-		prop = config.get(category, "worldHeight", Config.highDefault ? 256 : 128);
+		prop = config.get(category, "worldHeight", Config.highProfiles ? 256 : 128);
 		prop.setMinValue(64).setMaxValue(256);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");

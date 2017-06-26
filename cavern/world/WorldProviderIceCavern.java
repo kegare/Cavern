@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 import cavern.config.IceCavernConfig;
 import cavern.config.manager.CaveBiomeManager;
 import cavern.config.property.ConfigBiomeType;
-import cavern.util.WeightedItem;
+import cavern.util.WeightedItemStack;
 import net.minecraft.init.Biomes;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.biome.BiomeProviderSingle;
@@ -15,7 +15,7 @@ import net.minecraft.world.gen.IChunkGenerator;
 
 public class WorldProviderIceCavern extends WorldProviderCavern
 {
-	public static final List<WeightedItem> HIBERNATE_ITEMS = Lists.newArrayList();
+	public static final List<WeightedItemStack> HIBERNATE_ITEMS = Lists.newArrayList();
 
 	@Override
 	protected void init()

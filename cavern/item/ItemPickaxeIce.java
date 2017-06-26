@@ -1,6 +1,5 @@
 package cavern.item;
 
-import cavern.core.Cavern;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
@@ -12,7 +11,6 @@ public class ItemPickaxeIce extends ItemPickaxeCave
 	public ItemPickaxeIce()
 	{
 		super(CaveItems.ICE, "pickaxeIce");
-		this.setCreativeTab(Cavern.TAB_CAVERN);
 	}
 
 	@Override

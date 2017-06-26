@@ -14,14 +14,19 @@ import cavern.block.CaveBlocks;
 import cavern.client.config.CaveConfigEntries;
 import cavern.config.manager.CaveVein;
 import cavern.config.manager.CaveVeinManager;
+import cavern.config.property.ConfigEntities;
 import cavern.core.Cavern;
+import cavern.entity.EntityCavenicSkeleton;
+import cavern.entity.EntityCavenicSpider;
+import cavern.entity.EntityCavenicZombie;
 import cavern.util.BlockMeta;
 import cavern.world.CaveType;
-import cavern.world.gen.WorldGenAquaDungeons;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.BlockStone;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.monster.EntityCaveSpider;
+import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.monster.EntityZombie;
@@ -43,8 +48,10 @@ public class AquaCavernConfig
 	public static boolean generateCaves;
 	public static boolean generateRavine;
 	public static boolean generateDungeons;
+	public static boolean generateTowerDungeons;
 
-	public static String[] dungeonMobs;
+	public static ConfigEntities dungeonMobs = new ConfigEntities();
+	public static ConfigEntities towerDungeonMobs = new ConfigEntities();
 
 	public static double caveBrightness;
 
@@ -80,7 +87,7 @@ public class AquaCavernConfig
 		propOrder.add(prop.getName());
 		dimensionId = prop.getInt(dimensionId);
 
-		prop = config.get(category, "worldHeight", Config.highDefault ? 256 : 128);
+		prop = config.get(category, "worldHeight", Config.highProfiles ? 256 : 128);
 		prop.setMinValue(64).setMaxValue(256);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -131,25 +138,35 @@ public class AquaCavernConfig
 		propOrder.add(prop.getName());
 		generateDungeons = prop.getBoolean(generateDungeons);
 
-		Set<Class<? extends Entity>> classes = Sets.newHashSet();
+		prop = config.get(category, "generateTowerDungeons", true);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [default: " + prop.getDefault() + "]";
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		generateTowerDungeons = prop.getBoolean(generateTowerDungeons);
 
-		classes.add(EntityZombie.class);
-		classes.add(EntitySkeleton.class);
-		classes.add(EntitySpider.class);
+		Set<Class<? extends Entity>> mobs = Sets.newHashSet();
 
-		Set<String> mobs = Sets.newTreeSet();
+		mobs.add(EntityZombie.class);
+		mobs.add(EntitySkeleton.class);
+		mobs.add(EntitySpider.class);
 
-		for (Class<? extends Entity> clazz : classes)
+		Set<String> values = Sets.newTreeSet();
+
+		for (Class<? extends Entity> entityClass : mobs)
 		{
-			ResourceLocation name = EntityList.getKey(clazz);
+			ResourceLocation key = EntityList.getKey(entityClass);
 
-			if (name != null)
+			if (key != null)
 			{
-				mobs.add(name.toString());
+				values.add(key.toString());
 			}
 		}
 
-		prop = config.get(category, "dungeonMobs", mobs.toArray(new String[mobs.size()]));
+		prop = config.get(category, "dungeonMobs", values.toArray(new String[values.size()]));
 		prop.setConfigEntryClass(CaveConfigEntries.selectMobs);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -157,7 +174,39 @@ public class AquaCavernConfig
 		comment += "Note: If multiplayer, server-side only.";
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
-		dungeonMobs = prop.getStringList();
+		dungeonMobs.setValues(prop.getStringList());
+
+		mobs.clear();
+		mobs.add(EntityZombie.class);
+		mobs.add(EntitySkeleton.class);
+		mobs.add(EntitySpider.class);
+		mobs.add(EntityCaveSpider.class);
+		mobs.add(EntityEnderman.class);
+		mobs.add(EntityCavenicSkeleton.class);
+		mobs.add(EntityCavenicZombie.class);
+		mobs.add(EntityCavenicSpider.class);
+
+		values.clear();
+
+		for (Class<? extends Entity> entityClass : mobs)
+		{
+			ResourceLocation key = EntityList.getKey(entityClass);
+
+			if (key != null)
+			{
+				values.add(key.toString());
+			}
+		}
+
+		prop = config.get(category, "towerDungeonMobs", values.toArray(new String[values.size()]));
+		prop.setConfigEntryClass(CaveConfigEntries.selectMobs);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		towerDungeonMobs.setValues(prop.getStringList());
 
 		prop = config.get(category, "caveBrightness", 0.075D);
 		prop.setMinValue(0.0D).setMaxValue(1.0D);
@@ -212,7 +261,7 @@ public class AquaCavernConfig
 			veins.add(new CaveVein(new BlockMeta(Blocks.CLAY, 0), 30, 20, 1, 127));
 			veins.add(new CaveVein(new BlockMeta(Blocks.SAND, BlockSand.EnumType.SAND.getMetadata()), 15, 20, 1, 127));
 
-			if (Config.highDefault)
+			if (Config.highProfiles)
 			{
 				veins.add(new CaveVein(new BlockMeta(Blocks.COAL_ORE, 0), 35, 20, 128, 255));
 				veins.add(new CaveVein(new BlockMeta(Blocks.IRON_ORE, 0), 30, 12, 128, 255));
@@ -256,7 +305,14 @@ public class AquaCavernConfig
 
 	public static void refreshDungeonMobs()
 	{
-		WorldGenAquaDungeons.clearDungeonMobs();
-		WorldGenAquaDungeons.addDungeonMobs(Sets.newHashSet(dungeonMobs));
+		if (dungeonMobs != null)
+		{
+			dungeonMobs.refreshEntities();
+		}
+
+		if (towerDungeonMobs != null)
+		{
+			towerDungeonMobs.refreshEntities();
+		}
 	}
 }

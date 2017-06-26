@@ -6,9 +6,9 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import cavern.block.BlockCave;
-import cavern.core.Cavern;
 import cavern.recipe.RecipeChargeIceEquipment;
 import cavern.recipe.RecipeHelper;
+import cavern.util.CaveUtils;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
@@ -162,17 +162,17 @@ public class CaveItems
 	@SideOnly(Side.CLIENT)
 	public static void registerModel(Item item, String modelName)
 	{
-		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(Cavern.MODID + ":" + modelName, "inventory"));
+		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(CaveUtils.getKey(modelName), "inventory"));
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerModels(Item item, String... modelName)
+	public static void registerModels(Item item, String... modelNames)
 	{
 		List<ModelResourceLocation> models = Lists.newArrayList();
 
-		for (String model : modelName)
+		for (String model : modelNames)
 		{
-			models.add(new ModelResourceLocation(Cavern.MODID + ":" + model, "inventory"));
+			models.add(new ModelResourceLocation(CaveUtils.getKey(model), "inventory"));
 		}
 
 		ModelBakery.registerItemVariants(item, models.toArray(new ResourceLocation[models.size()]));
@@ -218,6 +218,12 @@ public class CaveItems
 
 	public static void registerEquipments()
 	{
+		AQUAMARINE.setRepairItem(ItemCave.EnumType.AQUAMARINE.getItemStack());
+		MAGNITE.setRepairItem(ItemCave.EnumType.MAGNITE_INGOT.getItemStack());
+		HEXCITE.setRepairItem(ItemCave.EnumType.HEXCITE.getItemStack());
+		ICE.setRepairItem(new ItemStack(Blocks.PACKED_ICE));
+		MANALITE.setRepairItem(ItemCave.EnumType.MANALITE.getItemStack());
+
 		IceEquipment.register(ICE_SWORD);
 		IceEquipment.register(ICE_PICKAXE);
 		IceEquipment.register(ICE_AXE);

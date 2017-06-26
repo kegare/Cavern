@@ -1,19 +1,20 @@
 package cavern.capability;
 
+import javax.annotation.Nullable;
+
 import cavern.api.IHunterStats;
 import cavern.api.IIceEquipment;
 import cavern.api.IInventoryEquipment;
 import cavern.api.IMagicianStats;
 import cavern.api.IMinerStats;
-import cavern.core.Cavern;
 import cavern.item.IceEquipment;
 import cavern.item.ItemMagicalBook;
 import cavern.stats.IPortalCache;
+import cavern.util.CaveUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -37,13 +38,6 @@ public class CaveCapabilities
 	@CapabilityInject(IInventoryEquipment.class)
 	public static Capability<IInventoryEquipment> INVENTORY_EQUIP = null;
 
-	public static final ResourceLocation PORTAL_CACHE_ID = new ResourceLocation(Cavern.MODID, "PortalCache");
-	public static final ResourceLocation MINER_STATS_ID = new ResourceLocation(Cavern.MODID, "MinerStats");
-	public static final ResourceLocation HUNTER_STATS_ID = new ResourceLocation(Cavern.MODID, "HunterStats");
-	public static final ResourceLocation MAGICIAN_STATS_ID = new ResourceLocation(Cavern.MODID, "MagicianStats");
-	public static final ResourceLocation ICE_EQUIP_ID = new ResourceLocation(Cavern.MODID, "IceEquip");
-	public static final ResourceLocation INVENTORY_EQUIP_ID = new ResourceLocation(Cavern.MODID, "InventoryEquip");
-
 	public static void registerCapabilities()
 	{
 		CapabilityPortalCache.register();
@@ -66,6 +60,7 @@ public class CaveCapabilities
 		return entry != null && isValid(capability) && entry.hasCapability(capability, null);
 	}
 
+	@Nullable
 	public static <T> T getCapability(ICapabilitySerializable<NBTTagCompound> entry, Capability<T> capability)
 	{
 		return hasCapability(entry, capability) ? entry.getCapability(capability, null) : null;
@@ -74,31 +69,38 @@ public class CaveCapabilities
 	@SubscribeEvent
 	public void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event)
 	{
-		event.addCapability(PORTAL_CACHE_ID, new CapabilityPortalCache());
+		event.addCapability(CaveUtils.getKey("PortalCache"), new CapabilityPortalCache());
 
 		if (event.getObject() instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer)event.getObject();
 
-			event.addCapability(MINER_STATS_ID, new CapabilityMinerStats(player));
-			event.addCapability(HUNTER_STATS_ID, new CapabilityHunterStats(player));
-			event.addCapability(MAGICIAN_STATS_ID, new CapabilityMagicianStats(player));
+			event.addCapability(CaveUtils.getKey("MinerStats"), new CapabilityMinerStats(player));
+			event.addCapability(CaveUtils.getKey("HunterStats"), new CapabilityHunterStats(player));
+			event.addCapability(CaveUtils.getKey("MagicianStats"), new CapabilityMagicianStats(player));
 		}
 	}
 
 	@SubscribeEvent
-	public void onAttachItemCapabilities(AttachCapabilitiesEvent<Item> event)
+	public void onAttachItemCapabilities(AttachCapabilitiesEvent<ItemStack> event)
 	{
-		Item item = event.getObject();
+		ItemStack stack = event.getObject();
 
-		if (IceEquipment.isIceEquipment(item))
+		if (IceEquipment.isIceEquipment(stack))
 		{
-			event.addCapability(ICE_EQUIP_ID, new CapabilityIceEquipment());
+			event.addCapability(CaveUtils.getKey("IceEquip"), new CapabilityIceEquipment());
 		}
 
-		if (item instanceof ItemMagicalBook)
+		if (stack.getItem() instanceof ItemMagicalBook)
 		{
-			event.addCapability(INVENTORY_EQUIP_ID, new CapabilityInventoryEquipment());
+			switch (ItemMagicalBook.EnumType.byItemStack(stack))
+			{
+				case STORAGE:
+				case COMPOSITING:
+					event.addCapability(CaveUtils.getKey("InventoryEquip"), new CapabilityInventoryEquipment());
+					break;
+				default:
+			}
 		}
 	}
 

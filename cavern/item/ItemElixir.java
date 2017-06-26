@@ -41,7 +41,6 @@ public class ItemElixir extends Item
 		return "item." + EnumType.byItemStack(stack).getUnlocalizedName();
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
 	{
@@ -144,24 +143,24 @@ public class ItemElixir extends Item
 		ELIXIR_MEDIUM(1, "elixirMedium", 50, true),
 		ELIXIR_HIGH(2, "elixirHigh", 100, true);
 
-		private static final EnumType[] DAMAGE_LOOKUP = new EnumType[values().length];
+		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
 
-		private final int itemDamage;
+		private final int meta;
 		private final String unlocalizedName;
 		private final int healMPAmount;
 		private final boolean healPercentages;
 
-		private EnumType(int damage, String name, int amount, boolean percentages)
+		private EnumType(int meta, String name, int amount, boolean percentages)
 		{
-			this.itemDamage = damage;
+			this.meta = meta;
 			this.unlocalizedName = name;
 			this.healMPAmount = amount;
 			this.healPercentages = percentages;
 		}
 
-		public int getItemDamage()
+		public int getMetadata()
 		{
-			return itemDamage;
+			return meta;
 		}
 
 		public String getUnlocalizedName()
@@ -186,29 +185,29 @@ public class ItemElixir extends Item
 
 		public ItemStack getItemStack(int amount)
 		{
-			return new ItemStack(CaveItems.ELIXIR, amount, getItemDamage());
+			return new ItemStack(CaveItems.ELIXIR, amount, getMetadata());
 		}
 
-		public static EnumType byDamage(int damage)
+		public static EnumType byMetadata(int meta)
 		{
-			if (damage < 0 || damage >= DAMAGE_LOOKUP.length)
+			if (meta < 0 || meta >= META_LOOKUP.length)
 			{
-				damage = 0;
+				meta = 0;
 			}
 
-			return DAMAGE_LOOKUP[damage];
+			return META_LOOKUP[meta];
 		}
 
-		public static EnumType byItemStack(ItemStack itemstack)
+		public static EnumType byItemStack(ItemStack stack)
 		{
-			return byDamage(itemstack == null ? 0 : itemstack.getItemDamage());
+			return byMetadata(stack.isEmpty() ? 0 : stack.getMetadata());
 		}
 
 		static
 		{
 			for (EnumType type : values())
 			{
-				DAMAGE_LOOKUP[type.getItemDamage()] = type;
+				META_LOOKUP[type.getMetadata()] = type;
 			}
 		}
 	}

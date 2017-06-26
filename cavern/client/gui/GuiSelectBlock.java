@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.base.Strings;
@@ -82,7 +84,7 @@ public class GuiSelectBlock extends GuiScreen
 						continue;
 					}
 
-					int meta = stack.getItemDamage();
+					int meta = stack.getMetadata();
 
 					if (meta < 0 || meta > 15 || sub.hasTileEntity(sub.getStateFromMeta(meta)))
 					{
@@ -600,16 +602,16 @@ public class GuiSelectBlock extends GuiScreen
 			return contents.size();
 		}
 
-		public String getBlockMetaTypeName(BlockMeta blockMeta, ItemStack itemstack)
+		public String getBlockMetaTypeName(@Nullable BlockMeta blockMeta, ItemStack stack)
 		{
 			if (blockMeta == null)
 			{
 				return null;
 			}
 
-			if (itemstack.isEmpty())
+			if (stack.isEmpty())
 			{
-				itemstack = new ItemStack(blockMeta.getBlock(), 1, blockMeta.getMeta());
+				stack = new ItemStack(blockMeta.getBlock(), 1, blockMeta.getMeta());
 			}
 
 			String name = null;
@@ -620,16 +622,16 @@ public class GuiSelectBlock extends GuiScreen
 				{
 					name = blockMeta.getName();
 				}
-				else if (itemstack.getItem() != Items.AIR)
+				else if (stack.getItem() != Items.AIR)
 				{
 					switch (nameType)
 					{
 						case 2:
-							name = itemstack.getUnlocalizedName();
+							name = stack.getUnlocalizedName();
 							name = name.substring(name.indexOf(".") + 1);
 							break;
 						default:
-							name = itemstack.getDisplayName();
+							name = stack.getDisplayName();
 							break;
 					}
 				}
@@ -652,7 +654,7 @@ public class GuiSelectBlock extends GuiScreen
 			return name;
 		}
 
-		public String getBlockMetaTypeName(BlockMeta blockMeta)
+		public String getBlockMetaTypeName(@Nullable BlockMeta blockMeta)
 		{
 			return getBlockMetaTypeName(blockMeta, ItemStack.EMPTY);
 		}

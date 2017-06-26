@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 import cavern.config.RuinsCavernConfig;
 import cavern.config.manager.CaveBiomeManager;
 import cavern.config.property.ConfigBiomeType;
-import cavern.util.WeightedItem;
+import cavern.util.WeightedItemStack;
 import net.minecraft.init.Biomes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
@@ -16,7 +16,7 @@ import net.minecraft.world.gen.IChunkGenerator;
 
 public class WorldProviderRuinsCavern extends WorldProviderCavern
 {
-	public static final List<WeightedItem> RUINS_CHEST_ITEMS = Lists.newArrayList();
+	public static final List<WeightedItemStack> RUINS_CHEST_ITEMS = Lists.newArrayList();
 
 	@Override
 	protected void init()

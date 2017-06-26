@@ -382,9 +382,9 @@ public class ItemCavenicBow extends ItemBow
 			return zoomScale;
 		}
 
-		public static BowMode byItemStack(@Nullable ItemStack stack)
+		public static BowMode byItemStack(ItemStack stack)
 		{
-			if (stack == null || stack.isEmpty())
+			if (stack.isEmpty())
 			{
 				return NORMAL;
 			}

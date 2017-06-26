@@ -227,7 +227,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 
 		for (EntityItem entityItem : world.getEntitiesWithinAABB(EntityItem.class, getEntityBoundingBox().grow(0.65D)))
 		{
-			if (entityItem != null && entityItem.isEntityAlive() && entityItem.onGround)
+			if (entityItem.isEntityAlive() && entityItem.onGround)
 			{
 				ItemStack stack = entityItem.getItem();
 
@@ -280,9 +280,9 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 	@Override
 	protected boolean processInteract(EntityPlayer player, EnumHand hand)
 	{
-		ItemStack heldItem = player.getHeldItem(hand);
+		ItemStack held = player.getHeldItem(hand);
 
-		if (heldItem.isEmpty() || getDistanceSqToEntity(player) > 5.0D)
+		if (held.isEmpty() || getDistanceSqToEntity(player) > 5.0D)
 		{
 			return false;
 		}
@@ -291,7 +291,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 
 		if (!world.isRemote)
 		{
-			player.setHeldItem(hand, onItemStackPickup(heldItem));
+			player.setHeldItem(hand, onItemStackPickup(held));
 
 			player.displayGUIChest(backpackInventory);
 

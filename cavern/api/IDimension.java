@@ -1,20 +1,28 @@
 package cavern.api;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.Entity;
+import net.minecraft.world.DimensionType;
 
 public interface IDimension
 {
-	public int getCavernDimension();
+	public DimensionType getCavernDimension();
 
-	public int getAquaCavernDimension();
+	@Nullable
+	public DimensionType getAquaCavernDimension();
 
-	public int getCavelandDimension();
+	@Nullable
+	public DimensionType getCavelandDimension();
 
-	public int getIceCavernDimension();
+	@Nullable
+	public DimensionType getIceCavernDimension();
 
-	public int getRuinsCavernDimension();
+	@Nullable
+	public DimensionType getRuinsCavernDimension();
 
-	public int getCaveniaDimension();
+	@Nullable
+	public DimensionType getCaveniaDimension();
 
 	public boolean isAquaCavernDisabled();
 
@@ -26,31 +34,31 @@ public interface IDimension
 
 	public boolean isCaveniaDisabled();
 
-	public boolean isEntityInCavern(Entity entity);
+	public boolean isEntityInCavern(@Nullable Entity entity);
 
-	public boolean isEntityInAquaCavern(Entity entity);
+	public boolean isEntityInAquaCavern(@Nullable Entity entity);
 
-	public boolean isEntityInCaveland(Entity entity);
+	public boolean isEntityInCaveland(@Nullable Entity entity);
 
-	public boolean isEntityInIceCavern(Entity entity);
+	public boolean isEntityInIceCavern(@Nullable Entity entity);
 
-	public boolean isEntityInRuinsCavern(Entity entity);
+	public boolean isEntityInRuinsCavern(@Nullable Entity entity);
 
-	public boolean isEntityInCavenia(Entity entity);
+	public boolean isEntityInCavenia(@Nullable Entity entity);
 
-	public boolean isEntityInCaves(Entity entity);
+	public boolean isEntityInCaves(@Nullable Entity entity);
 
-	public boolean isCavern(int dimension);
+	public boolean isCavern(@Nullable DimensionType type);
 
-	public boolean isAquaCavern(int dimension);
+	public boolean isAquaCavern(@Nullable DimensionType type);
 
-	public boolean isCaveland(int dimension);
+	public boolean isCaveland(@Nullable DimensionType type);
 
-	public boolean isIceCavern(int dimension);
+	public boolean isIceCavern(@Nullable DimensionType type);
 
-	public boolean isRuinsCavern(int dimension);
+	public boolean isRuinsCavern(@Nullable DimensionType type);
 
-	public boolean isCavenia(int dimension);
+	public boolean isCavenia(@Nullable DimensionType type);
 
-	public boolean isCaves(int dimension);
+	public boolean isCaves(@Nullable DimensionType type);
 }

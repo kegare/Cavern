@@ -53,7 +53,7 @@ public class ChunkGeneratorIceCavern implements IChunkGenerator
 
 	private WorldGenerator lakeWaterGen = new WorldGenLakes(Blocks.WATER);
 	private WorldGenerator liquidWaterGen = new WorldGenIceLiquids(Blocks.FLOWING_WATER);
-	private WorldGenerator dungeonGen = new WorldGenIceDungeons();
+	private WorldGenerator dungeonGen = new WorldGenIceDungeons(IceCavernConfig.dungeonMobs.getKeys());
 
 	public ChunkGeneratorIceCavern(World world)
 	{

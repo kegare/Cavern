@@ -1,10 +1,9 @@
 package cavern.recipe;
 
-import cavern.core.Cavern;
+import cavern.util.CaveUtils;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -12,12 +11,12 @@ public class RecipeHelper
 {
 	public static IRecipe getRecipe(String name, IRecipe recipe)
 	{
-		return recipe.setRegistryName(new ResourceLocation(Cavern.MODID, name));
+		return recipe.setRegistryName(CaveUtils.getKey(name));
 	}
 
 	public static IRecipe getShapedRecipe(String group, String name, ItemStack result, Object... recipe)
 	{
-		return new ShapedOreRecipe(new ResourceLocation(Cavern.MODID, group), result, recipe).setRegistryName(Cavern.MODID, name);
+		return new ShapedOreRecipe(CaveUtils.getKey(group), result, recipe).setRegistryName(name);
 	}
 
 	public static IRecipe getShapedRecipe(String name, ItemStack result, Object... recipe)
@@ -27,7 +26,7 @@ public class RecipeHelper
 
 	public static IRecipe getShapelessRecipe(String group, String name, ItemStack result, Object... recipe)
 	{
-		return new ShapelessOreRecipe(new ResourceLocation(Cavern.MODID, group), result, recipe).setRegistryName(Cavern.MODID, name);
+		return new ShapelessOreRecipe(CaveUtils.getKey(group), result, recipe).setRegistryName(name);
 	}
 
 	public static IRecipe getShapelessRecipe(String name, ItemStack result, Object... recipe)

@@ -48,7 +48,7 @@ public class BlockAcresia extends BlockCrops
 
 	protected int getCropDamage()
 	{
-		return ItemAcresia.EnumType.FRUITS.getItemDamage();
+		return ItemAcresia.EnumType.FRUITS.getMetadata();
 	}
 
 	public ItemStack getCropItem()
@@ -69,7 +69,7 @@ public class BlockAcresia extends BlockCrops
 
 	protected int getSeedDamage()
 	{
-		return ItemAcresia.EnumType.SEEDS.getItemDamage();
+		return ItemAcresia.EnumType.SEEDS.getMetadata();
 	}
 
 	public ItemStack getSeedItem()
@@ -205,13 +205,13 @@ public class BlockAcresia extends BlockCrops
 	{
 		if (!canGrow(world, pos, state, world.isRemote))
 		{
-			ItemStack heldItem = player.getHeldItem(hand);
+			ItemStack held = player.getHeldItem(hand);
 
-			if (!heldItem.isEmpty() && heldItem.getItem() instanceof ItemShears)
+			if (!held.isEmpty() && held.getItem() instanceof ItemShears)
 			{
 				if (!world.isRemote)
 				{
-					int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, heldItem);
+					int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, held);
 					ItemStack crop = getCropItem(4 + world.rand.nextInt(3) + fortune);
 					EntityItem drop = new EntityItem(world, pos.getX() + 0.5D, pos.getY() + 0.25D, pos.getZ() + 0.5D, crop);
 
@@ -220,7 +220,7 @@ public class BlockAcresia extends BlockCrops
 					world.spawnEntity(drop);
 					world.setBlockState(pos, withAge(2), 2);
 
-					heldItem.damageItem(1, player);
+					held.damageItem(1, player);
 
 					drop.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.25F);
 				}

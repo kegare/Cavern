@@ -11,7 +11,6 @@ import cavern.config.GeneralConfig;
 import cavern.stats.MinerStats;
 import cavern.util.BlockMeta;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -37,7 +36,7 @@ public class ConfigMiningPoints
 		values = entries;
 	}
 
-	public boolean hasInit()
+	public boolean shouldInit()
 	{
 		return init;
 	}
@@ -103,9 +102,8 @@ public class ConfigMiningPoints
 				{
 					i = str.lastIndexOf(':');
 					BlockMeta blockMeta = new BlockMeta(str.substring(0, i), str.substring(i + 1));
-					Block block = blockMeta.getBlock();
 
-					if (block != null && block != Blocks.AIR)
+					if (blockMeta.isNotAir())
 					{
 						MinerStats.setPointAmount(blockMeta, point);
 					}

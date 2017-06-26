@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Random;
 
 import cavern.config.AquaCavernConfig;
+import cavern.config.CavernConfig;
 import cavern.config.manager.CaveVein;
 import cavern.world.gen.MapGenAquaCaves;
 import cavern.world.gen.MapGenAquaRavine;
-import cavern.world.gen.WorldGenAquaDungeons;
+import cavern.world.gen.WorldGenCaveDungeons;
+import cavern.world.gen.WorldGenTowerDungeons;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EnumCreatureType;
@@ -42,7 +44,8 @@ public class ChunkGeneratorAquaCavern implements IChunkGenerator
 	private final MapGenBase caveGenerator = new MapGenAquaCaves();
 	private final MapGenBase ravineGenerator = new MapGenAquaRavine();
 
-	private WorldGenerator dungeonGen = new WorldGenAquaDungeons();
+	private WorldGenerator dungeonGen = new WorldGenCaveDungeons(AquaCavernConfig.dungeonMobs.getKeys());
+	private WorldGenerator towerDungeonGen = new WorldGenTowerDungeons(AquaCavernConfig.towerDungeonMobs.getKeys());
 
 	public ChunkGeneratorAquaCavern(World world)
 	{
@@ -151,6 +154,18 @@ public class ChunkGeneratorAquaCavern implements IChunkGenerator
 				z = rand.nextInt(16) + 8;
 
 				dungeonGen.generate(world, rand, blockPos.add(x, y, z));
+			}
+		}
+
+		if (CavernConfig.generateTowerDungeons && TerrainGen.populate(this, world, rand, chunkX, chunkZ, false, EventType.DUNGEON))
+		{
+			if (rand.nextDouble() < 0.0035D)
+			{
+				x = rand.nextInt(16) + 8;
+				y = rand.nextInt(16) + 8;
+				z = rand.nextInt(16) + 8;
+
+				towerDungeonGen.generate(world, rand, blockPos.add(x, y, z));
 			}
 		}
 

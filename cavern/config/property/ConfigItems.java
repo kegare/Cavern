@@ -58,10 +58,14 @@ public class ConfigItems
 					return true;
 				}
 
-				if (itemMeta.getMeta() == stack.getItemDamage())
+				if (stack.getHasSubtypes())
 				{
-					return true;
+					if (itemMeta.getMeta() == stack.getMetadata())
+					{
+						return true;
+					}
 				}
+				else return true;
 			}
 		}
 

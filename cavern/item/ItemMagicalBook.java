@@ -104,7 +104,6 @@ public class ItemMagicalBook extends Item
 		return stack;
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
 	{
@@ -268,18 +267,18 @@ public class ItemMagicalBook extends Item
 		SUMMON(11, "summon", 4, null, 0.0D, 0.15D),
 		COMPOSITING(12, "compositing", 1, new long[] {15000L}, 0.0D, 0.1D);
 
-		private static final EnumType[] DAMAGE_LOOKUP = new EnumType[values().length];
+		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
 
-		private final int itemDamage;
+		private final int meta;
 		private final String unlocalizedName;
 		private final int maxLevel;
 		private final long[] magicSpellTimes;
 		private final double magicRange;
 		private final double magicRarity;
 
-		private EnumType(int damage, String name, int level, @Nullable long[] times, double range, double rarity)
+		private EnumType(int meta, String name, int level, @Nullable long[] times, double range, double rarity)
 		{
-			this.itemDamage = damage;
+			this.meta = meta;
 			this.unlocalizedName = name;
 			this.maxLevel = level;
 			this.magicSpellTimes = times == null ? new long[] {3000L, 5000L, 7000L, 10000L} : times;
@@ -287,9 +286,9 @@ public class ItemMagicalBook extends Item
 			this.magicRarity = rarity;
 		}
 
-		public int getItemDamage()
+		public int getMeta()
 		{
-			return itemDamage;
+			return meta;
 		}
 
 		public String getUnlocalizedName()
@@ -351,29 +350,29 @@ public class ItemMagicalBook extends Item
 
 		public ItemStack getItemStack(int level)
 		{
-			return CaveItems.MAGICAL_BOOK.setMagicLevel(new ItemStack(CaveItems.MAGICAL_BOOK, 1, getItemDamage()), level);
+			return CaveItems.MAGICAL_BOOK.setMagicLevel(new ItemStack(CaveItems.MAGICAL_BOOK, 1, getMeta()), level);
 		}
 
-		public static EnumType byDamage(int damage)
+		public static EnumType byMetadata(int meta)
 		{
-			if (damage < 0 || damage >= DAMAGE_LOOKUP.length)
+			if (meta < 0 || meta >= META_LOOKUP.length)
 			{
-				damage = 0;
+				meta = 0;
 			}
 
-			return DAMAGE_LOOKUP[damage];
+			return META_LOOKUP[meta];
 		}
 
-		public static EnumType byItemStack(ItemStack itemstack)
+		public static EnumType byItemStack(ItemStack stack)
 		{
-			return byDamage(itemstack == null ? 0 : itemstack.getItemDamage());
+			return byMetadata(stack.isEmpty() ? 0 : stack.getMetadata());
 		}
 
 		static
 		{
 			for (EnumType type : values())
 			{
-				DAMAGE_LOOKUP[type.getItemDamage()] = type;
+				META_LOOKUP[type.getMeta()] = type;
 			}
 		}
 	}

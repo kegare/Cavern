@@ -709,9 +709,8 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 					{
 						i = str.lastIndexOf(':');
 						BlockMeta blockMeta = new BlockMeta(str.substring(0, i), str.substring(i + 1));
-						Block block = blockMeta.getBlock();
 
-						if (block != null && block != Blocks.AIR)
+						if (blockMeta.isNotAir())
 						{
 							PointEntry entry = new PointEntry(blockMeta, point);
 

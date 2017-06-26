@@ -75,7 +75,7 @@ public class GuiSelectItem extends GuiScreen
 			}
 			else for (ItemStack stack : list)
 			{
-				if (stack.getItemDamage() == 0 && stack.isItemStackDamageable())
+				if (stack.isItemStackDamageable() && stack.getItemDamage() == 0)
 				{
 					ITEMS.addIfAbsent(new ItemMeta(stack.getItem(), -1));
 				}

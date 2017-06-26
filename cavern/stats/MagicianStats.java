@@ -337,7 +337,7 @@ public class MagicianStats implements IMagicianStats
 
 			for (Entity entity : world.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().grow(range)))
 			{
-				if (entity != null && player.canEntityBeSeen(entity) && entityMagic.isTarget(player, entity) && entityMagic.execute(player, entity))
+				if (player.canEntityBeSeen(entity) && entityMagic.isTarget(player, entity) && entityMagic.execute(player, entity))
 				{
 					++count;
 				}
@@ -356,7 +356,7 @@ public class MagicianStats implements IMagicianStats
 
 			for (EntityPlayer targetPlayer : world.getEntitiesWithinAABB(EntityPlayer.class, player.getEntityBoundingBox().grow(range)))
 			{
-				if (targetPlayer != null && player.canEntityBeSeen(targetPlayer) && playerMagic.isTarget(player, targetPlayer) && playerMagic.execute(player, targetPlayer))
+				if (player.canEntityBeSeen(targetPlayer) && playerMagic.isTarget(player, targetPlayer) && playerMagic.execute(player, targetPlayer))
 				{
 					++count;
 				}
@@ -393,7 +393,7 @@ public class MagicianStats implements IMagicianStats
 
 			if (sound != null)
 			{
-				world.playSound(null, player.posX, player.posY, player.posZ, sound, SoundCategory.PLAYERS, 0.35F, 1.0F);
+				world.playSound(null, player.posX, player.posY, player.posZ, sound, SoundCategory.PLAYERS, 0.3F, 1.0F);
 			}
 
 			return !hasCallback || callback.isSuccessMagic(player, stats, magic, success);

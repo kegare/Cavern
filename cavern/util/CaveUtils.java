@@ -152,6 +152,11 @@ public class CaveUtils
 		return i;
 	};
 
+	public static ResourceLocation getKey(String key)
+	{
+		return new ResourceLocation(Cavern.MODID, key);
+	}
+
 	public static boolean isItemPickaxe(ItemStack stack)
 	{
 		if (stack.isEmpty())
@@ -272,13 +277,45 @@ public class CaveUtils
 		return stateA.getBlock() == stateB.getBlock() && stateA.getBlock().getMetaFromState(stateA) == stateB.getBlock().getMetaFromState(stateB);
 	}
 
-	public static ItemStack getSpawnEgg(ResourceLocation entityName)
+	@Nullable
+	public static String getEntityName(ResourceLocation key)
+	{
+		if (key == null)
+		{
+			return null;
+		}
+
+		String entityName = EntityList.getTranslationName(key);
+
+		if (!Strings.isNullOrEmpty(entityName))
+		{
+			return Cavern.proxy.translate("entity." + entityName + ".name");
+		}
+
+		return key.toString();
+	}
+
+	@Nullable
+	public static String getEntityName(Class<? extends Entity> entityClass)
+	{
+		ResourceLocation key = EntityList.getKey(entityClass);
+
+		return getEntityName(key);
+	}
+
+	public static ItemStack getSpawnEgg(@Nullable ResourceLocation key)
 	{
 		ItemStack item = new ItemStack(Items.SPAWN_EGG);
+
+		if (key == null)
+		{
+			return item;
+		}
+
 		NBTTagCompound nbt = new NBTTagCompound();
 		NBTTagCompound tag = new NBTTagCompound();
 
-		tag.setString("id", entityName.toString());
+		tag.setString("id", key.toString());
 		nbt.setTag("EntityTag", tag);
 
 		item.setTagCompound(nbt);
@@ -288,9 +325,9 @@ public class CaveUtils
 
 	public static ItemStack getSpawnEgg(Class<? extends Entity> entityClass)
 	{
-		ResourceLocation entityName = EntityList.getKey(entityClass);
+		ResourceLocation key = EntityList.getKey(entityClass);
 
-		return getSpawnEgg(entityName);
+		return getSpawnEgg(key);
 	}
 
 	public static void setLocationAndAngles(@Nullable Entity entity, double posX, double posY, double posZ)

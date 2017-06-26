@@ -29,7 +29,7 @@ import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
 import cavern.util.BlockMeta;
 import cavern.util.CaveUtils;
-import cavern.util.WeightedItem;
+import cavern.util.WeightedItemStack;
 import cavern.world.WorldProviderIceCavern;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
@@ -315,15 +315,15 @@ public class CaveEventHooks
 						}
 						else if (RANDOM.nextDouble() < 0.0325D)
 						{
-							WeightedItem randomItem = WeightedRandom.getRandomItem(RANDOM, WorldProviderIceCavern.HIBERNATE_ITEMS);
+							WeightedItemStack randomItem = WeightedRandom.getRandomItem(RANDOM, WorldProviderIceCavern.HIBERNATE_ITEMS);
 
-							Block.spawnAsEntity(world, pos, randomItem.getItem());
+							Block.spawnAsEntity(world, pos, randomItem.getItemStack());
 						}
 						else if (RANDOM.nextDouble() < 0.0085D)
 						{
-							WeightedItem randomItem = WeightedRandom.getRandomItem(RANDOM, BlockCave.RANDOMITE_ITEMS);
+							WeightedItemStack randomItem = WeightedRandom.getRandomItem(RANDOM, BlockCave.RANDOMITE_ITEMS);
 
-							Block.spawnAsEntity(world, pos, randomItem.getItem());
+							Block.spawnAsEntity(world, pos, randomItem.getItemStack());
 						}
 						else if (IceEquipment.isIceEquipment(thePlayer.getHeldItemMainhand()) && RANDOM.nextDouble() < 0.03D || RANDOM.nextDouble() < 0.01D)
 						{
@@ -492,7 +492,7 @@ public class CaveEventHooks
 						++elixirRank;
 					}
 
-					drops.add(new EntityItem(world, posX, posY, posZ, ItemElixir.EnumType.byDamage(elixirRank - 1).getItemStack()));
+					drops.add(new EntityItem(world, posX, posY, posZ, ItemElixir.EnumType.byMetadata(elixirRank - 1).getItemStack()));
 				}
 			}
 		}

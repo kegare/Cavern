@@ -47,7 +47,7 @@ public class ItemAxeManalite extends ItemAxeCave
 			{
 				for (EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, target.getEntityBoundingBox().grow(2.5D)))
 				{
-					if (entity != null && entity instanceof IMob && !(entity instanceof ISummonMob))
+					if (entity instanceof IMob && !(entity instanceof ISummonMob))
 					{
 						double dist = target.getDistanceSqToEntity(entity);
 						Vec3d vec = getSmashVector(player, dist <= 2.0D, (itemRand.nextDouble() + 1.0D) * 1.15D, 0.1D);

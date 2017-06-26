@@ -17,6 +17,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+import cavern.api.ISummonMob;
 import cavern.client.config.CaveConfigGui;
 import cavern.config.Config;
 import cavern.util.ArrayListExtended;
@@ -27,7 +28,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.util.ResourceLocation;
@@ -192,7 +192,7 @@ public class GuiSelectMob extends GuiScreen
 
 				for (String mob : mobList.selected)
 				{
-					values.add(I18n.format("entity." + mob + ".name"));
+					values.add(CaveUtils.getEntityName(new ResourceLocation(mob)));
 				}
 
 				drawHoveringText(values, mouseX, mouseY);
@@ -329,7 +329,12 @@ public class GuiSelectMob extends GuiScreen
 				EntityEntry entityEntry = entry.getValue();
 				Class<? extends Entity> entityClass = entityEntry.getEntityClass();
 
-				if (EntityMob.class == entityClass || EntityLiving.class == entityClass || !EntityLiving.class.isAssignableFrom(entityClass))
+				if (EntityMob.class == entityClass || EntityLiving.class == entityClass)
+				{
+					continue;
+				}
+
+				if (!EntityLiving.class.isAssignableFrom(entityClass) || ISummonMob.class.isAssignableFrom(entityClass))
 				{
 					continue;
 				}
@@ -409,14 +414,12 @@ public class GuiSelectMob extends GuiScreen
 
 			switch (nameType)
 			{
-			case 1:
-				name = entry;
-				break;
-			default:
-				ResourceLocation entryName = new ResourceLocation(entry);
-
-				name = I18n.format("entity." + EntityList.getTranslationName(entryName) + ".name");
-				break;
+				case 1:
+					name = entry;
+					break;
+				default:
+					name = CaveUtils.getEntityName(new ResourceLocation(entry));
+					break;
 			}
 
 			drawCenteredString(fontRenderer, name, width / 2, par3 + 1, 0xFFFFFF);

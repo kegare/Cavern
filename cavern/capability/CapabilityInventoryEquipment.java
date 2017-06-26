@@ -76,7 +76,7 @@ public class CapabilityInventoryEquipment implements ICapabilitySerializable<NBT
 					instance.readFromNBT((NBTTagCompound)nbt);
 				}
 			},
-			() -> new InventoryEquipment()
+			InventoryEquipment::new
 		);
 	}
 }

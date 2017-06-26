@@ -1,6 +1,5 @@
 package cavern.world;
 
-import cavern.api.CavernAPI;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CaveniaConfig;
@@ -32,35 +31,35 @@ public class CaveType
 
 		DimensionManager.registerDimension(DIM_CAVERN.getId(), DIM_CAVERN);
 
-		if (!CavernAPI.dimension.isAquaCavernDisabled())
+		if (!AquaCavernConfig.dimensionDisabled)
 		{
 			DIM_AQUA_CAVERN = DimensionType.register("Aqua Cavern", "_aqua_cavern", AquaCavernConfig.dimensionId, WorldProviderAquaCavern.class, false);
 
 			DimensionManager.registerDimension(DIM_AQUA_CAVERN.getId(), DIM_AQUA_CAVERN);
 		}
 
-		if (!CavernAPI.dimension.isCavelandDisabled())
+		if (!CavelandConfig.dimensionDisabled)
 		{
 			DIM_CAVELAND = DimensionType.register("Caveland", "_caveland", CavelandConfig.dimensionId, WorldProviderCaveland.class, false);
 
 			DimensionManager.registerDimension(DIM_CAVELAND.getId(), DIM_CAVELAND);
 		}
 
-		if (!CavernAPI.dimension.isIceCavernDisabled())
+		if (!IceCavernConfig.dimensionDisabled)
 		{
 			DIM_ICE_CAVERN = DimensionType.register("Ice Cavern", "_ice_cavern", IceCavernConfig.dimensionId, WorldProviderIceCavern.class, false);
 
 			DimensionManager.registerDimension(DIM_ICE_CAVERN.getId(), DIM_ICE_CAVERN);
 		}
 
-		if (!CavernAPI.dimension.isRuinsCavernDisabled())
+		if (!RuinsCavernConfig.dimensionDisabled)
 		{
 			DIM_RUINS_CAVERN = DimensionType.register("Ruins Cavern", "_ruins_cavern", RuinsCavernConfig.dimensionId, WorldProviderRuinsCavern.class, false);
 
 			DimensionManager.registerDimension(DIM_RUINS_CAVERN.getId(), DIM_RUINS_CAVERN);
 		}
 
-		if (!CavernAPI.dimension.isCaveniaDisabled())
+		if (!CaveniaConfig.dimensionDisabled)
 		{
 			DIM_CAVENIA = DimensionType.register("Cavenia", "_cavenia", CaveniaConfig.dimensionId, WorldProviderCavenia.class, false);
 

@@ -42,7 +42,7 @@ public class CompositingRecipeRepair implements ICompositingRecipe
 					repairItem = stack;
 				}
 
-				if (materialItem.isEmpty() && stack.getItem() == CaveItems.CAVE_ITEM && stack.getItemDamage() == ItemCave.EnumType.MANALITE.getItemDamage())
+				if (materialItem.isEmpty() && stack.getItem() == CaveItems.CAVE_ITEM && stack.getMetadata() == ItemCave.EnumType.MANALITE.getMetadata())
 				{
 					materialItem = stack;
 				}

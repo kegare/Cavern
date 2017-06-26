@@ -1,25 +1,26 @@
 package cavern.core;
 
+import cavern.util.CaveUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class CaveSounds
 {
-	public static final CaveSoundEvent CAVE_PORTAL = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cave_portal"));
-	public static final CaveSoundEvent RANK_PROMOTE = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "rank.promote"));
+	public static final CaveSoundEvent CAVE_PORTAL = new CaveSoundEvent("cave_portal");
+	public static final CaveSoundEvent RANK_PROMOTE = new CaveSoundEvent("rank.promote");
 
-	public static final CaveSoundEvent SPELLING = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "magic.spelling"));
-	public static final CaveSoundEvent SPELLING_END = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "magic.spelling.end"));
-	public static final CaveSoundEvent MAGIC_SUCCESS = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "magic.success"));
-	public static final CaveSoundEvent MAGIC_SUCCESS_SHORT = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "magic.success.short"));
+	public static final CaveSoundEvent SPELLING = new CaveSoundEvent("magic.spelling");
+	public static final CaveSoundEvent SPELLING_END = new CaveSoundEvent("magic.spelling.end");
+	public static final CaveSoundEvent MAGIC_SUCCESS = new CaveSoundEvent("magic.success");
+	public static final CaveSoundEvent MAGIC_SUCCESS_SHORT = new CaveSoundEvent("magic.success.short");
 
-	public static final CaveSoundEvent MUSIC_CAVE = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.cave"));
-	public static final CaveSoundEvent MUSIC_UNREST = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.unrest"));
-	public static final CaveSoundEvent MUSIC_AQUA = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.aqua"));
-	public static final CaveSoundEvent MUSIC_HOPE = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.hope"));
-	public static final CaveSoundEvent MUSIC_CAVENIA1 = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.cavenia1"));
-	public static final CaveSoundEvent MUSIC_CAVENIA2 = new CaveSoundEvent(new ResourceLocation(Cavern.MODID, "cavemusic.cavenia2"));
+	public static final CaveSoundEvent MUSIC_CAVE = new CaveSoundEvent("cavemusic.cave");
+	public static final CaveSoundEvent MUSIC_UNREST = new CaveSoundEvent("cavemusic.unrest");
+	public static final CaveSoundEvent MUSIC_AQUA = new CaveSoundEvent("cavemusic.aqua");
+	public static final CaveSoundEvent MUSIC_HOPE = new CaveSoundEvent("cavemusic.hope");
+	public static final CaveSoundEvent MUSIC_CAVENIA1 = new CaveSoundEvent("cavemusic.cavenia1");
+	public static final CaveSoundEvent MUSIC_CAVENIA2 = new CaveSoundEvent("cavemusic.cavenia2");
 
 	public static void registerSounds(IForgeRegistry<SoundEvent> registry)
 	{
@@ -41,10 +42,15 @@ public class CaveSounds
 
 	public static class CaveSoundEvent extends SoundEvent
 	{
-		public CaveSoundEvent(ResourceLocation soundName)
+		public CaveSoundEvent(ResourceLocation key)
 		{
-			super(soundName);
-			this.setRegistryName(soundName);
+			super(key);
+			this.setRegistryName(key);
+		}
+
+		public CaveSoundEvent(String key)
+		{
+			this(CaveUtils.getKey(key));
 		}
 	}
 }

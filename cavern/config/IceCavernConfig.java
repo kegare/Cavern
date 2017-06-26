@@ -14,10 +14,10 @@ import cavern.block.CaveBlocks;
 import cavern.client.config.CaveConfigEntries;
 import cavern.config.manager.CaveVein;
 import cavern.config.manager.CaveVeinManager;
+import cavern.config.property.ConfigEntities;
 import cavern.core.Cavern;
 import cavern.util.BlockMeta;
 import cavern.world.CaveType;
-import cavern.world.gen.WorldGenIceDungeons;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -42,7 +42,7 @@ public class IceCavernConfig
 	public static boolean generateLakes;
 	public static boolean generateDungeons;
 
-	public static String[] dungeonMobs;
+	public static ConfigEntities dungeonMobs = new ConfigEntities();
 
 	public static int monsterSpawn;
 	public static double caveBrightness;
@@ -79,7 +79,7 @@ public class IceCavernConfig
 		propOrder.add(prop.getName());
 		dimensionId = prop.getInt(dimensionId);
 
-		prop = config.get(category, "worldHeight", Config.highDefault ? 256 : 128);
+		prop = config.get(category, "worldHeight", Config.highProfiles ? 256 : 128);
 		prop.setMinValue(64).setMaxValue(256);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -166,9 +166,9 @@ public class IceCavernConfig
 		comment += "Note: If multiplayer, server-side only.";
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
-		dungeonMobs = prop.getStringList();
+		dungeonMobs.setValues(prop.getStringList());
 
-		prop = config.get(category, "monsterSpawn", Config.highDefault ? 100 : 0);
+		prop = config.get(category, "monsterSpawn", Config.highProfiles ? 100 : 0);
 		prop.setMinValue(0).setMaxValue(5000);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -241,7 +241,9 @@ public class IceCavernConfig
 
 	public static void refreshDungeonMobs()
 	{
-		WorldGenIceDungeons.clearDungeonMobs();
-		WorldGenIceDungeons.addDungeonMobs(Sets.newHashSet(dungeonMobs));
+		if (dungeonMobs != null)
+		{
+			dungeonMobs.refreshEntities();
+		}
 	}
 }

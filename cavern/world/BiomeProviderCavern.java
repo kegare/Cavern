@@ -52,7 +52,7 @@ public class BiomeProviderCavern extends BiomeProvider
 			random.setSeed(ChunkPos.asLong((chunkX + 1) / biomeSize, (chunkZ + 1) / biomeSize) ^ worldObj.getSeed());
 		}
 
-		return biomeManager.getRandomCaveBiome(random).getBiome();
+		return biomeManager.getRandomBiome(random, Biomes.PLAINS);
 	}
 
 	@Override

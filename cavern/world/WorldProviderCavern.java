@@ -203,18 +203,6 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 		return 10;
 	}
 
-	@Override
-	public String getWelcomeMessage()
-	{
-		return "Entering the " + getDimensionType().getName();
-	}
-
-	@Override
-	public String getDepartMessage()
-	{
-		return "Leaving the " + getDimensionType().getName();
-	}
-
 	@SideOnly(Side.CLIENT)
 	@Override
 	public IRenderHandler getSkyRenderer()

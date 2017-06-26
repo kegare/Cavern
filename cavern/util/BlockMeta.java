@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Objects;
@@ -15,8 +16,8 @@ import com.google.common.cache.LoadingCache;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class BlockMeta implements Comparable<BlockMeta>
@@ -37,7 +38,7 @@ public class BlockMeta implements Comparable<BlockMeta>
 
 	public BlockMeta(String name, int meta)
 	{
-		this(Block.REGISTRY.getObject(new ResourceLocation(name)), meta);
+		this(ObjectUtils.defaultIfNull(Block.getBlockFromName(name), Blocks.AIR), meta);
 	}
 
 	public BlockMeta(String name, String meta)
@@ -49,6 +50,11 @@ public class BlockMeta implements Comparable<BlockMeta>
 	public Block getBlock()
 	{
 		return block;
+	}
+
+	public boolean isNotAir()
+	{
+		return block != Blocks.AIR;
 	}
 
 	public int getMeta()

@@ -1,9 +1,9 @@
 package cavern.config.manager;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
+
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -52,30 +52,6 @@ public class CaveBiomeManager
 		return getCaveBiomes().put(biome.getBiome(), biome) != biome;
 	}
 
-	public boolean removeCaveBiome(CaveBiome biome)
-	{
-		return removeCaveBiome(biome.getBiome());
-	}
-
-	public boolean removeCaveBiome(Biome biome)
-	{
-		boolean ret = false;
-
-		for (Iterator<Entry<Biome, CaveBiome>> iterator = getCaveBiomes().entrySet().iterator(); iterator.hasNext();)
-		{
-			Entry<Biome, CaveBiome> entry = iterator.next();
-
-			if (entry.getKey() == biome)
-			{
-				iterator.remove();
-
-				ret = true;
-			}
-		}
-
-		return ret;
-	}
-
 	public CaveBiome getCaveBiome(Biome biome)
 	{
 		return getCaveBiome(biome, false);
@@ -93,9 +69,22 @@ public class CaveBiomeManager
 		return ret;
 	}
 
+	@Nullable
 	public CaveBiome getRandomCaveBiome(Random random)
 	{
 		return WeightedRandom.getRandomItem(random, Lists.newArrayList(getCaveBiomes().values()));
+	}
+
+	public Biome getRandomBiome(Random random, Biome defaultBiome)
+	{
+		CaveBiome caveBiome = getRandomCaveBiome(random);
+
+		if (caveBiome != null)
+		{
+			return caveBiome.getBiome();
+		}
+
+		return defaultBiome;
 	}
 
 	public Map<Biome, CaveBiome> getCaveBiomes()

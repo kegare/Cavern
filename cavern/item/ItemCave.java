@@ -21,8 +21,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemCave extends Item
 {
@@ -42,7 +40,6 @@ public class ItemCave extends Item
 		return "item." + EnumType.byItemStack(stack).getUnlocalizedName();
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
 	{
@@ -138,20 +135,20 @@ public class ItemCave extends Item
 		CAVENIC_ORB(5, "orbCavenic"),
 		MANALITE(6, "manalite");
 
-		private static final EnumType[] DAMAGE_LOOKUP = new EnumType[values().length];
+		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
 
-		private final int itemDamage;
+		private final int meta;
 		private final String unlocalizedName;
 
-		private EnumType(int damage, String name)
+		private EnumType(int meta, String name)
 		{
-			this.itemDamage = damage;
+			this.meta = meta;
 			this.unlocalizedName = name;
 		}
 
-		public int getItemDamage()
+		public int getMetadata()
 		{
-			return itemDamage;
+			return meta;
 		}
 
 		public String getUnlocalizedName()
@@ -166,29 +163,29 @@ public class ItemCave extends Item
 
 		public ItemStack getItemStack(int amount)
 		{
-			return new ItemStack(CaveItems.CAVE_ITEM, amount, getItemDamage());
+			return new ItemStack(CaveItems.CAVE_ITEM, amount, getMetadata());
 		}
 
-		public static EnumType byDamage(int damage)
+		public static EnumType byMetadata(int meta)
 		{
-			if (damage < 0 || damage >= DAMAGE_LOOKUP.length)
+			if (meta < 0 || meta >= META_LOOKUP.length)
 			{
-				damage = 0;
+				meta = 0;
 			}
 
-			return DAMAGE_LOOKUP[damage];
+			return META_LOOKUP[meta];
 		}
 
-		public static EnumType byItemStack(ItemStack itemstack)
+		public static EnumType byItemStack(ItemStack stack)
 		{
-			return byDamage(itemstack == null ? 0 : itemstack.getItemDamage());
+			return byMetadata(stack.isEmpty() ? 0 : stack.getMetadata());
 		}
 
 		static
 		{
 			for (EnumType type : values())
 			{
-				DAMAGE_LOOKUP[type.getItemDamage()] = type;
+				META_LOOKUP[type.getMetadata()] = type;
 			}
 		}
 	}

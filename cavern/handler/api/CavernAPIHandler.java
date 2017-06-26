@@ -23,7 +23,7 @@ import cavern.item.ItemMagicalBook;
 import cavern.stats.HunterStats;
 import cavern.stats.MagicianStats;
 import cavern.stats.MinerStats;
-import cavern.util.WeightedItem;
+import cavern.util.WeightedItemStack;
 import cavern.world.WorldProviderIceCavern;
 import cavern.world.WorldProviderRuinsCavern;
 import net.minecraft.block.Block;
@@ -78,7 +78,7 @@ public class CavernAPIHandler implements ICavernAPI
 	@Override
 	public void addRandomiteItem(ItemStack item, int weight)
 	{
-		BlockCave.RANDOMITE_ITEMS.add(new WeightedItem(item, weight));
+		BlockCave.RANDOMITE_ITEMS.add(new WeightedItemStack(item, weight));
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class CavernAPIHandler implements ICavernAPI
 	@Override
 	public void addHibernateItem(ItemStack item, int weight)
 	{
-		WorldProviderIceCavern.HIBERNATE_ITEMS.add(new WeightedItem(item, weight));
+		WorldProviderIceCavern.HIBERNATE_ITEMS.add(new WeightedItemStack(item, weight));
 	}
 
 	@Override
@@ -174,7 +174,7 @@ public class CavernAPIHandler implements ICavernAPI
 	@Override
 	public void addRuinsChestItem(ItemStack item, int weight)
 	{
-		WorldProviderRuinsCavern.RUINS_CHEST_ITEMS.add(new WeightedItem(item, weight));
+		WorldProviderRuinsCavern.RUINS_CHEST_ITEMS.add(new WeightedItemStack(item, weight));
 	}
 
 	@Override

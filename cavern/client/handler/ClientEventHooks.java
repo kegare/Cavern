@@ -89,9 +89,10 @@ public class ClientEventHooks
 
 		if (mod.equals(Cavern.MODID))
 		{
-			if (type == null)
+			if (Strings.isNullOrEmpty(type))
 			{
 				GeneralConfig.syncConfig();
+				MiningAssistConfig.syncConfig();
 				CavernConfig.syncConfig();
 				AquaCavernConfig.syncConfig();
 				CavelandConfig.syncConfig();

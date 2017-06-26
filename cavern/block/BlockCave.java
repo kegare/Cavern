@@ -9,7 +9,7 @@ import cavern.block.bonus.FissureBreakEvent;
 import cavern.core.Cavern;
 import cavern.item.CaveItems;
 import cavern.item.ItemCave;
-import cavern.util.WeightedItem;
+import cavern.util.WeightedItemStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.MapColor;
@@ -42,7 +42,7 @@ public class BlockCave extends Block
 {
 	public static final PropertyEnum<EnumType> VARIANT = PropertyEnum.create("variant", EnumType.class);
 
-	public static final List<WeightedItem> RANDOMITE_ITEMS = Lists.newArrayList();
+	public static final List<WeightedItemStack> RANDOMITE_ITEMS = Lists.newArrayList();
 	public static final List<FissureBreakEvent> FISSURE_EVENTS = Lists.newArrayList();
 
 	public BlockCave()
@@ -130,7 +130,6 @@ public class BlockCave extends Block
 		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
@@ -152,14 +151,14 @@ public class BlockCave extends Block
 			switch (getType(state))
 			{
 				case RANDOMITE_ORE:
-					WeightedItem randomItem = WeightedRandom.getRandomItem(RANDOM, RANDOMITE_ITEMS);
+					WeightedItemStack randomItem = WeightedRandom.getRandomItem(RANDOM, RANDOMITE_ITEMS);
 
 					if (randomItem == null)
 					{
 						break;
 					}
 
-					ItemStack stack = randomItem.getItem();
+					ItemStack stack = randomItem.getItemStack();
 
 					if (RANDOM.nextDouble() <= 0.015D)
 					{
@@ -225,11 +224,11 @@ public class BlockCave extends Block
 		switch (getType(state))
 		{
 			case AQUAMARINE_ORE:
-				return ItemCave.EnumType.AQUAMARINE.getItemDamage();
+				return ItemCave.EnumType.AQUAMARINE.getMetadata();
 			case HEXCITE_ORE:
-				return ItemCave.EnumType.HEXCITE.getItemDamage();
+				return ItemCave.EnumType.HEXCITE.getMetadata();
 			case MANALITE_ORE:
-				return ItemCave.EnumType.MANALITE.getItemDamage();
+				return ItemCave.EnumType.MANALITE.getMetadata();
 			default:
 		}
 
@@ -388,6 +387,11 @@ public class BlockCave extends Block
 			}
 
 			return META_LOOKUP[meta];
+		}
+
+		public static EnumType byItemStack(ItemStack stack)
+		{
+			return byMetadata(stack.isEmpty() ? 0 : stack.getMetadata());
 		}
 
 		static
