@@ -13,6 +13,7 @@ import cavern.item.InventoryEquipment;
 import cavern.magic.IMagic.IPlainMagic;
 import cavern.recipe.CompositingRecipeBasic;
 import cavern.stats.MagicianStats;
+import cavern.util.CaveUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
@@ -206,6 +207,8 @@ public class MagicCompositing implements IPlainMagic
 		InventoryHelper.dropInventoryItems(world, player, inventory);
 
 		soundType = 0;
+
+		CaveUtils.grantAdvancement(player, "magic_compositing");
 
 		return true;
 	}

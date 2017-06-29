@@ -5,9 +5,9 @@ import java.util.Random;
 
 import cavern.config.CavernConfig;
 import cavern.config.IceCavernConfig;
-import cavern.config.manager.CaveVein;
 import cavern.world.gen.MapGenIceCaves;
 import cavern.world.gen.MapGenIceRavine;
+import cavern.world.gen.VeinGenerator;
 import cavern.world.gen.WorldGenIceDungeons;
 import cavern.world.gen.WorldGenIceLiquids;
 import net.minecraft.block.BlockFalling;
@@ -50,6 +50,8 @@ public class ChunkGeneratorIceCavern implements IChunkGenerator
 
 	private MapGenBase caveGenerator = new MapGenIceCaves();
 	private MapGenBase ravineGenerator = new MapGenIceRavine();
+
+	private VeinGenerator veinGenerator = new VeinGenerator(IceCavernConfig.veinManager.getCaveVeins());
 
 	private WorldGenerator lakeWaterGen = new WorldGenLakes(Blocks.WATER);
 	private WorldGenerator liquidWaterGen = new WorldGenIceLiquids(Blocks.FLOWING_WATER);
@@ -142,6 +144,8 @@ public class ChunkGeneratorIceCavern implements IChunkGenerator
 
 		replaceBiomeBlocks(chunkX, chunkZ, primer);
 
+		veinGenerator.generate(world, rand, biomesForGeneration, primer);
+
 		Chunk chunk = new Chunk(world, primer, chunkX, chunkZ);
 		byte[] biomeArray = chunk.getBiomeArray();
 
@@ -196,13 +200,6 @@ public class ChunkGeneratorIceCavern implements IChunkGenerator
 		}
 
 		MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Pre(world, rand, blockPos));
-
-		MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Pre(world, rand, blockPos));
-
-		for (CaveVein vein : IceCavernConfig.veinManager.getCaveVeins())
-		{
-			vein.generateVeins(world, rand, blockPos);
-		}
 
 		MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Post(world, rand, blockPos));
 

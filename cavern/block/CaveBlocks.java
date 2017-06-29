@@ -12,7 +12,6 @@ import cavern.item.ItemBlockCave;
 import cavern.item.ItemBlockPerverted;
 import cavern.item.ItemCave;
 import cavern.item.ItemPortalCave;
-import cavern.recipe.RecipeHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
 import net.minecraft.block.BlockOldLeaf;
@@ -29,7 +28,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.ColorizerFoliage;
 import net.minecraft.world.biome.BiomeColorHelper;
 import net.minecraftforge.client.model.ModelLoader;
@@ -127,9 +125,9 @@ public class CaveBlocks
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerModels(Block block, String... modelName)
+	public static void registerModels(Block block, String... modelNames)
 	{
-		CaveItems.registerModels(Item.getItemFromBlock(block), modelName);
+		CaveItems.registerModels(Item.getItemFromBlock(block), modelNames);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -139,9 +137,9 @@ public class CaveBlocks
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerVanillaModels(Block block, String... modelName)
+	public static void registerVanillaModels(Block block, String... modelNames)
 	{
-		CaveItems.registerVanillaModels(Item.getItemFromBlock(block), modelName);
+		CaveItems.registerVanillaModels(Item.getItemFromBlock(block), modelNames);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -210,36 +208,6 @@ public class CaveBlocks
 		OreDictionary.registerOre("blockManalite", BlockCave.EnumType.MANALITE_BLOCK.getItemStack());
 		OreDictionary.registerOre("treeLeaves", new ItemStack(PERVERTED_LEAVES, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre("treeSapling", new ItemStack(PERVERTED_SAPLING, 1, OreDictionary.WILDCARD_VALUE));
-	}
-
-	public static void registerRecipes(IForgeRegistry<IRecipe> registry)
-	{
-		registry.register(RecipeHelper.getSquareRecipe("aquamarine_block",
-			BlockCave.EnumType.AQUAMARINE_BLOCK.getItemStack(), ItemCave.EnumType.AQUAMARINE.getItemStack()));
-		registry.register(RecipeHelper.getSquareRecipe("magnite_block",
-			BlockCave.EnumType.MAGNITE_BLOCK.getItemStack(), ItemCave.EnumType.MAGNITE_INGOT.getItemStack()));
-		registry.register(RecipeHelper.getSquareRecipe("hexcite_block",
-			BlockCave.EnumType.HEXCITE_BLOCK.getItemStack(), ItemCave.EnumType.HEXCITE.getItemStack()));
-		registry.register(RecipeHelper.getSquareRecipe("manalite_block",
-			BlockCave.EnumType.MANALITE_BLOCK.getItemStack(), ItemCave.EnumType.MANALITE.getItemStack()));
-
-		registry.register(RecipeHelper.getShapelessRecipe("stick_perverted",
-			new ItemStack(Items.STICK, 8), new ItemStack(PERVERTED_LOG, 1, OreDictionary.WILDCARD_VALUE)));
-
-		for (BlockPlanks.EnumType type : BlockOldLog.VARIANT.getAllowedValues())
-		{
-			int meta = type.getMetadata();
-
-			registry.register(RecipeHelper.getSmallSquareRecipe("planks_perverted", "planks_perverted_" + type.getName(),
-				new ItemStack(Blocks.PLANKS, 4, meta), new ItemStack(PERVERTED_LOG, 1, meta)));
-			registry.register(RecipeHelper.getShapelessRecipe("sapling_perverted", "sapling_perverted_" + type.getName(),
-				new ItemStack(PERVERTED_SAPLING, 1, meta), new ItemStack(Blocks.SAPLING, 1, meta), new ItemStack(Items.FERMENTED_SPIDER_EYE)));
-		}
-
-		registry.register(RecipeHelper.getSurroundRecipe("slippery_ice",
-			new ItemStack(SLIPPERY_ICE), new ItemStack(Items.WATER_BUCKET), new ItemStack(Blocks.ICE)));
-		registry.register(RecipeHelper.getShapelessRecipe("slippery_ice", "slippery_ice_packed", new ItemStack(SLIPPERY_ICE),
-			new ItemStack(Blocks.PACKED_ICE), new ItemStack(Items.WATER_BUCKET)));
 	}
 
 	public static void registerSmeltingRecipes()

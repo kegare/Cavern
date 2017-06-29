@@ -4,6 +4,7 @@ import java.util.Random;
 
 import cavern.api.ISummonMob;
 import cavern.magic.IMagic.IPlainMagic;
+import cavern.util.CaveUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -124,11 +125,18 @@ public class MagicFlameBreath implements IPlainMagic
 			}
 		}
 
-		if (count > 0 && !player.isPotionActive(MobEffects.FIRE_RESISTANCE))
+		if (count > 0)
 		{
-			player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 10 * level * 20, 0, false, false));
+			if (!player.isPotionActive(MobEffects.FIRE_RESISTANCE))
+			{
+				player.addPotionEffect(new PotionEffect(MobEffects.FIRE_RESISTANCE, 10 * level * 20, 0, false, false));
+			}
+
+			CaveUtils.grantAdvancement(player, "magic_flame_breath");
+
+			return true;
 		}
 
-		return count > 0;
+		return false;
 	}
 }

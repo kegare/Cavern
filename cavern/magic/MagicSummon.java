@@ -7,6 +7,7 @@ import cavern.entity.EntitySummonCavenicZombie;
 import cavern.entity.EntitySummonSkeleton;
 import cavern.entity.EntitySummonZombie;
 import cavern.magic.IMagic.IPlainMagic;
+import cavern.util.CaveUtils;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -177,6 +178,9 @@ public class MagicSummon implements IPlainMagic
 			((EntityLiving)entity).onInitialSpawn(world.getDifficultyForLocation(pos), null);
 		}
 
-		world.spawnEntity(entity);
+		if (world.spawnEntity(entity))
+		{
+			CaveUtils.grantAdvancement(player, "magic_summon");
+		}
 	}
 }

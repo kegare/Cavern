@@ -1,0 +1,22 @@
+{
+    "display": {
+        "icon": {
+            "item": "cavern:caveland_portal"
+        },
+        "title": {
+            "translate": "advancements.cavern.enter_the_caveland.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.enter_the_caveland.description"
+        }
+    },
+    "parent": "cavern:pick_sapling",
+    "criteria": {
+        "entered_caveland": {
+            "trigger": "minecraft:changed_dimension",
+            "conditions": {
+                "to": "Caveland"
+            }
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "display": {
+        "icon": {
+            "item": "cavern:magical_book",
+            "data": 1
+        },
+        "title": {
+            "translate": "advancements.cavern.magic_explosion.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.magic_explosion.description"
+        }
+    },
+    "parent": "cavern:magic_flame_breath",
+    "criteria": {
+        "magic_explosion": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

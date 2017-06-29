@@ -1,0 +1,27 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:sapling",
+            "data": 0
+        },
+        "title": {
+            "translate": "advancements.cavern.pick_sapling.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.pick_sapling.description"
+        }
+    },
+    "parent": "cavern:root",
+    "criteria": {
+        "sapling": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "minecraft:sapling"
+                    }
+                ]
+            }
+        }
+    }
+}

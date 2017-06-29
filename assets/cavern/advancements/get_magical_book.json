@@ -1,0 +1,27 @@
+{
+    "display": {
+        "icon": {
+            "item": "cavern:magical_book",
+            "data": 9
+        },
+        "title": {
+            "translate": "advancements.cavern.get_magical_book.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.get_magical_book.description"
+        }
+    },
+    "parent": "cavern:root",
+    "criteria": {
+        "magical_book": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "cavern:magical_book"
+                    }
+                ]
+            }
+        }
+    }
+}

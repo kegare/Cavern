@@ -1,0 +1,20 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:diamond_sword"
+        },
+        "title": {
+            "translate": "advancements.cavenia.crazy_ranger.title"
+        },
+        "description": {
+            "translate": "advancements.cavenia.crazy_ranger.description"
+        },
+        "frame": "challenge"
+    },
+    "parent": "cavern:cavenia/ranger",
+    "criteria": {
+        "crazy_ranger": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

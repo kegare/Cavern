@@ -1,0 +1,20 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:golden_sword"
+        },
+        "title": {
+            "translate": "advancements.cavenia.ranger.title"
+        },
+        "description": {
+            "translate": "advancements.cavenia.ranger.description"
+        },
+        "frame": "goal"
+    },
+    "parent": "cavern:cavenia/crazy_hunter",
+    "criteria": {
+        "ranger": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

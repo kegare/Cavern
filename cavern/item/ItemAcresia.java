@@ -23,8 +23,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemAcresia extends ItemBlock implements IPlantable
 {
@@ -42,7 +40,6 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 		return "item." + EnumType.byItemStack(stack).getUnlocalizedName();
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
 	{
@@ -59,12 +56,12 @@ public class ItemAcresia extends ItemBlock implements IPlantable
 
 	public boolean isSeeds(ItemStack stack)
 	{
-		return stack != null && EnumType.byItemStack(stack) == EnumType.SEEDS;
+		return !stack.isEmpty() && EnumType.byItemStack(stack) == EnumType.SEEDS;
 	}
 
 	public boolean isFruits(ItemStack stack)
 	{
-		return stack != null && EnumType.byItemStack(stack) == EnumType.FRUITS;
+		return !stack.isEmpty() && EnumType.byItemStack(stack) == EnumType.FRUITS;
 	}
 
 	@Override

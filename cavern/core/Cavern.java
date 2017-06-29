@@ -69,8 +69,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 (
 	modid = Cavern.MODID,
 	guiFactory = "cavern.client.config.CaveGuiFactory",
-	updateJSON = "https://raw.githubusercontent.com/kegare/Cavern/master/cavern.json",
-	dependencies = "required-after:Forge@[14.21.0.2373,)"
+	updateJSON = "https://raw.githubusercontent.com/kegare/Cavern/master/cavern.json"
 )
 public class Cavern
 {
@@ -161,7 +160,6 @@ public class Cavern
 	{
 		IForgeRegistry<IRecipe> registry = event.getRegistry();
 
-		CaveBlocks.registerRecipes(registry);
 		CaveItems.registerRecipes(registry);
 	}
 

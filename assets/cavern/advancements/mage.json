@@ -1,0 +1,20 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:writable_book"
+        },
+        "title": {
+            "translate": "advancements.cavern.mage.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.mage.description"
+        },
+        "frame": "goal"
+    },
+    "parent": "cavern:magician",
+    "criteria": {
+        "mage": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

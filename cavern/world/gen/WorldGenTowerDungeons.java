@@ -45,6 +45,11 @@ public class WorldGenTowerDungeons extends WorldGenerator
 	{
 		setRandomStructures(world, rand, pos);
 
+		while (pos.getY() > 1 && world.isAirBlock(pos))
+		{
+			pos = pos.down();
+		}
+
 		generateAirs(world, rand, pos);
 		generateWalls(world, rand, pos);
 		generateFloors(world, rand, pos);
@@ -71,10 +76,7 @@ public class WorldGenTowerDungeons extends WorldGenerator
 		BlockPos from = pos.add(ceilSize, 0, ceilSize);
 		BlockPos to = pos.add(-ceilSize, y, -ceilSize);
 
-		for (BlockPos blockPos : BlockPos.getAllInBoxMutable(from, to))
-		{
-			world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 2);
-		}
+		BlockPos.getAllInBoxMutable(from, to).forEach(blockPos -> world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 2));
 	}
 
 	protected void generateWalls(World world, Random rand, BlockPos pos)
@@ -85,10 +87,7 @@ public class WorldGenTowerDungeons extends WorldGenerator
 			BlockPos from = center.offset(facing.rotateY(), roomSize);
 			BlockPos to = center.offset(facing.rotateYCCW(), roomSize).up(roomHeight * maxFloor);
 
-			for (BlockPos blockPos : BlockPos.getAllInBoxMutable(from, to))
-			{
-				world.setBlockState(blockPos, getWallBlock(world, rand, blockPos), 2);
-			}
+			BlockPos.getAllInBoxMutable(from, to).forEach(blockPos -> world.setBlockState(blockPos, getWallBlock(world, rand, blockPos), 2));
 		}
 	}
 
@@ -128,10 +127,7 @@ public class WorldGenTowerDungeons extends WorldGenerator
 			BlockPos from = center.offset(facing.rotateY(), ceilSize);
 			BlockPos to = center.offset(facing.rotateYCCW(), ceilSize);
 
-			for (BlockPos blockPos : BlockPos.getAllInBoxMutable(from, to))
-			{
-				world.setBlockState(blockPos, getFirstFloorLiquid(world, rand, blockPos), 2);
-			}
+			BlockPos.getAllInBoxMutable(from, to).forEach(blockPos -> world.setBlockState(blockPos, getFirstFloorLiquid(world, rand, blockPos), 2));
 
 			world.setBlockState(center, getFootholdBlock(world, rand, center), 2);
 		}
@@ -174,10 +170,7 @@ public class WorldGenTowerDungeons extends WorldGenerator
 			BlockPos from = center.offset(facing.rotateY(), floorSize);
 			BlockPos to = from.up(roomHeight * maxFloor - 1);
 
-			for (BlockPos blockPos : BlockPos.getAllInBoxMutable(from, to))
-			{
-				world.setBlockState(blockPos, getPillarBlock(world, rand, blockPos), 2);
-			}
+			BlockPos.getAllInBoxMutable(from, to).forEach(blockPos -> world.setBlockState(blockPos, getPillarBlock(world, rand, blockPos), 2));
 		}
 	}
 
@@ -193,10 +186,7 @@ public class WorldGenTowerDungeons extends WorldGenerator
 		BlockPos from = pos.add(ceilSize, y, ceilSize);
 		BlockPos to = pos.add(-ceilSize, y, -ceilSize);
 
-		for (BlockPos blockPos : BlockPos.getAllInBoxMutable(from, to))
-		{
-			world.setBlockState(blockPos, getCeilingBlock(world, rand, blockPos), 2);
-		}
+		BlockPos.getAllInBoxMutable(from, to).forEach(blockPos -> world.setBlockState(blockPos, getCeilingBlock(world, rand, blockPos), 2));
 	}
 
 	protected IBlockState getCeilingBlock(World world, Random rand, BlockPos pos)
@@ -216,26 +206,17 @@ public class WorldGenTowerDungeons extends WorldGenerator
 			BlockPos from = center.up();
 			BlockPos to = center.up(ladderHeight);
 
-			for (BlockPos blockPos : BlockPos.getAllInBoxMutable(from, to))
-			{
-				world.setBlockState(blockPos, Blocks.LADDER.getDefaultState().withProperty(BlockLadder.FACING, facing.getOpposite()), 2);
-			}
+			BlockPos.getAllInBoxMutable(from, to).forEach(blockPos -> world.setBlockState(blockPos, Blocks.LADDER.getDefaultState().withProperty(BlockLadder.FACING, facing.getOpposite()), 2));
 
 			from = center.offset(facing.rotateY());
 			to = from.up(wallHeight);
 
-			for (BlockPos blockPos : BlockPos.getAllInBoxMutable(from, to))
-			{
-				world.setBlockState(blockPos, getLadderCoverBlock(world, rand, blockPos), 2);
-			}
+			BlockPos.getAllInBoxMutable(from, to).forEach(blockPos -> world.setBlockState(blockPos, getLadderCoverBlock(world, rand, blockPos), 2));
 
 			from = center.offset(facing.rotateYCCW());
 			to = from.up(wallHeight);
 
-			for (BlockPos blockPos : BlockPos.getAllInBoxMutable(from, to))
-			{
-				world.setBlockState(blockPos, getLadderCoverBlock(world, rand, blockPos), 2);
-			}
+			BlockPos.getAllInBoxMutable(from, to).forEach(blockPos -> world.setBlockState(blockPos, getLadderCoverBlock(world, rand, blockPos), 2));
 		}
 	}
 

@@ -4,10 +4,9 @@ import java.util.List;
 import java.util.Random;
 
 import cavern.config.AquaCavernConfig;
-import cavern.config.CavernConfig;
-import cavern.config.manager.CaveVein;
 import cavern.world.gen.MapGenAquaCaves;
 import cavern.world.gen.MapGenAquaRavine;
+import cavern.world.gen.VeinGenerator;
 import cavern.world.gen.WorldGenCaveDungeons;
 import cavern.world.gen.WorldGenTowerDungeons;
 import net.minecraft.block.BlockFalling;
@@ -43,6 +42,8 @@ public class ChunkGeneratorAquaCavern implements IChunkGenerator
 
 	private final MapGenBase caveGenerator = new MapGenAquaCaves();
 	private final MapGenBase ravineGenerator = new MapGenAquaRavine();
+
+	private VeinGenerator veinGenerator = new VeinGenerator(AquaCavernConfig.veinManager.getCaveVeins());
 
 	private WorldGenerator dungeonGen = new WorldGenCaveDungeons(AquaCavernConfig.dungeonMobs.getKeys());
 	private WorldGenerator towerDungeonGen = new WorldGenTowerDungeons(AquaCavernConfig.towerDungeonMobs.getKeys());
@@ -118,6 +119,8 @@ public class ChunkGeneratorAquaCavern implements IChunkGenerator
 
 		replaceBiomeBlocks(chunkX, chunkZ, primer);
 
+		veinGenerator.generate(world, rand, biomesForGeneration, primer);
+
 		Chunk chunk = new Chunk(world, primer, chunkX, chunkZ);
 		byte[] biomeArray = chunk.getBiomeArray();
 
@@ -157,7 +160,7 @@ public class ChunkGeneratorAquaCavern implements IChunkGenerator
 			}
 		}
 
-		if (CavernConfig.generateTowerDungeons && TerrainGen.populate(this, world, rand, chunkX, chunkZ, false, EventType.DUNGEON))
+		if (AquaCavernConfig.generateTowerDungeons && TerrainGen.populate(this, world, rand, chunkX, chunkZ, false, EventType.DUNGEON))
 		{
 			if (rand.nextDouble() < 0.0035D)
 			{
@@ -170,13 +173,6 @@ public class ChunkGeneratorAquaCavern implements IChunkGenerator
 		}
 
 		MinecraftForge.EVENT_BUS.post(new DecorateBiomeEvent.Pre(world, rand, blockPos));
-
-		MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Pre(world, rand, blockPos));
-
-		for (CaveVein vein : AquaCavernConfig.veinManager.getCaveVeins())
-		{
-			vein.generateVeins(world, rand, blockPos);
-		}
 
 		MinecraftForge.ORE_GEN_BUS.post(new OreGenEvent.Post(world, rand, blockPos));
 

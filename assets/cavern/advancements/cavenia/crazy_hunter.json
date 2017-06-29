@@ -1,0 +1,19 @@
+{
+    "display": {
+        "icon": {
+            "item": "cavern:magnite_sword"
+        },
+        "title": {
+            "translate": "advancements.cavenia.crazy_hunter.title"
+        },
+        "description": {
+            "translate": "advancements.cavenia.crazy_hunter.description"
+        }
+    },
+    "parent": "cavern:cavenia/hunter",
+    "criteria": {
+        "crazy_hunter": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

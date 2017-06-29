@@ -62,11 +62,11 @@ public class ConfigEntities
 			}
 
 			ResourceLocation key = new ResourceLocation(value);
-			Class<? extends Entity> clazz = EntityList.getClass(key);
+			Class<? extends Entity> entityClass = EntityList.getClass(key);
 
-			if (clazz != null)
+			if (entityClass != null)
 			{
-				entities.add(clazz);
+				entities.add(entityClass);
 				keys.add(key);
 			}
 		});

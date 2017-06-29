@@ -1,0 +1,23 @@
+{
+    "display": {
+        "icon": {
+            "item": "cavern:cave_item",
+            "data": 5
+        },
+        "title": {
+            "translate": "advancements.cavenia.root.title"
+        },
+        "description": {
+            "translate": "advancements.cavenia.root.description"
+        },
+        "background": "minecraft:textures/blocks/gravel.png"
+    },
+    "criteria": {
+        "entered_cavenia": {
+            "trigger": "minecraft:changed_dimension",
+            "conditions": {
+                "to": "Cavenia"
+            }
+        }
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "display": {
+        "icon": {
+            "item": "cavern:manalite_bow"
+        },
+        "title": {
+            "translate": "advancements.cavern.magical_weapons.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.magical_weapons.description"
+        },
+        "frame": "goal"
+    },
+    "parent": "cavern:mine_manalite",
+    "criteria": {
+        "manalite_sword": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "cavern:manalite_sword"
+                    }
+                ]
+            }
+        },
+        "manalite_axe": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "cavern:manalite_axe"
+                    }
+                ]
+            }
+        },
+        "manalite_bow": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "cavern:manalite_bow"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        ["manalite_sword", "manalite_axe", "manalite_bow"]
+    ]
+}

@@ -30,6 +30,7 @@ import cavern.stats.MinerStats;
 import cavern.util.BlockMeta;
 import cavern.util.CaveUtils;
 import cavern.util.WeightedItemStack;
+import cavern.world.TeleporterRepatriation;
 import cavern.world.WorldProviderIceCavern;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSapling;
@@ -48,6 +49,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -57,6 +59,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -69,6 +72,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 
 public class CaveEventHooks
@@ -117,6 +121,30 @@ public class CaveEventHooks
 		{
 			EntityPlayerMP player = (EntityPlayerMP)event.player;
 			WorldServer world = player.getServerWorld();
+
+			if (GeneralConfig.cavernEscapeMission)
+			{
+				boolean fromCave = CavernAPI.dimension.isCaves(DimensionType.getById(event.fromDim));
+				boolean toCave = CavernAPI.dimension.isCaves(DimensionType.getById(event.toDim));
+
+				if (fromCave && !toCave && !GeneralConfig.canEscapeFromCaves(player))
+				{
+					MinecraftServer server = player.mcServer;
+					WorldServer worldNew = server.getWorld(event.fromDim);
+
+					if (worldNew != null)
+					{
+						player.timeUntilPortal = player.getPortalCooldown();
+
+						server.getPlayerList().transferPlayerToDimension(player, event.fromDim, new TeleporterRepatriation(worldNew));
+
+						player.sendStatusMessage(new TextComponentTranslation("cavern.escapeMission.bad.message"), true);
+
+						return;
+					}
+				}
+			}
+
 			String suffix = ".LastTeleportTime";
 
 			if (CavernAPI.dimension.isEntityInCavern(player))
@@ -559,6 +587,27 @@ public class CaveEventHooks
 			}
 
 			event.setResult(result);
+		}
+	}
+
+	@SubscribeEvent
+	public void onItemCrafted(ItemCraftedEvent event)
+	{
+		EntityPlayer player = event.player;
+		ItemStack stack = event.crafting;
+		World world = player.world;
+
+		if (!world.isRemote && !stack.isEmpty())
+		{
+			if (IceEquipment.isIceEquipment(stack))
+			{
+				int charge = IceEquipment.get(stack).getCharge();
+
+				if (charge > 0)
+				{
+					CaveUtils.grantAdvancement(player, "ice_charge");
+				}
+			}
 		}
 	}
 

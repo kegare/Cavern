@@ -1,0 +1,21 @@
+{
+    "display": {
+        "icon": {
+            "item": "cavern:magical_book",
+            "data": 12
+        },
+        "title": {
+            "translate": "advancements.cavern.magic_compositing.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.magic_compositing.description"
+        },
+        "frame": "goal"
+    },
+    "parent": "cavern:magic_summon",
+    "criteria": {
+        "magic_compositing": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

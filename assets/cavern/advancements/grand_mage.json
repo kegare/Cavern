@@ -1,0 +1,20 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:written_book"
+        },
+        "title": {
+            "translate": "advancements.cavern.grand_mage.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.grand_mage.description"
+        },
+        "frame": "challenge"
+    },
+    "parent": "cavern:mage",
+    "criteria": {
+        "grand_mage": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

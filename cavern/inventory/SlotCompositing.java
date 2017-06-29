@@ -34,7 +34,7 @@ public class SlotCompositing extends Slot
 	{
 		if (!stack.isEmpty() && stack.getItem() instanceof ItemMagicalBook)
 		{
-			if (stack.getMetadata() == ItemMagicalBook.EnumType.COMPOSITING.getMeta())
+			if (stack.getMetadata() == ItemMagicalBook.EnumType.COMPOSITING.getMetadata())
 			{
 				return false;
 			}

@@ -1,0 +1,19 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:book"
+        },
+        "title": {
+            "translate": "advancements.cavern.magician.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.magician.description"
+        }
+    },
+    "parent": "cavern:get_magical_book",
+    "criteria": {
+        "magician": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

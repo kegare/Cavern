@@ -11,6 +11,9 @@ import cavern.config.property.ConfigItems;
 import cavern.config.property.ConfigMiningPoints;
 import cavern.core.Cavern;
 import cavern.util.CaveUtils;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -39,6 +42,7 @@ public class GeneralConfig
 	public static boolean showMagicianRank;
 
 	public static ConfigCaveborn caveborn = new ConfigCaveborn();
+	public static boolean cavernEscapeMission;
 
 	public static boolean portalCache;
 	public static boolean slipperyIceCustomColor;
@@ -251,6 +255,16 @@ public class GeneralConfig
 		propOrder.add(prop.getName());
 		caveborn.setValue(prop.getInt(caveborn.getValue()));
 
+		prop = config.get(category, "cavernEscapeMission", false);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [default: " + prop.getDefault() + "]";
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, does not have to match client-side and server-side.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		cavernEscapeMission = prop.getBoolean(cavernEscapeMission);
+
 		prop = config.get(category, "portalCache", false);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -340,6 +354,34 @@ public class GeneralConfig
 		}
 
 		miningPoints.refreshPoints();
+
+		return true;
+	}
+
+	public static boolean canEscapeFromCaves(EntityPlayer entityPlayer)
+	{
+		if (!cavernEscapeMission)
+		{
+			return true;
+		}
+
+		if (entityPlayer == null || !(entityPlayer instanceof EntityPlayerMP))
+		{
+			return false;
+		}
+
+		EntityPlayerMP player = (EntityPlayerMP)entityPlayer;
+
+		for (Advancement advancement : player.mcServer.getAdvancementManager().getAdvancements())
+		{
+			if (Cavern.MODID.equals(advancement.getId().getResourceDomain()) && !advancement.getId().getResourcePath().startsWith("cavenia"))
+			{
+				if (!player.getAdvancements().getProgress(advancement).isDone())
+				{
+					return false;
+				}
+			}
+		}
 
 		return true;
 	}

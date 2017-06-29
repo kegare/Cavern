@@ -20,6 +20,7 @@ import cavern.stats.bonus.MineBonusExperience;
 import cavern.stats.bonus.MineBonusHaste;
 import cavern.stats.bonus.MineBonusResistance;
 import cavern.util.BlockMeta;
+import cavern.util.CaveUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -165,6 +166,23 @@ public class MinerStats implements IMinerStats
 				double z = player.posZ;
 
 				player.getServerWorld().playSound(null, x, y, z, CaveSounds.RANK_PROMOTE, SoundCategory.MASTER, 0.85F, 1.0F);
+
+				switch (current)
+				{
+					case IRON_MINER:
+						CaveUtils.grantAdvancement(player, "iron_miner");
+						break;
+					case GOLD_MINER:
+						CaveUtils.grantAdvancement(player, "gold_miner");
+						break;
+					case HEXCITE_MINER:
+						CaveUtils.grantAdvancement(player, "hexcite_miner");
+						break;
+					case DIAMOND_MINER:
+						CaveUtils.grantAdvancement(player, "diamond_miner");
+						break;
+					default:
+				}
 			}
 
 			MinecraftForge.EVENT_BUS.post(new MinerStatsEvent.PromoteRank(entityPlayer, this));

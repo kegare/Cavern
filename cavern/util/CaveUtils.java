@@ -23,6 +23,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 
 import cavern.core.Cavern;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
@@ -479,5 +480,26 @@ public class CaveUtils
 	{
 		player.renderOffsetX = -1.8F * facing.getFrontOffsetX();
 		player.renderOffsetZ = -1.8F * facing.getFrontOffsetZ();
+	}
+
+	public static void grantAdvancement(EntityPlayer entityPlayer, String key)
+	{
+		grantCriterion(entityPlayer, key, key);
+	}
+
+	public static void grantCriterion(EntityPlayer entityPlayer, String key, String criterion)
+	{
+		if (entityPlayer == null || !(entityPlayer instanceof EntityPlayerMP))
+		{
+			return;
+		}
+
+		EntityPlayerMP player = (EntityPlayerMP)entityPlayer;
+		Advancement advancement = player.mcServer.getAdvancementManager().getAdvancement(getKey(key));
+
+		if (advancement != null)
+		{
+			player.getAdvancements().grantCriterion(advancement, criterion);
+		}
 	}
 }

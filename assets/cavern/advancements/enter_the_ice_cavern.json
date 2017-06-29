@@ -1,0 +1,22 @@
+{
+    "display": {
+        "icon": {
+            "item": "cavern:ice_cavern_portal"
+        },
+        "title": {
+            "translate": "advancements.cavern.enter_the_ice_cavern.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.enter_the_ice_cavern.description"
+        }
+    },
+    "parent": "cavern:ice_stuff",
+    "criteria": {
+        "entered_ice_cavern": {
+            "trigger": "minecraft:changed_dimension",
+            "conditions": {
+                "to": "Ice Cavern"
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "display": {
+        "icon": {
+            "item": "cavern:ice_pickaxe"
+        },
+        "title": {
+            "translate": "advancements.cavern.ice_charge.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.ice_charge.description"
+        }
+    },
+    "parent": "cavern:enter_the_ice_cavern",
+    "criteria": {
+        "ice_charge": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

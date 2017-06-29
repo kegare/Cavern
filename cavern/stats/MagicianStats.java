@@ -14,6 +14,7 @@ import cavern.magic.IMagic.IPlayerMagic;
 import cavern.magic.IMagicCallback;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.MagicianStatsAdjustMessage;
+import cavern.util.CaveUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -145,6 +146,20 @@ public class MagicianStats implements IMagicianStats
 				double z = player.posZ;
 
 				player.getServerWorld().playSound(null, x, y, z, CaveSounds.RANK_PROMOTE, SoundCategory.MASTER, 0.85F, 1.0F);
+
+				switch (current)
+				{
+					case MAGICIAN:
+						CaveUtils.grantAdvancement(player, "magician");
+						break;
+					case MAGE:
+						CaveUtils.grantAdvancement(player, "mage");
+						break;
+					case GRAND_MAGE:
+						CaveUtils.grantAdvancement(player, "grand_mage");
+						break;
+					default:
+				}
 			}
 
 			MinecraftForge.EVENT_BUS.post(new MagicianStatsEvent.PromoteRank(entityPlayer, this));
@@ -322,6 +337,8 @@ public class MagicianStats implements IMagicianStats
 		{
 			player.sendStatusMessage(new TextComponentTranslation("cavern.magicianstats.mp.short"), true);
 			player.attackEntityFrom(CaveDamageSources.EXHAUST_MP, MathHelper.clamp(3 * magic.getMagicLevel(), 1, 10));
+
+			CaveUtils.grantAdvancement(player, "short_mp");
 
 			return false;
 		}

@@ -1,6 +1,7 @@
 package cavern.magic;
 
 import cavern.magic.IMagic.IPlainMagic;
+import cavern.util.CaveUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -66,6 +67,8 @@ public class MagicExplosion implements IPlainMagic
 		while (i < 2 + getMagicLevel() * 2 && world.isAirBlock(pos));
 
 		MagicalExplosion.createExplosion(world, player, pos.getX() + 0.5D, pos.getY() + 0.25D, pos.getZ() + 0.5D, 3.0F + 2.5F * getMagicLevel(), true);
+
+		CaveUtils.grantAdvancement(player, "magic_explosion");
 
 		return true;
 	}

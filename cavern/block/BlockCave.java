@@ -9,6 +9,7 @@ import cavern.block.bonus.FissureBreakEvent;
 import cavern.core.Cavern;
 import cavern.item.CaveItems;
 import cavern.item.ItemCave;
+import cavern.util.CaveUtils;
 import cavern.util.WeightedItemStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -182,6 +183,11 @@ public class BlockCave extends Block
 						spawnAsEntity(world, pos, stack);
 					}
 
+					if (player != null)
+					{
+						CaveUtils.grantAdvancement(player, "mine_randomite");
+					}
+
 					break;
 				case FISSURED_STONE:
 				case FISSURED_PACKED_ICE:
@@ -190,6 +196,11 @@ public class BlockCave extends Block
 					if (event != null)
 					{
 						event.get().onBreakBlock(world, pos, state, chance, fortune, harvesters.get(), RANDOM);
+					}
+
+					if (player != null)
+					{
+						CaveUtils.grantAdvancement(player, "mine_fissure");
 					}
 
 					break;

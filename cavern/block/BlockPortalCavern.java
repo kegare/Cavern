@@ -7,6 +7,7 @@ import com.google.common.cache.LoadingCache;
 import cavern.api.CavernAPI;
 import cavern.client.gui.GuiRegeneration;
 import cavern.config.CavernConfig;
+import cavern.config.GeneralConfig;
 import cavern.core.CaveSounds;
 import cavern.core.Cavern;
 import cavern.stats.IPortalCache;
@@ -36,6 +37,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -185,6 +187,19 @@ public class BlockPortalCavern extends BlockPortal
 
 					if (!player.isSneaking() && !player.isPotionActive(MobEffects.BLINDNESS))
 					{
+						if (GeneralConfig.cavernEscapeMission)
+						{
+							boolean fromCave = CavernAPI.dimension.isCaves(worldOld.provider.getDimensionType());
+							boolean toCave = CavernAPI.dimension.isCaves(worldNew.provider.getDimensionType());
+
+							if (fromCave && !toCave && !GeneralConfig.canEscapeFromCaves(player))
+							{
+								player.sendStatusMessage(new TextComponentTranslation("cavern.escapeMission.bad.message"), true);
+
+								return;
+							}
+						}
+
 						double x = player.posX;
 						double y = player.posY + player.getEyeHeight();
 						double z = player.posZ;

@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import cavern.block.BlockCave;
 import cavern.recipe.RecipeChargeIceEquipment;
 import cavern.recipe.RecipeHelper;
 import cavern.util.CaveUtils;
@@ -190,11 +189,11 @@ public class CaveItems
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerVanillaModels(Item item, String... modelName)
+	public static void registerVanillaModels(Item item, String... modelNames)
 	{
 		List<ModelResourceLocation> models = Lists.newArrayList();
 
-		for (String model : modelName)
+		for (String model : modelNames)
 		{
 			models.add(new ModelResourceLocation("minecraft:" + model, "inventory"));
 		}
@@ -240,55 +239,6 @@ public class CaveItems
 
 	public static void registerRecipes(IForgeRegistry<IRecipe> registry)
 	{
-		registry.register(RecipeHelper.getShapelessRecipe("aquamarine",
-			ItemCave.EnumType.AQUAMARINE.getItemStack(9), BlockCave.EnumType.AQUAMARINE_BLOCK.getItemStack()));
-		registry.register(RecipeHelper.getShapelessRecipe("magnite_ingot",
-			ItemCave.EnumType.MAGNITE_INGOT.getItemStack(9), BlockCave.EnumType.MAGNITE_BLOCK.getItemStack()));
-		registry.register(RecipeHelper.getShapelessRecipe("hexcite",
-			ItemCave.EnumType.HEXCITE.getItemStack(9), BlockCave.EnumType.HEXCITE_BLOCK.getItemStack()));
-		registry.register(RecipeHelper.getShapelessRecipe("manalite",
-			ItemCave.EnumType.MANALITE.getItemStack(9), BlockCave.EnumType.MANALITE_BLOCK.getItemStack()));
-
-		registry.register(RecipeHelper.getPickaxeRecipe("aquamarine_pickaxe",
-			new ItemStack(AQUAMARINE_PICKAXE), ItemCave.EnumType.AQUAMARINE.getItemStack()));
-		registry.register(RecipeHelper.getAxeRecipe("aquamarine_axe",
-			new ItemStack(AQUAMARINE_AXE), ItemCave.EnumType.AQUAMARINE.getItemStack()));
-		registry.register(RecipeHelper.getShovelRecipe("aquamarine_shovel",
-			new ItemStack(AQUAMARINE_SHOVEL), ItemCave.EnumType.AQUAMARINE.getItemStack()));
-
-		registry.register(RecipeHelper.getSwordRecipe("magnite_sword",
-			new ItemStack(MAGNITE_SWORD), ItemCave.EnumType.MAGNITE_INGOT.getItemStack()));
-		registry.register(RecipeHelper.getPickaxeRecipe("magnite_pickaxe",
-			new ItemStack(MAGNITE_PICKAXE), ItemCave.EnumType.MAGNITE_INGOT.getItemStack()));
-		registry.register(RecipeHelper.getAxeRecipe("magnite_axe",
-			new ItemStack(MAGNITE_AXE), ItemCave.EnumType.MAGNITE_INGOT.getItemStack()));
-		registry.register(RecipeHelper.getShovelRecipe("magnite_shovel",
-			new ItemStack(MAGNITE_SHOVEL), ItemCave.EnumType.MAGNITE_INGOT.getItemStack()));
-
-		registry.register(RecipeHelper.getSwordRecipe("hexcite_sword",
-			new ItemStack(HEXCITE_SWORD), ItemCave.EnumType.HEXCITE.getItemStack()));
-		registry.register(RecipeHelper.getPickaxeRecipe("hexcite_pickaxe",
-			new ItemStack(HEXCITE_PICKAXE), ItemCave.EnumType.HEXCITE.getItemStack()));
-		registry.register(RecipeHelper.getAxeRecipe("hexcite_axe",
-			new ItemStack(HEXCITE_AXE), ItemCave.EnumType.HEXCITE.getItemStack()));
-		registry.register(RecipeHelper.getShovelRecipe("hexcite_shovel",
-			new ItemStack(HEXCITE_SHOVEL), ItemCave.EnumType.HEXCITE.getItemStack()));
-		registry.register(RecipeHelper.getHoeRecipe("hexcite_hoe",
-			new ItemStack(HEXCITE_HOE), ItemCave.EnumType.HEXCITE.getItemStack()));
-		registry.register(RecipeHelper.getHelmetRecipe("hexcite_helmet",
-			new ItemStack(HEXCITE_HELMET), ItemCave.EnumType.HEXCITE.getItemStack()));
-		registry.register(RecipeHelper.getChestplateRecipe("hexcite_chestplate",
-			new ItemStack(HEXCITE_CHESTPLATE), ItemCave.EnumType.HEXCITE.getItemStack()));
-		registry.register(RecipeHelper.getLeggingsRecipe("hexcite_leggings",
-			new ItemStack(HEXCITE_LEGGINGS), ItemCave.EnumType.HEXCITE.getItemStack()));
-		registry.register(RecipeHelper.getBootsRecipe("hexcite_boots",
-			new ItemStack(HEXCITE_BOOTS), ItemCave.EnumType.HEXCITE.getItemStack()));
-
-		registry.register(RecipeHelper.getRodRecipe("ice_stick",
-			ItemCave.EnumType.ICE_STICK.getItemStack(2), new ItemStack(Blocks.ICE)));
-		registry.register(RecipeHelper.getRodRecipe("ice_stick", "ice_stick_packed",
-			ItemCave.EnumType.ICE_STICK.getItemStack(8), new ItemStack(Blocks.PACKED_ICE)));
-
 		registry.register(RecipeHelper.getSwordRecipe("ice_sword",
 			IceEquipment.getChargedItem(ICE_SWORD, 3), new ItemStack(Blocks.ICE), "stickIce"));
 		registry.register(RecipeHelper.getPickaxeRecipe("ice_pickaxe",
@@ -319,13 +269,6 @@ public class CaveItems
 			IceEquipment.getChargedItem(ICE_BOW, 36), new ItemStack(Items.BOW, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Blocks.PACKED_ICE)));
 
 		registry.register(RecipeHelper.getRecipe("charge_ice_equip", new RecipeChargeIceEquipment()));
-
-		registry.register(RecipeHelper.getSwordRecipe("manalite_sword",
-			new ItemStack(MANALITE_SWORD), ItemCave.EnumType.MANALITE.getItemStack()));
-		registry.register(RecipeHelper.getAxeRecipe("manalite_axe",
-			new ItemStack(MANALITE_AXE), ItemCave.EnumType.MANALITE.getItemStack()));
-		registry.register(RecipeHelper.getSmallSurroundRecipe("manalite_bow",
-			new ItemStack(MANALITE_BOW), new ItemStack(Items.BOW, 1, OreDictionary.WILDCARD_VALUE), ItemCave.EnumType.MANALITE.getItemStack()));
 	}
 
 	public static boolean hasMagicalItem(EntityPlayer player, boolean handOnly)

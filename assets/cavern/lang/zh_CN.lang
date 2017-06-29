@@ -219,20 +219,6 @@ item.shovelIce.name=冰铲
 item.hoeIce.name=冰锄
 item.bowIce.name=冰弓
 
-achievement.cavern.cavern.desc=去Cavern
-achievement.cavern.aquaCavern.desc=去Aqua Cavern
-achievement.cavern.caveland.desc=去Caveland
-achievement.cavern.iceCavern.desc=去Ice Cavern
-achievement.cavern.ruinsCavern.desc=去Ruins Cavern
-achievement.cavern.aquamarine=海蓝宝石
-achievement.cavern.aquamarine.desc=获得海蓝宝石
-achievement.cavern.magnite=超硝石
-achievement.cavern.magnite.desc=熔炼超硝石矿，获得超硝石锭
-achievement.cavern.hexcite=白钻石
-achievement.cavern.hexcite.desc=获得白钻石
-achievement.cavern.acresia=健壮的作物
-achievement.cavern.acresia.desc=黄奇粒实丰收
-
 tooltip.iceEquipment.charge=冰充 : %s
 
 shop.cavern.portal.name=传送门商店

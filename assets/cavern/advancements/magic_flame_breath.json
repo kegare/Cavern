@@ -1,0 +1,20 @@
+{
+    "display": {
+        "icon": {
+            "item": "cavern:magical_book",
+            "data": 0
+        },
+        "title": {
+            "translate": "advancements.cavern.magic_flame_breath.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.magic_flame_breath.description"
+        }
+    },
+    "parent": "cavern:magician",
+    "criteria": {
+        "magic_flame_breath": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

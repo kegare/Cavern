@@ -286,7 +286,7 @@ public class ItemMagicalBook extends Item
 			this.magicRarity = rarity;
 		}
 
-		public int getMeta()
+		public int getMetadata()
 		{
 			return meta;
 		}
@@ -350,7 +350,7 @@ public class ItemMagicalBook extends Item
 
 		public ItemStack getItemStack(int level)
 		{
-			return CaveItems.MAGICAL_BOOK.setMagicLevel(new ItemStack(CaveItems.MAGICAL_BOOK, 1, getMeta()), level);
+			return CaveItems.MAGICAL_BOOK.setMagicLevel(new ItemStack(CaveItems.MAGICAL_BOOK, 1, getMetadata()), level);
 		}
 
 		public static EnumType byMetadata(int meta)
@@ -372,7 +372,7 @@ public class ItemMagicalBook extends Item
 		{
 			for (EnumType type : values())
 			{
-				META_LOOKUP[type.getMeta()] = type;
+				META_LOOKUP[type.getMetadata()] = type;
 			}
 		}
 	}

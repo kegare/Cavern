@@ -1,0 +1,19 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:iron_sword"
+        },
+        "title": {
+            "translate": "advancements.cavenia.hunter.title"
+        },
+        "description": {
+            "translate": "advancements.cavenia.hunter.description"
+        }
+    },
+    "parent": "cavern:cavenia/root",
+    "criteria": {
+        "hunter": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

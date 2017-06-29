@@ -6,6 +6,7 @@ import cavern.capability.CaveCapabilities;
 import cavern.core.CaveSounds;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.HunterStatsAdjustMessage;
+import cavern.util.CaveUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -131,6 +132,23 @@ public class HunterStats implements IHunterStats
 				double z = player.posZ;
 
 				player.getServerWorld().playSound(null, x, y, z, CaveSounds.RANK_PROMOTE, SoundCategory.MASTER, 0.85F, 1.0F);
+
+				switch (current)
+				{
+					case HUNTER:
+						CaveUtils.grantCriterion(player, "cavenia/hunter", "hunter");
+						break;
+					case CRAZY_HUNTER:
+						CaveUtils.grantCriterion(player, "cavenia/crazy_hunter", "crazy_hunter");
+						break;
+					case RANGER:
+						CaveUtils.grantCriterion(player, "cavenia/ranger", "ranger");
+						break;
+					case CRAZY_RANGER:
+						CaveUtils.grantCriterion(player, "cavenia/crazy_ranger", "crazy_ranger");
+						break;
+					default:
+				}
 			}
 
 			MinecraftForge.EVENT_BUS.post(new HunterStatsEvent.PromoteRank(entityPlayer, this));

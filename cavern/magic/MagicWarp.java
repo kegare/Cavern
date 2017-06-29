@@ -168,6 +168,8 @@ public class MagicWarp implements IPlainMagic
 			CaveUtils.setLocationAndAngles(player, pos);
 
 			setWarpPoint(null, player.dimension);
+
+			CaveUtils.grantAdvancement(player, "magic_warp");
 		}
 		else
 		{

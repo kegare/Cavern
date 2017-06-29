@@ -1,0 +1,37 @@
+{
+    "display": {
+        "icon": {
+            "item": "cavern:cave_item",
+            "data": 6
+        },
+        "title": {
+            "translate": "advancements.cavern.mine_manalite.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.mine_manalite.description"
+        }
+    },
+    "parent": "cavern:get_magical_book",
+    "criteria": {
+        "manalite": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "cavern:cave_item",
+                        "data": 6
+                    }
+                ]
+            }
+        }
+    },
+    "rewards": {
+        "recipes": [
+            "cavern:manalite",
+            "cavern:manalite_block",
+            "cavern:manalite_sword",
+            "cavern:manalite_axe",
+            "cavern:manalite_bow"
+        ]
+    }
+}
