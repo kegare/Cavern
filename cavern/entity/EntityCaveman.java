@@ -231,7 +231,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 			{
 				ItemStack stack = entityItem.getItem();
 
-				if (stack != null && !stack.isEmpty())
+				if (!stack.isEmpty())
 				{
 					stack = onItemStackPickup(stack);
 
@@ -322,7 +322,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 	{
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
 
-		setHeldItem(EnumHand.MAIN_HAND, getInitialItem());
+		setHeldItem(EnumHand.MAIN_HAND, getInitialHeldItem());
 
 		for (ItemStack stack : getInitialInventoryItems())
 		{
@@ -332,7 +332,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 		return livingdata;
 	}
 
-	protected ItemStack getInitialItem()
+	protected ItemStack getInitialHeldItem()
 	{
 		if (rand.nextDouble() < 0.35D)
 		{
@@ -363,7 +363,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 
 		for (int i = 0; i < 3; ++i)
 		{
-			ItemStack stack = getInitialItem();
+			ItemStack stack = getInitialHeldItem();
 
 			if (!stack.isEmpty())
 			{

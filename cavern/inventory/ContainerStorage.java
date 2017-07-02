@@ -1,11 +1,14 @@
 package cavern.inventory;
 
+import invtweaks.api.container.ChestContainer;
+import invtweaks.api.container.ChestContainer.RowSizeCallback;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+@ChestContainer
 public class ContainerStorage extends Container
 {
 	private final IInventory storageInventory;
@@ -91,4 +94,10 @@ public class ContainerStorage extends Container
 
 		storageInventory.closeInventory(player);
 	}
+
+	 @RowSizeCallback
+	 public int getRowSize()
+	 {
+		 return numRows + 3;
+	 }
 }

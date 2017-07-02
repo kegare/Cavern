@@ -134,7 +134,7 @@ public class BlockCave extends Block
 	@Override
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
-		for (EnumType type : EnumType.values())
+		for (EnumType type : EnumType.VALUES)
 		{
 			list.add(type.getItemStack());
 		}
@@ -152,16 +152,15 @@ public class BlockCave extends Block
 			switch (getType(state))
 			{
 				case RANDOMITE_ORE:
+					ItemStack stack = ItemStack.EMPTY;
 					WeightedItemStack randomItem = WeightedRandom.getRandomItem(RANDOM, RANDOMITE_ITEMS);
 
-					if (randomItem == null)
+					if (randomItem != null)
 					{
-						break;
+						stack = randomItem.getItemStack();
 					}
 
-					ItemStack stack = randomItem.getItemStack();
-
-					if (RANDOM.nextDouble() <= 0.015D)
+					if (RANDOM.nextDouble() <= 0.015D * MathHelper.clamp(fortune, 1, 3))
 					{
 						Item item = Item.REGISTRY.getRandomObject(RANDOM);
 
@@ -195,7 +194,7 @@ public class BlockCave extends Block
 
 					if (event != null)
 					{
-						event.get().onBreakBlock(world, pos, state, chance, fortune, harvesters.get(), RANDOM);
+						event.get().onBreakBlock(world, pos, state, chance, fortune, player, RANDOM);
 					}
 
 					if (player != null)
@@ -310,7 +309,7 @@ public class BlockCave extends Block
 		MANALITE_ORE(9, "manalite_ore", "oreManalite", MapColor.DIAMOND, Material.ROCK, SoundType.STONE, 3.5F, 2),
 		MANALITE_BLOCK(10, "manalite_block", "blockManalite", MapColor.DIAMOND, Material.IRON, SoundType.METAL, 4.0F, 2);
 
-		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
+		public static final EnumType[] VALUES = new EnumType[values().length];
 
 		private final int meta;
 		private final String name;
@@ -392,12 +391,12 @@ public class BlockCave extends Block
 
 		public static EnumType byMetadata(int meta)
 		{
-			if (meta < 0 || meta >= META_LOOKUP.length)
+			if (meta < 0 || meta >= VALUES.length)
 			{
 				meta = 0;
 			}
 
-			return META_LOOKUP[meta];
+			return VALUES[meta];
 		}
 
 		public static EnumType byItemStack(ItemStack stack)
@@ -409,7 +408,7 @@ public class BlockCave extends Block
 		{
 			for (EnumType type : values())
 			{
-				META_LOOKUP[type.getMetadata()] = type;
+				VALUES[type.getMetadata()] = type;
 			}
 		}
 	}

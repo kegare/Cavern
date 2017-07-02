@@ -469,6 +469,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 
 				biomeList.scrollToTop();
 				biomeList.scrollToSelected();
+
 				break;
 		}
 	}

@@ -106,17 +106,17 @@ public class MagicUnknown implements IPlainMagic
 
 		if (bookItem.getItem() instanceof ItemMagicalBook)
 		{
-			ItemMagicalBook item = (ItemMagicalBook)bookItem.getItem();
+			ItemMagicalBook magicalBook = (ItemMagicalBook)bookItem.getItem();
 			int rank = MagicianStats.get(player).getRank();
-			int level = item.getMagicLevel(bookItem);
+			int level = magicalBook.getMagicLevel(bookItem);
 
 			if (level > rank + 1)
 			{
-				item.setMagicLevel(bookItem, 1);
+				magicalBook.setMagicLevel(bookItem, 1);
 			}
 			else if (RANDOM.nextDouble() <= 0.3D)
 			{
-				item.setMagicLevel(bookItem, --level);
+				magicalBook.setMagicLevel(bookItem, --level);
 			}
 		}
 

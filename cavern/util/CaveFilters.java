@@ -41,9 +41,9 @@ public class CaveFilters
 		catch (Throwable e) {}
 
 		Block block = blockMeta.getBlock();
-		ItemStack itemstack = new ItemStack(block, 1, blockMeta.getMeta());
+		ItemStack stack = new ItemStack(block, 1, blockMeta.getMeta());
 
-		if (itemstack.getItem() == Items.AIR)
+		if (stack.getItem() == Items.AIR)
 		{
 			try
 			{
@@ -67,7 +67,7 @@ public class CaveFilters
 		{
 			try
 			{
-				if (CaveUtils.containsIgnoreCase(itemstack.getUnlocalizedName(), filter))
+				if (CaveUtils.containsIgnoreCase(stack.getUnlocalizedName(), filter))
 				{
 					return true;
 				}
@@ -76,7 +76,7 @@ public class CaveFilters
 
 			try
 			{
-				if (CaveUtils.containsIgnoreCase(itemstack.getDisplayName(), filter))
+				if (CaveUtils.containsIgnoreCase(stack.getDisplayName(), filter))
 				{
 					return true;
 				}
@@ -112,11 +112,11 @@ public class CaveFilters
 		}
 		catch (Throwable e) {}
 
-		ItemStack itemstack = itemMeta.getItemStack();
+		ItemStack stack = itemMeta.getItemStack();
 
 		try
 		{
-			if (CaveUtils.containsIgnoreCase(itemstack.getUnlocalizedName(), filter))
+			if (CaveUtils.containsIgnoreCase(stack.getUnlocalizedName(), filter))
 			{
 				return true;
 			}
@@ -125,7 +125,7 @@ public class CaveFilters
 
 		try
 		{
-			if (CaveUtils.containsIgnoreCase(itemstack.getDisplayName(), filter))
+			if (CaveUtils.containsIgnoreCase(stack.getDisplayName(), filter))
 			{
 				return true;
 			}
@@ -134,7 +134,7 @@ public class CaveFilters
 
 		try
 		{
-			if (itemstack.getItem().getToolClasses(itemstack).contains(filter))
+			if (stack.getItem().getToolClasses(stack).contains(filter))
 			{
 				return true;
 			}
@@ -151,7 +151,7 @@ public class CaveFilters
 			return false;
 		}
 
-		if (Biome.getIdForBiome(biome) == NumberUtils.toInt(filter, -1) || CaveUtils.containsIgnoreCase(biome.getBiomeName(), filter))
+		if (Biome.getIdForBiome(biome) == NumberUtils.toInt(filter, -1) || CaveUtils.containsIgnoreCase(biome.getRegistryName().toString(), filter))
 		{
 			return true;
 		}

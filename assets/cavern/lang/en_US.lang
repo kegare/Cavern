@@ -491,6 +491,6 @@ cavern.miningassist.toggle.message=Mining Assist has been changed to %s
 cavern.miningassist.toggle.failed.message=Mining Assist cannot be changed until become the %s
 cavern.miningassist.notify.message=Mining Assist is set to %s
 
-tooltip.iceEquipment.charge=Ice Charge : %s
+tooltip.iceEquipment.charge=Ice Charge: %s
 
 cavern.escapeMission.bad.message=Cavern advancements has not been completed yet

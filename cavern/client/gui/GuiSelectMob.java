@@ -489,9 +489,21 @@ public class GuiSelectMob extends GuiScreen
 			});
 		}
 
-		protected boolean filterMatch(String name, String filter)
+		protected boolean filterMatch(String entry, String filter)
 		{
-			return StringUtils.containsIgnoreCase(name, filter) || StringUtils.containsIgnoreCase(I18n.format("entity." + name + ".name"), filter);
+			if (StringUtils.containsIgnoreCase(entry, filter))
+			{
+				return true;
+			}
+
+			String name = CaveUtils.getEntityName(new ResourceLocation(entry));
+
+			if (!Strings.isNullOrEmpty(name))
+			{
+				return StringUtils.containsIgnoreCase(name, filter);
+			}
+
+			return false;
 		}
 	}
 }

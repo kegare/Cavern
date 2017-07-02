@@ -4,9 +4,15 @@ import java.io.File;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.Level;
 
+import com.google.common.base.Strings;
+
 import cavern.util.CaveLog;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
@@ -107,5 +113,65 @@ public class Config
 		{
 			config.save();
 		}
+	}
+
+	@Nullable
+	public static Biome getBiomeFromString(@Nullable String str)
+	{
+		return getBiomeFromString(str, null);
+	}
+
+	public static Biome getBiomeFromString(@Nullable String str, @Nullable Biome fallback)
+	{
+		if (Strings.isNullOrEmpty(str))
+		{
+			return null;
+		}
+
+		if (NumberUtils.isCreatable(str))
+		{
+			int id = NumberUtils.toInt(str, -1);
+
+			if (id < 0 || id > 255)
+			{
+				return null;
+			}
+
+			return Biome.getBiome(id, fallback);
+		}
+
+		ResourceLocation key = new ResourceLocation(str);
+
+		return ObjectUtils.defaultIfNull(Biome.REGISTRY.getObject(key), fallback);
+	}
+
+	public static boolean containsBiome(@Nullable String[] biomes, @Nullable Biome biome)
+	{
+		if (biomes == null || biomes.length <= 0)
+		{
+			return false;
+		}
+
+		if (biome == null)
+		{
+			return false;
+		}
+
+		for (String str : biomes)
+		{
+			if (NumberUtils.isCreatable(str))
+			{
+				if (NumberUtils.toInt(str, -1) == Biome.getIdForBiome(biome))
+				{
+					return true;
+				}
+			}
+			else if (str.equals(biome.getRegistryName().toString()))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

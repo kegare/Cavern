@@ -49,7 +49,7 @@ public class ItemElixir extends Item
 			return;
 		}
 
-		for (EnumType type : EnumType.values())
+		for (EnumType type : EnumType.VALUES)
 		{
 			subItems.add(type.getItemStack());
 		}
@@ -143,7 +143,7 @@ public class ItemElixir extends Item
 		ELIXIR_MEDIUM(1, "elixirMedium", 50, true),
 		ELIXIR_HIGH(2, "elixirHigh", 100, true);
 
-		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
+		public static final EnumType[] VALUES = new EnumType[values().length];
 
 		private final int meta;
 		private final String unlocalizedName;
@@ -190,12 +190,12 @@ public class ItemElixir extends Item
 
 		public static EnumType byMetadata(int meta)
 		{
-			if (meta < 0 || meta >= META_LOOKUP.length)
+			if (meta < 0 || meta >= VALUES.length)
 			{
 				meta = 0;
 			}
 
-			return META_LOOKUP[meta];
+			return VALUES[meta];
 		}
 
 		public static EnumType byItemStack(ItemStack stack)
@@ -207,7 +207,7 @@ public class ItemElixir extends Item
 		{
 			for (EnumType type : values())
 			{
-				META_LOOKUP[type.getMetadata()] = type;
+				VALUES[type.getMetadata()] = type;
 			}
 		}
 	}

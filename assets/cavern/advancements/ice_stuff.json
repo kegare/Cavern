@@ -22,24 +22,5 @@
                 ]
             }
         }
-    },
-    "rewards": {
-        "recipes": [
-            "cavern:ice_stick",
-            "cavern:ice_stick_packed",
-            "cavern:ice_sword",
-            "cavern:ice_pickaxe",
-            "cavern:ice_axe",
-            "cavern:ice_shovel",
-            "cavern:ice_hoe",
-            "cavern:ice_sword_packed",
-            "cavern:ice_pickaxe_packed",
-            "cavern:ice_axe_packed",
-            "cavern:ice_shovel_packed",
-            "cavern:ice_hoe_packed",
-            "cavern:ice_bow",
-            "cavern:ice_bow_normal",
-            "cavern:ice_bow_packed"
-        ]
     }
 }

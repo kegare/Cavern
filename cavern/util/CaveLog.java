@@ -26,11 +26,6 @@ public class CaveLog
 		configured = true;
 	}
 
-	public static void log(String targetLog, Level level, String format, Object... data)
-	{
-		LogManager.getLogger(targetLog).log(level, String.format(format, data));
-	}
-
 	public static void log(Level level, String format, Object... data)
 	{
 		if (!configured)
@@ -39,11 +34,6 @@ public class CaveLog
 		}
 
 		LOG.myLog.log(level, String.format(format, data));
-	}
-
-	public static void log(String targetLog, Level level, Throwable ex, String format, Object... data)
-	{
-		LogManager.getLogger(targetLog).log(level, String.format(format, data), ex);
 	}
 
 	public static void log(Level level, Throwable ex, String format, Object... data)

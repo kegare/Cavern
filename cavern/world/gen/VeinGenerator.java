@@ -3,8 +3,7 @@ package cavern.world.gen;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.commons.lang3.ArrayUtils;
-
+import cavern.config.Config;
 import cavern.config.manager.CaveVein;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.EnumFacing.Axis;
@@ -149,13 +148,13 @@ public class VeinGenerator
 
 					if (state.getBlock() == vein.getTarget().getBlock() && state.getBlock().getMetaFromState(state) == vein.getTarget().getMeta())
 					{
-						int[] targetBiomes = vein.getBiomes();
+						String[] targetBiomes = vein.getBiomes();
 
 						if (targetBiomes != null && targetBiomes.length > 0)
 						{
 							Biome biome = biomes[x * 16 + z];
 
-							if (biome == null || !ArrayUtils.contains(targetBiomes, Biome.getIdForBiome(biome)))
+							if (biome == null || Config.containsBiome(targetBiomes, biome))
 							{
 								continue;
 							}

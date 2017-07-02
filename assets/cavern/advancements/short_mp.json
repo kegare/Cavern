@@ -16,5 +16,8 @@
         "short_mp": {
             "trigger": "minecraft:impossible"
         }
+    },
+    "rewards": {
+        "experience": 5
     }
 }

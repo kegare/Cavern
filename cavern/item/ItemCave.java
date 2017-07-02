@@ -48,7 +48,7 @@ public class ItemCave extends Item
 			return;
 		}
 
-		for (EnumType type : EnumType.values())
+		for (EnumType type : EnumType.VALUES)
 		{
 			subItems.add(type.getItemStack());
 		}
@@ -135,7 +135,7 @@ public class ItemCave extends Item
 		CAVENIC_ORB(5, "orbCavenic"),
 		MANALITE(6, "manalite");
 
-		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
+		public static final EnumType[] VALUES = new EnumType[values().length];
 
 		private final int meta;
 		private final String unlocalizedName;
@@ -168,12 +168,12 @@ public class ItemCave extends Item
 
 		public static EnumType byMetadata(int meta)
 		{
-			if (meta < 0 || meta >= META_LOOKUP.length)
+			if (meta < 0 || meta >= VALUES.length)
 			{
 				meta = 0;
 			}
 
-			return META_LOOKUP[meta];
+			return VALUES[meta];
 		}
 
 		public static EnumType byItemStack(ItemStack stack)
@@ -185,7 +185,7 @@ public class ItemCave extends Item
 		{
 			for (EnumType type : values())
 			{
-				META_LOOKUP[type.getMetadata()] = type;
+				VALUES[type.getMetadata()] = type;
 			}
 		}
 	}

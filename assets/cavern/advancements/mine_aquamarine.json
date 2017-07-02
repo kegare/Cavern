@@ -24,14 +24,5 @@
                 ]
             }
         }
-    },
-    "rewards": {
-        "recipes": [
-            "cavern:aquamarine",
-            "cavern:aquamarine_block",
-            "cavern:aquamarine_pickaxe",
-            "cavern:aquamarine_axe",
-            "cavern:aquamarine_shovel"
-        ]
     }
 }

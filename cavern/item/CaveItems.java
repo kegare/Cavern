@@ -20,6 +20,7 @@ import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.util.EnumHelper;
@@ -30,8 +31,8 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 public class CaveItems
 {
-	private static final List<Item> ITEMS = Lists.newArrayList();
-	private static final List<Item> MAGICAL_ITEMS = Lists.newArrayList();
+	private static final NonNullList<Item> ITEMS = NonNullList.create();
+	private static final NonNullList<Item> MAGICAL_ITEMS = NonNullList.create();
 
 	public static final ToolMaterial AQUAMARINE = EnumHelper.addToolMaterial("AQUAMARINE", 2, 200, 8.0F, 1.5F, 15);
 	public static final ToolMaterial MAGNITE = EnumHelper.addToolMaterial("MAGNITE", 3, 10, 100.0F, 11.0F, 50);
@@ -126,36 +127,42 @@ public class CaveItems
 	public static void registerModels()
 	{
 		registerModels(CAVE_ITEM, "aquamarine", "magnite_ingot", "hexcite", "ice_stick", "miner_orb", "cavenic_orb", "manalite");
-		registerModel(AQUAMARINE_PICKAXE, "aquamarine_pickaxe");
-		registerModel(AQUAMARINE_AXE, "aquamarine_axe");
-		registerModel(AQUAMARINE_SHOVEL, "aquamarine_shovel");
-		registerModel(MAGNITE_SWORD, "magnite_sword");
-		registerModel(MAGNITE_PICKAXE, "magnite_pickaxe");
-		registerModel(MAGNITE_AXE, "magnite_axe");
-		registerModel(MAGNITE_SHOVEL, "magnite_shovel");
-		registerModel(HEXCITE_SWORD, "hexcite_sword");
-		registerModel(HEXCITE_PICKAXE, "hexcite_pickaxe");
-		registerModel(HEXCITE_AXE, "hexcite_axe");
-		registerModel(HEXCITE_SHOVEL, "hexcite_shovel");
-		registerModel(HEXCITE_HOE, "hexcite_hoe");
-		registerModel(HEXCITE_HELMET, "hexcite_helmet");
-		registerModel(HEXCITE_CHESTPLATE, "hexcite_chestplate");
-		registerModel(HEXCITE_LEGGINGS, "hexcite_leggings");
-		registerModel(HEXCITE_BOOTS, "hexcite_boots");
-		registerModel(ICE_SWORD, "ice_sword");
-		registerModel(ICE_PICKAXE, "ice_pickaxe");
-		registerModel(ICE_AXE, "ice_axe");
-		registerModel(ICE_SHOVEL, "ice_shovel");
-		registerModel(ICE_HOE, "ice_hoe");
-		registerModel(ICE_BOW, "ice_bow");
+		registerModel(AQUAMARINE_PICKAXE);
+		registerModel(AQUAMARINE_AXE);
+		registerModel(AQUAMARINE_SHOVEL);
+		registerModel(MAGNITE_SWORD);
+		registerModel(MAGNITE_PICKAXE);
+		registerModel(MAGNITE_AXE);
+		registerModel(MAGNITE_SHOVEL);
+		registerModel(HEXCITE_SWORD);
+		registerModel(HEXCITE_PICKAXE);
+		registerModel(HEXCITE_AXE);
+		registerModel(HEXCITE_SHOVEL);
+		registerModel(HEXCITE_HOE);
+		registerModel(HEXCITE_HELMET);
+		registerModel(HEXCITE_CHESTPLATE);
+		registerModel(HEXCITE_LEGGINGS);
+		registerModel(HEXCITE_BOOTS);
+		registerModel(ICE_SWORD);
+		registerModel(ICE_PICKAXE);
+		registerModel(ICE_AXE);
+		registerModel(ICE_SHOVEL);
+		registerModel(ICE_HOE);
+		registerModel(ICE_BOW);
 		registerModels(MAGICAL_BOOK, "magical_book_flame_breath", "magical_book_explosion", "magical_book_thunderbolt",
 			"magical_book_venom_blast", "magical_book_return", "magical_book_heal", "magical_book_holy_bless", "magical_book_storage", "magical_book_warp",
 			"magical_book_unknown", "magical_book_torch", "magical_book_summon", "magical_book_compositing");
 		registerModels(ELIXIR, "elixir", "elixir_medium", "elixir_high");
-		registerModel(CAVENIC_BOW, "cavenic_bow");
-		registerModel(MANALITE_SWORD, "manalite_sword");
-		registerModel(MANALITE_AXE, "manalite_axe");
-		registerModel(MANALITE_BOW, "manalite_bow");
+		registerModel(CAVENIC_BOW);
+		registerModel(MANALITE_SWORD);
+		registerModel(MANALITE_AXE);
+		registerModel(MANALITE_BOW);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void registerModel(Item item)
+	{
+		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 
 	@SideOnly(Side.CLIENT)

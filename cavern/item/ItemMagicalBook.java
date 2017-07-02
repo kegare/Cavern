@@ -112,7 +112,7 @@ public class ItemMagicalBook extends Item
 			return;
 		}
 
-		for (EnumType type : EnumType.values())
+		for (EnumType type : EnumType.VALUES)
 		{
 			for (int i = 1; i <= type.getMaxLevel(); ++i)
 			{
@@ -267,7 +267,7 @@ public class ItemMagicalBook extends Item
 		SUMMON(11, "summon", 4, null, 0.0D, 0.15D),
 		COMPOSITING(12, "compositing", 1, new long[] {15000L}, 0.0D, 0.1D);
 
-		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
+		public static final EnumType[] VALUES = new EnumType[values().length];
 
 		private final int meta;
 		private final String unlocalizedName;
@@ -355,12 +355,12 @@ public class ItemMagicalBook extends Item
 
 		public static EnumType byMetadata(int meta)
 		{
-			if (meta < 0 || meta >= META_LOOKUP.length)
+			if (meta < 0 || meta >= VALUES.length)
 			{
 				meta = 0;
 			}
 
-			return META_LOOKUP[meta];
+			return VALUES[meta];
 		}
 
 		public static EnumType byItemStack(ItemStack stack)
@@ -372,7 +372,7 @@ public class ItemMagicalBook extends Item
 		{
 			for (EnumType type : values())
 			{
-				META_LOOKUP[type.getMetadata()] = type;
+				VALUES[type.getMetadata()] = type;
 			}
 		}
 	}

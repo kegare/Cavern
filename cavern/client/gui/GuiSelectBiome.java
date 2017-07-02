@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.base.Joiner;
@@ -15,7 +14,6 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.common.primitives.Ints;
 
 import cavern.client.config.CaveConfigGui;
 import cavern.config.Config;
@@ -39,7 +37,6 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
-import net.minecraftforge.fml.client.config.GuiConfigEntries.ArrayEntry;
 import net.minecraftforge.fml.client.config.HoverChecker;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -53,8 +50,6 @@ public class GuiSelectBiome extends GuiScreen
 	protected int selectorId;
 
 	protected GuiTextField biomeField;
-
-	protected ArrayEntry arrayEntry;
 
 	protected BiomeList biomeList;
 
@@ -85,12 +80,6 @@ public class GuiSelectBiome extends GuiScreen
 	{
 		this(parent);
 		this.biomeField = biomeField;
-	}
-
-	public GuiSelectBiome(GuiScreen parent, ArrayEntry entry)
-	{
-		this(parent);
-		this.arrayEntry = entry;
 	}
 
 	@Override
@@ -165,34 +154,21 @@ public class GuiSelectBiome extends GuiScreen
 						{
 							biomeField.setText("");
 						}
-
-						if (arrayEntry != null)
-						{
-							arrayEntry.setListFromChildScreen(new Object[0]);
-						}
 					}
 					else
 					{
-						Set<Integer> ret = Sets.newTreeSet();
+						Set<String> biomes = Sets.newTreeSet();
 
 						for (Biome biome : biomeList.selected)
 						{
-							if (biome != null)
-							{
-								ret.add(Biome.getIdForBiome(biome));
-							}
+							biomes.add(biome.getRegistryName().toString());
 						}
 
-						if (!ret.isEmpty())
+						if (!biomes.isEmpty())
 						{
 							if (biomeField != null)
 							{
-								biomeField.setText(Ints.join(", ", Ints.toArray(ret)));
-							}
-
-							if (arrayEntry != null)
-							{
-								arrayEntry.setListFromChildScreen(ret.toArray());
+								biomeField.setText(Joiner.on(", ").join(biomes));
 							}
 						}
 					}
@@ -255,7 +231,7 @@ public class GuiSelectBiome extends GuiScreen
 			{
 				List<String> info = Lists.newArrayList();
 
-				info.add(TextFormatting.DARK_GRAY + Integer.toString(Biome.getIdForBiome(biome)) + ": " + Strings.nullToEmpty(biome.getBiomeName()));
+				info.add(biome.getBiomeName() + TextFormatting.DARK_GRAY + "   " + biome.getRegistryName().toString());
 
 				IBlockState state = biome.topBlock;
 				Block block = state.getBlock();
@@ -325,10 +301,7 @@ public class GuiSelectBiome extends GuiScreen
 
 				for (Biome biome : biomeList.selected)
 				{
-					if (biome != null)
-					{
-						biomes.add(Biome.getIdForBiome(biome) + ": " + biome.getBiomeName());
-					}
+					biomes.add(biome.getRegistryName().toString());
 				}
 
 				drawHoveringText(biomes, mouseX, mouseY);
@@ -455,69 +428,49 @@ public class GuiSelectBiome extends GuiScreen
 				}
 			}
 
-			if (biomeField != null)
-			{
-				String text = biomeField.getText();
-
-				if (!Strings.isNullOrEmpty(text))
-				{
-					if (text.contains(","))
-					{
-						for (String str : Splitter.on(',').trimResults().omitEmptyStrings().split(text))
-						{
-							int i = NumberUtils.toInt(str, -1);
-
-							if (i >= 0 && i <= 255)
-							{
-								Biome biome = Biome.getBiome(i);
-
-								if (biome != null)
-								{
-									selected.add(biome);
-								}
-							}
-						}
-					}
-					else
-					{
-						int i = NumberUtils.toInt(text, -1);
-
-						if (i >= 0 && i <= 255)
-						{
-							Biome biome = Biome.getBiome(i);
-
-							if (biome != null)
-							{
-								selected.add(biome);
-							}
-						}
-					}
-				}
-			}
-
-			if (arrayEntry != null)
-			{
-				for (Object obj : arrayEntry.getCurrentValues())
-				{
-					String str = String.valueOf(obj);
-					int i = NumberUtils.toInt(str, -1);
-
-					if (i >= 0 && i <= 255)
-					{
-						Biome biome = Biome.getBiome(i);
-
-						if (biome != null)
-						{
-							selected.add(biome);
-						}
-					}
-				}
-			}
+			setSelectedBiomes();
 
 			if (!selected.isEmpty())
 			{
 				scrollToTop();
 				scrollToSelected();
+			}
+		}
+
+		protected void setSelectedBiomes()
+		{
+			if (biomeField == null)
+			{
+				return;
+			}
+
+			String text = biomeField.getText();
+
+			if (Strings.isNullOrEmpty(text))
+			{
+				return;
+			}
+
+			if (text.contains(","))
+			{
+				for (String str : Splitter.on(',').trimResults().omitEmptyStrings().split(text))
+				{
+					Biome biome = Config.getBiomeFromString(str);
+
+					if (biome != null)
+					{
+						selected.add(biome);
+					}
+				}
+			}
+			else
+			{
+				Biome biome = Config.getBiomeFromString(text);
+
+				if (biome != null)
+				{
+					selected.add(biome);
+				}
 			}
 		}
 
@@ -571,16 +524,20 @@ public class GuiSelectBiome extends GuiScreen
 				return;
 			}
 
-			String name = biome.getBiomeName();
+			boolean isTabDown = Keyboard.isKeyDown(Keyboard.KEY_TAB);
 
-			if (!Strings.isNullOrEmpty(name))
+			if (isTabDown)
 			{
-				drawCenteredString(fontRenderer, name, width / 2, par3 + 1, 0xFFFFFF);
+				drawCenteredString(fontRenderer, biome.getRegistryName().toString(), width / 2, par3 + 1, 0xE0E0E0);
+			}
+			else
+			{
+				drawCenteredString(fontRenderer, biome.getBiomeName(), width / 2, par3 + 1, 0xFFFFFF);
 			}
 
-			if (detailInfo.isChecked() || Keyboard.isKeyDown(Keyboard.KEY_TAB))
+			if (detailInfo.isChecked() && isTabDown)
 			{
-				drawString(fontRenderer, Integer.toString(Biome.getIdForBiome(biome)), width / 2 - 100, par3 + 1, 0xE0E0E0);
+				drawString(fontRenderer, Integer.toString(Biome.getIdForBiome(biome)), width / 2 - 100, par3 + 1, 0xFFFFFF);
 
 				if (Keyboard.isKeyDown(Keyboard.KEY_TAB))
 				{

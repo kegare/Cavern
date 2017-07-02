@@ -15,13 +15,13 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.common.primitives.Ints;
 
 import cavern.client.config.CaveConfigGui;
 import cavern.config.CavernConfig;
@@ -435,33 +435,26 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 							if (!Strings.isNullOrEmpty(biomesField.getText()))
 							{
 								String text = biomesField.getText();
-								Set<Integer> ret = Sets.newTreeSet();
+								Set<String> biomes = Sets.newTreeSet();
 
 								if (text.contains(","))
 								{
 									for (String str : Splitter.on(',').trimResults().omitEmptyStrings().split(text))
 									{
-										int i = NumberUtils.toInt(str, -1);
-
-										if (i >= 0 && i <= 255)
+										if (Strings.isNullOrEmpty(str))
 										{
-											ret.add(i);
+											biomes.add(str);
 										}
 									}
 								}
 								else
 								{
-									int i = NumberUtils.toInt(text, -1);
-
-									if (i >= 0 && i <= 255)
-									{
-										ret.add(i);
-									}
+									biomes.add(text);
 								}
 
-								if (!ret.isEmpty())
+								if (!biomes.isEmpty())
 								{
-									vein.setBiomes(Ints.toArray(ret));
+									vein.setBiomes(biomes.toArray(new String[biomes.size()]));
 								}
 							}
 						}
@@ -537,11 +530,15 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 								minHeightField.setText(Integer.toString(vein.getMinHeight()));
 								maxHeightField.setText(Integer.toString(vein.getMaxHeight()));
 
-								int[] biomes = vein.getBiomes();
+								String[] biomes = vein.getBiomes();
 
-								if (biomes != null && biomes.length > 0)
+								if (biomes == null || biomes.length <= 0)
 								{
-									biomesField.setText(Ints.join(", ", biomes));
+									biomesField.setText("");
+								}
+								else
+								{
+									biomesField.setText(Joiner.on(", ").join(biomes));
 								}
 							}
 						}
@@ -757,11 +754,11 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 				info.add(prefix + I18n.format(Config.LANG_KEY + "veins.size") + ": " + vein.getSize());
 				info.add(prefix + I18n.format(Config.LANG_KEY + "veins.height") + ": " + vein.getMinHeight() + ", " + vein.getMaxHeight());
 
-				int[] biomes = vein.getBiomes();
+				String[] biomes = vein.getBiomes();
 
 				if (biomes != null && biomes.length > 0)
 				{
-					List<String> list = fontRenderer.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "veins.biomes") + ": " + Ints.join(", ", biomes), 300);
+					List<String> list = fontRenderer.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "veins.biomes") + ": " + Joiner.on(", ").join(biomes), 300);
 
 					for (String text : list)
 					{

@@ -30,26 +30,28 @@ public class CaveBiomeManager
 		return type;
 	}
 
-	public boolean addCaveBiome(CaveBiome biome)
+	public boolean addCaveBiome(CaveBiome biomeEntry)
 	{
-		return addCaveBiome(biome, false);
+		return addCaveBiome(biomeEntry, false);
 	}
 
-	public boolean addCaveBiome(CaveBiome biome, boolean absent)
+	public boolean addCaveBiome(CaveBiome biomeEntry, boolean absent)
 	{
+		Biome biome = biomeEntry.getBiome();
+
 		if (absent)
 		{
-			if (getCaveBiomes().get(biome) == null)
+			if (getCaveBiomes().containsKey(biome))
 			{
-				getCaveBiomes().put(biome.getBiome(), biome);
-
-				return true;
+				return false;
 			}
 
-			return false;
+			getCaveBiomes().put(biome, biomeEntry);
+
+			return true;
 		}
 
-		return getCaveBiomes().put(biome.getBiome(), biome) != biome;
+		return getCaveBiomes().put(biome, biomeEntry) != biomeEntry;
 	}
 
 	public CaveBiome getCaveBiome(Biome biome)

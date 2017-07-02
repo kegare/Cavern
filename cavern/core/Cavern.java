@@ -116,6 +116,46 @@ public class Cavern
 		CaveConfigEntries.initEntries();
 	}
 
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event)
+	{
+		GeneralConfig.syncConfig();
+
+		MiningAssistConfig.syncConfig();
+
+		GameRegistry.registerFuelHandler(new CaveFuelHandler());
+
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new CaveGuiHandler());
+
+		CaveNetworkRegistry.registerMessages();
+
+		CaveCapabilities.registerCapabilities();
+
+		CavernAPIHandler.registerItems(CavernAPI.apiHandler);
+		CavernAPIHandler.registerEvents(CavernAPI.apiHandler);
+
+		MinerStats.registerMineBonus();
+
+		if (event.getSide().isClient())
+		{
+			CaveRenderingRegistry.registerRenderers();
+			CaveRenderingRegistry.registerRenderBlocks();
+
+			CaveKeyBindings.registerKeyBindings();
+
+			MinecraftForge.EVENT_BUS.register(new ClientEventHooks());
+			MinecraftForge.EVENT_BUS.register(new MinerStatsHUDEventHooks());
+			MinecraftForge.EVENT_BUS.register(new HunterStatsHUDEventHooks());
+			MinecraftForge.EVENT_BUS.register(new MagicianStatsHUDEventHooks());
+			MinecraftForge.EVENT_BUS.register(new MagicSpellEventHooks());
+		}
+
+		MinecraftForge.EVENT_BUS.register(new CaveEventHooks());
+		MinecraftForge.EVENT_BUS.register(new CavebornEventHooks());
+		MinecraftForge.EVENT_BUS.register(new MiningAssistEventHooks());
+		MinecraftForge.EVENT_BUS.register(new CaveniaEventHooks());
+	}
+
 	@SubscribeEvent
 	public void registerBlocks(RegistryEvent.Register<Block> event)
 	{
@@ -161,46 +201,6 @@ public class Cavern
 		IForgeRegistry<IRecipe> registry = event.getRegistry();
 
 		CaveItems.registerRecipes(registry);
-	}
-
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		GeneralConfig.syncConfig();
-
-		MiningAssistConfig.syncConfig();
-
-		GameRegistry.registerFuelHandler(new CaveFuelHandler());
-
-		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new CaveGuiHandler());
-
-		CaveNetworkRegistry.registerMessages();
-
-		CaveCapabilities.registerCapabilities();
-
-		CavernAPIHandler.registerItems(CavernAPI.apiHandler);
-		CavernAPIHandler.registerEvents(CavernAPI.apiHandler);
-
-		MinerStats.registerMineBonus();
-
-		if (event.getSide().isClient())
-		{
-			CaveRenderingRegistry.registerRenderers();
-			CaveRenderingRegistry.registerRenderBlocks();
-
-			CaveKeyBindings.registerKeyBindings();
-
-			MinecraftForge.EVENT_BUS.register(new ClientEventHooks());
-			MinecraftForge.EVENT_BUS.register(new MinerStatsHUDEventHooks());
-			MinecraftForge.EVENT_BUS.register(new HunterStatsHUDEventHooks());
-			MinecraftForge.EVENT_BUS.register(new MagicianStatsHUDEventHooks());
-			MinecraftForge.EVENT_BUS.register(new MagicSpellEventHooks());
-		}
-
-		MinecraftForge.EVENT_BUS.register(new CaveEventHooks());
-		MinecraftForge.EVENT_BUS.register(new CavebornEventHooks());
-		MinecraftForge.EVENT_BUS.register(new MiningAssistEventHooks());
-		MinecraftForge.EVENT_BUS.register(new CaveniaEventHooks());
 	}
 
 	@EventHandler

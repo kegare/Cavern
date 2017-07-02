@@ -314,16 +314,12 @@ public class GeneralConfig
 		Config.saveConfig(config);
 	}
 
-	public static boolean refreshMiningPointItems()
+	public static void refreshMiningPointItems()
 	{
-		if (miningPointItems == null)
+		if (miningPointItems != null)
 		{
-			return false;
+			miningPointItems.refreshItems();
 		}
-
-		miningPointItems.refreshItems();
-
-		return true;
 	}
 
 	public static boolean isMiningPointItem(ItemStack stack)
@@ -346,16 +342,12 @@ public class GeneralConfig
 		return false;
 	}
 
-	public static boolean refreshMiningPoints()
+	public static void refreshMiningPoints()
 	{
-		if (miningPoints == null)
+		if (miningPoints != null)
 		{
-			return false;
+			miningPoints.refreshPoints();
 		}
-
-		miningPoints.refreshPoints();
-
-		return true;
 	}
 
 	public static boolean canEscapeFromCaves(EntityPlayer entityPlayer)

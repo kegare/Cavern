@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
 
@@ -58,16 +59,7 @@ public class GuiSelectItem extends GuiScreen
 
 			list.clear();
 
-			CreativeTabs[] tabs = item.getCreativeTabs();
-
-			if (tabs == null)
-			{
-				item.getSubItems(item.getCreativeTab(), list);
-			}
-			else for (CreativeTabs tab : tabs)
-			{
-				item.getSubItems(tab, list);
-			}
+			item.getSubItems(ObjectUtils.defaultIfNull(item.getCreativeTab(), CreativeTabs.SEARCH), list);
 
 			if (list.isEmpty())
 			{

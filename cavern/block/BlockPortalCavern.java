@@ -352,7 +352,7 @@ public class BlockPortalCavern extends BlockPortal
 		private final EnumFacing.Axis axis;
 		private final EnumFacing rightDir;
 		private final EnumFacing leftDir;
-		private int portalBlockCount = 0;
+		private int portalBlockCount;
 		private BlockPos bottomLeft;
 		private int height;
 		private int width;

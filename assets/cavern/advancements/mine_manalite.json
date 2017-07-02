@@ -24,14 +24,5 @@
                 ]
             }
         }
-    },
-    "rewards": {
-        "recipes": [
-            "cavern:manalite",
-            "cavern:manalite_block",
-            "cavern:manalite_sword",
-            "cavern:manalite_axe",
-            "cavern:manalite_bow"
-        ]
     }
 }

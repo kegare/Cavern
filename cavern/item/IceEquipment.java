@@ -66,14 +66,14 @@ public class IceEquipment implements IIceEquipment
 		return EQUIPS.contains(item);
 	}
 
-	public static boolean isIceEquipment(ItemStack item)
+	public static boolean isIceEquipment(ItemStack stack)
 	{
-		return !item.isEmpty() && isIceEquipment(item.getItem());
+		return !stack.isEmpty() && isIceEquipment(stack.getItem());
 	}
 
-	public static IIceEquipment get(ItemStack item)
+	public static IIceEquipment get(ItemStack stack)
 	{
-		IIceEquipment equip = CaveCapabilities.getCapability(item, CaveCapabilities.ICE_EQUIP);
+		IIceEquipment equip = CaveCapabilities.getCapability(stack, CaveCapabilities.ICE_EQUIP);
 
 		if (equip == null)
 		{
@@ -85,16 +85,16 @@ public class IceEquipment implements IIceEquipment
 
 	public static ItemStack getChargedItem(Item item, int amount)
 	{
-		ItemStack itemstack = new ItemStack(item);
+		ItemStack stack = new ItemStack(item);
 
-		get(itemstack).setCharge(amount);
+		get(stack).setCharge(amount);
 
-		return itemstack;
+		return stack;
 	}
 
-	public static boolean canApplyEnchantments(ItemStack item, Enchantment enchantment)
+	public static boolean canApplyEnchantments(ItemStack stack, Enchantment enchantment)
 	{
-		if (enchantment == null || !isIceEquipment(item))
+		if (enchantment == null || !isIceEquipment(stack))
 		{
 			return false;
 		}

@@ -487,26 +487,27 @@ public class CavernConfig
 	{
 		for (String name : manager.config.getCategoryNames())
 		{
-			ResourceLocation entry = new ResourceLocation(name);
+			Biome biome = Config.getBiomeFromString(name);
 
-			if (Biome.REGISTRY.containsKey(entry))
+			if (biome == null)
 			{
-				Biome biome = Biome.REGISTRY.getObject(entry);
-				ConfigCategory category = manager.config.getCategory(name);
-
-				int weight = category.get("weight").getInt();
-				String terrainBlock = category.get("terrainBlock").getString();
-				String terrainBlockMeta = category.get("terrainBlockMeta").getString();
-				String topBlock = category.get("topBlock").getString();
-				String topBlockMeta = category.get("topBlockMeta").getString();
-
-				CaveBiome caveBiome = new CaveBiome(biome, weight);
-
-				caveBiome.setTerrainBlock(new BlockMeta(terrainBlock, terrainBlockMeta));
-				caveBiome.setTopBlock(new BlockMeta(topBlock, topBlockMeta));
-
-				manager.addCaveBiome(caveBiome);
+				continue;
 			}
+
+			ConfigCategory category = manager.config.getCategory(name);
+
+			int weight = category.get("weight").getInt();
+			String terrainBlock = category.get("terrainBlock").getString();
+			String terrainBlockMeta = category.get("terrainBlockMeta").getString();
+			String topBlock = category.get("topBlock").getString();
+			String topBlockMeta = category.get("topBlockMeta").getString();
+
+			CaveBiome caveBiome = new CaveBiome(biome, weight);
+
+			caveBiome.setTerrainBlock(new BlockMeta(terrainBlock, terrainBlockMeta));
+			caveBiome.setTopBlock(new BlockMeta(topBlock, topBlockMeta));
+
+			manager.addCaveBiome(caveBiome);
 		}
 	}
 
@@ -596,7 +597,7 @@ public class CavernConfig
 			propOrder.add(prop.getName());
 			prop.set(vein.getMaxHeight());
 
-			prop = manager.config.get(entry, "biomes", new int[0]);
+			prop = manager.config.get(entry, "biomes", new String[0]);
 			prop.setMaxListLength(256);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -633,7 +634,7 @@ public class CavernConfig
 					int size = category.get("size").getInt();
 					int minHeight = category.get("minHeight").getInt();
 					int maxHeight = category.get("maxHeight").getInt();
-					int[] biomes = category.get("biomes").getIntList();
+					String[] biomes = category.get("biomes").getStringList();
 
 					CaveVein vein = new CaveVein();
 

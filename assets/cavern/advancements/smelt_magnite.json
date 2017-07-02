@@ -24,15 +24,5 @@
                 ]
             }
         }
-    },
-    "rewards": {
-        "recipes": [
-            "cavern:magnite_ingot",
-            "cavern:magnite_block",
-            "cavern:magnite_sword",
-            "cavern:magnite_pickaxe",
-            "cavern:magnite_axe",
-            "cavern:magnite_shovel"
-        ]
     }
 }

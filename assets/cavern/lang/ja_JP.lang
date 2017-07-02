@@ -476,6 +476,6 @@ cavern.miningassist.toggle.message=採掘アシストが %s に変更されま�
 cavern.miningassist.toggle.failed.message=採掘アシストは %s になるまで使用できません
 cavern.miningassist.notify.message=採掘アシストは %s に設定されています
 
-tooltip.iceEquipment.charge=アイスチャージ : %s
+tooltip.iceEquipment.charge=アイスチャージ: %s
 
 cavern.escapeMission.bad.message=まだ達成していない洞窟の進捗があります

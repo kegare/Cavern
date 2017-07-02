@@ -219,6 +219,4 @@ item.shovelIce.name=冰铲
 item.hoeIce.name=冰锄
 item.bowIce.name=冰弓
 
-tooltip.iceEquipment.charge=冰充 : %s
-
-shop.cavern.portal.name=传送门商店
+tooltip.iceEquipment.charge=冰充: %s

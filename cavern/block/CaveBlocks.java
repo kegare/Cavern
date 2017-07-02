@@ -104,18 +104,24 @@ public class CaveBlocks
 		ModelLoader.setCustomStateMapper(PERVERTED_LEAVES, new StateMap.Builder().withName(BlockOldLeaf.VARIANT).withSuffix("_leaves").ignore(BlockLeaves.CHECK_DECAY, BlockLeaves.DECAYABLE).build());
 		ModelLoader.setCustomStateMapper(PERVERTED_SAPLING, new StateMap.Builder().withName(BlockSapling.TYPE).withSuffix("_sapling").build());
 
-		registerModel(CAVERN_PORTAL, "cavern_portal");
-		registerModel(AQUA_CAVERN_PORTAL, "aqua_cavern_portal");
-		registerModel(CAVELAND_PORTAL, "caveland_portal");
-		registerModel(ICE_CAVERN_PORTAL, "ice_cavern_portal");
-		registerModel(RUINS_CAVERN_PORTAL, "ruins_cavern_portal");
+		registerModel(CAVERN_PORTAL);
+		registerModel(AQUA_CAVERN_PORTAL);
+		registerModel(CAVELAND_PORTAL);
+		registerModel(ICE_CAVERN_PORTAL);
+		registerModel(RUINS_CAVERN_PORTAL);
 		registerModels(CAVE_BLOCK, "aquamarine_ore", "aquamarine_block", "magnite_ore", "magnite_block", "randomite_ore",
 			"hexcite_ore", "hexcite_block", "fissured_stone", "fissured_packed_ice", "manalite_ore", "manalite_block");
 		registerModels(ACRESIA, "acresia_seeds", "acresia_fruits");
 		registerVanillaModels(PERVERTED_LOG, "oak_log", "spruce_log", "birch_log", "jungle_log");
 		registerVanillaModels(PERVERTED_LEAVES, "oak_leaves", "spruce_leaves", "birch_leaves", "jungle_leaves");
 		registerVanillaModels(PERVERTED_SAPLING, "oak_sapling", "spruce_sapling", "birch_sapling", "jungle_sapling", "acacia_sapling", "dark_oak_sapling");
-		registerModel(SLIPPERY_ICE, "slippery_ice");
+		registerModel(SLIPPERY_ICE);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void registerModel(Block block)
+	{
+		CaveItems.registerModel(Item.getItemFromBlock(block));
 	}
 
 	@SideOnly(Side.CLIENT)

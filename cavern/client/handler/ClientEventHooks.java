@@ -3,6 +3,7 @@ package cavern.client.handler;
 import com.google.common.base.Strings;
 
 import cavern.api.CavernAPI;
+import cavern.api.IIceEquipment;
 import cavern.client.gui.GuiDownloadCaveTerrain;
 import cavern.client.gui.GuiLoadCaveTerrain;
 import cavern.config.AquaCavernConfig;
@@ -14,6 +15,7 @@ import cavern.config.IceCavernConfig;
 import cavern.config.MiningAssistConfig;
 import cavern.config.RuinsCavernConfig;
 import cavern.core.Cavern;
+import cavern.item.IceEquipment;
 import cavern.item.ItemBowIce;
 import cavern.item.ItemBowManalite;
 import cavern.item.ItemCavenicBow;
@@ -49,6 +51,7 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.GuiModList;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
@@ -466,6 +469,22 @@ public class ClientEventHooks
 			}
 
 			event.setNewfov(event.getFov() * (1.0F - f * 0.15F));
+		}
+	}
+
+	@SubscribeEvent
+	public void onItemTooltip(ItemTooltipEvent event)
+	{
+		ItemStack stack = event.getItemStack();
+
+		if (IceEquipment.isIceEquipment(stack))
+		{
+			IIceEquipment equip = IceEquipment.get(stack);
+
+			if (!equip.isHiddenTooltip())
+			{
+				event.getToolTip().add(Cavern.proxy.translateFormat("tooltip.iceEquipment.charge", equip.getCharge()));
+			}
 		}
 	}
 }

@@ -287,4 +287,4 @@ cavern.miningassist.toggle.message=채굴 보조가 %s 로 변경되었습니다
 cavern.miningassist.toggle.failed.message=채굴 보조는 %s 가 될 때까지 사용할 수 없습니다
 cavern.miningassist.notify.message=채굴 보조는 %s 로 설정되어 있습니다
 
-tooltip.iceEquipment.charge=아이스 충전 : %s
+tooltip.iceEquipment.charge=아이스 충전: %s

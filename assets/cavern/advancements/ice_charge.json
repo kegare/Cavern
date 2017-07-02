@@ -15,5 +15,8 @@
         "ice_charge": {
             "trigger": "minecraft:impossible"
         }
+    },
+    "rewards": {
+        "experience": 30
     }
 }

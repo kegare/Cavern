@@ -4,12 +4,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.common.primitives.Ints;
 
+import cavern.config.Config;
 import cavern.util.BlockMeta;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -23,7 +23,7 @@ public class CaveVein
 	private int veinSize;
 	private int minHeight;
 	private int maxHeight;
-	private int[] biomes;
+	private String[] biomes;
 
 	public CaveVein() {}
 
@@ -36,7 +36,7 @@ public class CaveVein
 		this.veinSize = size;
 		this.minHeight = min;
 		this.maxHeight = max;
-		this.biomes = new int[0];
+		this.biomes = new String[0];
 	}
 
 	public CaveVein(BlockMeta block, int weight, int size, int min, int max, Object... biomes)
@@ -51,15 +51,15 @@ public class CaveVein
 		this.biomes = vein.biomes;
 	}
 
-	private int[] getBiomes(Object... objects)
+	private String[] getBiomes(Object... objects)
 	{
-		Set<Integer> biomes = Sets.newTreeSet();
+		Set<String> biomes = Sets.newTreeSet();
 
 		for (Object element : objects)
 		{
 			if (element instanceof Biome)
 			{
-				biomes.add(Biome.getIdForBiome((Biome)element));
+				biomes.add(((Biome)element).getRegistryName().toString());
 			}
 			else if (element instanceof Integer)
 			{
@@ -67,7 +67,7 @@ public class CaveVein
 
 				if (biome != null)
 				{
-					biomes.add(Biome.getIdForBiome(biome));
+					biomes.add(biome.getRegistryName().toString());
 				}
 			}
 			else if (element instanceof Type)
@@ -76,12 +76,12 @@ public class CaveVein
 
 				for (Biome biome : BiomeDictionary.getBiomes(type))
 				{
-					biomes.add(Biome.getIdForBiome(biome));
+					biomes.add(biome.getRegistryName().toString());
 				}
 			}
 		}
 
-		return Ints.toArray(biomes);
+		return biomes.toArray(new String[biomes.size()]);
 	}
 
 	public BlockMeta getBlockMeta()
@@ -154,12 +154,12 @@ public class CaveVein
 		maxHeight = height;
 	}
 
-	public int[] getBiomes()
+	public String[] getBiomes()
 	{
 		return biomes;
 	}
 
-	public void setBiomes(int[] target)
+	public void setBiomes(String[] target)
 	{
 		biomes = target;
 	}
@@ -171,18 +171,18 @@ public class CaveVein
 			return Collections.emptyList();
 		}
 
-		List<Biome> ret = Lists.newArrayList();
+		NonNullList<Biome> list = NonNullList.create();
 
-		for (int id : biomes)
+		for (String key : biomes)
 		{
-			Biome biome = Biome.getBiome(id);
+			Biome biome = Config.getBiomeFromString(key);
 
 			if (biome != null)
 			{
-				ret.add(biome);
+				list.add(biome);
 			}
 		}
 
-		return ret;
+		return list;
 	}
 }

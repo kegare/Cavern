@@ -4,6 +4,7 @@ import java.util.Random;
 
 import cavern.magic.IMagic.IPlayerMagic;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
@@ -71,6 +72,11 @@ public class MagicHolyBless implements IPlayerMagic
 			while (potion == null || potion.isBadEffect() || targetPlayer.isPotionActive(potion))
 			{
 				potion = Potion.REGISTRY.getRandomObject(RANDOM);
+
+				if (potion == MobEffects.GLOWING)
+				{
+					potion = null;
+				}
 
 				if (++timeout > 100)
 				{
