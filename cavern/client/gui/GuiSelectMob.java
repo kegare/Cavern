@@ -28,8 +28,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.passive.IAnimals;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
@@ -491,6 +494,34 @@ public class GuiSelectMob extends GuiScreen
 
 		protected boolean filterMatch(String entry, String filter)
 		{
+			if ("monster".equalsIgnoreCase(filter))
+			{
+				Class<? extends Entity> entityClass = EntityList.getClass(new ResourceLocation(entry));
+
+				if (IMob.class.isAssignableFrom(entityClass))
+				{
+					return true;
+				}
+
+				return false;
+			}
+			else if ("animal".equalsIgnoreCase(filter))
+			{
+				Class<? extends Entity> entityClass = EntityList.getClass(new ResourceLocation(entry));
+
+				if (IMob.class.isAssignableFrom(entityClass))
+				{
+					return false;
+				}
+
+				if (IAnimals.class.isAssignableFrom(entityClass))
+				{
+					return true;
+				}
+
+				return false;
+			}
+
 			if (StringUtils.containsIgnoreCase(entry, filter))
 			{
 				return true;

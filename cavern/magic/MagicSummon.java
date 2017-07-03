@@ -2,6 +2,7 @@ package cavern.magic;
 
 import javax.annotation.Nullable;
 
+import cavern.core.CaveSounds;
 import cavern.entity.EntitySummonCavenicSkeleton;
 import cavern.entity.EntitySummonCavenicZombie;
 import cavern.entity.EntitySummonSkeleton;
@@ -12,6 +13,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -56,6 +58,12 @@ public class MagicSummon implements IPlainMagic
 	public int getMagicPoint()
 	{
 		return 2 * getMagicLevel();
+	}
+
+	@Override
+	public SoundEvent getMagicSound()
+	{
+		return CaveSounds.MAGIC_SUCCESS_MISC;
 	}
 
 	@Override

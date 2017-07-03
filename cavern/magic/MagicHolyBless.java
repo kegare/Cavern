@@ -2,11 +2,13 @@ package cavern.magic;
 
 import java.util.Random;
 
+import cavern.core.CaveSounds;
 import cavern.magic.IMagic.IPlayerMagic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.SoundEvent;
 
 public class MagicHolyBless implements IPlayerMagic
 {
@@ -54,6 +56,12 @@ public class MagicHolyBless implements IPlayerMagic
 	}
 
 	@Override
+	public SoundEvent getMagicSound()
+	{
+		return CaveSounds.MAGIC_HOLY;
+	}
+
+	@Override
 	public boolean isTarget(EntityPlayer player, EntityPlayer targetPlayer)
 	{
 		return getMagicLevel() > 1 || player.getCachedUniqueIdString().equals(targetPlayer.getCachedUniqueIdString());
@@ -84,7 +92,17 @@ public class MagicHolyBless implements IPlayerMagic
 				}
 			}
 
-			targetPlayer.addPotionEffect(new PotionEffect(potion, (60 + 30 * (level - 1)) * 20, level - 1, false, false));
+			if (potion != null)
+			{
+				if (potion.isInstant())
+				{
+					potion.affectEntity(player, player, targetPlayer, level - 1, 1.0D);
+				}
+				else
+				{
+					targetPlayer.addPotionEffect(new PotionEffect(potion, (60 + 30 * (level - 1)) * 20, level - 1, false, false));
+				}
+			}
 		}
 
 		targetPlayer.extinguish();

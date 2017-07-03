@@ -4,12 +4,14 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import cavern.core.CaveSounds;
 import cavern.magic.IMagic.IPlainMagic;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -66,6 +68,12 @@ public class MagicWarp implements IPlainMagic
 	public int getMagicPoint()
 	{
 		return 2 * getMagicLevel();
+	}
+
+	@Override
+	public SoundEvent getMagicSound()
+	{
+		return CaveSounds.MAGIC_SUCCESS_MISC;
 	}
 
 	@Override

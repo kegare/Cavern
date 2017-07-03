@@ -370,6 +370,7 @@ item.bowCavenic.torch=TORCH
 item.swordManalite.name=Magical Sword: Manalite
 item.axeManalite.name=Magical Axe: Manalite
 item.bowManalite.name=Magical Bow: Manalite
+item.compassOre.name=Ore Compass
 
 entity.CavenicSkeleton.name=Cavenic Skeleton
 entity.CavenicCreeper.name=Cavenic Creeper
@@ -406,6 +407,8 @@ advancements.cavern.mine_randomite.title=Strange Ore
 advancements.cavern.mine_randomite.description=Mine a randomite ore
 advancements.cavern.get_miner_orb.title=Miner's Treasure
 advancements.cavern.get_miner_orb.description=Acquire a miner's thought orb
+advancements.cavern.ore_compass.title=Ore Finder
+advancements.cavern.ore_compass.description=Construct a ore compass
 advancements.cavern.enter_the_ruins_cavern.title=Ruins Cavern
 advancements.cavern.enter_the_ruins_cavern.description=Enter the Ruins Cavern dimension
 advancements.cavern.mine_fissure.title=Wonder Fissure

@@ -1,11 +1,13 @@
 package cavern.magic;
 
+import cavern.core.CaveSounds;
 import cavern.entity.EntityMagicTorcher;
 import cavern.magic.IMagic.IPlainMagic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -66,6 +68,12 @@ public class MagicTorch implements IPlainMagic
 	public int getMagicPoint()
 	{
 		return getMagicLevel();
+	}
+
+	@Override
+	public SoundEvent getMagicSound()
+	{
+		return CaveSounds.MAGIC_SUCCESS_MISC;
 	}
 
 	@Override

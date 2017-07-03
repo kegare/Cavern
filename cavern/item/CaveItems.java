@@ -72,6 +72,7 @@ public class CaveItems
 	public static final ItemSwordManalite MANALITE_SWORD = new ItemSwordManalite();
 	public static final ItemAxeManalite MANALITE_AXE = new ItemAxeManalite();
 	public static final ItemBowManalite MANALITE_BOW = new ItemBowManalite();
+	public static final ItemOreCompass ORE_COMPASS = new ItemOreCompass();
 
 	public static List<Item> getItems()
 	{
@@ -121,6 +122,7 @@ public class CaveItems
 		registerItem(registry, MANALITE_SWORD.setRegistryName("manalite_sword"));
 		registerItem(registry, MANALITE_AXE.setRegistryName("manalite_axe"));
 		registerItem(registry, MANALITE_BOW.setRegistryName("manalite_bow"));
+		registerItem(registry, ORE_COMPASS.setRegistryName("ore_compass"));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -157,6 +159,7 @@ public class CaveItems
 		registerModel(MANALITE_SWORD);
 		registerModel(MANALITE_AXE);
 		registerModel(MANALITE_BOW);
+		registerModel(ORE_COMPASS, "ore_compass");
 	}
 
 	@SideOnly(Side.CLIENT)

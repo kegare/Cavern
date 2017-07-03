@@ -1,8 +1,10 @@
 package cavern.magic;
 
+import cavern.core.CaveSounds;
 import cavern.magic.IMagic.IPlayerMagic;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -51,6 +53,12 @@ public class MagicReturn implements IPlayerMagic
 	public int getMagicPoint()
 	{
 		return 5 * getMagicLevel();
+	}
+
+	@Override
+	public SoundEvent getMagicSound()
+	{
+		return CaveSounds.MAGIC_SUCCESS_MISC;
 	}
 
 	@Override

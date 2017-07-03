@@ -9,6 +9,7 @@ import cavern.api.IMagicianStats;
 import cavern.api.IMinerStats;
 import cavern.item.IceEquipment;
 import cavern.item.ItemMagicalBook;
+import cavern.item.OreCompass;
 import cavern.stats.IPortalCache;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.Entity;
@@ -37,6 +38,8 @@ public class CaveCapabilities
 	public static Capability<IIceEquipment> ICE_EQUIP = null;
 	@CapabilityInject(IInventoryEquipment.class)
 	public static Capability<IInventoryEquipment> INVENTORY_EQUIP = null;
+	@CapabilityInject(OreCompass.class)
+	public static Capability<OreCompass> ORE_COMPASS = null;
 
 	public static void registerCapabilities()
 	{
@@ -46,6 +49,7 @@ public class CaveCapabilities
 		CapabilityMagicianStats.register();
 		CapabilityIceEquipment.register();
 		CapabilityInventoryEquipment.register();
+		CapabilityOreCompass.register();
 
 		MinecraftForge.EVENT_BUS.register(new CaveCapabilities());
 	}

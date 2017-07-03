@@ -2,6 +2,7 @@ package cavern.magic;
 
 import java.util.Random;
 
+import cavern.core.CaveSounds;
 import cavern.item.ItemMagicalBook;
 import cavern.item.ItemMagicalBook.EnumType;
 import cavern.magic.IMagic.IPlainMagic;
@@ -9,6 +10,7 @@ import cavern.stats.MagicianStats;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
@@ -55,6 +57,12 @@ public class MagicUnknown implements IPlainMagic
 	public int getMagicPoint()
 	{
 		return 3;
+	}
+
+	@Override
+	public SoundEvent getMagicSound()
+	{
+		return CaveSounds.MAGIC_SUCCESS_MISC;
 	}
 
 	@Override

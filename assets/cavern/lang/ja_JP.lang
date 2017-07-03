@@ -359,6 +359,7 @@ item.bowCavenic.torch=松明
 item.swordManalite.name=魔剣: マナライト
 item.axeManalite.name=魔斧: マナライト
 item.bowManalite.name=魔弓: マナライト
+item.compassOre.name=鉱石コンパス
 
 entity.CavenicSkeleton.name=ケイブニックスケルトン
 entity.CavenicCreeper.name=ケイブニッククリーパー
@@ -393,6 +394,8 @@ advancements.cavern.mine_randomite.title=奇妙な鉱石
 advancements.cavern.mine_randomite.description=ランダマイト鉱石を採掘する
 advancements.cavern.get_miner_orb.title=炭鉱夫の宝
 advancements.cavern.get_miner_orb.description=炭鉱夫のオーブを手に入れる
+advancements.cavern.ore_compass.title=鉱石を探れ！
+advancements.cavern.ore_compass.description=鉱石コンパスをつくる
 advancements.cavern.enter_the_ruins_cavern.title=Ruins Cavern
 advancements.cavern.enter_the_ruins_cavern.description=遺された洞窟
 advancements.cavern.mine_fissure.title=不思議な亀裂

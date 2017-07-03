@@ -8,6 +8,7 @@ import cavern.api.CavernAPI;
 import cavern.api.ICompositingRecipe;
 import cavern.api.IMagicianStats;
 import cavern.api.event.PlayerCompositedEvent;
+import cavern.core.CaveSounds;
 import cavern.core.Cavern;
 import cavern.item.InventoryEquipment;
 import cavern.magic.IMagic.IPlainMagic;
@@ -82,7 +83,7 @@ public class MagicCompositing implements IPlainMagic
 				return SoundEvents.UI_BUTTON_CLICK;
 		}
 
-		return IPlainMagic.super.getMagicSound();
+		return CaveSounds.MAGIC_SUCCESS_MISC;
 	}
 
 	@Override

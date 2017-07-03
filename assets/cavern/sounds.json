@@ -89,10 +89,22 @@
       "cavern:magic_success"
     ]
   },
+  "magic.success.misc": {
+    "category": "player",
+    "sounds": [
+      "cavern:magic_success_misc"
+    ]
+  },
   "magic.success.short": {
     "category": "player",
     "sounds": [
       "cavern:magic_success_short"
+    ]
+  },
+  "magic.holy": {
+    "category": "player",
+    "sounds": [
+      "cavern:magic_holy"
     ]
   }
 }

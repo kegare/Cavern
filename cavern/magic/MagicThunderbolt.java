@@ -61,13 +61,9 @@ public class MagicThunderbolt implements IEntityMagic
 	public boolean execute(EntityPlayer player, Entity entity)
 	{
 		World world = entity.world;
+		EntityLightningBolt lightningBolt = new EntityLightningBolt(world, entity.posX, entity.posY, entity.posZ, false);
 
-		if (!world.isRemote)
-		{
-			EntityLightningBolt lightningBolt = new EntityLightningBolt(world, entity.posX, entity.posY, entity.posZ, false);
-
-			world.addWeatherEffect(lightningBolt);
-		}
+		world.addWeatherEffect(lightningBolt);
 
 		return true;
 	}

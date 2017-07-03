@@ -4,10 +4,12 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import cavern.core.CaveSounds;
 import cavern.magic.IMagic.IPlayerMagic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.SoundEvent;
 
 public class MagicHeal implements IPlayerMagic
 {
@@ -50,6 +52,12 @@ public class MagicHeal implements IPlayerMagic
 	public int getMagicPoint()
 	{
 		return getMagicLevel() + 1;
+	}
+
+	@Override
+	public SoundEvent getMagicSound()
+	{
+		return CaveSounds.MAGIC_HOLY;
 	}
 
 	@Override
