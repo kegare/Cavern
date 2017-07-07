@@ -12,10 +12,12 @@ import cavern.core.CaveSounds;
 import cavern.core.Cavern;
 import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
+import cavern.util.CaveUtils;
 import cavern.world.CaveType;
 import cavern.world.TeleporterCavern;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPortal;
+import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockWorldState;
@@ -336,7 +338,6 @@ public class BlockPortalCavern extends BlockPortal
 		return new ItemStack(this);
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list)
 	{
@@ -352,10 +353,12 @@ public class BlockPortalCavern extends BlockPortal
 		private final EnumFacing.Axis axis;
 		private final EnumFacing rightDir;
 		private final EnumFacing leftDir;
+
 		private int portalBlockCount;
 		private BlockPos bottomLeft;
 		private int height;
 		private int width;
+		private IBlockState portalFrame;
 
 		public Size(World world, BlockPos pos, EnumFacing.Axis axis)
 		{
@@ -406,15 +409,13 @@ public class BlockPortalCavern extends BlockPortal
 			{
 				BlockPos pos1 = pos.offset(face, i);
 
-				if (!isEmptyBlock(world.getBlockState(pos1)) || world.getBlockState(pos1.down()).getBlock() != Blocks.MOSSY_COBBLESTONE)
+				if (!isEmptyBlock(world.getBlockState(pos1)) || !isFrameBlock(world.getBlockState(pos1.down())))
 				{
 					break;
 				}
 			}
 
-			Block block = world.getBlockState(pos.offset(face, i)).getBlock();
-
-			return block == Blocks.MOSSY_COBBLESTONE ? i : 0;
+			return isFrameBlock(world.getBlockState(pos.offset(face, i))) ? i : 0;
 		}
 
 		public int getHeight()
@@ -437,32 +438,27 @@ public class BlockPortalCavern extends BlockPortal
 				{
 					BlockPos pos = bottomLeft.offset(rightDir, i).up(height);
 					IBlockState state = world.getBlockState(pos);
-					Block block = state.getBlock();
 
 					if (!isEmptyBlock(state))
 					{
 						break outside;
 					}
 
-					if (block == BlockPortalCavern.this)
+					if (state.getBlock() == BlockPortalCavern.this)
 					{
 						++portalBlockCount;
 					}
 
 					if (i == 0)
 					{
-						block = world.getBlockState(pos.offset(leftDir)).getBlock();
-
-						if (block != Blocks.MOSSY_COBBLESTONE)
+						if (!isFrameBlock(world.getBlockState(pos.offset(leftDir))))
 						{
 							break outside;
 						}
 					}
 					else if (i == width - 1)
 					{
-						block = world.getBlockState(pos.offset(rightDir)).getBlock();
-
-						if (block != Blocks.MOSSY_COBBLESTONE)
+						if (!isFrameBlock(world.getBlockState(pos.offset(rightDir))))
 						{
 							break outside;
 						}
@@ -472,9 +468,10 @@ public class BlockPortalCavern extends BlockPortal
 
 			for (i = 0; i < width; ++i)
 			{
-				if (world.getBlockState(bottomLeft.offset(rightDir, i).up(height)).getBlock() != Blocks.MOSSY_COBBLESTONE)
+				if (!isFrameBlock(world.getBlockState(bottomLeft.offset(rightDir, i).up(height))))
 				{
 					height = 0;
+
 					break;
 				}
 			}
@@ -496,6 +493,23 @@ public class BlockPortalCavern extends BlockPortal
 		protected boolean isEmptyBlock(IBlockState state)
 		{
 			return state.getMaterial() == Material.AIR || state.getBlock() == BlockPortalCavern.this;
+		}
+
+		protected boolean isFrameBlock(IBlockState state)
+		{
+			if (portalFrame == null)
+			{
+				if (state.getBlock() == Blocks.MOSSY_COBBLESTONE)
+				{
+					portalFrame = Blocks.MOSSY_COBBLESTONE.getDefaultState();
+				}
+				else if (state.getBlock() == Blocks.STONEBRICK && state.getBlock().getMetaFromState(state) == BlockStoneBrick.MOSSY_META)
+				{
+					portalFrame = Blocks.STONEBRICK.getDefaultState().withProperty(BlockStoneBrick.VARIANT, BlockStoneBrick.EnumType.MOSSY);
+				}
+			}
+
+			return CaveUtils.areBlockStatesEqual(portalFrame, state);
 		}
 
 		public boolean isValid()

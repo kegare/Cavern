@@ -195,7 +195,7 @@ public class MinerStatsHUDEventHooks
 		}
 
 		MinerRank minerRank = MinerRank.get(stats.getRank());
-		MiningAssist miningAssist = MiningAssist.byType(stats.getMiningAssist());
+		MiningAssist miningAssist = MiningAssist.get(stats.getMiningAssist());
 
 		String point = Integer.toString(stats.getPoint());
 		String rank = I18n.format(minerRank.getUnlocalizedName());

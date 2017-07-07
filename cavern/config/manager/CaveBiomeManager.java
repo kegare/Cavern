@@ -3,8 +3,6 @@ package cavern.config.manager;
 import java.util.Map;
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -71,7 +69,6 @@ public class CaveBiomeManager
 		return ret;
 	}
 
-	@Nullable
 	public CaveBiome getRandomCaveBiome(Random random)
 	{
 		return WeightedRandom.getRandomItem(random, Lists.newArrayList(getCaveBiomes().values()));

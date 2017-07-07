@@ -159,7 +159,7 @@ public class CaveItems
 		registerModel(MANALITE_SWORD);
 		registerModel(MANALITE_AXE);
 		registerModel(MANALITE_BOW);
-		registerModel(ORE_COMPASS, "ore_compass");
+		registerModel(ORE_COMPASS);
 	}
 
 	@SideOnly(Side.CLIENT)

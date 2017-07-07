@@ -23,6 +23,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 
 import cavern.core.Cavern;
+import cavern.network.CaveNetworkRegistry;
+import cavern.network.client.ToastMessage;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
@@ -331,6 +333,20 @@ public class CaveUtils
 		return getSpawnEgg(key);
 	}
 
+	public static boolean isMoving(@Nullable Entity entity)
+	{
+		if (entity == null)
+		{
+			return false;
+		}
+
+		double motionX = entity.motionX;
+		double motionY = entity.motionY;
+		double motionZ = entity.motionZ;
+
+		return motionX * motionX + motionY * motionY + motionZ * motionZ > 0.01D;
+	}
+
 	public static void setLocationAndAngles(@Nullable Entity entity, double posX, double posY, double posZ)
 	{
 		if (entity == null)
@@ -482,24 +498,33 @@ public class CaveUtils
 		player.renderOffsetZ = -1.8F * facing.getFrontOffsetZ();
 	}
 
-	public static void grantAdvancement(EntityPlayer entityPlayer, String key)
+	public static boolean grantAdvancement(EntityPlayer entityPlayer, String key)
 	{
-		grantCriterion(entityPlayer, key, key);
+		return grantCriterion(entityPlayer, key, key);
 	}
 
-	public static void grantCriterion(EntityPlayer entityPlayer, String key, String criterion)
+	public static boolean grantCriterion(EntityPlayer entityPlayer, String key, String criterion)
 	{
 		if (entityPlayer == null || !(entityPlayer instanceof EntityPlayerMP))
 		{
-			return;
+			return false;
 		}
 
 		EntityPlayerMP player = (EntityPlayerMP)entityPlayer;
 		Advancement advancement = player.mcServer.getAdvancementManager().getAdvancement(getKey(key));
 
-		if (advancement != null)
+		return advancement != null && player.getAdvancements().grantCriterion(advancement, criterion);
+	}
+
+	public static boolean grantToast(EntityPlayer player, String key)
+	{
+		if (grantCriterion(player, "toasts/" + key, key))
 		{
-			player.getAdvancements().grantCriterion(advancement, criterion);
+			CaveNetworkRegistry.sendTo(new ToastMessage(key), (EntityPlayerMP)player);
+
+			return true;
 		}
+
+		return false;
 	}
 }

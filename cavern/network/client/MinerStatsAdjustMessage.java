@@ -3,6 +3,7 @@ package cavern.network.client;
 import cavern.api.IMinerStats;
 import cavern.stats.MinerStats;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -46,7 +47,8 @@ public class MinerStatsAdjustMessage implements IMessage, IMessageHandler<MinerS
 	@Override
 	public IMessage onMessage(MinerStatsAdjustMessage message, MessageContext ctx)
 	{
-		EntityPlayer player = FMLClientHandler.instance().getClientPlayerEntity();
+		Minecraft mc = FMLClientHandler.instance().getClient();
+		EntityPlayer player = mc.player;
 
 		if (player != null)
 		{

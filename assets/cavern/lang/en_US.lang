@@ -67,6 +67,8 @@ cavern.config.general.caveborn.2=Cavern
 cavern.config.general.caveborn.3=Aqua Cavern
 cavern.config.general.caveborn.4=Caveland
 cavern.config.general.caveborn.5=Ice Cavern
+cavern.config.general.cavebornBonusItems=Caveborn Bonus Items
+cavern.config.general.cavebornBonusItems.tooltip=Specify the bonus items for caveborn.
 cavern.config.general.cavernEscapeMission=Cavern Escape Mission
 cavern.config.general.cavernEscapeMission.tooltip=Whether to enable escape mission from cave dimensions.
 cavern.config.general.portalCache=Portal Cache
@@ -486,13 +488,19 @@ key.cavern.miningAssist=Toggle Mining Assist
 
 key.categories.cavern=Cavern
 
+cavern.miningassist.name=Mining Assist
 cavern.miningassist.disabled=Disabled
 cavern.miningassist.quick=QUICK
 cavern.miningassist.ranged=RANGED
 cavern.miningassist.adit=ADIT
 cavern.miningassist.toggle.message=Mining Assist has been changed to %s
 cavern.miningassist.toggle.failed.message=Mining Assist cannot be changed until become the %s
+cavern.miningassist.toggle.press=Press %s key to toggle mode
 cavern.miningassist.notify.message=Mining Assist is set to %s
+
+cavern.toast.ability.title=Ability Unlocked!
+cavern.toast.mission.title=Mission
+cavern.toast.mission.ruins=In Search of Lost Orb
 
 tooltip.iceEquipment.charge=Ice Charge: %s
 

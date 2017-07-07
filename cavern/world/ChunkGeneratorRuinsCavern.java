@@ -172,24 +172,20 @@ public class ChunkGeneratorRuinsCavern implements IChunkGenerator
 					for (int i = 0; i < 18; ++i)
 					{
 						WeightedItemStack randomItem = WeightedRandom.getRandomItem(rand, WorldProviderRuinsCavern.RUINS_CHEST_ITEMS);
+						ItemStack stack = randomItem.getItemStack();
 
-						if (randomItem != null)
+						if (!stack.isEmpty())
 						{
-							ItemStack stack = randomItem.getItemStack();
+							int count = stack.getCount();
 
-							if (stack != null)
+							if (count > 1)
 							{
-								int count = stack.getCount();
+								int min = count / 2;
 
-								if (count > 1)
-								{
-									int min = count / 2;
-
-									stack.setCount(Math.max(rand.nextInt(count) + 1, min));
-								}
-
-								chest.setInventorySlotContents(i, stack);
+								stack.setCount(Math.max(rand.nextInt(count) + 1, min));
 							}
+
+							chest.setInventorySlotContents(i, stack);
 						}
 					}
 				}

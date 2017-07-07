@@ -15,7 +15,7 @@ public enum MagicianRank
 	MAGE(3, 300, 300, 0.75F, 7, "mage", new ItemStack(Items.WRITABLE_BOOK)),
 	GRAND_MAGE(4, 1000, 500, 0.55F, 6, "grandMage", new ItemStack(Items.WRITTEN_BOOK));
 
-	private static final MagicianRank[] RANK_LOOKUP = new MagicianRank[values().length];
+	public static final MagicianRank[] VALUES = new MagicianRank[values().length];
 
 	private final int rank;
 	private final int phase;
@@ -107,21 +107,21 @@ public enum MagicianRank
 			rank = 0;
 		}
 
-		int max = RANK_LOOKUP.length - 1;
+		int max = VALUES.length - 1;
 
 		if (rank > max)
 		{
 			rank = max;
 		}
 
-		return RANK_LOOKUP[rank];
+		return VALUES[rank];
 	}
 
 	static
 	{
 		for (MagicianRank rank : values())
 		{
-			RANK_LOOKUP[rank.getRank()] = rank;
+			VALUES[rank.getRank()] = rank;
 		}
 	}
 }

@@ -22,13 +22,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiDownloadCaveTerrain extends GuiDownloadTerrain
 {
+	private static int panoramaTimer;
+
 	private final DynamicTexture viewportTexture;
 	private final ResourceLocation panoramaBackground;
 	private final long prevTime;
 
 	public PanoramaPaths currentPanoramaPaths;
-
-	private static int panoramaTimer;
 
 	public GuiDownloadCaveTerrain(NetHandlerPlayClient handler)
 	{
@@ -41,13 +41,13 @@ public class GuiDownloadCaveTerrain extends GuiDownloadTerrain
 
 	public PanoramaPaths getPanoramaPaths()
 	{
-		if (GuiListSlot.panoramaPaths.isEmpty())
+		if (GuiListSlot.PANORAMA_PATHS.isEmpty())
 		{
 			currentPanoramaPaths = null;
 		}
 		else if (currentPanoramaPaths == null)
 		{
-			currentPanoramaPaths = GuiListSlot.panoramaPaths.get(0, null);
+			currentPanoramaPaths = GuiListSlot.PANORAMA_PATHS.get(0, null);
 		}
 
 		return currentPanoramaPaths;

@@ -14,7 +14,10 @@ import cavern.util.CaveUtils;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.relauncher.FMLLaunchHandler;
@@ -42,6 +45,8 @@ public class GeneralConfig
 	public static boolean showMagicianRank;
 
 	public static ConfigCaveborn caveborn = new ConfigCaveborn();
+	public static ConfigItems cavebornBonusItems = new ConfigItems();
+
 	public static boolean cavernEscapeMission;
 
 	public static boolean portalCache;
@@ -255,6 +260,23 @@ public class GeneralConfig
 		propOrder.add(prop.getName());
 		caveborn.setValue(prop.getInt(caveborn.getValue()));
 
+		NonNullList<ItemStack> items = NonNullList.create();
+
+		items.add(new ItemStack(Items.STONE_PICKAXE));
+		items.add(new ItemStack(Items.STONE_SWORD));
+		items.add(new ItemStack(Blocks.TORCH));
+		items.add(new ItemStack(Items.BREAD));
+
+		prop = config.get(category, "cavebornBonusItems", cavebornBonusItems.createValues(items));
+		prop.setConfigEntryClass(CaveConfigEntries.selectBlocksAndItems);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		cavebornBonusItems.setValues(prop.getStringList());
+
 		prop = config.get(category, "cavernEscapeMission", false);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -347,6 +369,14 @@ public class GeneralConfig
 		if (miningPoints != null)
 		{
 			miningPoints.refreshPoints();
+		}
+	}
+
+	public static void refreshCavebornBonusItems()
+	{
+		if (cavebornBonusItems != null)
+		{
+			cavebornBonusItems.refreshItems();
 		}
 	}
 

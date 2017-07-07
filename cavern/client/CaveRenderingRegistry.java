@@ -2,6 +2,8 @@ package cavern.client;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import com.google.common.collect.Maps;
 
 import cavern.client.renderer.RenderCaveman;
@@ -77,6 +79,6 @@ public class CaveRenderingRegistry
 	{
 		Block ret = RENDER_BLOCK_MAP.get(block);
 
-		return ret == null ? block : ret;
+		return ObjectUtils.defaultIfNull(ret, block);
 	}
 }

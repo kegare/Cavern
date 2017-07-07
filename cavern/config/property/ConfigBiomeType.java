@@ -1,7 +1,5 @@
 package cavern.config.property;
 
-import net.minecraft.util.math.MathHelper;
-
 public class ConfigBiomeType
 {
 	private int value;
@@ -18,16 +16,45 @@ public class ConfigBiomeType
 
 	public Type getType()
 	{
-		Type[] types = Type.values();
-		int max = types.length - 1;
-
-		return types[MathHelper.clamp(getValue(), 0, max)];
+		return Type.get(getValue());
 	}
 
 	public enum Type
 	{
-		NATURAL,
-		SQUARE,
-		LARGE_SQUARE
+		NATURAL(0),
+		SQUARE(1),
+		LARGE_SQUARE(2);
+
+		public static final Type[] VALUES = new Type[values().length];
+
+		private final int type;
+
+		private Type(int type)
+		{
+			this.type = type;
+		}
+
+		public int getType()
+		{
+			return type;
+		}
+
+		public static Type get(int type)
+		{
+			if (type < 0 || type >= VALUES.length)
+			{
+				type = 0;
+			}
+
+			return VALUES[type];
+		}
+
+		static
+		{
+			for (Type type : values())
+			{
+				VALUES[type.getType()] = type;
+			}
+		}
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
+import cavern.core.Cavern;
 import cavern.util.ArrayListExtended;
 import cavern.util.PanoramaPaths;
 import net.minecraft.client.Minecraft;
@@ -23,7 +24,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class GuiListSlot extends GuiSlot
 {
-	public static final ArrayListExtended<PanoramaPaths> panoramaPaths = new ArrayListExtended<>();
+	public static final ArrayListExtended<PanoramaPaths> PANORAMA_PATHS = new ArrayListExtended<>();
+
+	private static final Random RANDOM = new Random();
+
+	private static int panoramaTimer;
 
 	static
 	{
@@ -33,10 +38,10 @@ public abstract class GuiListSlot extends GuiSlot
 
 			for (int j = 0; j < paths.length; ++j)
 			{
-				paths[j] = new ResourceLocation("cavern", String.format("gui/panorama/%d/%d.png", i, j));
+				paths[j] = new ResourceLocation(Cavern.MODID, String.format("textures/gui/panorama/%d/%d.png", i, j));
 			}
 
-			panoramaPaths.addIfAbsent(new PanoramaPaths(paths[0], paths[1], paths[2], paths[3], paths[4], paths[5]));
+			PANORAMA_PATHS.addIfAbsent(new PanoramaPaths(paths[0], paths[1], paths[2], paths[3], paths[4], paths[5]));
 		}
 	}
 
@@ -48,10 +53,6 @@ public abstract class GuiListSlot extends GuiSlot
 
 	public PanoramaPaths currentPanoramaPaths;
 
-	private static int panoramaTimer;
-
-	private static final Random RANDOM = new Random();
-
 	public GuiListSlot(Minecraft mc, int width, int height, int top, int bottom, int slotHeight)
 	{
 		super(mc, width, height, top, bottom, slotHeight);
@@ -62,13 +63,13 @@ public abstract class GuiListSlot extends GuiSlot
 
 	public PanoramaPaths getPanoramaPaths()
 	{
-		if (panoramaPaths.isEmpty())
+		if (PANORAMA_PATHS.isEmpty())
 		{
 			currentPanoramaPaths = null;
 		}
 		else if (currentPanoramaPaths == null)
 		{
-			currentPanoramaPaths = panoramaPaths.get(RANDOM.nextInt(panoramaPaths.size()), null);
+			currentPanoramaPaths = PANORAMA_PATHS.get(RANDOM.nextInt(PANORAMA_PATHS.size()), null);
 		}
 
 		return currentPanoramaPaths;

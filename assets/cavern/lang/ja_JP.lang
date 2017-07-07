@@ -62,6 +62,8 @@ cavern.config.general.showMagicianRank.tooltip=魔術ランクを魔術ポイン
 cavern.config.general.caveborn=ケイブボーン
 cavern.config.general.caveborn.tooltip=ケイブボーンタイプを指定します。初めてワールドに入った際に、洞窟ディメンションへ転送します。
 cavern.config.general.caveborn.0=無効
+cavern.config.general.cavebornBonusItems=ケイブボーンのボーナスアイテム
+cavern.config.general.cavebornBonusItems.tooltip=ケイブボーンのボーナスアイテムを指定します。
 cavern.config.general.cavernEscapeMission=洞窟脱出ミッション
 cavern.config.general.cavernEscapeMission.tooltip=洞窟ディメンションから脱出するミッションを有効にします。
 cavern.config.general.portalCache=ポータルキャッシュ
@@ -471,13 +473,19 @@ advancements.cavenia.crazy_ranger.description=クレイジーレンジャーに�
 
 key.cavern.miningAssist=採掘アシストの切り替え
 
+cavern.miningassist.name=採掘アシスト
 cavern.miningassist.disabled=無効
 cavern.miningassist.quick=一括破壊
 cavern.miningassist.ranged=範囲破壊
 cavern.miningassist.adit=坑道掘り
 cavern.miningassist.toggle.message=採掘アシストが %s に変更されました
 cavern.miningassist.toggle.failed.message=採掘アシストは %s になるまで使用できません
+cavern.miningassist.toggle.press=%sキーを押すとモードが切り替わります
 cavern.miningassist.notify.message=採掘アシストは %s に設定されています
+
+cavern.toast.ability.title=能力解放！
+cavern.toast.mission.title=ミッション
+cavern.toast.mission.ruins=失われたオーブを探して
 
 tooltip.iceEquipment.charge=アイスチャージ: %s
 

@@ -14,6 +14,6 @@ public class TeleporterRepatriation extends TeleporterCavern
 	@Override
 	protected boolean isPortalBlock(IBlockState state)
 	{
-		return state != null && state.getBlock() instanceof BlockPortalCavern;
+		return state.getBlock() instanceof BlockPortalCavern;
 	}
 }

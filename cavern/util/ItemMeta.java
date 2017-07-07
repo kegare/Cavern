@@ -1,5 +1,7 @@
 package cavern.util;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import com.google.common.base.Objects;
 
 import net.minecraft.init.Items;
@@ -19,14 +21,14 @@ public class ItemMeta
 		this.meta = meta;
 	}
 
-	public ItemMeta(ItemStack itemstack)
+	public ItemMeta(ItemStack stack)
 	{
-		this(itemstack.getItem(), itemstack.getMetadata());
+		this(stack.getItem(), stack.getMetadata());
 	}
 
 	public ItemMeta(String name, int meta)
 	{
-		this(Item.REGISTRY.getObject(new ResourceLocation(name)), meta);
+		this(ObjectUtils.defaultIfNull(Item.REGISTRY.getObject(new ResourceLocation(name)), Items.AIR), meta);
 	}
 
 	public Item getItem()
@@ -41,7 +43,12 @@ public class ItemMeta
 
 	public ItemStack getItemStack()
 	{
-		return isEmpty() ? ItemStack.EMPTY : new ItemStack(item, 1, meta);
+		return getItemStack(1);
+	}
+
+	public ItemStack getItemStack(int amount)
+	{
+		return isEmpty() ? ItemStack.EMPTY : new ItemStack(item, amount, meta);
 	}
 
 	public boolean isEmpty()
@@ -58,7 +65,7 @@ public class ItemMeta
 	{
 		String name = getItemName();
 
-		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE)
+		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE || !item.getHasSubtypes())
 		{
 			return name;
 		}
@@ -70,6 +77,11 @@ public class ItemMeta
 	public String toString()
 	{
 		String name = getItemName();
+
+		if (!item.getHasSubtypes())
+		{
+			return name;
+		}
 
 		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE)
 		{
@@ -97,6 +109,10 @@ public class ItemMeta
 		{
 			return false;
 		}
+		else if (!item.getHasSubtypes() && !itemMeta.item.getHasSubtypes())
+		{
+			return true;
+		}
 		else if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE || itemMeta.meta < 0 || itemMeta.meta == OreDictionary.WILDCARD_VALUE)
 		{
 			return true;
@@ -108,7 +124,7 @@ public class ItemMeta
 	@Override
 	public int hashCode()
 	{
-		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE)
+		if (!item.getHasSubtypes() || meta < 0 || meta == OreDictionary.WILDCARD_VALUE)
 		{
 			return item.hashCode();
 		}

@@ -21,27 +21,27 @@ public class ContainerStorage extends Container
 
 		storageInventory.openInventory(player);
 
-		for (int j = 0; j < numRows; ++j)
+		for (int row = 0; row < numRows; ++row)
 		{
-			for (int k = 0; k < 9; ++k)
+			for (int column = 0; column < 9; ++column)
 			{
-				addSlotToContainer(new SlotStorage(storageInventory, k + j * 9, 8 + k * 18, 18 + j * 18).setCanPut(false));
+				addSlotToContainer(new SlotStorage(storageInventory, column + row * 9, 8 + column * 18, 18 + row * 18).setCanPut(false));
 			}
 		}
 
 		int i = (numRows - 4) * 18;
 
-		for (int j = 0; j < 3; ++j)
+		for (int row = 0; row < 3; ++row)
 		{
-			for (int k = 0; k < 9; ++k)
+			for (int column = 0; column < 9; ++column)
 			{
-				addSlotToContainer(new SlotStorage(playerInventory, k + j * 9 + 9, 8 + k * 18, 103 + j * 18 + i).setCanTake(false));
+				addSlotToContainer(new SlotStorage(playerInventory, column + row * 9 + 9, 8 + column * 18, 103 + row * 18 + i).setCanTake(false));
 			}
 		}
 
-		for (int j = 0; j < 9; ++j)
+		for (int column = 0; column < 9; ++column)
 		{
-			addSlotToContainer(new SlotStorage(playerInventory, j, 8 + j * 18, 161 + i).setCanTake(false));
+			addSlotToContainer(new SlotStorage(playerInventory, column, 8 + column * 18, 161 + i).setCanTake(false));
 		}
 	}
 

@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiCompositing extends GuiContainer
 {
-	private static final ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("textures/gui/container/generic_54.png");
+	private static final ResourceLocation CHEST_BACKGROUND = new ResourceLocation("textures/gui/container/generic_54.png");
 
 	private final IInventory playerInventory;
 	private final int inventoryRows;
@@ -48,7 +48,7 @@ public class GuiCompositing extends GuiContainer
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.getTextureManager().bindTexture(CHEST_GUI_TEXTURE);
+		mc.getTextureManager().bindTexture(CHEST_BACKGROUND);
 		int i = getGuiLeft();
 		int j = getGuiTop();
 		drawTexturedModalRect(i, j, 0, 0, xSize, inventoryRows * 18 + 17);

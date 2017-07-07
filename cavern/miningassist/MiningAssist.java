@@ -1,13 +1,20 @@
 package cavern.miningassist;
 
-public enum MiningAssist
+import javax.annotation.Nullable;
+
+import cavern.api.IMinerStats;
+import cavern.stats.MinerStats;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.IStringSerializable;
+
+public enum MiningAssist implements IStringSerializable
 {
 	DISABLED(0, "disabled"),
 	QUICK(1, "quick"),
 	RANGED(2, "ranged"),
 	ADIT(3, "adit");
 
-	private static final MiningAssist[] TYPE_LOOKUP = new MiningAssist[values().length];
+	public static final MiningAssist[] VALUES = new MiningAssist[values().length];
 
 	private final int type;
 	private final String name;
@@ -23,6 +30,7 @@ public enum MiningAssist
 		return type;
 	}
 
+	@Override
 	public String getName()
 	{
 		return name;
@@ -33,21 +41,31 @@ public enum MiningAssist
 		return "cavern.miningassist." + name;
 	}
 
-	public static MiningAssist byType(int type)
+	public static MiningAssist byPlayer(EntityPlayer player)
 	{
-		if (type < 0 || type >= TYPE_LOOKUP.length)
+		return byMiner(MinerStats.get(player, true));
+	}
+
+	public static MiningAssist byMiner(@Nullable IMinerStats stats)
+	{
+		return get(stats == null ? 0 : stats.getMiningAssist());
+	}
+
+	public static MiningAssist get(int type)
+	{
+		if (type < 0 || type >= VALUES.length)
 		{
 			type = 0;
 		}
 
-		return TYPE_LOOKUP[type];
+		return VALUES[type];
 	}
 
 	static
 	{
 		for (MiningAssist assist : values())
 		{
-			TYPE_LOOKUP[assist.getType()] = assist;
+			VALUES[assist.getType()] = assist;
 		}
 	}
 }

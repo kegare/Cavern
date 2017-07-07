@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 public class FissureEventPotion implements IFissureBreakEvent
 {
 	@Override
-	public void onBreakBlock(World world, BlockPos pos, IBlockState state, float chance, int fortune, EntityPlayer player, Random random)
+	public boolean onBreakBlock(World world, BlockPos pos, IBlockState state, float chance, int fortune, EntityPlayer player, Random random)
 	{
 		Potion potion;
 
@@ -72,7 +72,9 @@ public class FissureEventPotion implements IFissureBreakEvent
 			areaEffectCloud.setDuration(150);
 			areaEffectCloud.addEffect(new PotionEffect(potion, 200, random.nextInt(2)));
 
-			world.spawnEntity(areaEffectCloud);
+			return world.spawnEntity(areaEffectCloud);
 		}
+
+		return false;
 	}
 }

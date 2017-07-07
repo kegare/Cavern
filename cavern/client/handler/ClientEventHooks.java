@@ -1,11 +1,16 @@
 package cavern.client.handler;
 
+import java.util.Iterator;
+import java.util.List;
+
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 
 import cavern.api.CavernAPI;
 import cavern.api.IIceEquipment;
 import cavern.client.gui.GuiDownloadCaveTerrain;
 import cavern.client.gui.GuiLoadCaveTerrain;
+import cavern.client.gui.toasts.DelayedToast;
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CaveniaConfig;
@@ -68,6 +73,8 @@ public class ClientEventHooks
 {
 	public static GuiScreen displayGui;
 
+	public static final List<DelayedToast> DELAYED_TOAST = Lists.newArrayList();
+
 	@SubscribeEvent
 	public void onTick(ClientTickEvent event)
 	{
@@ -81,6 +88,19 @@ public class ClientEventHooks
 			FMLClientHandler.instance().showGuiScreen(displayGui);
 
 			displayGui = null;
+		}
+
+		if (!DELAYED_TOAST.isEmpty())
+		{
+			Iterator<DelayedToast> iterator = DELAYED_TOAST.iterator();
+
+			while (iterator.hasNext())
+			{
+				if (!iterator.next().onUpdate())
+				{
+					iterator.remove();
+				}
+			}
 		}
 	}
 
@@ -295,7 +315,7 @@ public class ClientEventHooks
 
 		if (MiningAssistConfig.miningAssistNotify)
 		{
-			MiningAssist assist = MiningAssist.byType(MinerStats.get(player).getMiningAssist());
+			MiningAssist assist = MiningAssist.byPlayer(player);
 
 			if (assist != MiningAssist.DISABLED)
 			{

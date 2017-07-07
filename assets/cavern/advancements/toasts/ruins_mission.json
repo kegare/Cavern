@@ -1,0 +1,7 @@
+{
+    "criteria": {
+        "ruins_mission": {
+            "trigger": "minecraft:impossible"
+        }
+    }
+}

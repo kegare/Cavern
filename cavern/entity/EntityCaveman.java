@@ -2,6 +2,7 @@ package cavern.entity;
 
 import cavern.api.CavernAPI;
 import cavern.api.ICavenicMob;
+import cavern.util.CaveUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -195,7 +196,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 
 		if (!world.isRemote)
 		{
-			if (onGround && motionX == 0.0D && motionZ == 0.0D)
+			if (onGround && !CaveUtils.isMoving(this))
 			{
 				++restTime;
 

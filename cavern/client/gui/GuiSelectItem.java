@@ -524,7 +524,7 @@ public class GuiSelectItem extends GuiScreen
 					}
 					else
 					{
-						itemMeta = new ItemMeta(value, -1);
+						itemMeta = new ItemMeta(value, 0);
 					}
 
 					if (!itemMeta.isEmpty())

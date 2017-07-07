@@ -1,5 +1,6 @@
 package cavern.handler;
 
+import java.util.Random;
 import java.util.Set;
 
 import com.google.common.collect.Sets;
@@ -9,16 +10,19 @@ import cavern.block.BlockPortalCavern;
 import cavern.config.GeneralConfig;
 import cavern.config.RuinsCavernConfig;
 import cavern.config.property.ConfigCaveborn;
+import cavern.util.ItemMeta;
 import cavern.world.TeleporterCavern;
 import cavern.world.TeleporterRuinsCavern;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -29,6 +33,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 public class CavebornEventHooks
 {
 	public static final Set<String> FIRST_PLAYERS = Sets.newHashSet();
+
+	private static final Random RANDOM = new Random();
 
 	@SubscribeEvent
 	public void onPlayerLoadFromFile(PlayerEvent.LoadFromFile event)
@@ -54,7 +60,7 @@ public class CavebornEventHooks
 			EntityPlayerMP player = (EntityPlayerMP)event.player;
 			ConfigCaveborn.Type caveborn = GeneralConfig.caveborn.getType();
 
-			if (caveborn != ConfigCaveborn.Type.DISABLED && FIRST_PLAYERS.contains(player.getUniqueID().toString()))
+			if (caveborn != ConfigCaveborn.Type.DISABLED && FIRST_PLAYERS.contains(player.getCachedUniqueIdString()))
 			{
 				MinecraftServer server = player.mcServer;
 
@@ -122,6 +128,23 @@ public class CavebornEventHooks
 						world.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0F, 0.65F);
 					}
 				}
+
+				WorldServer world = player.getServerWorld();
+				double x = player.posX;
+				double y = player.posY + 0.25D;
+				double z = player.posZ;
+
+				for (ItemMeta itemMeta : GeneralConfig.cavebornBonusItems.getItems())
+				{
+					ItemStack stack = itemMeta.getItemStack();
+
+					if (stack.isStackable())
+					{
+						stack = itemMeta.getItemStack(MathHelper.getInt(RANDOM, 4, 16));
+					}
+
+					InventoryHelper.spawnItemStack(world, x, y, z, stack);
+				}
 			}
 		}
 	}
@@ -129,6 +152,6 @@ public class CavebornEventHooks
 	@SubscribeEvent
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent event)
 	{
-		FIRST_PLAYERS.remove(event.player.getUniqueID().toString());
+		FIRST_PLAYERS.remove(event.player.getCachedUniqueIdString());
 	}
 }

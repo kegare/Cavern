@@ -152,13 +152,8 @@ public class BlockCave extends Block
 			switch (getType(state))
 			{
 				case RANDOMITE_ORE:
-					ItemStack stack = ItemStack.EMPTY;
 					WeightedItemStack randomItem = WeightedRandom.getRandomItem(RANDOM, RANDOMITE_ITEMS);
-
-					if (randomItem != null)
-					{
-						stack = randomItem.getItemStack();
-					}
+					ItemStack stack = randomItem.getItemStack();
 
 					if (RANDOM.nextDouble() <= 0.015D * MathHelper.clamp(fortune, 1, 3))
 					{
@@ -190,11 +185,16 @@ public class BlockCave extends Block
 					break;
 				case FISSURED_STONE:
 				case FISSURED_PACKED_ICE:
-					FissureBreakEvent event = WeightedRandom.getRandomItem(RANDOM, FISSURE_EVENTS);
+					int i = FISSURE_EVENTS.size();
 
-					if (event != null)
+					while (--i > 0)
 					{
-						event.get().onBreakBlock(world, pos, state, chance, fortune, player, RANDOM);
+						FissureBreakEvent event = WeightedRandom.getRandomItem(RANDOM, FISSURE_EVENTS);
+
+						if (event.get().onBreakBlock(world, pos, state, chance, fortune, player, RANDOM))
+						{
+							break;
+						}
 					}
 
 					if (player != null)

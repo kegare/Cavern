@@ -10,6 +10,7 @@ public class CaveConfigEntries
 	public static Class<? extends IConfigEntry> cycleInteger;
 
 	public static Class<? extends IConfigEntry> selectBlocks;
+	public static Class<? extends IConfigEntry> selectBlocksAndItems;
 	public static Class<? extends IConfigEntry> selectItems;
 	public static Class<? extends IConfigEntry> selectMobs;
 
@@ -21,6 +22,7 @@ public class CaveConfigEntries
 		cycleInteger = CycleIntegerEntry.class;
 
 		selectBlocks = SelectBlocksEntry.class;
+		selectBlocksAndItems = SelectBlocksAndItemsEntry.class;
 		selectItems = SelectItemsEntry.class;
 		selectMobs = SelectMobsEntry.class;
 

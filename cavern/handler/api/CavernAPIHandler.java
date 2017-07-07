@@ -12,9 +12,9 @@ import cavern.api.IMineBonus;
 import cavern.api.IMinerStats;
 import cavern.block.BlockCave;
 import cavern.block.bonus.FissureBreakEvent;
-import cavern.block.bonus.FissureEventBreathing;
 import cavern.block.bonus.FissureEventExplosion;
 import cavern.block.bonus.FissureEventPotion;
+import cavern.block.bonus.FissureEventRefresh;
 import cavern.item.CaveItems;
 import cavern.item.IceEquipment;
 import cavern.item.ItemCave;
@@ -298,6 +298,6 @@ public class CavernAPIHandler implements ICavernAPI
 	{
 		handler.addFissureBreakEvent(new FissureEventPotion(), 100);
 		handler.addFissureBreakEvent(new FissureEventExplosion(), 10);
-		handler.addFissureBreakEvent(new FissureEventBreathing(), 50);
+		handler.addFissureBreakEvent(new FissureEventRefresh(), 50);
 	}
 }

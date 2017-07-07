@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import cavern.capability.CapabilityOreCompass;
 import cavern.core.Cavern;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
@@ -26,6 +27,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemOreCompass extends Item
 {
+	@SideOnly(Side.CLIENT)
+	private long prevTime;
+
 	public ItemOreCompass()
 	{
 		this.setUnlocalizedName("compassOre");
@@ -113,7 +117,14 @@ public class ItemOreCompass extends Item
 	{
 		if (isSelected && entity != null && entity instanceof EntityPlayer)
 		{
+			if (prevTime > 0 && Minecraft.getSystemTime() - prevTime < 5000L)
+			{
+				return;
+			}
+
 			OreCompass.get(stack).refreshOrePos();
+
+			prevTime = Minecraft.getSystemTime();
 		}
 	}
 

@@ -12,6 +12,7 @@ import cavern.api.event.MinerStatsEvent;
 import cavern.block.BlockCave;
 import cavern.block.CaveBlocks;
 import cavern.capability.CaveCapabilities;
+import cavern.config.MiningAssistConfig;
 import cavern.core.CaveSounds;
 import cavern.miningassist.MiningAssist;
 import cavern.network.CaveNetworkRegistry;
@@ -183,6 +184,11 @@ public class MinerStats implements IMinerStats
 						break;
 					default:
 				}
+
+				if (current.getRank() >= MiningAssistConfig.minerRank.getValue())
+				{
+					CaveUtils.grantToast(player, "mining_assist");
+				}
 			}
 
 			MinecraftForge.EVENT_BUS.post(new MinerStatsEvent.PromoteRank(entityPlayer, this));
@@ -239,7 +245,7 @@ public class MinerStats implements IMinerStats
 	{
 		int prev = miningAssist;
 
-		miningAssist = MiningAssist.byType(type).getType();
+		miningAssist = MiningAssist.get(type).getType();
 
 		if (miningAssist != prev)
 		{

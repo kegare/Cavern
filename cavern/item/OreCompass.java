@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import cavern.capability.CaveCapabilities;
 import cavern.stats.MinerStats;
+import cavern.util.CaveUtils;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockRedstoneOre;
 import net.minecraft.block.state.IBlockState;
@@ -25,8 +26,6 @@ public class OreCompass
 	@SideOnly(Side.CLIENT)
 	private long lastUpdateTick;
 
-	@SideOnly(Side.CLIENT)
-	private long prevTime;
 	@SideOnly(Side.CLIENT)
 	private BlockPos orePos;
 
@@ -56,30 +55,19 @@ public class OreCompass
 	@SideOnly(Side.CLIENT)
 	public boolean refreshOrePos()
 	{
-		if (prevTime > 0 && Minecraft.getSystemTime() - prevTime < 3000L)
-		{
-			return false;
-		}
-
 		Minecraft mc = FMLClientHandler.instance().getClient();
 
-		if (mc.player == null)
+		if (mc == null || !mc.isIntegratedServerRunning())
 		{
 			return false;
 		}
 
-		double motionX = mc.player.motionX;
-		double motionY = mc.player.motionY;
-		double motionZ = mc.player.motionZ;
-		double vec = motionX * motionX + motionY * motionY + motionZ * motionZ;
-
-		if (vec > 0.01D)
+		if (mc.world == null || mc.player == null || CaveUtils.isMoving(mc.player))
 		{
 			return false;
 		}
 
-		orePos = findOrePos();
-		prevTime = Minecraft.getSystemTime();
+		orePos = findOrePos(mc.world, mc.player.getPosition(), 50);
 
 		return orePos != null;
 	}
@@ -96,38 +84,29 @@ public class OreCompass
 		return compass;
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Nullable
-	public static BlockPos findOrePos()
+	public static BlockPos findOrePos(@Nullable World world, @Nullable BlockPos origin, int range)
 	{
-		Minecraft mc = FMLClientHandler.instance().getClient();
-
-		if (mc == null || !mc.isIntegratedServerRunning())
-		{
-			return null;
-		}
-
-		if (mc.world == null || mc.player == null)
+		if (world == null || origin == null || range <= 0)
 		{
 			return null;
 		}
 
 		int dist = 0;
-		BlockPos origin = mc.player.getPosition();
 
-		while (++dist < 50)
+		while (++dist < range)
 		{
 			BlockPos from = origin.add(dist, 3, dist);
 			BlockPos to = origin.add(-dist, -3, -dist);
 
 			for (BlockPos pos : BlockPos.getAllInBoxMutable(from, to))
 			{
-				if (mc.world.isAirBlock(pos))
+				if (world.isAirBlock(pos))
 				{
 					continue;
 				}
 
-				IBlockState state = mc.world.getBlockState(pos);
+				IBlockState state = world.getBlockState(pos);
 
 				if (state.getBlock() instanceof BlockOre || state.getBlock() instanceof BlockRedstoneOre)
 				{

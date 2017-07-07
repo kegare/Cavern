@@ -271,6 +271,7 @@ public class Cavern
 
 		GeneralConfig.refreshMiningPointItems();
 		GeneralConfig.refreshMiningPoints();
+		GeneralConfig.refreshCavebornBonusItems();
 
 		MiningAssistConfig.refreshEffectiveItems();
 		MiningAssistConfig.refreshTargetBlocks();

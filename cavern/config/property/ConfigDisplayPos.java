@@ -27,18 +27,18 @@ public class ConfigDisplayPos
 		BOTTOM_LEFT(3),
 		HIDDEN(4);
 
-		private static final Type[] TYPE_LOOKUP = new Type[values().length];
+		public static final Type[] VALUES = new Type[values().length];
 
-		private int pos;
+		private int type;
 
-		private Type(int pos)
+		private Type(int type)
 		{
-			this.pos = pos;
+			this.type = type;
 		}
 
-		public int getPos()
+		public int getType()
 		{
-			return pos;
+			return type;
 		}
 
 		public boolean isTop()
@@ -66,28 +66,28 @@ public class ConfigDisplayPos
 			return this == HIDDEN;
 		}
 
-		public static Type get(int pos)
+		public static Type get(int type)
 		{
-			if (pos < 0)
+			if (type < 0)
 			{
-				pos = 0;
+				type = 0;
 			}
 
-			int max = TYPE_LOOKUP.length - 1;
+			int max = VALUES.length - 1;
 
-			if (pos > max)
+			if (type > max)
 			{
-				pos = max;
+				type = max;
 			}
 
-			return TYPE_LOOKUP[pos];
+			return VALUES[type];
 		}
 
 		static
 		{
 			for (Type type : values())
 			{
-				TYPE_LOOKUP[type.getPos()] = type;
+				VALUES[type.getType()] = type;
 			}
 		}
 	}

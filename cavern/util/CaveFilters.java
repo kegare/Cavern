@@ -1,8 +1,11 @@
 package cavern.util;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
@@ -15,7 +18,7 @@ import net.minecraftforge.common.BiomeManager.BiomeType;
 
 public class CaveFilters
 {
-	public static boolean blockFilter(BlockMeta blockMeta, String filter)
+	public static boolean blockFilter(@Nullable BlockMeta blockMeta, @Nullable String filter)
 	{
 		if (blockMeta == null || Strings.isNullOrEmpty(filter))
 		{
@@ -96,7 +99,7 @@ public class CaveFilters
 		return false;
 	}
 
-	public static boolean itemFilter(ItemMeta itemMeta, String filter)
+	public static boolean itemFilter(@Nullable ItemMeta itemMeta, @Nullable String filter)
 	{
 		if (itemMeta == null || Strings.isNullOrEmpty(filter))
 		{
@@ -144,7 +147,7 @@ public class CaveFilters
 		return false;
 	}
 
-	public static boolean biomeFilter(Biome biome, String filter)
+	public static boolean biomeFilter(@Nullable Biome biome, @Nullable String filter)
 	{
 		if (biome == null || Strings.isNullOrEmpty(filter))
 		{
@@ -189,11 +192,16 @@ public class CaveFilters
 
 			if (type != null)
 			{
-				for (BiomeEntry entry : BiomeManager.getBiomes(type))
+				ImmutableList<BiomeEntry> list = BiomeManager.getBiomes(type);
+
+				if (list != null)
 				{
-					if (Biome.getIdForBiome(entry.biome) == Biome.getIdForBiome(biome))
+					for (BiomeEntry entry : list)
 					{
-						return true;
+						if (entry != null && entry.biome.getRegistryName().equals(biome.getRegistryName()))
+						{
+							return true;
+						}
 					}
 				}
 			}

@@ -11,5 +11,5 @@ import net.minecraft.world.World;
 
 public interface IFissureBreakEvent
 {
-	public void onBreakBlock(World world, BlockPos pos, IBlockState state, float chance, int fortune, @Nullable EntityPlayer player, Random random);
+	public boolean onBreakBlock(World world, BlockPos pos, IBlockState state, float chance, int fortune, @Nullable EntityPlayer player, Random random);
 }

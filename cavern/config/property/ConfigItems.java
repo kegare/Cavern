@@ -9,7 +9,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
 import cavern.util.ItemMeta;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 public class ConfigItems
 {
@@ -40,6 +42,30 @@ public class ConfigItems
 	public boolean isEmpty()
 	{
 		return items.isEmpty();
+	}
+
+	public String[] createValues(NonNullList<ItemStack> items)
+	{
+		Set<String> set = Sets.newTreeSet();
+
+		for (ItemStack stack : items)
+		{
+			if (!stack.isEmpty())
+			{
+				Item item = stack.getItem();
+
+				if (stack.getHasSubtypes())
+				{
+					set.add(item.getRegistryName().toString() + ":" + stack.getMetadata());
+				}
+				else
+				{
+					set.add(item.getRegistryName().toString());
+				}
+			}
+		}
+
+		return set.toArray(new String[set.size()]);
 	}
 
 	public boolean hasItemStack(ItemStack stack)

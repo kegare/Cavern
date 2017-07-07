@@ -35,6 +35,7 @@ import net.minecraft.block.BlockSapling;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityWitch;
@@ -62,6 +63,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
@@ -75,6 +77,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensio
 public class CaveEventHooks
 {
 	protected static final Random RANDOM = new Random();
+
+	public static final String NBT_SLEEPTIME = "Cavern:SleepTime";
 
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)
@@ -214,6 +218,8 @@ public class CaveEventHooks
 				}
 
 				data.setLong(key, world.getTotalWorldTime());
+
+				CaveUtils.grantToast(player, "ruins_mission");
 			}
 			else if (CavernAPI.dimension.isEntityInCavenia(player))
 			{
@@ -226,6 +232,31 @@ public class CaveEventHooks
 				}
 
 				data.setLong(key, world.getTotalWorldTime());
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onTravelToDimension(EntityTravelToDimensionEvent event)
+	{
+		if (GeneralConfig.cavernEscapeMission)
+		{
+			Entity entity = event.getEntity();
+
+			if (!(entity instanceof EntityPlayerMP))
+			{
+				return;
+			}
+
+			EntityPlayerMP player = (EntityPlayerMP)entity;
+			boolean fromCave = CavernAPI.dimension.isCaves(DimensionType.getById(entity.dimension));
+			boolean toCave = CavernAPI.dimension.isCaves(DimensionType.getById(event.getDimension()));
+
+			if (fromCave && !toCave && !GeneralConfig.canEscapeFromCaves(player))
+			{
+				player.sendStatusMessage(new TextComponentTranslation("cavern.escapeMission.bad.message"), true);
+
+				event.setCanceled(true);
 			}
 		}
 	}
@@ -539,7 +570,7 @@ public class CaveEventHooks
 				long worldTime = world.getTotalWorldTime();
 				long sleepTime;
 
-				if (data.hasKey("Cavern:SleepTime", NBT.TAG_ANY_NUMERIC))
+				if (data.hasKey(NBT_SLEEPTIME, NBT.TAG_ANY_NUMERIC))
 				{
 					sleepTime = data.getLong("Cavern:SleepTime");
 				}
@@ -547,7 +578,7 @@ public class CaveEventHooks
 				{
 					sleepTime = worldTime;
 
-					data.setLong("Cavern:SleepTime", worldTime);
+					data.setLong(NBT_SLEEPTIME, worldTime);
 				}
 
 				long requireTime = GeneralConfig.sleepWaitTime * 20;
@@ -580,7 +611,7 @@ public class CaveEventHooks
 					MagicianStats.get(player).addMP(100);
 				}
 
-				data.setLong("Cavern:SleepTime", world.getTotalWorldTime());
+				data.setLong(NBT_SLEEPTIME, world.getTotalWorldTime());
 			}
 
 			event.setResult(result);

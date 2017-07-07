@@ -4,9 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Roman
 {
-	private static final int[] values = {1, 10, 100, 1000};
-	private static final char[] ones = {'I', 'X', 'C', 'M'};
-	private static final char[] fives = {'V', 'L', 'D'};
+	private static final int[] VALUES = {1, 10, 100, 1000};
+	private static final char[] ONES = {'I', 'X', 'C', 'M'};
+	private static final char[] FIVES = {'V', 'L', 'D'};
 
 	public static String toRoman(int num)
 	{
@@ -19,28 +19,28 @@ public class Roman
 
 		for (int i = 3; i >= 0; --i)
 		{
-			int r = num / values[i];
-			num %= values[i];
+			int r = num / VALUES[i];
+			num %= VALUES[i];
 
 			if (r == 4)
 			{
-				ret.append(ones[i]).append(fives[i]);
+				ret.append(ONES[i]).append(FIVES[i]);
 				continue;
 			}
 
 			if (r == 9)
 			{
-				ret.append(ones[i]).append(ones[i + 1]);
+				ret.append(ONES[i]).append(ONES[i + 1]);
 				continue;
 			}
 
 			if (r >= 5)
 			{
-				ret.append(fives[i]);
+				ret.append(FIVES[i]);
 				r -= 5;
 			}
 
-			ret.append(StringUtils.repeat(ones[i], r));
+			ret.append(StringUtils.repeat(ONES[i], r));
 		}
 
 		return ret.toString();

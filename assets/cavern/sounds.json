@@ -74,37 +74,37 @@
   "magic.spelling": {
     "category": "player",
     "sounds": [
-      "cavern:spelling"
+      "cavern:magic/spelling"
     ]
   },
   "magic.spelling.end": {
     "category": "player",
     "sounds": [
-      "cavern:spelling_end"
+      "cavern:magic/spelling_end"
     ]
   },
   "magic.success": {
     "category": "player",
     "sounds": [
-      "cavern:magic_success"
+      "cavern:magic/success"
     ]
   },
   "magic.success.misc": {
     "category": "player",
     "sounds": [
-      "cavern:magic_success_misc"
+      "cavern:magic/success_misc"
     ]
   },
   "magic.success.short": {
     "category": "player",
     "sounds": [
-      "cavern:magic_success_short"
+      "cavern:magic/success_short"
     ]
   },
   "magic.holy": {
     "category": "player",
     "sounds": [
-      "cavern:magic_holy"
+      "cavern:magic/holy"
     ]
   }
 }

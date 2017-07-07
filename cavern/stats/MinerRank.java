@@ -17,7 +17,7 @@ public enum MinerRank
 	HEXCITE_MINER(6, 3000, 1.5F, "hexciteMiner", new ItemStack(CaveItems.HEXCITE_PICKAXE)),
 	DIAMOND_MINER(7, 5000, 1.75F, "diamondMiner", new ItemStack(Items.DIAMOND_PICKAXE));
 
-	private static final MinerRank[] RANK_LOOKUP = new MinerRank[values().length];
+	public static final MinerRank[] VALUES = new MinerRank[values().length];
 
 	private final int rank;
 	private final int phase;
@@ -71,21 +71,21 @@ public enum MinerRank
 			rank = 0;
 		}
 
-		int max = RANK_LOOKUP.length - 1;
+		int max = VALUES.length - 1;
 
 		if (rank > max)
 		{
 			rank = max;
 		}
 
-		return RANK_LOOKUP[rank];
+		return VALUES[rank];
 	}
 
 	static
 	{
 		for (MinerRank rank : values())
 		{
-			RANK_LOOKUP[rank.getRank()] = rank;
+			VALUES[rank.getRank()] = rank;
 		}
 	}
 }

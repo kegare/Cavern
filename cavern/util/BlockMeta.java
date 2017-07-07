@@ -17,6 +17,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -84,14 +85,9 @@ public class BlockMeta implements Comparable<BlockMeta>
 
 	public String getName()
 	{
-		if (block == null)
-		{
-			return "null";
-		}
-
 		String name = getBlockName();
 
-		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE)
+		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE || !Item.getItemFromBlock(block).getHasSubtypes())
 		{
 			return name;
 		}
@@ -102,12 +98,12 @@ public class BlockMeta implements Comparable<BlockMeta>
 	@Override
 	public String toString()
 	{
-		if (block == null)
-		{
-			return "null";
-		}
-
 		String name = getBlockName();
+
+		if (!Item.getItemFromBlock(block).getHasSubtypes())
+		{
+			return name;
+		}
 
 		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE)
 		{
@@ -139,6 +135,10 @@ public class BlockMeta implements Comparable<BlockMeta>
 		{
 			return true;
 		}
+		else if (!Item.getItemFromBlock(block).getHasSubtypes() && !Item.getItemFromBlock(blockMeta.block).getHasSubtypes())
+		{
+			return true;
+		}
 
 		return meta == blockMeta.meta;
 	}
@@ -146,12 +146,7 @@ public class BlockMeta implements Comparable<BlockMeta>
 	@Override
 	public int hashCode()
 	{
-		if (block == null)
-		{
-			return super.hashCode();
-		}
-
-		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE)
+		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE || !Item.getItemFromBlock(block).getHasSubtypes())
 		{
 			return block.hashCode();
 		}

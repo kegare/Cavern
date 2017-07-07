@@ -7,7 +7,6 @@ import cavern.config.GeneralConfig;
 import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
 import cavern.util.CaveUtils;
-import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.block.BlockPortal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -114,7 +113,7 @@ public class TeleporterCavern extends Teleporter
 	}
 
 	@Override
-	public boolean placeInExistingPortal(Entity entity, float par2)
+	public boolean placeInExistingPortal(Entity entity, float rotationYaw)
 	{
 		double d0 = -1.0D;
 		int x = MathHelper.floor(entity.posX);
@@ -133,7 +132,7 @@ public class TeleporterCavern extends Teleporter
 		}
 		else
 		{
-			BlockPos pos1 = new BlockPos(entity);
+			BlockPos origin = new BlockPos(entity);
 
 			for (int px = -128; px <= 128; ++px)
 			{
@@ -141,7 +140,7 @@ public class TeleporterCavern extends Teleporter
 
 				for (int pz = -128; pz <= 128; ++pz)
 				{
-					for (BlockPos blockpos = pos1.add(px, world.getActualHeight() - 1 - pos1.getY(), pz); blockpos.getY() >= 0; blockpos = current)
+					for (BlockPos blockpos = origin.add(px, world.getActualHeight() - 1 - origin.getY(), pz); blockpos.getY() >= 0; blockpos = current)
 					{
 						current = blockpos.down();
 
@@ -152,7 +151,7 @@ public class TeleporterCavern extends Teleporter
 								blockpos = current;
 							}
 
-							double dist = blockpos.distanceSq(pos1);
+							double dist = blockpos.distanceSq(origin);
 
 							if (d0 < 0.0D || dist < d0)
 							{
@@ -267,7 +266,7 @@ public class TeleporterCavern extends Teleporter
 				double d3 = entity.motionZ;
 				entity.motionX = d2 * f2 + d3 * f5;
 				entity.motionZ = d2 * f4 + d3 * f3;
-				entity.rotationYaw = par2 - face0.getHorizontalIndex() * 90 + face.getHorizontalIndex() * 90;
+				entity.rotationYaw = rotationYaw - face0.getHorizontalIndex() * 90 + face.getHorizontalIndex() * 90;
 			}
 
 			CaveUtils.setLocationAndAngles(entity, posX, posY, posZ);
@@ -285,7 +284,7 @@ public class TeleporterCavern extends Teleporter
 
 	protected boolean isPortalBlock(IBlockState state)
 	{
-		return state != null && state.getBlock() == portal;
+		return state.getBlock() == portal;
 	}
 
 	@Override
@@ -331,19 +330,19 @@ public class TeleporterCavern extends Teleporter
 								j1 = -j1;
 							}
 
-							for (int i2 = 0; i2 < 3; ++i2)
+							for (int size1 = 0; size1 < 3; ++size1)
 							{
-								for (int j2 = 0; j2 < 4; ++j2)
+								for (int size2 = 0; size2 < 4; ++size2)
 								{
-									for (int k2 = -1; k2 < 4; ++k2)
+									for (int height = -1; height < 4; ++height)
 									{
-										int px1 = px + (j2 - 1) * i1 + i2 * j1;
-										int py1 = py + k2;
-										int pz1 = pz + (j2 - 1) * j1 - i2 * i1;
+										int checkX = px + (size2 - 1) * i1 + size1 * j1;
+										int checkY = py + height;
+										int checkZ = pz + (size2 - 1) * j1 - size1 * i1;
 
-										pos.setPos(px1, py1, pz1);
+										pos.setPos(checkX, checkY, checkZ);
 
-										if (k2 < 0 && !world.getBlockState(pos).getMaterial().isSolid() || k2 >= 0 && !world.isAirBlock(pos))
+										if (height < 0 && !world.getBlockState(pos).getMaterial().isSolid() || height >= 0 && !world.isAirBlock(pos))
 										{
 											continue outside;
 										}
@@ -392,17 +391,17 @@ public class TeleporterCavern extends Teleporter
 								int i1 = k % 2;
 								int j1 = 1 - i1;
 
-								for (int i2 = 0; i2 < 4; ++i2)
+								for (int width = 0; width < 4; ++width)
 								{
-									for (int j2 = -1; j2 < 4; ++j2)
+									for (int height = -1; height < 4; ++height)
 									{
-										int px1 = px + (i2 - 1) * i1;
-										int py1 = py + j2;
-										int pz1 = pz + (i2 - 1) * j1;
+										int px1 = px + (width - 1) * i1;
+										int py1 = py + height;
+										int pz1 = pz + (width - 1) * j1;
 
 										pos.setPos(px1, py1, pz1);
 
-										if (j2 < 0 && !world.getBlockState(pos).getMaterial().isSolid() || j2 >= 0 && !world.isAirBlock(pos))
+										if (height < 0 && !world.getBlockState(pos).getMaterial().isSolid() || height >= 0 && !world.isAirBlock(pos))
 										{
 											continue outside;
 										}
@@ -444,16 +443,16 @@ public class TeleporterCavern extends Teleporter
 			y1 = MathHelper.clamp(y1, CavernAPI.dimension.isEntityInCaves(entity) ? 10 : 70, world.getActualHeight() - 10);
 			y2 = y1;
 
-			for (int i2 = -1; i2 <= 1; ++i2)
+			for (int size1 = -1; size1 <= 1; ++size1)
 			{
-				for (int j2 = 1; j2 < 3; ++j2)
+				for (int size2 = 1; size2 < 3; ++size2)
 				{
-					for (int k2 = -1; k2 < 3; ++k2)
+					for (int height = -1; height < 3; ++height)
 					{
-						int blockX = x2 + (j2 - 1) * i1 + i2 * j1;
-						int blockY = y2 + k2;
-						int blockZ = z2 + (j2 - 1) * j1 - i2 * i1;
-						boolean flag = k2 < 0;
+						int blockX = x2 + (size2 - 1) * i1 + size1 * j1;
+						int blockY = y2 + height;
+						int blockZ = z2 + (size2 - 1) * j1 - size1 * i1;
+						boolean flag = height < 0;
 
 						world.setBlockState(pos.setPos(blockX, blockY, blockZ), flag ? MOSSY_COBBLESTONE : AIR);
 					}
@@ -463,54 +462,31 @@ public class TeleporterCavern extends Teleporter
 
 		IBlockState state = portal.getDefaultState().withProperty(BlockPortal.AXIS, i1 != 0 ? EnumFacing.Axis.X : EnumFacing.Axis.Z);
 
-		for (int i2 = 0; i2 < 4; ++i2)
+		for (int width = 0; width < 4; ++width)
 		{
-			for (int j2 = 0; j2 < 4; ++j2)
+			for (int height = -1; height < 4; ++height)
 			{
-				for (int k2 = -1; k2 < 4; ++k2)
-				{
-					int blockX = x2 + (j2 - 1) * i1;
-					int blockY = y2 + k2;
-					int blockZ = z2 + (j2 - 1) * j1;
-					boolean flag1 = j2 == 0 || j2 == 3 || k2 == -1 || k2 == 3;
+				int blockX = x2 + (width - 1) * i1;
+				int blockY = y2 + height;
+				int blockZ = z2 + (width - 1) * j1;
+				boolean flag = width == 0 || width == 3 || height == -1 || height == 3;
 
-					world.setBlockState(pos.setPos(blockX, blockY, blockZ), flag1 ? MOSSY_COBBLESTONE : state, 2);
-				}
+				world.setBlockState(pos.setPos(blockX, blockY, blockZ), flag ? MOSSY_COBBLESTONE : state, 2);
 			}
+		}
 
-			for (int j2 = 0; j2 < 4; ++j2)
+		for (int width = 0; width < 4; ++width)
+		{
+			for (int height = -1; height < 4; ++height)
 			{
-				for (int k2 = -1; k2 < 4; ++k2)
-				{
-					int blockX = x2 + (j2 - 1) * i1;
-					int blockY = y2 + k2;
-					int blockZ = z2 + (j2 - 1) * j1;
+				int blockX = x2 + (width - 1) * i1;
+				int blockY = y2 + height;
+				int blockZ = z2 + (width - 1) * j1;
 
-					world.notifyNeighborsOfStateChange(pos.setPos(blockX, blockY, blockZ), world.getBlockState(pos).getBlock(), false);
-				}
+				world.notifyNeighborsOfStateChange(pos.setPos(blockX, blockY, blockZ), world.getBlockState(pos).getBlock(), false);
 			}
 		}
 
 		return true;
-	}
-
-	@Override
-	public void removeStalePortalLocations(long time)
-	{
-		if (time % 100L == 0L)
-		{
-			ObjectIterator<PortalPosition> iterator = destinationCoordinateCache.values().iterator();
-			long i = time - 300L;
-
-			while (iterator.hasNext())
-			{
-				PortalPosition pos = iterator.next();
-
-				if (pos == null || pos.lastUpdateTime < i)
-				{
-					iterator.remove();
-				}
-			}
-		}
 	}
 }

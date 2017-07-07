@@ -17,7 +17,7 @@ public enum HunterRank
 	RANGER(6, 1000, 15.0F, 15, "ranger", new ItemStack(Items.GOLDEN_SWORD)),
 	CRAZY_RANGER(7, 3000, 20.0F, 20, "crazyRanger", new ItemStack(Items.DIAMOND_SWORD));
 
-	private static final HunterRank[] RANK_LOOKUP = new HunterRank[values().length];
+	public static final HunterRank[] VALUES = new HunterRank[values().length];
 
 	private final int rank;
 	private final int phase;
@@ -78,21 +78,21 @@ public enum HunterRank
 			rank = 0;
 		}
 
-		int max = RANK_LOOKUP.length - 1;
+		int max = VALUES.length - 1;
 
 		if (rank > max)
 		{
 			rank = max;
 		}
 
-		return RANK_LOOKUP[rank];
+		return VALUES[rank];
 	}
 
 	static
 	{
 		for (HunterRank rank : values())
 		{
-			RANK_LOOKUP[rank.getRank()] = rank;
+			VALUES[rank.getRank()] = rank;
 		}
 	}
 }
