@@ -9,8 +9,6 @@ import com.google.common.collect.Table;
 import cavern.api.IMineBonus;
 import cavern.api.IMinerStats;
 import cavern.api.event.MinerStatsEvent;
-import cavern.block.BlockCave;
-import cavern.block.CaveBlocks;
 import cavern.capability.CaveCapabilities;
 import cavern.config.MiningAssistConfig;
 import cavern.core.CaveSounds;
@@ -352,30 +350,30 @@ public class MinerStats implements IMinerStats
 		setPointAmount(blockMeta.getBlock(), blockMeta.getMeta(), amount);
 	}
 
-	public static void setPointAmount(String oredict, int amount)
+	public static void setPointAmount(String name, int amount)
 	{
-		NonNullList<ItemStack> ores = OreDictionary.getOres(oredict);
+		NonNullList<ItemStack> ores = OreDictionary.getOres(name, false);
 
 		if (ores.isEmpty())
 		{
 			return;
 		}
 
-		for (ItemStack entry : ores)
+		for (ItemStack stack : ores)
 		{
-			if (entry.isEmpty())
+			if (stack.isEmpty())
 			{
 				continue;
 			}
 
-			Block block = Block.getBlockFromItem(entry.getItem());
+			Block block = Block.getBlockFromItem(stack.getItem());
 
 			if (block == null || block == Blocks.AIR)
 			{
 				continue;
 			}
 
-			setPointAmount(block, entry.getMetadata(), amount);
+			setPointAmount(block, stack.getMetadata(), amount);
 		}
 	}
 
@@ -383,63 +381,6 @@ public class MinerStats implements IMinerStats
 	{
 		lastMine = blockMeta;
 		lastMinePoint = point;
-	}
-
-	public static void registerPointAmounts()
-	{
-		MinerStats.setPointAmount("oreCoal", 1);
-		MinerStats.setPointAmount("oreIron", 1);
-		MinerStats.setPointAmount("oreGold", 1);
-		MinerStats.setPointAmount("oreRedstone", 2);
-		MinerStats.setPointAmount(Blocks.LIT_REDSTONE_ORE, 0, 2);
-		MinerStats.setPointAmount("oreLapis", 3);
-		MinerStats.setPointAmount("oreEmerald", 3);
-		MinerStats.setPointAmount("oreDiamond", 5);
-		MinerStats.setPointAmount("oreQuartz", 2);
-		MinerStats.setPointAmount("oreCopper", 1);
-		MinerStats.setPointAmount("oreTin", 1);
-		MinerStats.setPointAmount("oreLead", 1);
-		MinerStats.setPointAmount("oreSilver", 1);
-		MinerStats.setPointAmount("oreAdamantium", 1);
-		MinerStats.setPointAmount("oreAluminum", 1);
-		MinerStats.setPointAmount("oreApatite", 1);
-		MinerStats.setPointAmount("oreMythril", 1);
-		MinerStats.setPointAmount("oreOnyx", 1);
-		MinerStats.setPointAmount("oreUranium", 2);
-		MinerStats.setPointAmount("oreSapphire", 3);
-		MinerStats.setPointAmount("oreRuby", 3);
-		MinerStats.setPointAmount("oreTopaz", 2);
-		MinerStats.setPointAmount("oreChrome", 1);
-		MinerStats.setPointAmount("orePlatinum", 1);
-		MinerStats.setPointAmount("oreTitanium", 1);
-		MinerStats.setPointAmount("oreTofu", 1);
-		MinerStats.setPointAmount("oreTofuDiamond", 4);
-		MinerStats.setPointAmount("oreSulfur", 1);
-		MinerStats.setPointAmount("oreSaltpeter", 1);
-		MinerStats.setPointAmount("oreFirestone", 2);
-		MinerStats.setPointAmount("oreSalt", 1);
-		MinerStats.setPointAmount("oreJade", 1);
-		MinerStats.setPointAmount("oreManganese", 1);
-		MinerStats.setPointAmount("oreLanite", 1);
-		MinerStats.setPointAmount("oreMeurodite", 1);
-		MinerStats.setPointAmount("oreSoul", 1);
-		MinerStats.setPointAmount("oreSunstone", 1);
-		MinerStats.setPointAmount("oreZinc", 1);
-		MinerStats.setPointAmount("oreCrocoite", 3);
-		MinerStats.setPointAmount("glowstone", 2);
-		MinerStats.setPointAmount("oreGypsum", 1);
-		MinerStats.setPointAmount("oreChalcedonyB", 1);
-		MinerStats.setPointAmount("oreChalcedonyW", 1);
-		MinerStats.setPointAmount("oreMagnetite", 1);
-		MinerStats.setPointAmount("oreNiter", 1);
-		MinerStats.setPointAmount("oreSchorl", 1);
-		MinerStats.setPointAmount("oreAquamarine", 2);
-		MinerStats.setPointAmount("oreMagnite", 1);
-		MinerStats.setPointAmount("oreRandomite", 2);
-		MinerStats.setPointAmount("oreHexcite", 4);
-		MinerStats.setPointAmount("oreManalite", 4);
-		MinerStats.setPointAmount(CaveBlocks.CAVE_BLOCK, BlockCave.EnumType.FISSURED_STONE.getMetadata(), 3);
-		MinerStats.setPointAmount(CaveBlocks.CAVE_BLOCK, BlockCave.EnumType.FISSURED_PACKED_ICE.getMetadata(), 3);
 	}
 
 	public static void registerMineBonus()

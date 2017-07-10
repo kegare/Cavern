@@ -2,10 +2,12 @@ package cavern.client.gui;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -13,6 +15,7 @@ import org.lwjgl.input.Keyboard;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -27,10 +30,9 @@ import cavern.util.PanoramaPaths;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -52,7 +54,7 @@ public class GuiSelectItem extends GuiScreen
 
 		for (Item item : Item.REGISTRY)
 		{
-			if (item == null)
+			if (item == null || item == Items.AIR)
 			{
 				continue;
 			}
@@ -63,32 +65,22 @@ public class GuiSelectItem extends GuiScreen
 
 			if (list.isEmpty())
 			{
-				ITEMS.addIfAbsent(new ItemMeta(item, -1));
+				ITEMS.addIfAbsent(new ItemMeta(item, 0));
 			}
 			else for (ItemStack stack : list)
 			{
-				if (stack.isItemStackDamageable() && stack.getItemDamage() == 0)
-				{
-					ITEMS.addIfAbsent(new ItemMeta(stack.getItem(), -1));
-				}
-				else
-				{
-					ITEMS.addIfAbsent(new ItemMeta(stack));
-				}
+				ITEMS.addIfAbsent(new ItemMeta(stack));
 			}
 		}
 	}
 
 	protected final GuiScreen parent;
 
-	protected IItemSelector selector;
-	protected int selectorId;
+	protected ISelectorCallback<ItemMeta> selectorCallback;
 
 	protected GuiTextField nameField, metaField;
 
 	protected ArrayEntry arrayEntry;
-
-	protected Collection<ItemMeta> selectedEntries;
 
 	protected ItemList itemList;
 
@@ -108,45 +100,35 @@ public class GuiSelectItem extends GuiScreen
 		this.parent = parent;
 	}
 
-	public GuiSelectItem(GuiScreen parent, IItemSelector selector, int id)
+	public GuiSelectItem(GuiScreen parent, @Nullable ISelectorCallback<ItemMeta> callback)
 	{
 		this(parent);
-		this.selector = selector;
-		this.selectorId = id;
+		this.selectorCallback = callback;
 	}
 
-	public GuiSelectItem(GuiScreen parent, GuiTextField nameField, GuiTextField metaField)
+	public GuiSelectItem(GuiScreen parent, @Nullable GuiTextField nameField, @Nullable GuiTextField metaField)
 	{
 		this(parent);
 		this.nameField = nameField;
 		this.metaField = metaField;
 	}
 
-	public GuiSelectItem(GuiScreen parent, GuiTextField nameField, GuiTextField metaField, IItemSelector selector, int id)
+	public GuiSelectItem(GuiScreen parent, @Nullable GuiTextField nameField, @Nullable GuiTextField metaField, @Nullable ISelectorCallback<ItemMeta> callback)
 	{
 		this(parent, nameField, metaField);
-		this.selector = selector;
-		this.selectorId = id;
+		this.selectorCallback = callback;
 	}
 
-	public GuiSelectItem(GuiScreen parent, ArrayEntry arrayEntry)
+	public GuiSelectItem(GuiScreen parent, @Nullable ArrayEntry arrayEntry)
 	{
 		this(parent);
 		this.arrayEntry = arrayEntry;
 	}
 
-	public GuiSelectItem(GuiScreen parent, ArrayEntry arrayEntry, IItemSelector selector, int id)
+	public GuiSelectItem(GuiScreen parent, @Nullable ArrayEntry arrayEntry, @Nullable ISelectorCallback<ItemMeta> callback)
 	{
 		this(parent, arrayEntry);
-		this.selector = selector;
-		this.selectorId = id;
-	}
-
-	public GuiSelectItem setSelected(Collection<ItemMeta> items)
-	{
-		selectedEntries = items;
-
-		return this;
+		this.selectorCallback = callback;
 	}
 
 	@Override
@@ -210,9 +192,9 @@ public class GuiSelectItem extends GuiScreen
 			switch (button.id)
 			{
 				case 0:
-					if (selector != null)
+					if (selectorCallback != null)
 					{
-						selector.onItemSelected(selectorId, itemList.selected);
+						selectorCallback.onSelected(ImmutableList.copyOf(itemList.selected));
 					}
 
 					if (arrayEntry != null)
@@ -223,23 +205,7 @@ public class GuiSelectItem extends GuiScreen
 						}
 						else
 						{
-							Set<String> values = Sets.newLinkedHashSet();
-
-							for (ItemMeta itemMeta : itemList.selected)
-							{
-								ItemStack stack = itemMeta.getItemStack();
-
-								if (stack.isItemStackDamageable())
-								{
-									values.add(itemMeta.getItemName());
-								}
-								else
-								{
-									values.add(itemMeta.getName());
-								}
-							}
-
-							arrayEntry.setListFromChildScreen(values.toArray());
+							arrayEntry.setListFromChildScreen(itemList.selected.stream().map(ItemMeta::getName).collect(Collectors.toList()).toArray());
 						}
 					}
 
@@ -475,7 +441,7 @@ public class GuiSelectItem extends GuiScreen
 	{
 		protected final ArrayListExtended<ItemMeta> entries = new ArrayListExtended<>();
 		protected final ArrayListExtended<ItemMeta> contents = new ArrayListExtended<>();
-		protected final Set<ItemMeta> selected = Sets.newLinkedHashSet();
+		protected final Set<ItemMeta> selected = Sets.newTreeSet();
 		protected final Map<String, List<ItemMeta>> filterCache = Maps.newHashMap();
 
 		protected int nameType;
@@ -505,10 +471,8 @@ public class GuiSelectItem extends GuiScreen
 
 			if (arrayEntry != null)
 			{
-				Arrays.stream(arrayEntry.getCurrentValues()).filter(o -> o != null && !Strings.isNullOrEmpty(o.toString())).forEach(o ->
+				Arrays.stream(arrayEntry.getCurrentValues()).map(Object::toString).filter(value -> !Strings.isNullOrEmpty(value)).forEach(value ->
 				{
-					String value = o.toString().trim();
-
 					if (!value.contains(":"))
 					{
 						value = "minecraft:" + value;
@@ -536,7 +500,7 @@ public class GuiSelectItem extends GuiScreen
 
 			for (ItemMeta itemMeta : ITEMS)
 			{
-				if (selector == null || selector.canSelectItem(selectorId, itemMeta))
+				if (selectorCallback == null || selectorCallback.isValidEntry(itemMeta))
 				{
 					entries.addIfAbsent(itemMeta);
 					contents.addIfAbsent(itemMeta);
@@ -589,6 +553,7 @@ public class GuiSelectItem extends GuiScreen
 			return contents.size();
 		}
 
+		@Nullable
 		public String getItemMetaTypeName(ItemMeta itemMeta, ItemStack stack)
 		{
 			if (itemMeta == null)
@@ -603,26 +568,18 @@ public class GuiSelectItem extends GuiScreen
 
 			String name = null;
 
-			try
+			switch (nameType)
 			{
-				if (nameType == 1)
-				{
+				case 1:
 					name = itemMeta.getName();
-				}
-				else switch (nameType)
-				{
-					case 2:
-						name = stack.getUnlocalizedName();
-						name = name.substring(name.indexOf(".") + 1);
-						break;
-					default:
-						name = stack.getDisplayName();
-						break;
-				}
-			}
-			catch (Throwable e)
-			{
-				name = null;
+					break;
+				case 2:
+					name = stack.getUnlocalizedName();
+					name = name.substring(name.indexOf(".") + 1);
+					break;
+				default:
+					name = stack.getDisplayName();
+					break;
 			}
 
 			return name;
@@ -659,15 +616,7 @@ public class GuiSelectItem extends GuiScreen
 
 			if (detailInfo.isChecked())
 			{
-				try
-				{
-					GlStateManager.enableRescaleNormal();
-					RenderHelper.enableGUIStandardItemLighting();
-					itemRender.renderItemIntoGUI(stack, width / 2 - 100, par3 - 1);
-					RenderHelper.disableStandardItemLighting();
-					GlStateManager.disableRescaleNormal();
-				}
-				catch (Throwable e) {}
+				drawItemStack(itemRender, stack, width / 2 - 100, par3 - 1);
 			}
 		}
 

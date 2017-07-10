@@ -25,76 +25,48 @@ public class CaveFilters
 			return false;
 		}
 
-		try
+		if (CaveUtils.containsIgnoreCase(blockMeta.getName(), filter))
 		{
-			if (CaveUtils.containsIgnoreCase(blockMeta.getName(), filter))
-			{
-				return true;
-			}
+			return true;
 		}
-		catch (Throwable e) {}
 
-		try
+		if (CaveUtils.containsIgnoreCase(blockMeta.getMetaString(), filter))
 		{
-			if (CaveUtils.containsIgnoreCase(blockMeta.getMetaString(), filter))
-			{
-				return true;
-			}
+			return true;
 		}
-		catch (Throwable e) {}
 
 		Block block = blockMeta.getBlock();
 		ItemStack stack = new ItemStack(block, 1, blockMeta.getMeta());
 
 		if (stack.getItem() == Items.AIR)
 		{
-			try
+			if (CaveUtils.containsIgnoreCase(block.getLocalizedName(), filter))
 			{
-				if (CaveUtils.containsIgnoreCase(block.getUnlocalizedName(), filter))
-				{
-					return true;
-				}
+				return true;
 			}
-			catch (Throwable e) {}
 
-			try
-			{
-				if (CaveUtils.containsIgnoreCase(block.getLocalizedName(), filter))
-				{
-					return true;
-				}
-			}
-			catch (Throwable e) {}
-		}
-		else
-		{
-			try
-			{
-				if (CaveUtils.containsIgnoreCase(stack.getUnlocalizedName(), filter))
-				{
-					return true;
-				}
-			}
-			catch (Throwable e) {}
-
-			try
-			{
-				if (CaveUtils.containsIgnoreCase(stack.getDisplayName(), filter))
-				{
-					return true;
-				}
-			}
-			catch (Throwable e) {}
-		}
-
-		try
-		{
-			if (CaveUtils.containsIgnoreCase(block.getHarvestTool(blockMeta.getBlockState()), filter))
+			if (CaveUtils.containsIgnoreCase(block.getUnlocalizedName(), filter))
 			{
 				return true;
 			}
 		}
-		catch (Throwable e) {}
+		else
+		{
+			if (CaveUtils.containsIgnoreCase(stack.getDisplayName(), filter))
+			{
+				return true;
+			}
+
+			if (CaveUtils.containsIgnoreCase(stack.getUnlocalizedName(), filter))
+			{
+				return true;
+			}
+		}
+
+		if (CaveUtils.containsIgnoreCase(block.getHarvestTool(blockMeta.getBlockState()), filter))
+		{
+			return true;
+		}
 
 		return false;
 	}
@@ -106,43 +78,27 @@ public class CaveFilters
 			return false;
 		}
 
-		try
+		if (CaveUtils.containsIgnoreCase(itemMeta.getName(), filter))
 		{
-			if (CaveUtils.containsIgnoreCase(itemMeta.getName(), filter))
-			{
-				return true;
-			}
+			return true;
 		}
-		catch (Throwable e) {}
 
 		ItemStack stack = itemMeta.getItemStack();
 
-		try
+		if (CaveUtils.containsIgnoreCase(stack.getDisplayName(), filter))
 		{
-			if (CaveUtils.containsIgnoreCase(stack.getUnlocalizedName(), filter))
-			{
-				return true;
-			}
+			return true;
 		}
-		catch (Throwable e) {}
 
-		try
+		if (CaveUtils.containsIgnoreCase(stack.getUnlocalizedName(), filter))
 		{
-			if (CaveUtils.containsIgnoreCase(stack.getDisplayName(), filter))
-			{
-				return true;
-			}
+			return true;
 		}
-		catch (Throwable e) {}
 
-		try
+		if (stack.getItem().getToolClasses(stack).contains(filter))
 		{
-			if (stack.getItem().getToolClasses(stack).contains(filter))
-			{
-				return true;
-			}
+			return true;
 		}
-		catch (Throwable e) {}
 
 		return false;
 	}
@@ -159,54 +115,50 @@ public class CaveFilters
 			return true;
 		}
 
-		try
+		for (BiomeDictionary.Type type : BiomeDictionary.getTypes(biome))
 		{
-			if (BiomeDictionary.hasType(biome, BiomeDictionary.Type.getType(filter)))
+			if (type.getName().equalsIgnoreCase(filter))
 			{
 				return true;
 			}
 		}
-		catch (Throwable e) {}
 
-		try
+		if (blockFilter(new BlockMeta(biome.topBlock), filter))
 		{
-			if (blockFilter(new BlockMeta(biome.topBlock), filter))
-			{
-				return true;
-			}
+			return true;
 		}
-		catch (Throwable e) {}
 
-		try
+		if (blockFilter(new BlockMeta(biome.fillerBlock), filter))
 		{
-			if (blockFilter(new BlockMeta(biome.fillerBlock), filter))
-			{
-				return true;
-			}
+			return true;
 		}
-		catch (Throwable e) {}
+
+		BiomeType type;
 
 		try
 		{
-			BiomeType type = BiomeType.valueOf(filter.toUpperCase());
+			type = BiomeType.valueOf(filter.toUpperCase());
+		}
+		catch (IllegalArgumentException e)
+		{
+			type = null;
+		}
 
-			if (type != null)
+		if (type != null)
+		{
+			ImmutableList<BiomeEntry> list = BiomeManager.getBiomes(type);
+
+			if (list != null)
 			{
-				ImmutableList<BiomeEntry> list = BiomeManager.getBiomes(type);
-
-				if (list != null)
+				for (BiomeEntry entry : list)
 				{
-					for (BiomeEntry entry : list)
+					if (entry != null && entry.biome.getRegistryName().equals(biome.getRegistryName()))
 					{
-						if (entry != null && entry.biome.getRegistryName().equals(biome.getRegistryName()))
-						{
-							return true;
-						}
+						return true;
 					}
 				}
 			}
 		}
-		catch (Throwable e) {}
 
 		return false;
 	}

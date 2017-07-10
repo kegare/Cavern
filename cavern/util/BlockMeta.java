@@ -85,6 +85,11 @@ public class BlockMeta implements Comparable<BlockMeta>
 
 	public String getName()
 	{
+		return getName(false);
+	}
+
+	public String getName(boolean metaName)
+	{
 		String name = getBlockName();
 
 		if (meta < 0 || meta == OreDictionary.WILDCARD_VALUE || !Item.getItemFromBlock(block).getHasSubtypes())
@@ -92,7 +97,7 @@ public class BlockMeta implements Comparable<BlockMeta>
 			return name;
 		}
 
-		return name + ":" + meta;
+		return name + ":" + (metaName ? getMetaString() : meta);
 	}
 
 	@Override
@@ -155,18 +160,13 @@ public class BlockMeta implements Comparable<BlockMeta>
 	}
 
 	@Override
-	public int compareTo(BlockMeta o)
+	public int compareTo(BlockMeta blockMeta)
 	{
-		int i = CaveUtils.compareWithNull(this, o);
+		int i = CaveUtils.compareWithNull(this, blockMeta);
 
-		if (i == 0 && o != null)
+		if (i == 0 && blockMeta != null)
 		{
-			i = CaveUtils.BLOCK_COMPARATOR.compare(getBlock(), o.getBlock());
-
-			if (i == 0 && getBlock() != null && o.getBlock() != null)
-			{
-				i = Integer.compare(getMeta(), o.getMeta());
-			}
+			i = getName().compareTo(blockMeta.getName());
 		}
 
 		return i;

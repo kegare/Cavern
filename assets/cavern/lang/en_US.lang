@@ -13,6 +13,12 @@ cavern.version.message.alpha=You are using an Alpha version of %s
 cavern.version.message.dev=You are using a Dev version of %s
 
 cavern.config.title=Cavern Configuration
+cavern.config.version=The latest version of Cavern is %s
+cavern.config.version.latest=You are using the latest version
+cavern.config.version.old=You are using an older version
+cavern.config.version.beta=You are using a beta version
+cavern.config.version.alpha=You are using an alpha version
+cavern.config.version.dev=You are using a development version
 cavern.config.detail=Detail info
 cavern.config.detail.hover=Display detailed information.
 cavern.config.instant=Instant filter
@@ -81,10 +87,8 @@ cavern.config.general.sleepRefresh=Sleep Refresh
 cavern.config.general.sleepRefresh.tooltip=Whether to refresh health when wake up in the cave dimensions.
 
 cavern.config.points=Mining Points Customize
-cavern.config.points.block=Block
-cavern.config.points.block.tooltip=Specify the block name.
 cavern.config.points.point=Mining Point
-cavern.config.points.point.tooltip=Specify the mining point of the block.
+cavern.config.points.point.tooltip=Specify the mining point for the block.
 
 cavern.config.miningassist=Mining Assist Settings
 cavern.config.miningassist.effectiveItems=Effective Items
@@ -214,11 +218,11 @@ cavern.config.veins.maxHeight.tooltip=Specify the maximum height for generation.
 cavern.config.veins.biomes=Biomes
 cavern.config.veins.biomes.tooltip=Specify the accept biomes for generation.
 
-cavern.config.select.block=Select a block
-cavern.config.select.block.multiple=Select blocks
+cavern.config.select.block=Select the block
+cavern.config.select.block.multiple=Select the blocks
 cavern.config.select.block.selected=%d blocks selected
-cavern.config.select.item=Select a item
-cavern.config.select.item.multiple=Select items
+cavern.config.select.item=Select the item
+cavern.config.select.item.multiple=Select the items
 cavern.config.select.item.selected=%d items selected
 cavern.config.select.biome=Select the biomes
 cavern.config.select.biome.selected=%d biomes selected
@@ -229,7 +233,11 @@ cavern.config.select.biome.info.rainfall=Rainfall
 cavern.config.select.biome.info.type=Type
 cavern.config.select.mob=Select the mobs
 cavern.config.select.mob.selected=%d mobs selected
+cavern.config.select.oreDict=Select the ore dictionaries
+cavern.config.select.oreDict.selected=%d ore dictionaries selected
 cavern.config.select.entry.selected=%d entries selected
+cavern.config.select.switch.block=Block
+cavern.config.select.switch.oreDict=Ore Dict
 
 cavern.message.sleep.still=You are not tired. You cannot sleep until %d minutes at least.
 
@@ -373,6 +381,15 @@ item.swordManalite.name=Magical Sword: Manalite
 item.axeManalite.name=Magical Axe: Manalite
 item.bowManalite.name=Magical Bow: Manalite
 item.compassOre.name=Ore Compass
+item.swordComposite.name=Composite Sword
+item.pickaxeComposite.name=Composite Pickaxe
+item.axeComposite.name=Composite Axe
+item.shovelComposite.name=Composite Shovel
+item.hoeComposite.name=Composite Hoe
+item.helmetComposite.name=Composite Helmet
+item.chestplateComposite.name=Composite Chestplate
+item.leggingsComposite.name=Composite Leggings
+item.bootsComposite.name=Composite Boots
 
 entity.CavenicSkeleton.name=Cavenic Skeleton
 entity.CavenicCreeper.name=Cavenic Creeper

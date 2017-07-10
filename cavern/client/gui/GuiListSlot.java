@@ -2,24 +2,40 @@ package cavern.client.gui;
 
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.ObjectUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
+import com.google.common.base.Strings;
+
+import cavern.client.CaveRenderingRegistry;
 import cavern.core.Cavern;
 import cavern.util.ArrayListExtended;
+import cavern.util.BlockMeta;
 import cavern.util.PanoramaPaths;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 @SideOnly(Side.CLIENT)
 public abstract class GuiListSlot extends GuiSlot
@@ -281,5 +297,85 @@ public abstract class GuiListSlot extends GuiSlot
 	public void scrollToNext()
 	{
 		scrollBy(getAmountScrolled() % getSlotHeight() + (bottom - top) / getSlotHeight() * getSlotHeight());
+	}
+
+	public void drawItemStack(RenderItem renderer, ItemStack stack, int x, int y)
+	{
+		drawItemStack(renderer, stack, x, y, null, null);
+	}
+
+	public void drawItemStack(RenderItem renderer, ItemStack stack, int x, int y, FontRenderer fontRenderer, @Nullable String overlay)
+	{
+		if (stack.isEmpty())
+		{
+			return;
+		}
+
+		if (stack.getMetadata() == OreDictionary.WILDCARD_VALUE)
+		{
+			NBTTagCompound nbt = stack.getTagCompound();
+
+			stack = new ItemStack(stack.getItem(), stack.getCount());
+			stack.setTagCompound(nbt);
+		}
+
+		GlStateManager.enableRescaleNormal();
+		RenderHelper.enableGUIStandardItemLighting();
+
+		renderer.renderItemIntoGUI(stack, x, y);
+
+		if (!Strings.isNullOrEmpty(overlay))
+		{
+			renderer.renderItemOverlayIntoGUI(ObjectUtils.defaultIfNull(stack.getItem().getFontRenderer(stack), fontRenderer), stack, x, y, overlay);
+		}
+
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableRescaleNormal();
+	}
+
+	public void drawItemStack(RenderItem renderer, @Nullable IBlockState state, int x, int y)
+	{
+		drawItemStack(renderer, state, x, y, null, null);
+	}
+
+	public void drawItemStack(RenderItem renderer, @Nullable IBlockState state, int x, int y, FontRenderer fontRenderer, @Nullable String overlay)
+	{
+		if (state == null)
+		{
+			return;
+		}
+
+		Item item = Item.getItemFromBlock(CaveRenderingRegistry.getRenderBlock(state.getBlock()));
+
+		if (item == Items.AIR)
+		{
+			return;
+		}
+
+		int meta = state.getBlock().getMetaFromState(state);
+
+		drawItemStack(renderer, new ItemStack(item, 1, meta), x, y, fontRenderer, overlay);
+	}
+
+	public void drawItemStack(RenderItem renderer, @Nullable BlockMeta blockMeta, int x, int y)
+	{
+		drawItemStack(renderer, blockMeta, x, y, null, null);
+	}
+
+	public void drawItemStack(RenderItem renderer, @Nullable BlockMeta blockMeta, int x, int y, FontRenderer fontRenderer, @Nullable String overlay)
+	{
+		if (blockMeta == null)
+		{
+			return;
+		}
+
+		Item item = Item.getItemFromBlock(CaveRenderingRegistry.getRenderBlock(blockMeta.getBlock()));
+
+		if (item == Items.AIR)
+		{
+			return;
+		}
+
+		drawItemStack(renderer, new ItemStack(item, 1, blockMeta.getMeta()), x, y, fontRenderer, overlay);
 	}
 }

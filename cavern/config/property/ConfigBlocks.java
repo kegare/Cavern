@@ -9,6 +9,8 @@ import com.google.common.collect.Sets;
 import cavern.util.BlockMeta;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ConfigBlocks
@@ -88,27 +90,45 @@ public class ConfigBlocks
 		{
 			value = value.trim();
 
-			if (!value.contains(":"))
+			if (OreDictionary.doesOreNameExist(value))
 			{
-				value = "minecraft:" + value;
-			}
+				for (ItemStack stack : OreDictionary.getOres(value, false))
+				{
+					if (!stack.isEmpty() && stack.getItem() instanceof ItemBlock)
+					{
+						Block block = ((ItemBlock)stack.getItem()).getBlock();
 
-			BlockMeta blockMeta;
-
-			if (value.indexOf(':') != value.lastIndexOf(':'))
-			{
-				int i = value.lastIndexOf(':');
-
-				blockMeta = new BlockMeta(value.substring(0, i), value.substring(i + 1));
+						if (block != null)
+						{
+							blocks.add(new BlockMeta(block, stack.getMetadata()));
+						}
+					}
+				}
 			}
 			else
 			{
-				blockMeta = new BlockMeta(value, 0);
-			}
+				if (!value.contains(":"))
+				{
+					value = "minecraft:" + value;
+				}
 
-			if (blockMeta.getBlock() != null)
-			{
-				blocks.add(blockMeta);
+				BlockMeta blockMeta;
+
+				if (value.indexOf(':') != value.lastIndexOf(':'))
+				{
+					int i = value.lastIndexOf(':');
+
+					blockMeta = new BlockMeta(value.substring(0, i), value.substring(i + 1));
+				}
+				else
+				{
+					blockMeta = new BlockMeta(value, 0);
+				}
+
+				if (blockMeta.getBlock() != null)
+				{
+					blocks.add(blockMeta);
+				}
 			}
 		});
 	}

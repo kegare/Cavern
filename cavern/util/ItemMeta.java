@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
-public class ItemMeta
+public class ItemMeta implements Comparable<ItemMeta>
 {
 	private Item item = Items.AIR;
 	private int meta;
@@ -130,5 +130,18 @@ public class ItemMeta
 		}
 
 		return Objects.hashCode(item, meta);
+	}
+
+	@Override
+	public int compareTo(ItemMeta itemMeta)
+	{
+		int i = CaveUtils.compareWithNull(this, itemMeta);
+
+		if (i == 0 && itemMeta != null)
+		{
+			i = getName().compareTo(itemMeta.getName());
+		}
+
+		return i;
 	}
 }

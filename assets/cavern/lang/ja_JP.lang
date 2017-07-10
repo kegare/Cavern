@@ -13,12 +13,18 @@ cavern.version.message.alpha=あなたは %s のアルファバージョンを�
 cavern.version.message.dev=あなたは %s の開発者向けバージョンを利用しています
 
 cavern.config.title=Cavernの設定
+cavern.config.version=Cavernの最新バージョンは %s です
+cavern.config.version.latest=あなたは最新バージョンを利用しています
+cavern.config.version.old=あなたは古いバージョンを利用しています
+cavern.config.version.beta=あなたはベータバージョンを利用しています
+cavern.config.version.alpha=あなたはアルファバージョンを利用しています
+cavern.config.version.dev=あなたは開発バージョンを利用しています
 cavern.config.detail=詳細情報
 cavern.config.detail.hover=詳細情報を表示します。
 cavern.config.instant=インスタントフィルター
 cavern.config.instant.hover=フィルタテキストボックスに文字を入力すると瞬時にフィルタリングします。
 
-cavern.config.general=一般的な設定
+cavern.config.general=基本設定
 cavern.config.general.tooltip=cavern-general.cfgに含まれる設定を変更できます。
 cavern.config.general.versionNotify=バージョンの通知
 cavern.config.general.versionNotify.tooltip=新しいバージョンが利用可能なときに通知します。
@@ -76,8 +82,6 @@ cavern.config.general.sleepRefresh=睡眠時の回復
 cavern.config.general.sleepRefresh.tooltip=洞窟ディメンションで睡眠をしたときに体力を少し回復します。
 
 cavern.config.points=採掘ポイントのカスタマイズ
-cavern.config.points.block=ブロック
-cavern.config.points.block.tooltip=採掘ポイントを設定するブロックを指定します。
 cavern.config.points.point=採掘ポイント
 cavern.config.points.point.tooltip=得られる採掘ポイントを指定します。
 
@@ -218,7 +222,11 @@ cavern.config.select.biome.info.rainfall=降水量
 cavern.config.select.biome.info.type=タイプ
 cavern.config.select.mob=モブを選択してください
 cavern.config.select.mob.selected=%dつのモブが選択済み
+cavern.config.select.oreDict=鉱石辞書名を選択してください
+cavern.config.select.oreDict.selected=%dつの鉱石辞書名が選択済み
 cavern.config.select.entry.selected=%dつのエントリが選択済み
+cavern.config.select.switch.block=ブロック
+cavern.config.select.switch.oreDict=鉱石辞書
 
 cavern.message.sleep.still=まだ疲れていません。少なくとも、%d分は眠ることができません。
 
@@ -362,6 +370,15 @@ item.swordManalite.name=魔剣: マナライト
 item.axeManalite.name=魔斧: マナライト
 item.bowManalite.name=魔弓: マナライト
 item.compassOre.name=鉱石コンパス
+item.swordComposite.name=複合剣
+item.pickaxeComposite.name=複合ツルハシ
+item.axeComposite.name=複合斧
+item.shovelComposite.name=複合シャベル
+item.hoeComposite.name=複合クワ
+item.helmetComposite.name=複合ヘルメット
+item.chestplateComposite.name=複合チェストプレート
+item.leggingsComposite.name=複合レギンス
+item.bootsComposite.name=複合ブーツ
 
 entity.CavenicSkeleton.name=ケイブニックスケルトン
 entity.CavenicCreeper.name=ケイブニッククリーパー

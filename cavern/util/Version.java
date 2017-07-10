@@ -2,7 +2,10 @@ package cavern.util;
 
 import java.io.File;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Strings;
@@ -69,6 +72,12 @@ public class Version
 		return getResult().status;
 	}
 
+	@Nullable
+	public static ComparableVersion getTarget()
+	{
+		return getResult().target;
+	}
+
 	public static String getCurrent()
 	{
 		return CURRENT;
@@ -76,14 +85,7 @@ public class Version
 
 	public static ComparableVersion getLatest()
 	{
-		ComparableVersion ret = getResult().target;
-
-		if (ret == null)
-		{
-			return new ComparableVersion(CURRENT);
-		}
-
-		return ret;
+		return ObjectUtils.defaultIfNull(getTarget(), new ComparableVersion(CURRENT));
 	}
 
 	public static boolean isOutdated()

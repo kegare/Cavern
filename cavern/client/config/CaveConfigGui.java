@@ -39,4 +39,16 @@ public class CaveConfigGui extends GuiConfig
 
 		return list;
 	}
+
+	@Override
+	public void initGui()
+	{
+		if (entryList == null || needsRefresh)
+		{
+			entryList = new CaveConfigGuiEntries(this, mc);
+			needsRefresh = false;
+		}
+
+		super.initGui();
+	}
 }

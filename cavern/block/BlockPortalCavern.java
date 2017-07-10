@@ -26,13 +26,11 @@ import net.minecraft.block.state.pattern.BlockPattern;
 import net.minecraft.block.state.pattern.BlockPattern.PatternHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -228,42 +226,21 @@ public class BlockPortalCavern extends BlockPortal
 
 					worldOld.playSound(null, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.25F, 1.15F);
 
+					entity.dimension = dimNew;
+					world.removeEntityDangerously(entity);
+
+					entity.isDead = false;
+
 					server.getPlayerList().transferEntityToWorld(entity, dimOld, worldOld, worldNew, teleporter);
 
-					Entity target = EntityList.createEntityByIDFromName(EntityList.getKey(entity), worldNew);
+					x = entity.posX;
+					y = entity.posY + entity.getEyeHeight();
+					z = entity.posZ;
 
-					if (target != null)
-					{
-						NBTTagCompound nbt = new NBTTagCompound();
+					worldNew.playSound(null, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.5F, 1.15F);
 
-						entity.writeToNBT(nbt);
-						nbt.removeTag("Dimension");
-
-						target.readFromNBT(nbt);
-
-						boolean force = target.forceSpawn;
-
-						target.forceSpawn = true;
-
-						worldNew.spawnEntity(target);
-						worldNew.updateEntityWithOptionalForce(target, false);
-
-						x = target.posX;
-						y = target.posY + target.getEyeHeight();
-						z = target.posZ;
-
-						worldNew.playSound(null, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.5F, 1.15F);
-
-						target.forceSpawn = force;
-
-						cache.setLastDim(getType(), dimOld);
-						cache.setLastPos(getType(), dimOld, prevPos);
-					}
-
-					entity.setDead();
-
-					worldOld.resetUpdateEntityTick();
-					worldNew.resetUpdateEntityTick();
+					cache.setLastDim(getType(), dimOld);
+					cache.setLastPos(getType(), dimOld, prevPos);
 				}
 			}
 			else

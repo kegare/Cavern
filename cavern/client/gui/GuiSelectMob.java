@@ -2,11 +2,12 @@ package cavern.client.gui;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
@@ -68,7 +69,7 @@ public class GuiSelectMob extends GuiScreen
 		this.parent = parent;
 	}
 
-	public GuiSelectMob(GuiScreen parent, ArrayEntry entry)
+	public GuiSelectMob(GuiScreen parent, @Nullable ArrayEntry entry)
 	{
 		this(parent);
 		this.arrayEntry = entry;
@@ -313,11 +314,11 @@ public class GuiSelectMob extends GuiScreen
 		return false;
 	}
 
-	protected class MobList extends GuiListSlot implements Comparator<String>
+	protected class MobList extends GuiListSlot
 	{
 		protected final ArrayListExtended<String> mobs = new ArrayListExtended<>();
 		protected final ArrayListExtended<String> contents = new ArrayListExtended<>();
-		protected final Set<String> selected = Sets.newTreeSet(this);
+		protected final Set<String> selected = Sets.newTreeSet();
 		protected final Map<String, List<String>> filterCache = Maps.newHashMap();
 
 		protected int nameType;
@@ -445,19 +446,6 @@ public class GuiSelectMob extends GuiScreen
 			String entry = contents.get(index, null);
 
 			return !Strings.isNullOrEmpty(entry) && selected.contains(entry);
-		}
-
-		@Override
-		public int compare(String o1, String o2)
-		{
-			int i = CaveUtils.compareWithNull(o1, o2);
-
-			if (i == 0 && o1 != null && o2 != null)
-			{
-				i = Integer.compare(mobs.indexOf(o1), mobs.indexOf(o2));
-			}
-
-			return i;
 		}
 
 		protected void setFilter(String filter)

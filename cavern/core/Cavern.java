@@ -248,8 +248,6 @@ public class Cavern
 			CaveBlocks.registerItemBlockColors();
 		}
 
-		MinerStats.registerPointAmounts();
-
 		RuinsBlockData.init();
 	}
 

@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.base.Strings;
@@ -23,90 +22,32 @@ import com.google.common.collect.Sets;
 import cavern.client.config.CaveConfigGui;
 import cavern.config.Config;
 import cavern.util.ArrayListExtended;
-import cavern.util.BlockMeta;
-import cavern.util.CaveFilters;
 import cavern.util.CaveUtils;
 import cavern.util.PanoramaPaths;
-import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.ArrayEntry;
 import net.minecraftforge.fml.client.config.HoverChecker;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 @SideOnly(Side.CLIENT)
-public class GuiSelectBlock extends GuiScreen
+public class GuiSelectOreDict extends GuiScreen
 {
-	private static final ArrayListExtended<BlockMeta> BLOCKS = new ArrayListExtended<>();
-
-	static
-	{
-		NonNullList<ItemStack> list = NonNullList.create();
-
-		for (Block block : Block.REGISTRY)
-		{
-			if (block == null || block == Blocks.AIR)
-			{
-				continue;
-			}
-
-			list.clear();
-
-			block.getSubBlocks(ObjectUtils.defaultIfNull(block.getCreativeTabToDisplayOn(), CreativeTabs.SEARCH), list);
-
-			if (list.isEmpty())
-			{
-				if (!block.hasTileEntity(block.getDefaultState()))
-				{
-					BLOCKS.addIfAbsent(new BlockMeta(block, 0));
-				}
-			}
-			else for (ItemStack stack : list)
-			{
-				if (stack.isEmpty())
-				{
-					continue;
-				}
-
-				Block sub = Block.getBlockFromItem(stack.getItem());
-
-				if (sub == null || sub == Blocks.AIR)
-				{
-					continue;
-				}
-
-				int meta = stack.getMetadata();
-
-				if (meta < 0 || meta > 15 || sub.hasTileEntity(sub.getStateFromMeta(meta)))
-				{
-					continue;
-				}
-
-				BLOCKS.addIfAbsent(new BlockMeta(sub, meta));
-			}
-		}
-	}
-
 	protected final GuiScreen parent;
 
-	protected ISelectorCallback<BlockMeta> selectorCallback;
+	protected ISelectorCallback<OreDictEntry> selectorCallback;
 	protected SelectSwitchEntry switchEntry;
-
-	protected GuiTextField nameField, metaField;
 
 	protected ArrayEntry arrayEntry;
 
-	protected BlockList blockList;
+	protected OreDictList oreDictList;
 
 	protected GuiButton doneButton;
 	protected GuiButton switchButton;
@@ -120,37 +61,24 @@ public class GuiSelectBlock extends GuiScreen
 	protected HoverChecker detailHoverChecker;
 	protected HoverChecker instantHoverChecker;
 
-	public GuiSelectBlock(GuiScreen parent)
+	public GuiSelectOreDict(GuiScreen parent)
 	{
 		this.parent = parent;
 	}
 
-	public GuiSelectBlock(GuiScreen parent, @Nullable ISelectorCallback<BlockMeta> callback)
-	{
-		this(parent);
-		this.selectorCallback = callback;
-	}
-
-	public GuiSelectBlock(GuiScreen parent, @Nullable GuiTextField nameField, @Nullable GuiTextField metaField)
-	{
-		this(parent);
-		this.nameField = nameField;
-		this.metaField = metaField;
-	}
-
-	public GuiSelectBlock(GuiScreen parent, @Nullable GuiTextField nameField, @Nullable GuiTextField metaField, @Nullable ISelectorCallback<BlockMeta> callback)
-	{
-		this(parent, nameField, metaField);
-		this.selectorCallback = callback;
-	}
-
-	public GuiSelectBlock(GuiScreen parent, @Nullable ArrayEntry arrayEntry)
+	public GuiSelectOreDict(GuiScreen parent, @Nullable ArrayEntry arrayEntry)
 	{
 		this(parent);
 		this.arrayEntry = arrayEntry;
 	}
 
-	public GuiSelectBlock(GuiScreen parent, @Nullable ArrayEntry arrayEntry, @Nullable ISelectorCallback<BlockMeta> callback)
+	public GuiSelectOreDict(GuiScreen parent, @Nullable ISelectorCallback<OreDictEntry> callback)
+	{
+		this(parent);
+		this.selectorCallback = callback;
+	}
+
+	public GuiSelectOreDict(GuiScreen parent, @Nullable ArrayEntry arrayEntry, @Nullable ISelectorCallback<OreDictEntry> callback)
 	{
 		this(parent, arrayEntry);
 		this.selectorCallback = callback;
@@ -164,12 +92,12 @@ public class GuiSelectBlock extends GuiScreen
 	@Override
 	public void initGui()
 	{
-		if (blockList == null)
+		if (oreDictList == null)
 		{
-			blockList = new BlockList();
+			oreDictList = new OreDictList();
 		}
 
-		blockList.setDimensions(width, height, 32, height - 28);
+		oreDictList.setDimensions(width, height, 32, height - 28);
 
 		boolean hasSwitch = switchEntry != null;
 		int buttonWidth = hasSwitch ? 70 : 145;
@@ -241,26 +169,26 @@ public class GuiSelectBlock extends GuiScreen
 	{
 		if (selectorCallback != null)
 		{
-			selectorCallback.onSelected(ImmutableList.copyOf(blockList.selected));
+			selectorCallback.onSelected(ImmutableList.copyOf(oreDictList.selected));
 		}
 
 		if (arrayEntry != null)
 		{
 			if (switchEntry == null || mc.currentScreen == this)
 			{
-				if (blockList.selected.isEmpty())
+				if (oreDictList.selected.isEmpty())
 				{
 					arrayEntry.setListFromChildScreen(new String[0]);
 				}
 				else
 				{
-					arrayEntry.setListFromChildScreen(blockList.selected.stream().map(BlockMeta::getName).collect(Collectors.toList()).toArray());
+					arrayEntry.setListFromChildScreen(oreDictList.selected.stream().map(OreDictEntry::getName).collect(Collectors.toList()).toArray());
 				}
 			}
-			else if (!blockList.selected.isEmpty())
+			else if (!oreDictList.selected.isEmpty())
 			{
 				Object[] values = arrayEntry.getCurrentValues();
-				Object[] newValues = blockList.selected.stream().map(BlockMeta::getName).collect(Collectors.toList()).toArray();
+				Object[] newValues = oreDictList.selected.stream().map(OreDictEntry::getName).collect(Collectors.toList()).toArray();
 
 				if (values == null || values.length <= 0)
 				{
@@ -271,44 +199,6 @@ public class GuiSelectBlock extends GuiScreen
 					arrayEntry.setListFromChildScreen(ArrayUtils.addAll(values, newValues));
 				}
 			}
-		}
-
-		if (blockList.selected.isEmpty())
-		{
-			if (nameField != null)
-			{
-				nameField.setText("");
-			}
-
-			if (metaField != null)
-			{
-				metaField.setText("");
-			}
-		}
-		else for (BlockMeta blockMeta : blockList.selected)
-		{
-			if (nameField != null)
-			{
-				nameField.setText(blockMeta.getBlockName());
-			}
-
-			if (metaField != null)
-			{
-				metaField.setText(blockMeta.getMetaString());
-			}
-
-			break;
-		}
-
-		if (nameField != null)
-		{
-			nameField.setFocused(true);
-			nameField.setCursorPositionEnd();
-		}
-		else if (metaField != null)
-		{
-			metaField.setFocused(true);
-			metaField.setCursorPositionEnd();
 		}
 	}
 
@@ -340,8 +230,8 @@ public class GuiSelectBlock extends GuiScreen
 
 					mc.displayGuiScreen(parent);
 
-					blockList.selected.clear();
-					blockList.scrollToTop();
+					oreDictList.selected.clear();
+					oreDictList.scrollToTop();
 					break;
 				case 1:
 					CaveConfigGui.detailInfo = detailInfo.isChecked();
@@ -357,7 +247,7 @@ public class GuiSelectBlock extends GuiScreen
 
 					break;
 				default:
-					blockList.actionPerformed(button);
+					oreDictList.actionPerformed(button);
 			}
 		}
 	}
@@ -373,19 +263,9 @@ public class GuiSelectBlock extends GuiScreen
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float ticks)
 	{
-		blockList.drawScreen(mouseX, mouseY, ticks);
+		oreDictList.drawScreen(mouseX, mouseY, ticks);
 
-		boolean single = nameField != null || metaField != null;
-		String name = null;
-
-		if (single)
-		{
-			name = I18n.format(Config.LANG_KEY + "select.block");
-		}
-		else
-		{
-			name = I18n.format(Config.LANG_KEY + "select.block.multiple");
-		}
+		String name = I18n.format(Config.LANG_KEY + "select.oreDict");
 
 		if (!Strings.isNullOrEmpty(name))
 		{
@@ -405,28 +285,16 @@ public class GuiSelectBlock extends GuiScreen
 			drawHoveringText(fontRenderer.listFormattedStringToWidth(I18n.format(Config.LANG_KEY + "instant.hover"), 300), mouseX, mouseY);
 		}
 
-		if (!single && !blockList.selected.isEmpty())
+		if (!oreDictList.selected.isEmpty())
 		{
 			if (mouseX <= 100 && mouseY <= 20)
 			{
-				drawString(fontRenderer, I18n.format(Config.LANG_KEY + "select.block.selected", blockList.selected.size()), 5, 5, 0xEFEFEF);
+				drawString(fontRenderer, I18n.format(Config.LANG_KEY + "select.oreDict.selected", oreDictList.selected.size()), 5, 5, 0xEFEFEF);
 			}
 
 			if (selectedHoverChecker.checkHover(mouseX, mouseY))
 			{
-				List<String> texts = Lists.newArrayList();
-
-				for (BlockMeta blockMeta : blockList.selected)
-				{
-					name = blockList.getBlockMetaTypeName(blockMeta);
-
-					if (!Strings.isNullOrEmpty(name))
-					{
-						texts.add(name);
-					}
-				}
-
-				drawHoveringText(texts, mouseX, mouseY);
+				drawHoveringText(oreDictList.selected.stream().map(OreDictEntry::getName).collect(Collectors.toList()), mouseX, mouseY);
 			}
 		}
 	}
@@ -436,7 +304,7 @@ public class GuiSelectBlock extends GuiScreen
 	{
 		super.handleMouseInput();
 
-		blockList.handleMouseInput();
+		oreDictList.handleMouseInput();
 	}
 
 	@Override
@@ -466,11 +334,11 @@ public class GuiSelectBlock extends GuiScreen
 
 			if (Strings.isNullOrEmpty(text) && changed)
 			{
-				blockList.setFilter(null);
+				oreDictList.setFilter(null);
 			}
 			else if (instantFilter.isChecked() && changed || code == Keyboard.KEY_RETURN)
 			{
-				blockList.setFilter(text);
+				oreDictList.setFilter(text);
 			}
 		}
 		else
@@ -481,22 +349,22 @@ public class GuiSelectBlock extends GuiScreen
 			}
 			else if (code == Keyboard.KEY_BACK)
 			{
-				blockList.selected.clear();
+				oreDictList.selected.clear();
 			}
 			else if (code == Keyboard.KEY_TAB)
 			{
-				if (++blockList.nameType > 2)
+				if (++oreDictList.nameType > 1)
 				{
-					blockList.nameType = 0;
+					oreDictList.nameType = 0;
 				}
 			}
 			else if (code == Keyboard.KEY_UP)
 			{
-				blockList.scrollUp();
+				oreDictList.scrollUp();
 			}
 			else if (code == Keyboard.KEY_DOWN)
 			{
-				blockList.scrollDown();
+				oreDictList.scrollDown();
 			}
 			else if (code == Keyboard.KEY_LEFT || code == Keyboard.KEY_RIGHT)
 			{
@@ -506,23 +374,23 @@ public class GuiSelectBlock extends GuiScreen
 			}
 			else if (code == Keyboard.KEY_HOME)
 			{
-				blockList.scrollToTop();
+				oreDictList.scrollToTop();
 			}
 			else if (code == Keyboard.KEY_END)
 			{
-				blockList.scrollToEnd();
+				oreDictList.scrollToEnd();
 			}
 			else if (code == Keyboard.KEY_SPACE)
 			{
-				blockList.scrollToSelected();
+				oreDictList.scrollToSelected();
 			}
 			else if (code == Keyboard.KEY_PRIOR)
 			{
-				blockList.scrollToPrev();
+				oreDictList.scrollToPrev();
 			}
 			else if (code == Keyboard.KEY_NEXT)
 			{
-				blockList.scrollToNext();
+				oreDictList.scrollToNext();
 			}
 			else if (code == Keyboard.KEY_F || code == mc.gameSettings.keyBindChat.getKeyCode())
 			{
@@ -530,7 +398,7 @@ public class GuiSelectBlock extends GuiScreen
 			}
 			else if (isCtrlKeyDown() && code == Keyboard.KEY_A)
 			{
-				blockList.selected.addAll(blockList.contents);
+				oreDictList.selected.addAll(oreDictList.contents);
 			}
 		}
 	}
@@ -541,37 +409,21 @@ public class GuiSelectBlock extends GuiScreen
 		return false;
 	}
 
-	protected class BlockList extends GuiListSlot
+	protected class OreDictList extends GuiListSlot
 	{
-		protected final ArrayListExtended<BlockMeta> entries = new ArrayListExtended<>();
-		protected final ArrayListExtended<BlockMeta> contents = new ArrayListExtended<>();
-		protected final Set<BlockMeta> selected = Sets.newTreeSet();
-		protected final Map<String, List<BlockMeta>> filterCache = Maps.newHashMap();
+		protected final ArrayListExtended<OreDictEntry> entries = new ArrayListExtended<>();
+		protected final ArrayListExtended<OreDictEntry> contents = new ArrayListExtended<>();
+		protected final Set<OreDictEntry> selected = Sets.newTreeSet();
+		protected final Map<String, List<OreDictEntry>> filterCache = Maps.newHashMap();
 
 		protected int nameType;
 		protected boolean clickFlag;
 
-		protected BlockList()
+		protected OreDictList()
 		{
-			super(GuiSelectBlock.this.mc, 0, 0, 0, 0, 18);
+			super(GuiSelectOreDict.this.mc, 0, 0, 0, 0, 18);
 
-			Set<BlockMeta> select = Sets.newHashSet();
-
-			if (nameField != null)
-			{
-				String name = nameField.getText();
-				String meta = Integer.toString(-1);
-
-				if (metaField != null)
-				{
-					meta = metaField.getText();
-				}
-
-				if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(meta))
-				{
-					select.add(new BlockMeta(name, meta));
-				}
-			}
+			Set<String> select = Sets.newHashSet();
 
 			if (arrayEntry != null)
 			{
@@ -579,41 +431,30 @@ public class GuiSelectBlock extends GuiScreen
 				{
 					value = value.trim();
 
-					if (!value.contains(":"))
+					if (OreDictionary.doesOreNameExist(value))
 					{
-						value = "minecraft:" + value;
-					}
-
-					BlockMeta blockMeta;
-
-					if (value.indexOf(':') != value.lastIndexOf(':'))
-					{
-						int i = value.lastIndexOf(':');
-
-						blockMeta = new BlockMeta(value.substring(0, i), value.substring(i + 1));
-					}
-					else
-					{
-						blockMeta = new BlockMeta(value, 0);
-					}
-
-					if (blockMeta.isNotAir())
-					{
-						select.add(blockMeta);
+						select.add(value);
 					}
 				});
 			}
 
-			for (BlockMeta blockMeta : BLOCKS)
+			for (String name : OreDictionary.getOreNames())
 			{
-				if (selectorCallback == null || selectorCallback.isValidEntry(blockMeta))
+				if (Strings.isNullOrEmpty(name))
 				{
-					entries.addIfAbsent(blockMeta);
-					contents.addIfAbsent(blockMeta);
+					continue;
+				}
 
-					if (select.contains(blockMeta))
+				OreDictEntry entry = new OreDictEntry(name);
+
+				if (selectorCallback == null || selectorCallback.isValidEntry(entry))
+				{
+					entries.addIfAbsent(entry);
+					contents.addIfAbsent(entry);
+
+					if (select.contains(name))
 					{
-						selected.add(blockMeta);
+						selected.add(entry);
 					}
 				}
 			}
@@ -638,9 +479,9 @@ public class GuiSelectBlock extends GuiScreen
 			{
 				int amount = 0;
 
-				for (BlockMeta blockMeta : selected)
+				for (OreDictEntry entry : selected)
 				{
-					amount = contents.indexOf(blockMeta) * getSlotHeight();
+					amount = contents.indexOf(entry) * getSlotHeight();
 
 					if (getAmountScrolled() != amount)
 					{
@@ -659,58 +500,6 @@ public class GuiSelectBlock extends GuiScreen
 			return contents.size();
 		}
 
-		@Nullable
-		public String getBlockMetaTypeName(@Nullable BlockMeta blockMeta, ItemStack stack)
-		{
-			if (blockMeta == null)
-			{
-				return null;
-			}
-
-			if (stack.isEmpty())
-			{
-				stack = new ItemStack(blockMeta.getBlock(), 1, blockMeta.getMeta());
-			}
-
-			String name = null;
-
-			if (nameType == 1)
-			{
-				name = blockMeta.getName();
-			}
-			else if (stack.getItem() != Items.AIR)
-			{
-				switch (nameType)
-				{
-					case 2:
-						name = stack.getUnlocalizedName();
-						name = name.substring(name.indexOf(".") + 1);
-						break;
-					default:
-						name = stack.getDisplayName();
-						break;
-				}
-			}
-			else switch (nameType)
-			{
-				case 2:
-					name = blockMeta.getBlock().getUnlocalizedName();
-					name = name.substring(name.indexOf(".") + 1);
-					break;
-				default:
-					name = blockMeta.getBlock().getLocalizedName();
-					break;
-			}
-
-			return name;
-		}
-
-		@Nullable
-		public String getBlockMetaTypeName(@Nullable BlockMeta blockMeta)
-		{
-			return getBlockMetaTypeName(blockMeta, ItemStack.EMPTY);
-		}
-
 		@Override
 		protected void drawBackground()
 		{
@@ -720,14 +509,24 @@ public class GuiSelectBlock extends GuiScreen
 		@Override
 		protected void drawSlot(int slot, int par2, int par3, int par4, int mouseX, int mouseY, float partialTicks)
 		{
-			BlockMeta blockMeta = contents.get(slot, null);
+			OreDictEntry entry = contents.get(slot, null);
 
-			if (blockMeta == null)
+			if (entry == null)
 			{
 				return;
 			}
 
-			String name = getBlockMetaTypeName(blockMeta);
+			String name = entry.getName();
+
+			if (nameType == 1)
+			{
+				String displayName = entry.getItemStack().getDisplayName();
+
+				if (!Strings.isNullOrEmpty(displayName))
+				{
+					name = displayName;
+				}
+			}
 
 			if (!Strings.isNullOrEmpty(name))
 			{
@@ -736,39 +535,34 @@ public class GuiSelectBlock extends GuiScreen
 
 			if (detailInfo.isChecked())
 			{
-				drawItemStack(itemRender, blockMeta, width / 2 - 100, par3 - 1);
+				drawItemStack(itemRender, entry.getItemStack(), width / 2 - 100, par3 - 1);
 			}
 		}
 
 		@Override
 		protected void elementClicked(int slot, boolean flag, int mouseX, int mouseY)
 		{
-			BlockMeta blockMeta = contents.get(slot, null);
+			OreDictEntry entry = contents.get(slot, null);
 
-			if (blockMeta != null && (clickFlag = !clickFlag == true) && !selected.remove(blockMeta))
+			if (entry != null && (clickFlag = !clickFlag == true) && !selected.remove(entry))
 			{
-				if (nameField != null || metaField != null)
-				{
-					selected.clear();
-				}
-
-				selected.add(blockMeta);
+				selected.add(entry);
 			}
 		}
 
 		@Override
 		protected boolean isSelected(int slot)
 		{
-			BlockMeta blockMeta = contents.get(slot, null);
+			OreDictEntry entry = contents.get(slot, null);
 
-			return blockMeta != null && selected.contains(blockMeta);
+			return entry != null && selected.contains(entry);
 		}
 
 		protected void setFilter(String filter)
 		{
 			CaveUtils.getPool().execute(() ->
 			{
-				List<BlockMeta> result;
+				List<OreDictEntry> result;
 
 				if (Strings.isNullOrEmpty(filter))
 				{
@@ -796,9 +590,124 @@ public class GuiSelectBlock extends GuiScreen
 			});
 		}
 
-		protected boolean filterMatch(BlockMeta blockMeta, String filter)
+		protected boolean filterMatch(OreDictEntry entry, String filter)
 		{
-			return CaveFilters.blockFilter(blockMeta, filter);
+			if (entry == null)
+			{
+				return false;
+			}
+
+			if (CaveUtils.containsIgnoreCase(entry.getName(), filter))
+			{
+				return true;
+			}
+
+			return CaveUtils.containsIgnoreCase(entry.getItemStack().getDisplayName(), filter);
+		}
+	}
+
+	public static class OreDictEntry implements Comparable<OreDictEntry>
+	{
+		private String oreDictName;
+		private ItemStack cachedItemStack;
+
+		public OreDictEntry(String name)
+		{
+			this.oreDictName = name;
+		}
+
+		public String getName()
+		{
+			return oreDictName;
+		}
+
+		public void setName(String name)
+		{
+			oreDictName = name;
+
+			refreshItemStack();
+		}
+
+		public ItemStack getItemStack()
+		{
+			if (cachedItemStack == null)
+			{
+				refreshItemStack();
+			}
+
+			return cachedItemStack;
+		}
+
+		public void refreshItemStack()
+		{
+			for (ItemStack stack : OreDictionary.getOres(oreDictName, false))
+			{
+				if (!stack.isEmpty())
+				{
+					if (stack.getMetadata() == OreDictionary.WILDCARD_VALUE)
+					{
+						cachedItemStack = new ItemStack(stack.getItem());
+
+						if (stack.hasTagCompound())
+						{
+							cachedItemStack.setTagCompound(stack.getTagCompound());
+						}
+					}
+					else
+					{
+						cachedItemStack = stack.copy();
+					}
+
+					break;
+				}
+			}
+
+			if (cachedItemStack == null)
+			{
+				cachedItemStack = ItemStack.EMPTY;
+			}
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (this == obj)
+			{
+				return true;
+			}
+			else if (!(obj instanceof OreDictEntry))
+			{
+				return false;
+			}
+
+			OreDictEntry entry = (OreDictEntry)obj;
+
+			return oreDictName.equals(entry.oreDictName);
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return oreDictName.hashCode();
+		}
+
+		@Override
+		public String toString()
+		{
+			return oreDictName;
+		}
+
+		@Override
+		public int compareTo(OreDictEntry entry)
+		{
+			int i = CaveUtils.compareWithNull(this, entry);
+
+			if (i == 0 && entry != null)
+			{
+				i = oreDictName.compareTo(entry.oreDictName);
+			}
+
+			return i;
 		}
 	}
 }

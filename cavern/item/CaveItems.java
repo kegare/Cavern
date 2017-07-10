@@ -39,9 +39,12 @@ public class CaveItems
 	public static final ToolMaterial HEXCITE = EnumHelper.addToolMaterial("HEXCITE", 3, 1041, 10.0F, 5.0F, 15);
 	public static final ToolMaterial ICE = EnumHelper.addToolMaterial("ICE", 1, 120, 5.0F, 1.0F, 0);
 	public static final ToolMaterial MANALITE = EnumHelper.addToolMaterial("MANALITE", 3, 583, 6.0F, 2.0F, 8);
+	public static final ToolMaterial COMPOSITE = EnumHelper.addToolMaterial("COMPOSITE", 3, 2632, 12.0F, 6.0F, 20);
 
 	public static final ArmorMaterial HEXCITE_ARMOR = EnumHelper.addArmorMaterial("HEXCITE", "hexcite", 22,
 		new int[] {4, 7, 9, 4}, 15, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 1.0F);
+	public static final ArmorMaterial COMPOSITE_ARMOR = EnumHelper.addArmorMaterial("COMPOSITE", "composite", 50,
+		new int[] {5, 8, 10, 5}, 20, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, 2.0F);
 
 	public static final Item CAVE_ITEM = new ItemCave();
 	public static final ItemPickaxeAquamarine AQUAMARINE_PICKAXE = new ItemPickaxeAquamarine();
@@ -73,6 +76,15 @@ public class CaveItems
 	public static final ItemAxeManalite MANALITE_AXE = new ItemAxeManalite();
 	public static final ItemBowManalite MANALITE_BOW = new ItemBowManalite();
 	public static final ItemOreCompass ORE_COMPASS = new ItemOreCompass();
+	public static final ItemSwordCave COMPOSITE_SWORD = new ItemSwordCave(COMPOSITE, "swordComposite");
+	public static final ItemPickaxeCave COMPOSITE_PICKAXE = new ItemPickaxeCave(COMPOSITE, "pickaxeComposite");
+	public static final ItemAxeCave COMPOSITE_AXE = new ItemAxeCave(COMPOSITE, 12.0F, -2.6F, "axeComposite");
+	public static final ItemShovelCave COMPOSITE_SHOVEL = new ItemShovelCave(COMPOSITE, "shovelComposite");
+	public static final ItemHoeCave COMPOSITE_HOE = new ItemHoeCave(COMPOSITE, "hoeComposite");
+	public static final ItemArmorCave COMPOSITE_HELMET = new ItemArmorCave(COMPOSITE_ARMOR, "helmetComposite", "composite", EntityEquipmentSlot.HEAD);
+	public static final ItemArmorCave COMPOSITE_CHESTPLATE = new ItemArmorCave(COMPOSITE_ARMOR, "chestplateComposite", "composite", EntityEquipmentSlot.CHEST);
+	public static final ItemArmorCave COMPOSITE_LEGGINGS = new ItemArmorCave(COMPOSITE_ARMOR, "leggingsComposite", "composite", EntityEquipmentSlot.LEGS);
+	public static final ItemArmorCave COMPOSITE_BOOTS = new ItemArmorCave(COMPOSITE_ARMOR, "bootsComposite", "composite", EntityEquipmentSlot.FEET);
 
 	public static List<Item> getItems()
 	{
@@ -123,6 +135,15 @@ public class CaveItems
 		registerItem(registry, MANALITE_AXE.setRegistryName("manalite_axe"));
 		registerItem(registry, MANALITE_BOW.setRegistryName("manalite_bow"));
 		registerItem(registry, ORE_COMPASS.setRegistryName("ore_compass"));
+		registerItem(registry, COMPOSITE_SWORD.setRegistryName("composite_sword"));
+		registerItem(registry, COMPOSITE_PICKAXE.setRegistryName("composite_pickaxe"));
+		registerItem(registry, COMPOSITE_AXE.setRegistryName("composite_axe"));
+		registerItem(registry, COMPOSITE_SHOVEL.setRegistryName("composite_shovel"));
+		registerItem(registry, COMPOSITE_HOE.setRegistryName("composite_hoe"));
+		registerItem(registry, COMPOSITE_HELMET.setRegistryName("composite_helmet"));
+		registerItem(registry, COMPOSITE_CHESTPLATE.setRegistryName("composite_chestplate"));
+		registerItem(registry, COMPOSITE_LEGGINGS.setRegistryName("composite_leggings"));
+		registerItem(registry, COMPOSITE_BOOTS.setRegistryName("composite_boots"));
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -160,6 +181,15 @@ public class CaveItems
 		registerModel(MANALITE_AXE);
 		registerModel(MANALITE_BOW);
 		registerModel(ORE_COMPASS);
+		registerModel(COMPOSITE_SWORD);
+		registerModel(COMPOSITE_PICKAXE);
+		registerModel(COMPOSITE_AXE);
+		registerModel(COMPOSITE_SHOVEL);
+		registerModel(COMPOSITE_HOE);
+		registerModel(COMPOSITE_HELMET);
+		registerModel(COMPOSITE_CHESTPLATE);
+		registerModel(COMPOSITE_LEGGINGS);
+		registerModel(COMPOSITE_BOOTS);
 	}
 
 	@SideOnly(Side.CLIENT)

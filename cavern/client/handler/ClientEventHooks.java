@@ -132,6 +132,7 @@ public class ClientEventHooks
 					{
 						GeneralConfig.refreshMiningPointItems();
 						GeneralConfig.refreshMiningPoints();
+						GeneralConfig.refreshCavebornBonusItems();
 					}
 
 					break;

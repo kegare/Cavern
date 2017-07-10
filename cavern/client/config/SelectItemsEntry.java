@@ -1,9 +1,9 @@
 package cavern.client.config;
 
-import java.util.Collection;
+import java.util.List;
 
 import cavern.client.gui.GuiSelectItem;
-import cavern.client.gui.IItemSelector;
+import cavern.client.gui.ISelectorCallback;
 import cavern.util.ItemMeta;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemBlock;
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class SelectItemsEntry extends ArrayEntry implements IItemSelector
+public class SelectItemsEntry extends ArrayEntry implements ISelectorCallback<ItemMeta>
 {
 	public SelectItemsEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement)
 	{
@@ -33,16 +33,16 @@ public class SelectItemsEntry extends ArrayEntry implements IItemSelector
 		{
 			btnValue.playPressSound(mc.getSoundHandler());
 
-			mc.displayGuiScreen(new GuiSelectItem(owningScreen, this, this, 0));
+			mc.displayGuiScreen(new GuiSelectItem(owningScreen, this, this));
 		}
 	}
 
 	@Override
-	public void onItemSelected(int id, Collection<ItemMeta> selected) {}
+	public boolean isValidEntry(ItemMeta entry)
+	{
+		return !entry.isEmpty() && !(entry.getItem() instanceof ItemBlock);
+	}
 
 	@Override
-	public boolean canSelectItem(int id, ItemMeta itemMeta)
-	{
-		return !itemMeta.isEmpty() && !(itemMeta.getItem() instanceof ItemBlock);
-	}
+	public void onSelected(List<ItemMeta> selected) {}
 }

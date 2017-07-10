@@ -3,6 +3,8 @@ package cavern.recipe;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.google.common.collect.Lists;
 
 import cavern.api.ICompositingManager;
@@ -14,6 +16,7 @@ import cavern.item.ItemElixir;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.NonNullList;
@@ -80,5 +83,23 @@ public class CompositingManager implements ICompositingManager
 
 		manager.addRecipe(new ItemStack(CaveItems.CAVENIC_BOW), 0.5D, 100,
 			new ItemStack(Items.BOW), ItemCave.EnumType.CAVENIC_ORB.getItemStack(4));
+
+		List<Pair<Item, Pair<Item, Item>>> compositeRecipes = Lists.newArrayList();
+
+		compositeRecipes.add(Pair.of(CaveItems.COMPOSITE_SWORD, Pair.of(CaveItems.HEXCITE_SWORD, Items.DIAMOND_SWORD)));
+		compositeRecipes.add(Pair.of(CaveItems.COMPOSITE_PICKAXE, Pair.of(CaveItems.HEXCITE_PICKAXE, Items.DIAMOND_PICKAXE)));
+		compositeRecipes.add(Pair.of(CaveItems.COMPOSITE_AXE, Pair.of(CaveItems.HEXCITE_AXE, Items.DIAMOND_AXE)));
+		compositeRecipes.add(Pair.of(CaveItems.COMPOSITE_SHOVEL, Pair.of(CaveItems.HEXCITE_SHOVEL, Items.DIAMOND_SHOVEL)));
+		compositeRecipes.add(Pair.of(CaveItems.COMPOSITE_HOE, Pair.of(CaveItems.HEXCITE_HOE, Items.DIAMOND_HOE)));
+		compositeRecipes.add(Pair.of(CaveItems.COMPOSITE_HELMET, Pair.of(CaveItems.HEXCITE_HELMET, Items.DIAMOND_HELMET)));
+		compositeRecipes.add(Pair.of(CaveItems.COMPOSITE_CHESTPLATE, Pair.of(CaveItems.HEXCITE_CHESTPLATE, Items.DIAMOND_CHESTPLATE)));
+		compositeRecipes.add(Pair.of(CaveItems.COMPOSITE_LEGGINGS, Pair.of(CaveItems.HEXCITE_LEGGINGS, Items.DIAMOND_LEGGINGS)));
+		compositeRecipes.add(Pair.of(CaveItems.COMPOSITE_BOOTS, Pair.of(CaveItems.HEXCITE_BOOTS, Items.DIAMOND_BOOTS)));
+
+		for (Pair<Item, Pair<Item, Item>> entry : compositeRecipes)
+		{
+			manager.addRecipe(new ItemStack(entry.getLeft()), 0.5D, 100,
+				new ItemStack(entry.getRight().getLeft()), new ItemStack(entry.getRight().getRight()));
+		}
 	}
 }

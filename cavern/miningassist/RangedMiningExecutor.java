@@ -226,6 +226,11 @@ public class RangedMiningExecutor implements IMiningAssistExecutor
 			{
 				return held.canHarvestBlock(state);
 			}
+
+			if (state.getMaterial().isToolNotRequired())
+			{
+				return true;
+			}
 		}
 		else if (getTargetBlocks().hasBlockState(state))
 		{

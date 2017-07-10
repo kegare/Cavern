@@ -97,7 +97,7 @@ public class MiningAssistConfig
 		collectExps = prop.getBoolean(collectExps);
 
 		prop = config.get(category, "quickTargetBlocks", new String[0]);
-		prop.setConfigEntryClass(CaveConfigEntries.selectBlocks);
+		prop.setConfigEntryClass(CaveConfigEntries.selectBlocksAndOreDicts);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += Configuration.NEW_LINE;
@@ -107,7 +107,7 @@ public class MiningAssistConfig
 		quickTargetBlocks.setValues(prop.getStringList());
 
 		prop = config.get(category, "rangedTargetBlocks", new String[0]);
-		prop.setConfigEntryClass(CaveConfigEntries.selectBlocks);
+		prop.setConfigEntryClass(CaveConfigEntries.selectBlocksAndOreDicts);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += Configuration.NEW_LINE;
@@ -117,7 +117,7 @@ public class MiningAssistConfig
 		rangedTargetBlocks.setValues(prop.getStringList());
 
 		prop = config.get(category, "aditTargetBlocks", new String[0]);
-		prop.setConfigEntryClass(CaveConfigEntries.selectBlocks);
+		prop.setConfigEntryClass(CaveConfigEntries.selectBlocksAndOreDicts);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += Configuration.NEW_LINE;

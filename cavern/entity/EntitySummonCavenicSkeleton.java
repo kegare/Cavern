@@ -73,6 +73,12 @@ public class EntitySummonCavenicSkeleton extends EntityCavenicSkeleton implement
 	}
 
 	@Override
+	public boolean isFriends(Entity entity)
+	{
+		return entity != null && entity instanceof EntityCavenicSkeleton && entity instanceof ISummonMob;
+	}
+
+	@Override
 	public boolean isEntityInvulnerable(DamageSource source)
 	{
 		if (super.isEntityInvulnerable(source))

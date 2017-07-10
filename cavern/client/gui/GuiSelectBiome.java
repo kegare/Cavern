@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
@@ -11,6 +14,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -26,8 +30,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -46,8 +48,7 @@ public class GuiSelectBiome extends GuiScreen
 {
 	protected final GuiScreen parent;
 
-	protected IBiomeSelector selector;
-	protected int selectorId;
+	protected ISelectorCallback<Biome> selectorCallback;
 
 	protected GuiTextField biomeField;
 
@@ -69,14 +70,13 @@ public class GuiSelectBiome extends GuiScreen
 		this.parent = parent;
 	}
 
-	public GuiSelectBiome(GuiScreen parent, IBiomeSelector selector, int id)
+	public GuiSelectBiome(GuiScreen parent, @Nullable ISelectorCallback<Biome> callback)
 	{
 		this(parent);
-		this.selector = selector;
-		this.selectorId = id;
+		this.selectorCallback = callback;
 	}
 
-	public GuiSelectBiome(GuiScreen parent, GuiTextField biomeField)
+	public GuiSelectBiome(GuiScreen parent, @Nullable GuiTextField biomeField)
 	{
 		this(parent);
 		this.biomeField = biomeField;
@@ -143,9 +143,9 @@ public class GuiSelectBiome extends GuiScreen
 			switch (button.id)
 			{
 				case 0:
-					if (selector != null)
+					if (selectorCallback != null)
 					{
-						selector.onBiomeSelected(selectorId, biomeList.selected);
+						selectorCallback.onSelected(ImmutableList.copyOf(biomeList.selected));
 					}
 
 					if (biomeList.selected.isEmpty())
@@ -297,14 +297,7 @@ public class GuiSelectBiome extends GuiScreen
 
 			if (selectedHoverChecker.checkHover(mouseX, mouseY))
 			{
-				List<String> biomes = Lists.newArrayList();
-
-				for (Biome biome : biomeList.selected)
-				{
-					biomes.add(biome.getRegistryName().toString());
-				}
-
-				drawHoveringText(biomes, mouseX, mouseY);
+				drawHoveringText(biomeList.selected.stream().map(Biome::getBiomeName).collect(Collectors.toList()), mouseX, mouseY);
 			}
 		}
 	}
@@ -421,7 +414,7 @@ public class GuiSelectBiome extends GuiScreen
 
 			for (Biome biome : Biome.REGISTRY)
 			{
-				if (selector == null || selector.canSelectBiome(selectorId, biome))
+				if (selectorCallback == null || selectorCallback.isValidEntry(biome))
 				{
 					biomes.add(biome);
 					contents.add(biome);
@@ -539,38 +532,8 @@ public class GuiSelectBiome extends GuiScreen
 			{
 				drawString(fontRenderer, Integer.toString(Biome.getIdForBiome(biome)), width / 2 - 100, par3 + 1, 0xFFFFFF);
 
-				if (Keyboard.isKeyDown(Keyboard.KEY_TAB))
-				{
-					IBlockState state = biome.topBlock;
-					Block block = state.getBlock();
-					int meta = block.getMetaFromState(state);
-					ItemStack stack = new ItemStack(block, 1, meta);
-
-					try
-					{
-						GlStateManager.enableRescaleNormal();
-						RenderHelper.enableGUIStandardItemLighting();
-						itemRender.renderItemIntoGUI(stack, width / 2 + 70, par3 - 1);
-						RenderHelper.disableStandardItemLighting();
-						GlStateManager.disableRescaleNormal();
-					}
-					catch (Throwable e) {}
-
-					state = biome.fillerBlock;
-					block = state.getBlock();
-					meta = block.getMetaFromState(state);
-					stack = new ItemStack(block, 1, meta);
-
-					try
-					{
-						GlStateManager.enableRescaleNormal();
-						RenderHelper.enableGUIStandardItemLighting();
-						itemRender.renderItemIntoGUI(stack, width / 2 + 90, par3 - 1);
-						RenderHelper.disableStandardItemLighting();
-						GlStateManager.disableRescaleNormal();
-					}
-					catch (Throwable e) {}
-				}
+				drawItemStack(itemRender, biome.topBlock, width / 2 + 70, par3 - 1);
+				drawItemStack(itemRender, biome.fillerBlock, width / 2 + 90, par3 - 1);
 			}
 		}
 

@@ -1,11 +1,11 @@
 package cavern.client.gui;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -19,7 +19,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+import cavern.client.CaveRenderingRegistry;
 import cavern.client.config.CaveConfigGui;
+import cavern.client.gui.GuiSelectOreDict.OreDictEntry;
 import cavern.config.Config;
 import cavern.util.ArrayListExtended;
 import cavern.util.BlockMeta;
@@ -29,11 +31,9 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -42,9 +42,10 @@ import net.minecraftforge.fml.client.config.GuiConfigEntries.ArrayEntry;
 import net.minecraftforge.fml.client.config.HoverChecker;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 @SideOnly(Side.CLIENT)
-public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
+public class GuiMiningPointsEditor extends GuiScreen
 {
 	protected final GuiScreen parent;
 	protected final ArrayEntry arrayEntry;
@@ -68,11 +69,8 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 
 	protected boolean editMode;
 
-	protected GuiTextField blockField;
-	protected GuiTextField blockMetaField;
 	protected GuiTextField pointField;
 
-	protected HoverChecker blockHoverChecker;
 	protected HoverChecker pointHoverChecker;
 
 	private int maxLabelWidth;
@@ -94,7 +92,7 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 			pointList = new PointList();
 		}
 
-		pointList.setDimensions(width, height, 32, height - (editMode ? 80 : 28));
+		pointList.setDimensions(width, height, 32, height - (editMode ? 52 : 28));
 
 		if (doneButton == null)
 		{
@@ -198,8 +196,6 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 		instantHoverChecker = new HoverChecker(instantFilter, 800);
 
 		editLabelList.clear();
-		editLabelList.add(I18n.format(Config.LANG_KEY  + "points.block"));
-		editLabelList.add("");
 		editLabelList.add(I18n.format(Config.LANG_KEY  + "points.point"));
 
 		for (String key : editLabelList)
@@ -207,48 +203,25 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 			maxLabelWidth = Math.max(maxLabelWidth, fontRenderer.getStringWidth(key));
 		}
 
-		if (blockField == null)
-		{
-			blockField = new GuiTextField(1, fontRenderer, 0, 0, 0, 15);
-			blockField.setMaxStringLength(100);
-		}
-
-		int i = maxLabelWidth + 8 + width / 2;
-		blockField.x = width / 2 - i / 2 + maxLabelWidth + 10;
-		blockField.y = pointList.bottom + 5;
-		int fieldWidth = width / 2 + i / 2 - 45 - blockField.x + 40;
-		blockField.width = fieldWidth / 4 + fieldWidth / 2 - 1;
-
-		if (blockMetaField == null)
-		{
-			blockMetaField = new GuiTextField(2, fontRenderer, 0, 0, 0, blockField.height);
-			blockMetaField.setMaxStringLength(100);
-		}
-
-		blockMetaField.x = blockField.x + blockField.width + 3;
-		blockMetaField.y = blockField.y;
-		blockMetaField.width = fieldWidth / 4 - 1;
-
 		if (pointField == null)
 		{
-			pointField = new GuiTextField(3, fontRenderer, 0, 0, 0, blockField.height);
+			pointField = new GuiTextField(5, fontRenderer, 0, 0, 0, 15);
 			pointField.setMaxStringLength(5);
 		}
 
-		pointField.x = blockField.x;
-		pointField.y = blockField.y + blockField.height + 5;
-		pointField.width = fieldWidth;
+		int i = maxLabelWidth + 8 + width / 2;
+		pointField.x = width / 2 - i / 2 + maxLabelWidth + 10;
+		pointField.y = pointList.bottom + 7;
+		int fieldWidth = width / 2 + i / 2 - 45 - pointField.x + 40;
+		pointField.width = fieldWidth / 4 + fieldWidth / 2 - 1;
 
 		editFieldList.clear();
 
 		if (editMode)
 		{
-			editFieldList.add(blockField);
-			editFieldList.add(blockMetaField);
 			editFieldList.add(pointField);
 		}
 
-		blockHoverChecker = new HoverChecker(blockField.y - 1, blockField.y + blockField.height, blockField.x - maxLabelWidth - 12, blockField.x - 10, 800);
 		pointHoverChecker = new HoverChecker(pointField.y - 1, pointField.y + pointField.height, pointField.x - maxLabelWidth - 12, pointField.x - 10, 800);
 	}
 
@@ -262,26 +235,9 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 				case 0:
 					if (editMode)
 					{
-						for (PointEntry entry : pointList.selected)
+						if (!Strings.isNullOrEmpty(pointField.getText()))
 						{
-							if (!Strings.isNullOrEmpty(blockField.getText()))
-							{
-								Block block = Block.getBlockFromName(blockField.getText());
-
-								if (block != null && block != Blocks.AIR)
-								{
-									int meta = BlockMeta.getMetaFromString(block, blockMetaField.getText());
-
-									if (meta < 0)
-									{
-										meta = 0;
-									}
-
-									entry.setBlockMeta(new BlockMeta(block, meta));
-								}
-							}
-
-							if (!Strings.isNullOrEmpty(pointField.getText()))
+							for (PointEntry entry : pointList.selected)
 							{
 								entry.setPoint(NumberUtils.toInt(pointField.getText(), entry.getPoint()));
 							}
@@ -294,14 +250,7 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 					}
 					else
 					{
-						Set<String> values = Sets.newTreeSet();
-
-						for (PointEntry entry : pointList.points)
-						{
-							values.add(entry.toString());
-						}
-
-						arrayEntry.setListFromChildScreen(values.toArray());
+						arrayEntry.setListFromChildScreen(pointList.points.stream().map(PointEntry::toString).collect(Collectors.toList()).toArray());
 
 						actionPerformed(cancelButton);
 
@@ -325,14 +274,10 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 
 						if (pointList.selected.size() > 1)
 						{
-							blockField.setText("");
-							blockMetaField.setText("");
 							pointField.setText("");
 						}
 						else for (PointEntry entry : pointList.selected)
 						{
-							blockField.setText(entry.getBlockMeta().getBlockName());
-							blockMetaField.setText(entry.getBlockMeta().getMetaString());
 							pointField.setText(Integer.toString(entry.getPoint()));
 						}
 					}
@@ -351,7 +296,15 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 
 					break;
 				case 3:
-					mc.displayGuiScreen(new GuiSelectBlock(this, this, 0));
+					if (isShiftKeyDown())
+					{
+						mc.displayGuiScreen(getSelectBlockGuiScreen());
+					}
+					else
+					{
+						mc.displayGuiScreen(getSelectOreDictGuiScreen());
+					}
+
 					break;
 				case 4:
 					for (PointEntry entry : pointList.selected)
@@ -381,30 +334,92 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 		}
 	}
 
-	@Override
-	public void onBlockSelected(int id, Collection<BlockMeta> selected)
+	public GuiSelectBlock getSelectBlockGuiScreen()
 	{
-		if (editMode)
+		GuiSelectBlock selectBlock = createSelectBlockGuiScreen();
+		GuiSelectOreDict selectOreDict = createSelectOreDictGuiScreen();
+
+		selectBlock.setSwitchEntry(new SelectSwitchEntry(selectOreDict, "oreDict"));
+		selectOreDict.setSwitchEntry(new SelectSwitchEntry(selectBlock, "block"));
+
+		return selectBlock;
+	}
+
+	protected GuiSelectBlock createSelectBlockGuiScreen()
+	{
+		return new GuiSelectBlock(this, selected ->
 		{
-			return;
-		}
-
-		pointList.selected.clear();
-
-		for (BlockMeta blockMeta : selected)
-		{
-			PointEntry entry = new PointEntry(blockMeta, 1);
-
-			if (pointList.points.addIfAbsent(entry))
+			if (editMode)
 			{
-				pointList.contents.addIfAbsent(entry);
-
-				pointList.selected.add(entry);
+				return;
 			}
-		}
 
-		pointList.scrollToTop();
-		pointList.scrollToSelected();
+			pointList.selected.clear();
+
+			for (BlockMeta blockMeta : selected)
+			{
+				PointEntry entry = new PointEntry(blockMeta, 1);
+
+				if (pointList.points.addIfAbsent(entry))
+				{
+					pointList.contents.addIfAbsent(entry);
+
+					pointList.selected.add(entry);
+				}
+			}
+
+			pointList.scrollToTop();
+			pointList.scrollToSelected();
+		});
+	}
+
+	public GuiSelectOreDict getSelectOreDictGuiScreen()
+	{
+		GuiSelectOreDict selectOreDict = createSelectOreDictGuiScreen();
+		GuiSelectBlock selectBlock = createSelectBlockGuiScreen();
+
+		selectOreDict.setSwitchEntry(new SelectSwitchEntry(selectBlock, "block"));
+		selectBlock.setSwitchEntry(new SelectSwitchEntry(selectOreDict, "oreDict"));
+
+		return selectOreDict;
+	}
+
+	protected GuiSelectOreDict createSelectOreDictGuiScreen()
+	{
+		return new GuiSelectOreDict(this, new ISelectorCallback<OreDictEntry>()
+		{
+			@Override
+			public boolean isValidEntry(OreDictEntry entry)
+			{
+				return !entry.getItemStack().isEmpty() && entry.getItemStack().getItem() instanceof ItemBlock;
+			}
+
+			@Override
+			public void onSelected(List<OreDictEntry> selected)
+			{
+				if (editMode)
+				{
+					return;
+				}
+
+				pointList.selected.clear();
+
+				for (OreDictEntry oreDict : selected)
+				{
+					PointEntry entry = new PointEntry(oreDict, 1);
+
+					if (pointList.points.addIfAbsent(entry))
+					{
+						pointList.contents.addIfAbsent(entry);
+
+						pointList.selected.add(entry);
+					}
+				}
+
+				pointList.scrollToTop();
+				pointList.scrollToSelected();
+			}
+		});
 	}
 
 	@Override
@@ -414,7 +429,10 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 		{
 			for (GuiTextField textField : editFieldList)
 			{
-				textField.updateCursorCounter();
+				if (textField.getVisible())
+				{
+					textField.updateCursorCounter();
+				}
 			}
 		}
 		else
@@ -442,22 +460,16 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 			for (int i = 0; i < editFieldList.size(); ++i)
 			{
 				textField = editFieldList.get(i);
-				textField.drawTextBox();
 
-				drawString(fontRenderer, editLabelList.get(i), textField.x - maxLabelWidth - 10, textField.y + 3, 0xBBBBBB);
+				if (textField.getVisible())
+				{
+					textField.drawTextBox();
+
+					drawString(fontRenderer, editLabelList.get(i), textField.x - maxLabelWidth - 10, textField.y + 3, 0xBBBBBB);
+				}
 			}
 
-			if (blockHoverChecker.checkHover(mouseX, mouseY))
-			{
-				List<String> hover = Lists.newArrayList();
-				String key = Config.LANG_KEY + "points.block";
-
-				hover.add(TextFormatting.GRAY + I18n.format(key));
-				hover.addAll(fontRenderer.listFormattedStringToWidth(I18n.format(key + ".tooltip"), 300));
-
-				drawHoveringText(hover, mouseX, mouseY);
-			}
-			else if (pointHoverChecker.checkHover(mouseX, mouseY))
+			if (pointHoverChecker.checkHover(mouseX, mouseY))
 			{
 				List<String> hover = Lists.newArrayList();
 				String key = Config.LANG_KEY + "points.point";
@@ -490,7 +502,15 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 				List<String> info = Lists.newArrayList();
 				String prefix = TextFormatting.GRAY.toString();
 
-				info.add(prefix + I18n.format(Config.LANG_KEY + "points.block") + ": " + entry.getBlockMeta().getBlockName() + ":" + entry.getBlockMeta().getMetaString());
+				if (entry.isOreDict())
+				{
+					info.add(prefix + I18n.format(Config.LANG_KEY + "points.oreDict") + ": " + entry.getOreDict().getName());
+				}
+				else
+				{
+					info.add(prefix + I18n.format(Config.LANG_KEY + "points.block") + ": " + entry.getBlockMeta().getBlockName() + ":" + entry.getBlockMeta().getMetaString());
+				}
+
 				info.add(prefix + I18n.format(Config.LANG_KEY + "points.point") + ": " + entry.getPoint());
 
 				drawHoveringText(info, mouseX, mouseY);
@@ -539,13 +559,7 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 		}
 		else if (editMode)
 		{
-			for (GuiTextField textField : editFieldList)
-			{
-				if (textField != blockField && textField != blockMetaField)
-				{
-					textField.mouseClicked(x, y, code);
-				}
-			}
+			pointField.mouseClicked(x, y, code);
 		}
 		else
 		{
@@ -575,14 +589,11 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 				{
 					textField.setFocused(false);
 				}
-				else if (textField.isFocused())
+				else if (textField.getVisible() && textField.isFocused())
 				{
-					if (textField != blockField)
+					if (!CharUtils.isAsciiControl(c) && !CharUtils.isAsciiNumeric(c))
 					{
-						if (!CharUtils.isAsciiControl(c) && !CharUtils.isAsciiNumeric(c))
-						{
-							continue;
-						}
+						continue;
 					}
 
 					textField.textboxKeyTyped(c, code);
@@ -702,13 +713,35 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 					value = value.trim();
 
 					int i = value.indexOf(',');
-					String str = value.substring(0, i);
+					String str = value.substring(0, i).trim();
 					int point = NumberUtils.toInt(value.substring(i + 1));
 
-					if (str.contains(":"))
+					if (OreDictionary.doesOreNameExist(str))
 					{
-						i = str.lastIndexOf(':');
-						BlockMeta blockMeta = new BlockMeta(str.substring(0, i), str.substring(i + 1));
+						PointEntry entry = new PointEntry(new OreDictEntry(str), point);
+
+						points.add(entry);
+						contents.add(entry);
+					}
+					else
+					{
+						if (!str.contains(":"))
+						{
+							str = "minecraft:" + str;
+						}
+
+						BlockMeta blockMeta;
+
+						if (str.indexOf(':') != str.lastIndexOf(':'))
+						{
+							i = str.lastIndexOf(':');
+
+							blockMeta = new BlockMeta(str.substring(0, i), str.substring(i + 1));
+						}
+						else
+						{
+							blockMeta = new BlockMeta(str, 0);
+						}
 
 						if (blockMeta.isNotAir())
 						{
@@ -766,16 +799,30 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 				return;
 			}
 
-			BlockMeta blockMeta = entry.getBlockMeta();
-			Block block = blockMeta.getBlock();
-			int meta = blockMeta.getMeta();
-			ItemStack stack = new ItemStack(block, 1, meta);
-			boolean hasItem = stack.getItem() != Items.AIR;
-
 			String text = null;
+			ItemStack stack = null;
 
-			try
+			if (entry.isOreDict())
 			{
+				stack = entry.getOreDict().getItemStack();
+
+				if (nameType == 0 && !stack.isEmpty())
+				{
+					text = stack.getDisplayName();
+				}
+				else
+				{
+					text = entry.getOreDict().getName();
+				}
+			}
+			else
+			{
+				BlockMeta blockMeta = entry.getBlockMeta();
+				Block block = blockMeta.getBlock();
+				int meta = blockMeta.getMeta();
+				stack = new ItemStack(CaveRenderingRegistry.getRenderBlock(block), 1, meta);
+				boolean hasItem = stack.getItem() != Items.AIR;
+
 				if (nameType == 1)
 				{
 					text = blockMeta.getName();
@@ -804,10 +851,6 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 						break;
 				}
 			}
-			catch (Throwable e)
-			{
-				text = null;
-			}
 
 			if (!Strings.isNullOrEmpty(text))
 			{
@@ -816,16 +859,7 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 
 			if (detailInfo.isChecked())
 			{
-				try
-				{
-					GlStateManager.enableRescaleNormal();
-					RenderHelper.enableGUIStandardItemLighting();
-					itemRender.renderItemIntoGUI(stack, width / 2 - 100, par3 + 1);
-					itemRender.renderItemOverlayIntoGUI(fontRenderer, stack, width / 2 - 100, par3 + 1, Integer.toString(entry.getPoint()));
-					RenderHelper.disableStandardItemLighting();
-					GlStateManager.disableRescaleNormal();
-				}
-				catch (Throwable e) {}
+				drawItemStack(itemRender, stack, width / 2 - 100, par3 + 1, fontRenderer, Integer.toString(entry.getPoint()));
 			}
 		}
 
@@ -858,7 +892,7 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 			return entry != null && selected.contains(entry);
 		}
 
-		protected void setFilter(final String filter)
+		protected void setFilter(String filter)
 		{
 			CaveUtils.getPool().execute(() ->
 			{
@@ -892,6 +926,11 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 
 		protected boolean filterMatch(PointEntry entry, String filter)
 		{
+			if (entry.isOreDict())
+			{
+				return CaveUtils.containsIgnoreCase(entry.getOreDict().getName(), filter);
+			}
+
 			return CaveFilters.blockFilter(entry.getBlockMeta(), filter);
 		}
 
@@ -909,14 +948,22 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 		}
 	}
 
-	public static class PointEntry
+	public static class PointEntry implements Comparable<PointEntry>
 	{
 		private BlockMeta blockMeta;
+		private OreDictEntry oreDict;
+
 		private int point;
 
 		public PointEntry(BlockMeta block, int point)
 		{
 			this.blockMeta = block;
+			this.point = point;
+		}
+
+		public PointEntry(OreDictEntry oreDict, int point)
+		{
+			this.oreDict = oreDict;
 			this.point = point;
 		}
 
@@ -928,6 +975,26 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 		public void setBlockMeta(BlockMeta block)
 		{
 			blockMeta = block;
+		}
+
+		public OreDictEntry getOreDict()
+		{
+			return oreDict;
+		}
+
+		public void setOreDict(OreDictEntry entry)
+		{
+			oreDict = entry;
+		}
+
+		public boolean isOreDict()
+		{
+			return oreDict != null;
+		}
+
+		public String getName()
+		{
+			return isOreDict() ? oreDict.toString() : blockMeta.getName(true);
 		}
 
 		public int getPoint()
@@ -954,19 +1021,53 @@ public class GuiMiningPointsEditor extends GuiScreen implements IBlockSelector
 
 			PointEntry entry = (PointEntry)obj;
 
-			return Objects.equal(blockMeta, entry.blockMeta);
+			if (isOreDict() && entry.isOreDict())
+			{
+				return oreDict.equals(entry.oreDict);
+			}
+			else if (!isOreDict() && !entry.isOreDict())
+			{
+				return Objects.equal(blockMeta, entry.blockMeta);
+			}
+
+			return false;
 		}
 
 		@Override
 		public int hashCode()
 		{
-			return blockMeta.hashCode();
+			return isOreDict() ? oreDict.hashCode() : blockMeta.hashCode();
 		}
 
 		@Override
 		public String toString()
 		{
-			return blockMeta.getBlockName() + ":" + blockMeta.getMetaString() + "," + point;
+			return getName() + "," + point;
+		}
+
+		@Override
+		public int compareTo(PointEntry entry)
+		{
+			int i = CaveUtils.compareWithNull(this, entry);
+
+			if (i == 0 && entry != null)
+			{
+				i = Boolean.compare(isOreDict(), entry.isOreDict());
+
+				if (i == 0)
+				{
+					if (isOreDict() && entry.isOreDict())
+					{
+						i = oreDict.compareTo(entry.oreDict);
+					}
+					else
+					{
+						i = blockMeta.compareTo(entry.blockMeta);
+					}
+				}
+			}
+
+			return i;
 		}
 	}
 }

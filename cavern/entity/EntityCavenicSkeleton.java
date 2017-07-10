@@ -1,10 +1,15 @@
 package cavern.entity;
 
+import javax.annotation.Nullable;
+
 import cavern.api.CavernAPI;
 import cavern.api.ICavenicMob;
+import cavern.api.ISummonMob;
 import cavern.entity.ai.EntityAIAttackCavenicBow;
 import cavern.item.CaveItems;
 import cavern.item.ItemCave;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIAttackRangedBow;
@@ -144,10 +149,41 @@ public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 		}
 	}
 
+	public boolean isFriends(@Nullable Entity entity)
+	{
+		return entity != null && entity instanceof EntityCavenicSkeleton && !(entity instanceof ISummonMob);
+	}
+
 	@Override
 	public boolean isEntityInvulnerable(DamageSource source)
 	{
-		return super.isEntityInvulnerable(source) || source.getImmediateSource() == this || source.getImmediateSource() == this;
+		if (super.isEntityInvulnerable(source))
+		{
+			return true;
+		}
+
+		if (source.getImmediateSource() == this || source.getTrueSource() == this)
+		{
+			return true;
+		}
+
+		if (isFriends(source.getImmediateSource()) || isFriends(source.getTrueSource()))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public void setAttackTarget(EntityLivingBase entity)
+	{
+		if (isFriends(entity))
+		{
+			return;
+		}
+
+		super.setAttackTarget(entity);
 	}
 
 	@Override

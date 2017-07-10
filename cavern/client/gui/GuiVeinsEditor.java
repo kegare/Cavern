@@ -36,8 +36,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -51,7 +49,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
+public class GuiVeinsEditor extends GuiScreen
 {
 	protected final GuiScreen parent;
 	protected final CaveVeinManager manager;
@@ -558,7 +556,31 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 
 					break;
 				case 3:
-					mc.displayGuiScreen(new GuiSelectBlock(this, this, 0));
+					mc.displayGuiScreen(new GuiSelectBlock(this, selected ->
+					{
+						if (editMode)
+						{
+							return;
+						}
+
+						veinList.selected.clear();
+
+						for (BlockMeta blockMeta : selected)
+						{
+							CaveVein vein = new CaveVein(blockMeta, 1, 1, 1, 255);
+
+							if (veinList.veins.addIfAbsent(vein))
+							{
+								veinList.contents.addIfAbsent(vein);
+
+								veinList.selected.add(vein);
+							}
+						}
+
+						veinList.scrollToTop();
+						veinList.scrollToSelected();
+					}));
+
 					break;
 				case 4:
 					for (CaveVein vein : veinList.selected)
@@ -583,34 +605,6 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 				default:
 					veinList.actionPerformed(button);
 			}
-		}
-	}
-
-	@Override
-	public void onBlockSelected(int id, Collection<BlockMeta> selected)
-	{
-		switch (id)
-		{
-			case 0:
-				if (editMode)
-				{
-					return;
-				}
-
-				veinList.selected.clear();
-
-				for (BlockMeta blockMeta : selected)
-				{
-					CaveVein vein = new CaveVein(blockMeta, 1, 1, 1, 255);
-
-					veinList.veins.addIfAbsent(vein);
-					veinList.contents.addIfAbsent(vein);
-					veinList.selected.add(vein);
-				}
-
-				veinList.scrollToTop();
-				veinList.scrollToSelected();
-				break;
 		}
 	}
 
@@ -1195,39 +1189,32 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 
 			String text = null;
 
-			try
+			if (nameType == 1)
 			{
-				if (nameType == 1)
-				{
-					text = blockMeta.getName();
-				}
-				else if (hasItem)
-				{
-					switch (nameType)
-					{
-						case 2:
-							text = stack.getUnlocalizedName();
-							text = text.substring(text.indexOf(".") + 1);
-							break;
-						default:
-							text = stack.getDisplayName();
-							break;
-					}
-				}
-				else switch (nameType)
+				text = blockMeta.getName();
+			}
+			else if (hasItem)
+			{
+				switch (nameType)
 				{
 					case 2:
-						text = block.getUnlocalizedName();
+						text = stack.getUnlocalizedName();
 						text = text.substring(text.indexOf(".") + 1);
 						break;
 					default:
-						text = block.getLocalizedName();
+						text = stack.getDisplayName();
 						break;
 				}
 			}
-			catch (Throwable e)
+			else switch (nameType)
 			{
-				text = null;
+				case 2:
+					text = block.getUnlocalizedName();
+					text = text.substring(text.indexOf(".") + 1);
+					break;
+				default:
+					text = block.getLocalizedName();
+					break;
 			}
 
 			if (!Strings.isNullOrEmpty(text))
@@ -1237,32 +1224,8 @@ public class GuiVeinsEditor extends GuiScreen implements IBlockSelector
 
 			if (detailInfo.isChecked())
 			{
-				try
-				{
-					GlStateManager.enableRescaleNormal();
-					RenderHelper.enableGUIStandardItemLighting();
-					itemRender.renderItemIntoGUI(stack, width / 2 - 100, par3 + 1);
-					itemRender.renderItemOverlayIntoGUI(fontRenderer, stack, width / 2 - 100, par3 + 1, Integer.toString(vein.getSize()));
-					RenderHelper.disableStandardItemLighting();
-					GlStateManager.disableRescaleNormal();
-				}
-				catch (Throwable e) {}
-
-				blockMeta = vein.getTarget();
-				block = blockMeta.getBlock();
-				meta = blockMeta.getMeta();
-				stack = new ItemStack(block, 1, meta);
-
-				try
-				{
-					GlStateManager.enableRescaleNormal();
-					RenderHelper.enableGUIStandardItemLighting();
-					itemRender.renderItemIntoGUI(stack, width / 2 + 90, par3 + 1);
-					itemRender.renderItemOverlayIntoGUI(fontRenderer, stack, width / 2 + 90, par3 + 1, Integer.toString(vein.getWeight()));
-					RenderHelper.disableStandardItemLighting();
-					GlStateManager.disableRescaleNormal();
-				}
-				catch (Throwable e) {}
+				drawItemStack(itemRender, blockMeta, width / 2 - 100, par3 + 1, fontRenderer, Integer.toString(vein.getSize()));
+				drawItemStack(itemRender, vein.getTarget(), width / 2 + 90, par3 + 1, fontRenderer, Integer.toString(vein.getWeight()));
 			}
 		}
 

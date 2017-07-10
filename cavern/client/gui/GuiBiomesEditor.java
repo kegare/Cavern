@@ -34,11 +34,8 @@ import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
@@ -48,7 +45,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
+public class GuiBiomesEditor extends GuiScreen
 {
 	protected final GuiScreen parent;
 	protected final CaveBiomeManager manager;
@@ -102,7 +99,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 			refreshBiomes(manager.getCaveBiomes().values());
 		}
 
-		biomeList.setDimensions(width, height, 32, height - (editMode ? 105 : 28));
+		biomeList.setDimensions(width, height, 32, height - (editMode ? 95 : 28));
 
 		if (doneButton == null)
 		{
@@ -225,7 +222,7 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 
 		int i = maxLabelWidth + 8 + width / 2;
 		weightField.x = width / 2 - i / 2 + maxLabelWidth + 10;
-		weightField.y = biomeList.bottom + 1 + 20;
+		weightField.y = biomeList.bottom + 7;
 		weightField.width = width / 2 + i / 2 - 45 - weightField.x + 40;
 
 		if (terrainBlockField == null)
@@ -417,7 +414,28 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 
 					break;
 				case 3:
-					mc.displayGuiScreen(new GuiSelectBiome(this, this, 0));
+					mc.displayGuiScreen(new GuiSelectBiome(this, selected ->
+					{
+						if (editMode)
+						{
+							return;
+						}
+
+						biomeList.selected.clear();
+
+						for (Biome biome : selected)
+						{
+							CaveBiome caveBiome = new CaveBiome(biome, 10);
+
+							biomeList.biomes.addIfAbsent(caveBiome);
+							biomeList.contents.addIfAbsent(caveBiome);
+							biomeList.selected.add(caveBiome);
+						}
+
+						biomeList.scrollToTop();
+						biomeList.scrollToSelected();
+					}));
+
 					break;
 				case 4:
 					for (CaveBiome biome : biomeList.selected)
@@ -442,35 +460,6 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 				default:
 					biomeList.actionPerformed(button);
 			}
-		}
-	}
-
-	@Override
-	public void onBiomeSelected(int id, Collection<Biome> selected)
-	{
-		switch (id)
-		{
-			case 0:
-				if (editMode)
-				{
-					return;
-				}
-
-				biomeList.selected.clear();
-
-				for (Biome biome : selected)
-				{
-					CaveBiome caveBiome = new CaveBiome(biome, 10);
-
-					biomeList.biomes.addIfAbsent(caveBiome);
-					biomeList.contents.addIfAbsent(caveBiome);
-					biomeList.selected.add(caveBiome);
-				}
-
-				biomeList.scrollToTop();
-				biomeList.scrollToSelected();
-
-				break;
 		}
 	}
 
@@ -865,42 +854,13 @@ public class GuiBiomesEditor extends GuiScreen implements IBiomeSelector
 
 			if (!Strings.isNullOrEmpty(text))
 			{
-				drawCenteredString(fontRenderer, biome.getBiomeName(), width / 2, par3 + 3, 0xFFFFFF);
+				drawCenteredString(fontRenderer, text, width / 2, par3 + 3, 0xFFFFFF);
 			}
 
 			if (detailInfo.isChecked() || Keyboard.isKeyDown(Keyboard.KEY_TAB))
 			{
-				BlockMeta blockMeta = caveBiome.getTerrainBlock();
-				Block block = blockMeta.getBlock();
-				int meta = blockMeta.getMeta();
-				ItemStack stack = new ItemStack(block, 1, meta);
-
-				try
-				{
-					GlStateManager.enableRescaleNormal();
-					RenderHelper.enableGUIStandardItemLighting();
-					itemRender.renderItemIntoGUI(stack, width / 2 - 100, par3 + 1);
-					itemRender.renderItemOverlayIntoGUI(fontRenderer, stack, width / 2 - 100, par3 + 1, Integer.toString(Biome.getIdForBiome(biome)));
-					RenderHelper.disableStandardItemLighting();
-					GlStateManager.disableRescaleNormal();
-				}
-				catch (Throwable e) {}
-
-				blockMeta = caveBiome.getTopBlock();
-				block = blockMeta.getBlock();
-				meta = blockMeta.getMeta();
-				stack = new ItemStack(block, 1, meta);
-
-				try
-				{
-					GlStateManager.enableRescaleNormal();
-					RenderHelper.enableGUIStandardItemLighting();
-					itemRender.renderItemIntoGUI(stack, width / 2 + 90, par3 + 1);
-					itemRender.renderItemOverlayIntoGUI(fontRenderer, stack, width / 2 + 90, par3 + 1, Integer.toString(caveBiome.getWeight()));
-					RenderHelper.disableStandardItemLighting();
-					GlStateManager.disableRescaleNormal();
-				}
-				catch (Throwable e) {}
+				drawItemStack(itemRender, caveBiome.getTerrainBlock(), width / 2 - 100, par3 + 1, fontRenderer, Integer.toString(Biome.getIdForBiome(biome)));
+				drawItemStack(itemRender, caveBiome.getTopBlock(), width / 2 + 90, par3 + 1, fontRenderer, Integer.toString(caveBiome.getWeight()));
 			}
 		}
 
