@@ -26,6 +26,7 @@ import net.minecraft.block.state.pattern.BlockPattern;
 import net.minecraft.block.state.pattern.BlockPattern.PatternHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -157,6 +158,11 @@ public class BlockPortalCavern extends BlockPortal
 		{
 			if (entity.timeUntilPortal <= 0)
 			{
+				if (entity instanceof IProjectile)
+				{
+					return;
+				}
+
 				IPortalCache cache = PortalCache.get(entity);
 				MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 				int dimOld = entity.dimension;

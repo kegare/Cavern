@@ -40,7 +40,7 @@ public class MiningAssistConfig
 
 		if (config == null)
 		{
-			config = Config.loadConfig(category);
+			config = Config.loadConfig("mining-assist");
 		}
 
 		prop = config.get(category, "effectiveItems", new String[0]);
@@ -72,8 +72,6 @@ public class MiningAssistConfig
 			}
 		}
 
-		comment += Configuration.NEW_LINE;
-		comment += "Note: If multiplayer, server-side only.";
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		minerRank.setValue(prop.getInt(minerRank.getValue()));
@@ -148,7 +146,7 @@ public class MiningAssistConfig
 		propOrder.add(prop.getName());
 		rangedMining = prop.getInt(rangedMining);
 
-		if (GeneralConfig.side.isClient())
+		if (GeneralConfig.SIDE.isClient())
 		{
 			prop = config.get(category, "modifiedHardness", true);
 			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
@@ -172,16 +170,12 @@ public class MiningAssistConfig
 		Config.saveConfig(config);
 	}
 
-	public static boolean refreshEffectiveItems()
+	public static void refreshEffectiveItems()
 	{
-		if (effectiveItems == null)
+		if (effectiveItems != null)
 		{
-			return false;
+			effectiveItems.refreshItems();
 		}
-
-		effectiveItems.refreshItems();
-
-		return true;
 	}
 
 	public static boolean isEffectiveItem(ItemStack stack)
@@ -211,39 +205,27 @@ public class MiningAssistConfig
 		refreshAditTargetBlocks();
 	}
 
-	public static boolean refreshQuickTargetBlocks()
+	public static void refreshQuickTargetBlocks()
 	{
-		if (quickTargetBlocks == null)
+		if (quickTargetBlocks != null)
 		{
-			return false;
+			quickTargetBlocks.refreshBlocks();
 		}
-
-		quickTargetBlocks.refreshBlocks();
-
-		return true;
 	}
 
-	public static boolean refreshRangedTargetBlocks()
+	public static void refreshRangedTargetBlocks()
 	{
-		if (rangedTargetBlocks == null)
+		if (rangedTargetBlocks != null)
 		{
-			return false;
+			rangedTargetBlocks.refreshBlocks();
 		}
-
-		rangedTargetBlocks.refreshBlocks();
-
-		return true;
 	}
 
-	public static boolean refreshAditTargetBlocks()
+	public static void refreshAditTargetBlocks()
 	{
-		if (aditTargetBlocks == null)
+		if (aditTargetBlocks != null)
 		{
-			return false;
+			aditTargetBlocks.refreshBlocks();
 		}
-
-		aditTargetBlocks.refreshBlocks();
-
-		return true;
 	}
 }

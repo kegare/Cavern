@@ -1,5 +1,5 @@
 {
-  "homepage": "http://minecraft.curseforge.com/projects/cavern/files",
+  "homepage": "https://minecraft.curseforge.com/projects/cavern/files",
   "promos": {
     "1.8.9-recommended": "1.0.0",
     "1.8.9-latest": "1.0.0",
@@ -15,7 +15,7 @@
     "1.11-latest": "1.6.2",
     "1.11.2-recommended": "1.8.3",
     "1.11.2-latest": "1.8.3",
-    "1.12-recommended": "1.8.8",
-    "1.12-latest": "1.8.8"
+    "1.12-recommended": "1.8.9",
+    "1.12-latest": "1.8.9"
   }
 }

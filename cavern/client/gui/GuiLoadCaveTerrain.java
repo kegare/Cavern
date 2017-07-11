@@ -10,7 +10,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiLoadCaveTerrain extends GuiDownloadCaveTerrain
 {
-	private int loadTime;
+	private boolean loading;
+	private int progress;
+
+	private boolean renderWorker;
 
 	public GuiLoadCaveTerrain(NetHandlerPlayClient handler)
 	{
@@ -20,13 +23,47 @@ public class GuiLoadCaveTerrain extends GuiDownloadCaveTerrain
 	@Override
 	public String getInfoText()
 	{
+		if (progress > 200 && progress <= 300)
+		{
+			return I18n.format("cavern.terrain.almost");
+		}
+
 		return I18n.format("cavern.terrain.load");
+	}
+
+	public boolean isTerrainLoaded()
+	{
+		if (mc.getRenderViewEntity() == null)
+		{
+			return true;
+		}
+
+		if (!mc.getRenderViewEntity().addedToChunk)
+		{
+			renderWorker = true;
+		}
+		else if (renderWorker)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
 	public void updateScreen()
 	{
-		if (++loadTime > 200 || mc.player != null && (mc.player.onGround || mc.player.capabilities.isFlying || mc.player.isInWater()))
+		if (!isTerrainLoaded())
+		{
+			loading = renderWorker;
+		}
+		else if (loading)
+		{
+			mc.displayGuiScreen(null);
+			mc.setIngameFocus();
+		}
+
+		if (++progress > 400)
 		{
 			mc.displayGuiScreen(null);
 			mc.setIngameFocus();

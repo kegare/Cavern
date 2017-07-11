@@ -1,0 +1,53 @@
+{
+    "display": {
+        "icon": {
+            "item": "cavern:composite_pickaxe"
+        },
+        "title": {
+            "translate": "advancements.cavern.composite_tools.title"
+        },
+        "description": {
+            "translate": "advancements.cavern.composite_tools.description"
+        },
+        "frame": "challenge"
+    },
+    "parent": "cavern:magic_compositing",
+    "criteria": {
+        "composite_pickaxe": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "cavern:composite_pickaxe"
+                    }
+                ]
+            }
+        },
+        "composite_axe": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "cavern:composite_axe"
+                    }
+                ]
+            }
+        },
+        "composite_shovel": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "cavern:composite_shovel"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        ["composite_pickaxe", "composite_axe", "composite_shovel"]
+    ],
+    "rewards": {
+        "experience": 100
+    }
+}

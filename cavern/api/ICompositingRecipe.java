@@ -12,6 +12,8 @@ public interface ICompositingRecipe
 {
 	public NonNullList<ItemStack> getMaterialItems();
 
+	public boolean isMaterialItem(ItemStack stack);
+
 	public boolean matches(IInventory inventory, World world, @Nullable EntityPlayer player);
 
 	public ItemStack getCompositingResult(IInventory inventory, World world, @Nullable EntityPlayer player);

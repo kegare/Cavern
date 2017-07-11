@@ -18,10 +18,10 @@ public class RuinsCavernConfig
 
 	public static boolean generateCaves;
 
-	public static double caveBrightness;
-
 	public static boolean decorateTorches;
 	public static double bonusChest;
+
+	public static double caveBrightness;
 
 	public static void syncConfig()
 	{
@@ -74,17 +74,6 @@ public class RuinsCavernConfig
 		propOrder.add(prop.getName());
 		generateCaves = prop.getBoolean(generateCaves);
 
-		prop = config.get(category, "caveBrightness", 0.075D);
-		prop.setMinValue(0.0D).setMaxValue(1.0D);
-		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
-		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
-		comment += Configuration.NEW_LINE;
-		comment += "Note: If multiplayer, server-side only.";
-		prop.setComment(comment);
-		propOrder.add(prop.getName());
-		caveBrightness = prop.getDouble(caveBrightness);
-
 		prop = config.get(category, "decorateTorches", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -106,8 +95,16 @@ public class RuinsCavernConfig
 		propOrder.add(prop.getName());
 		bonusChest = prop.getDouble(bonusChest);
 
+		prop = config.get(category, "caveBrightness", 0.075D);
+		prop.setMinValue(0.0D).setMaxValue(1.0D);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		caveBrightness = prop.getDouble(caveBrightness);
+
 		config.setCategoryPropertyOrder(category, propOrder);
-		config.setCategoryLanguageKey(category, Config.LANG_KEY + category + ".cavern");
 
 		Config.saveConfig(config);
 	}

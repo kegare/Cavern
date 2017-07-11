@@ -10,6 +10,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class CompositingRecipeBasic implements ICompositingRecipe
 {
@@ -45,6 +46,38 @@ public class CompositingRecipeBasic implements ICompositingRecipe
 	public NonNullList<ItemStack> getMaterialItems()
 	{
 		return materialItems;
+	}
+
+	@Override
+	public boolean isMaterialItem(ItemStack stack)
+	{
+		if (stack.isEmpty())
+		{
+			return false;
+		}
+
+		for (ItemStack material : getMaterialItems())
+		{
+			if (stack.getHasSubtypes() && material.getHasSubtypes())
+			{
+				if (material.getMetadata() == OreDictionary.WILDCARD_VALUE)
+				{
+					return stack.getItem() == material.getItem();
+				}
+			}
+
+			if (!stack.getHasSubtypes() && !material.getHasSubtypes())
+			{
+				return stack.getItem() == material.getItem();
+			}
+
+			if (stack.isItemEqual(material) && ItemStack.areItemStackTagsEqual(stack, material))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override

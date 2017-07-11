@@ -1,7 +1,6 @@
 package cavern.world.gen;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nullable;
@@ -9,6 +8,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
 
 import cavern.util.CaveLog;
+import cavern.util.CaveUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -172,16 +172,7 @@ public class WorldGenIceDungeons extends WorldGenDungeons
 	{
 		if (!spawnerMobs.isEmpty())
 		{
-			List<ResourceLocation> list = Lists.newArrayList(spawnerMobs);
-
-			if (list.size() > 1)
-			{
-				int index = random.nextInt(list.size() - 1);
-
-				return list.get(index);
-			}
-
-			return list.get(0);
+			return CaveUtils.getRandomObject(Lists.newArrayList(spawnerMobs));
 		}
 
 		return null;

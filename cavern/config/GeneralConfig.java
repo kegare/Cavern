@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 
 import cavern.client.config.CaveConfigEntries;
 import cavern.config.property.ConfigCaveborn;
-import cavern.config.property.ConfigDisplayPos;
 import cavern.config.property.ConfigItems;
 import cavern.config.property.ConfigMiningPoints;
 import cavern.core.Cavern;
@@ -29,20 +28,11 @@ public class GeneralConfig
 
 	public static boolean versionNotify;
 
-	public static double caveMusicVolume;
+	public static int caveMusicVolume;
 
-	public static ConfigDisplayPos miningPointPosition = new ConfigDisplayPos();
-	public static boolean showMinerRank;
 	public static ConfigItems miningPointItems = new ConfigItems();
 	public static ConfigMiningPoints miningPoints = new ConfigMiningPoints();
 	public static boolean miningCombo;
-	public static boolean alwaysShowMinerStatus;
-
-	public static ConfigDisplayPos huntingPointPosition = new ConfigDisplayPos();
-	public static boolean showHunterRank;
-
-	public static ConfigDisplayPos magicianPointPosition = new ConfigDisplayPos();
-	public static boolean showMagicianRank;
 
 	public static ConfigCaveborn caveborn = new ConfigCaveborn();
 	public static ConfigItems cavebornBonusItems = new ConfigItems();
@@ -50,12 +40,11 @@ public class GeneralConfig
 	public static boolean cavernEscapeMission;
 
 	public static boolean portalCache;
-	public static boolean slipperyIceCustomColor;
 
 	public static int sleepWaitTime;
 	public static boolean sleepRefresh;
 
-	protected static final Side side = FMLLaunchHandler.side();
+	protected static final Side SIDE = FMLLaunchHandler.side();
 
 	public static void syncConfig()
 	{
@@ -69,6 +58,18 @@ public class GeneralConfig
 			config = Config.loadConfig(category);
 		}
 
+		if (SIDE.isClient())
+		{
+			prop = config.get(category, "caveMusicVolume", 35);
+			prop.setMinValue(0).setMaxValue(100).setConfigEntryClass(CaveConfigEntries.volumeSlider);
+			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
+			prop.setComment(comment);
+			propOrder.add(prop.getName());
+			caveMusicVolume = prop.getInt(caveMusicVolume);
+		}
+
 		prop = config.get(category, "versionNotify", true);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -78,51 +79,6 @@ public class GeneralConfig
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		versionNotify = prop.getBoolean(versionNotify);
-
-		if (side.isClient())
-		{
-			prop = config.get(category, "caveMusicVolume", 0.35D);
-			prop.setMinValue(0.0D).setMaxValue(1.0D);
-			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
-			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
-			prop.setComment(comment);
-			propOrder.add(prop.getName());
-			caveMusicVolume = prop.getDouble(caveMusicVolume);
-
-			prop = config.get(category, "miningPointPosition", ConfigDisplayPos.Type.BOTTOM_RIGHT.ordinal());
-			prop.setMinValue(0).setMaxValue(ConfigDisplayPos.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleInteger);
-			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
-			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
-
-			int min = Integer.parseInt(prop.getMinValue());
-			int max = Integer.parseInt(prop.getMaxValue());
-
-			for (int i = min; i <= max; ++i)
-			{
-				comment += Configuration.NEW_LINE + i + ": " + Cavern.proxy.translate(prop.getLanguageKey() + "." + i);
-
-				if (i < max)
-				{
-					comment += ",";
-				}
-			}
-
-			prop.setComment(comment);
-			propOrder.add(prop.getName());
-			miningPointPosition.setValue(prop.getInt(miningPointPosition.getValue()));
-		}
-
-		prop = config.get(category, "showMinerRank", true);
-		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
-		comment += " [default: " + prop.getDefault() + "]";
-		comment += Configuration.NEW_LINE;
-		comment += "Note: If multiplayer, does not have to match client-side and server-side.";
-		prop.setComment(comment);
-		propOrder.add(prop.getName());
-		showMinerRank = prop.getBoolean(showMinerRank);
 
 		prop = config.get(category, "miningPointItems", new String[0]);
 		prop.setConfigEntryClass(CaveConfigEntries.selectItems);
@@ -153,87 +109,6 @@ public class GeneralConfig
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		miningCombo = prop.getBoolean(miningCombo);
-
-		if (side.isClient())
-		{
-			prop = config.get(category, "alwaysShowMinerStatus", false);
-			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
-			comment += Configuration.NEW_LINE;
-			comment += "Note: If multiplayer, client-side only.";
-			prop.setComment(comment);
-			propOrder.add(prop.getName());
-			alwaysShowMinerStatus = prop.getBoolean(alwaysShowMinerStatus);
-
-			prop = config.get(category, "huntingPointPosition", ConfigDisplayPos.Type.BOTTOM_RIGHT.ordinal());
-			prop.setMinValue(0).setMaxValue(ConfigDisplayPos.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleInteger);
-			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
-			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
-
-			int min = Integer.parseInt(prop.getMinValue());
-			int max = Integer.parseInt(prop.getMaxValue());
-
-			for (int i = min; i <= max; ++i)
-			{
-				comment += Configuration.NEW_LINE + i + ": " + Cavern.proxy.translate(prop.getLanguageKey() + "." + i);
-
-				if (i < max)
-				{
-					comment += ",";
-				}
-			}
-
-			prop.setComment(comment);
-			propOrder.add(prop.getName());
-			huntingPointPosition.setValue(prop.getInt(huntingPointPosition.getValue()));
-		}
-
-		prop = config.get(category, "showHunterRank", true);
-		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
-		comment += " [default: " + prop.getDefault() + "]";
-		comment += Configuration.NEW_LINE;
-		comment += "Note: If multiplayer, does not have to match client-side and server-side.";
-		prop.setComment(comment);
-		propOrder.add(prop.getName());
-		showHunterRank = prop.getBoolean(showHunterRank);
-
-		if (side.isClient())
-		{
-			prop = config.get(category, "magicianPointPosition", ConfigDisplayPos.Type.BOTTOM_RIGHT.ordinal());
-			prop.setMinValue(0).setMaxValue(ConfigDisplayPos.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleInteger);
-			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
-			comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
-
-			int min = Integer.parseInt(prop.getMinValue());
-			int max = Integer.parseInt(prop.getMaxValue());
-
-			for (int i = min; i <= max; ++i)
-			{
-				comment += Configuration.NEW_LINE + i + ": " + Cavern.proxy.translate(prop.getLanguageKey() + "." + i);
-
-				if (i < max)
-				{
-					comment += ",";
-				}
-			}
-
-			prop.setComment(comment);
-			propOrder.add(prop.getName());
-			magicianPointPosition.setValue(prop.getInt(magicianPointPosition.getValue()));
-		}
-
-		prop = config.get(category, "showMagicianRank", true);
-		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
-		comment += " [default: " + prop.getDefault() + "]";
-		comment += Configuration.NEW_LINE;
-		comment += "Note: If multiplayer, does not have to match client-side and server-side.";
-		prop.setComment(comment);
-		propOrder.add(prop.getName());
-		showMagicianRank = prop.getBoolean(showMagicianRank);
 
 		prop = config.get(category, "caveborn", ConfigCaveborn.Type.DISABLED.ordinal());
 		prop.setMinValue(0).setMaxValue(ConfigCaveborn.Type.values().length - 1).setConfigEntryClass(CaveConfigEntries.cycleInteger);
@@ -282,7 +157,7 @@ public class GeneralConfig
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [default: " + prop.getDefault() + "]";
 		comment += Configuration.NEW_LINE;
-		comment += "Note: If multiplayer, does not have to match client-side and server-side.";
+		comment += "Note: If multiplayer, server-side only.";
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		cavernEscapeMission = prop.getBoolean(cavernEscapeMission);
@@ -296,20 +171,6 @@ public class GeneralConfig
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		portalCache = prop.getBoolean(portalCache);
-
-		if (side.isClient())
-		{
-			prop = config.get(category, "slipperyIceCustomColor", true);
-			prop.setRequiresWorldRestart(true);
-			prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
-			comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
-			comment += " [default: " + prop.getDefault() + "]";
-			comment += Configuration.NEW_LINE;
-			comment += "Note: If multiplayer, client-side only.";
-			prop.setComment(comment);
-			propOrder.add(prop.getName());
-			slipperyIceCustomColor = prop.getBoolean(slipperyIceCustomColor);
-		}
 
 		prop = config.get(category, "sleepWaitTime", 300);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());

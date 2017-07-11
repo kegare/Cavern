@@ -157,14 +157,11 @@ public class CaveniaConfig
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
-		comment += Configuration.NEW_LINE;
-		comment += "Note: If multiplayer, server-side only.";
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		caveBrightness = prop.getDouble(caveBrightness);
 
 		config.setCategoryPropertyOrder(category, propOrder);
-		config.setCategoryLanguageKey(category, Config.LANG_KEY + category + ".cavern");
 
 		Config.saveConfig(config);
 	}

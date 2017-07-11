@@ -27,6 +27,12 @@ public class CompositingRecipeUpgradeMagicalBook implements ICompositingRecipe
 	}
 
 	@Override
+	public boolean isMaterialItem(ItemStack stack)
+	{
+		return !stack.isEmpty() && stack.getItem() instanceof ItemMagicalBook;
+	}
+
+	@Override
 	public boolean matches(IInventory inventory, World world, EntityPlayer player)
 	{
 		Set<EnumType> checkSet = Sets.newHashSet();

@@ -3,6 +3,7 @@ package cavern.client.handler;
 import cavern.api.CavernAPI;
 import cavern.api.IMinerStats;
 import cavern.client.CaveRenderingRegistry;
+import cavern.config.DisplayConfig;
 import cavern.config.GeneralConfig;
 import cavern.config.MiningAssistConfig;
 import cavern.config.property.ConfigDisplayPos;
@@ -38,7 +39,7 @@ public class MinerStatsHUDEventHooks
 
 	protected ConfigDisplayPos.Type getDisplayType()
 	{
-		return GeneralConfig.miningPointPosition.getType();
+		return DisplayConfig.miningPointPosition.getType();
 	}
 
 	protected boolean canRenderHUD(Minecraft mc)
@@ -53,7 +54,7 @@ public class MinerStatsHUDEventHooks
 			return false;
 		}
 
-		if (CavernAPI.dimension.isEntityInCavenia(mc.player) && getDisplayType() == GeneralConfig.huntingPointPosition.getType())
+		if (CavernAPI.dimension.isEntityInCavenia(mc.player) && getDisplayType() == DisplayConfig.huntingPointPosition.getType())
 		{
 			return false;
 		}
@@ -63,12 +64,12 @@ public class MinerStatsHUDEventHooks
 			return false;
 		}
 
-		if (getDisplayType() == GeneralConfig.magicianPointPosition.getType() && CaveItems.hasMagicalItem(mc.player, true))
+		if (getDisplayType() == DisplayConfig.magicianPointPosition.getType() && CaveItems.hasMagicalItem(mc.player, true))
 		{
 			return false;
 		}
 
-		if (GeneralConfig.alwaysShowMinerStatus)
+		if (DisplayConfig.alwaysShowMinerStatus)
 		{
 			return true;
 		}
@@ -275,7 +276,7 @@ public class MinerStatsHUDEventHooks
 			combo = format + String.format("%d COMBO!", MinerStats.mineCombo) + TextFormatting.RESET;
 		}
 
-		boolean showRank = GeneralConfig.showMinerRank;
+		boolean showRank = DisplayConfig.showMinerRank;
 		boolean hasCombo = combo != null;
 		int pointX = displayType.isLeft() ? x + 5 : x + 17 - renderer.getStringWidth(point);
 		int pointY = y + 9;

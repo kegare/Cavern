@@ -2,7 +2,7 @@ package cavern.client.handler;
 
 import cavern.api.CavernAPI;
 import cavern.api.IHunterStats;
-import cavern.config.GeneralConfig;
+import cavern.config.DisplayConfig;
 import cavern.config.property.ConfigDisplayPos;
 import cavern.item.CaveItems;
 import cavern.network.server.StatsAdjustRequestMessage;
@@ -32,7 +32,7 @@ public class HunterStatsHUDEventHooks
 
 	protected ConfigDisplayPos.Type getDisplayType()
 	{
-		return GeneralConfig.huntingPointPosition.getType();
+		return DisplayConfig.huntingPointPosition.getType();
 	}
 
 	protected boolean canRenderHUD(Minecraft mc)
@@ -52,7 +52,7 @@ public class HunterStatsHUDEventHooks
 			return false;
 		}
 
-		if (getDisplayType() == GeneralConfig.magicianPointPosition.getType() && CaveItems.hasMagicalItem(mc.player, true))
+		if (getDisplayType() == DisplayConfig.magicianPointPosition.getType() && CaveItems.hasMagicalItem(mc.player, true))
 		{
 			return false;
 		}
@@ -199,7 +199,7 @@ public class HunterStatsHUDEventHooks
 			point = displayType.isLeft() ? point + " < " + per : per + " > " + point;
 		}
 
-		boolean showRank = GeneralConfig.showHunterRank;
+		boolean showRank = DisplayConfig.showHunterRank;
 		int pointX = displayType.isLeft() ? x + 5 : x + 17 - renderer.getStringWidth(point);
 		int pointY = y + 9;
 		int rankX = showRank ? displayType.isLeft() ? posX + 5 : posX + 17 - renderer.getStringWidth(rank) : -1;

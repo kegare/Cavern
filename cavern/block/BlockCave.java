@@ -3,6 +3,8 @@ package cavern.block;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import com.google.common.collect.Lists;
 
 import cavern.block.bonus.FissureBreakEvent;
@@ -152,25 +154,38 @@ public class BlockCave extends Block
 			switch (getType(state))
 			{
 				case RANDOMITE_ORE:
-					WeightedItemStack randomItem = WeightedRandom.getRandomItem(RANDOM, RANDOMITE_ITEMS);
-					ItemStack stack = randomItem.getItemStack();
+					ItemStack stack = ItemStack.EMPTY;
 
-					if (RANDOM.nextDouble() <= 0.015D * MathHelper.clamp(fortune, 1, 3))
+					if (!RANDOMITE_ITEMS.isEmpty())
+					{
+						stack = WeightedRandom.getRandomItem(RANDOM, RANDOMITE_ITEMS).getItemStack();
+					}
+
+					if (stack.isEmpty() || RANDOM.nextDouble() <= 0.015D * MathHelper.clamp(fortune, 1, 3))
 					{
 						Item item = Item.REGISTRY.getRandomObject(RANDOM);
 
-						if (item != null)
+						if (item != null && item != Items.AIR)
 						{
-							stack = new ItemStack(item);
+							if (item.getHasSubtypes())
+							{
+								NonNullList<ItemStack> items = NonNullList.create();
+
+								item.getSubItems(ObjectUtils.defaultIfNull(item.getCreativeTab(), CreativeTabs.SEARCH), items);
+
+								stack = CaveUtils.getRandomObject(items, ItemStack.EMPTY);
+							}
+
+							if (stack.isEmpty())
+							{
+								stack = new ItemStack(item);
+							}
 						}
 					}
 
-					if (stack.isEmpty() || RANDOM.nextInt(10) == 0)
+					if (player != null && (stack.isEmpty() || RANDOM.nextInt(30) == 0))
 					{
-						if (player != null)
-						{
-							player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 20 * 60, 1, false, false));
-						}
+						player.addPotionEffect(new PotionEffect(MobEffects.NIGHT_VISION, 20 * 90, 0, false, false));
 					}
 					else
 					{

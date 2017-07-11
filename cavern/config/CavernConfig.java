@@ -82,7 +82,7 @@ public class CavernConfig
 
 		if (config == null)
 		{
-			config = Config.loadConfig(category);
+			config = Config.loadConfig("cavern", category);
 		}
 
 		prop = config.get(category, "dimension", -50);
@@ -230,19 +230,7 @@ public class CavernConfig
 		mobs.add(EntityEnderman.class);
 		mobs.add(EntitySilverfish.class);
 
-		Set<String> values = Sets.newTreeSet();
-
-		for (Class<? extends Entity> entityClass : mobs)
-		{
-			ResourceLocation key = EntityList.getKey(entityClass);
-
-			if (key != null)
-			{
-				values.add(key.toString());
-			}
-		}
-
-		prop = config.get(category, "dungeonMobs", values.toArray(new String[values.size()]));
+		prop = config.get(category, "dungeonMobs", mobs.stream().map(EntityList::getKey).map(ResourceLocation::toString).sorted().toArray(String[]::new));
 		prop.setConfigEntryClass(CaveConfigEntries.selectMobs);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -262,19 +250,7 @@ public class CavernConfig
 		mobs.add(EntityCavenicZombie.class);
 		mobs.add(EntityCavenicSpider.class);
 
-		values.clear();
-
-		for (Class<? extends Entity> entityClass : mobs)
-		{
-			ResourceLocation key = EntityList.getKey(entityClass);
-
-			if (key != null)
-			{
-				values.add(key.toString());
-			}
-		}
-
-		prop = config.get(category, "towerDungeonMobs", values.toArray(new String[values.size()]));
+		prop = config.get(category, "towerDungeonMobs", mobs.stream().map(EntityList::getKey).map(ResourceLocation::toString).sorted().toArray(String[]::new));
 		prop.setConfigEntryClass(CaveConfigEntries.selectMobs);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -300,14 +276,11 @@ public class CavernConfig
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
-		comment += Configuration.NEW_LINE;
-		comment += "Note: If multiplayer, server-side only.";
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		caveBrightness = prop.getDouble(caveBrightness);
 
 		config.setCategoryPropertyOrder(category, propOrder);
-		config.setCategoryLanguageKey(category, Config.LANG_KEY + category + ".cavern");
 
 		Config.saveConfig(config);
 	}
@@ -316,7 +289,7 @@ public class CavernConfig
 	{
 		if (biomeManager.config == null)
 		{
-			biomeManager.config = Config.loadConfig("biomes");
+			biomeManager.config = Config.loadConfig("cavern", "biomes");
 		}
 		else
 		{
@@ -356,7 +329,7 @@ public class CavernConfig
 	{
 		if (veinManager.config == null)
 		{
-			veinManager.config = Config.loadConfig("veins");
+			veinManager.config = Config.loadConfig("cavern", "veins");
 		}
 		else
 		{

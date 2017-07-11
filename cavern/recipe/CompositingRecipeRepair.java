@@ -24,6 +24,12 @@ public class CompositingRecipeRepair implements ICompositingRecipe
 	}
 
 	@Override
+	public boolean isMaterialItem(ItemStack stack)
+	{
+		return !stack.isEmpty() && (stack.isItemDamaged() || stack.getItem() == CaveItems.CAVE_ITEM && stack.getMetadata() == ItemCave.EnumType.MANALITE.getMetadata());
+	}
+
+	@Override
 	public boolean matches(IInventory inventory, World world, EntityPlayer player)
 	{
 		materialItems.clear();

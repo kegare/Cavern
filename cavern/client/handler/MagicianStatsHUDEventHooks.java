@@ -1,7 +1,7 @@
 package cavern.client.handler;
 
 import cavern.api.IMagicianStats;
-import cavern.config.GeneralConfig;
+import cavern.config.DisplayConfig;
 import cavern.config.property.ConfigDisplayPos;
 import cavern.item.CaveItems;
 import cavern.network.server.StatsAdjustRequestMessage;
@@ -32,7 +32,7 @@ public class MagicianStatsHUDEventHooks
 
 	protected ConfigDisplayPos.Type getDisplayType()
 	{
-		return GeneralConfig.magicianPointPosition.getType();
+		return DisplayConfig.magicianPointPosition.getType();
 	}
 
 	protected boolean canRenderHUD(Minecraft mc)
@@ -195,7 +195,7 @@ public class MagicianStatsHUDEventHooks
 		}
 
 		String mp = TextFormatting.GRAY + String.format("%d / %d", stats.getMP(), magicianRank.getMaxMP(mc.player)) + TextFormatting.RESET;
-		boolean showRank = GeneralConfig.showMagicianRank;
+		boolean showRank = DisplayConfig.showMagicianRank;
 		int pointX = displayType.isLeft() ? x + 5 : x + 17 - renderer.getStringWidth(point);
 		int pointY = y + 9;
 		int rankX = showRank ? displayType.isLeft() ? posX + 5 : posX + 17 - renderer.getStringWidth(rank) : -1;

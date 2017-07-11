@@ -45,6 +45,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.DummyModContainer;
@@ -160,28 +161,6 @@ public class CaveUtils
 		return new ResourceLocation(Cavern.MODID, key);
 	}
 
-	public static boolean isItemPickaxe(ItemStack stack)
-	{
-		if (stack.isEmpty())
-		{
-			return false;
-		}
-
-		Item item = stack.getItem();
-
-		if (item instanceof ItemPickaxe)
-		{
-			return true;
-		}
-
-		if (item.getToolClasses(stack).contains("pickaxe"))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
 	public static int compareWithNull(Object o1, Object o2)
 	{
 		return (o1 == null ? 1 : 0) - (o2 == null ? 1 : 0);
@@ -257,14 +236,6 @@ public class CaveUtils
 		}
 	}
 
-	public static void setDimensionChange(EntityPlayerMP player)
-	{
-		if (!player.capabilities.isCreativeMode)
-		{
-			ObfuscationReflectionHelper.setPrivateValue(EntityPlayerMP.class, player, true, "invulnerableDimensionChange", "field_184851_cj");
-		}
-	}
-
 	public static boolean areBlockStatesEqual(@Nullable IBlockState stateA, @Nullable IBlockState stateB)
 	{
 		if (stateA == stateB)
@@ -278,6 +249,52 @@ public class CaveUtils
 		}
 
 		return stateA.getBlock() == stateB.getBlock() && stateA.getBlock().getMetaFromState(stateA) == stateB.getBlock().getMetaFromState(stateB);
+	}
+
+	@Nullable
+	public static <E> E getRandomObject(@Nullable List<E> list)
+	{
+		return getRandomObject(list, null);
+	}
+
+	public static <E> E getRandomObject(@Nullable List<E> list, @Nullable E nullDefault)
+	{
+		if (list == null || list.isEmpty())
+		{
+			return nullDefault;
+		}
+
+		return list.get(MathHelper.floor(Math.random() * list.size()));
+	}
+
+	public static boolean isItemPickaxe(ItemStack stack)
+	{
+		if (stack.isEmpty())
+		{
+			return false;
+		}
+
+		Item item = stack.getItem();
+
+		if (item instanceof ItemPickaxe)
+		{
+			return true;
+		}
+
+		if (item.getToolClasses(stack).contains("pickaxe"))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	public static void setDimensionChange(EntityPlayerMP player)
+	{
+		if (!player.capabilities.isCreativeMode)
+		{
+			ObfuscationReflectionHelper.setPrivateValue(EntityPlayerMP.class, player, true, "invulnerableDimensionChange", "field_184851_cj");
+		}
 	}
 
 	@Nullable

@@ -77,7 +77,7 @@ public class CaveMusicMessage implements IMessage, IMessageHandler<CaveMusicMess
 			}
 		}
 
-		if (GeneralConfig.caveMusicVolume > 0.0D)
+		if (GeneralConfig.caveMusicVolume > 0)
 		{
 			SoundEvent sound = SoundEvent.REGISTRY.getObject(new ResourceLocation(name));
 
@@ -85,7 +85,7 @@ public class CaveMusicMessage implements IMessage, IMessageHandler<CaveMusicMess
 			{
 				PositionedSound music = PositionedSoundRecord.getMasterRecord(sound, 1.0F);
 
-				ObfuscationReflectionHelper.setPrivateValue(PositionedSound.class, music, (float)GeneralConfig.caveMusicVolume, "volume", "field_147662_b");
+				ObfuscationReflectionHelper.setPrivateValue(PositionedSound.class, music, GeneralConfig.caveMusicVolume * 0.01F, "volume", "field_147662_b");
 
 				handler.playSound(music);
 

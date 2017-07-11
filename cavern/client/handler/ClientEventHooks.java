@@ -3,6 +3,8 @@ package cavern.client.handler;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
@@ -15,6 +17,8 @@ import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CaveniaConfig;
 import cavern.config.CavernConfig;
+import cavern.config.Config;
+import cavern.config.DisplayConfig;
 import cavern.config.GeneralConfig;
 import cavern.config.IceCavernConfig;
 import cavern.config.MiningAssistConfig;
@@ -115,6 +119,7 @@ public class ClientEventHooks
 			if (Strings.isNullOrEmpty(type))
 			{
 				GeneralConfig.syncConfig();
+				DisplayConfig.syncConfig();
 				MiningAssistConfig.syncConfig();
 				CavernConfig.syncConfig();
 				AquaCavernConfig.syncConfig();
@@ -135,6 +140,9 @@ public class ClientEventHooks
 						GeneralConfig.refreshCavebornBonusItems();
 					}
 
+					break;
+				case "display":
+					DisplayConfig.syncConfig();
 					break;
 				case "miningassist":
 					MiningAssistConfig.syncConfig();
@@ -236,7 +244,7 @@ public class ClientEventHooks
 				Cavern.metadata.description = desc;
 			}
 		}
-		else if (CavernAPI.dimension.isEntityInCaves(mc.player) && (mc.currentScreen == null || !(mc.currentScreen instanceof GuiWorldSelection)))
+		else if (DisplayConfig.customLoadingScreen && CavernAPI.dimension.isEntityInCaves(mc.player) && (mc.currentScreen == null || !(mc.currentScreen instanceof GuiWorldSelection)))
 		{
 			if (gui == null)
 			{
@@ -306,6 +314,18 @@ public class ClientEventHooks
 			{
 				mc.ingameGUI.getChatGUI().printChatMessage(message);
 			}
+		}
+
+		if (Config.configChecker.isUpdated() && !Config.configChecker.isNotified())
+		{
+			ITextComponent name = new TextComponentString(Cavern.metadata.name);
+			name.getStyle().setColor(TextFormatting.AQUA);
+			ITextComponent message = new TextComponentTranslation("cavern.config.message", name);
+			message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, FilenameUtils.normalize(Config.getConfigDir().getPath())));
+
+			mc.ingameGUI.getChatGUI().printChatMessage(message);
+
+			Config.configChecker.setNotified(true);
 		}
 	}
 

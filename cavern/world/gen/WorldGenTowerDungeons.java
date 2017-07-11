@@ -1,7 +1,6 @@
 package cavern.world.gen;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nullable;
@@ -283,16 +282,7 @@ public class WorldGenTowerDungeons extends WorldGenerator
 	{
 		if (!spawnerMobs.isEmpty())
 		{
-			List<ResourceLocation> list = Lists.newArrayList(spawnerMobs);
-
-			if (list.size() > 1)
-			{
-				int index = rand.nextInt(list.size() - 1);
-
-				return list.get(index);
-			}
-
-			return list.get(0);
+			return CaveUtils.getRandomObject(Lists.newArrayList(spawnerMobs));
 		}
 
 		return null;

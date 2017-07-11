@@ -140,25 +140,13 @@ public class IceCavernConfig
 		propOrder.add(prop.getName());
 		generateDungeons = prop.getBoolean(generateDungeons);
 
-		Set<Class<? extends Entity>> classes = Sets.newHashSet();
+		Set<Class<? extends Entity>> mobs = Sets.newHashSet();
 
-		classes.add(EntityZombie.class);
-		classes.add(EntitySkeleton.class);
-		classes.add(EntitySnowman.class);
+		mobs.add(EntityZombie.class);
+		mobs.add(EntitySkeleton.class);
+		mobs.add(EntitySnowman.class);
 
-		Set<String> mobs = Sets.newTreeSet();
-
-		for (Class<? extends Entity> clazz : classes)
-		{
-			ResourceLocation name = EntityList.getKey(clazz);
-
-			if (name != null)
-			{
-				mobs.add(name.toString());
-			}
-		}
-
-		prop = config.get(category, "dungeonMobs", mobs.toArray(new String[mobs.size()]));
+		prop = config.get(category, "dungeonMobs", mobs.stream().map(EntityList::getKey).map(ResourceLocation::toString).sorted().toArray(String[]::new));
 		prop.setConfigEntryClass(CaveConfigEntries.selectMobs);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
@@ -184,14 +172,11 @@ public class IceCavernConfig
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
 		comment += " [range: " + prop.getMinValue() + " ~ " + prop.getMaxValue() + ", default: " + prop.getDefault() + "]";
-		comment += Configuration.NEW_LINE;
-		comment += "Note: If multiplayer, server-side only.";
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		caveBrightness = prop.getDouble(caveBrightness);
 
 		config.setCategoryPropertyOrder(category, propOrder);
-		config.setCategoryLanguageKey(category, Config.LANG_KEY + category + ".cavern");
 
 		Config.saveConfig(config);
 	}

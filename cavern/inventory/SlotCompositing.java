@@ -1,5 +1,7 @@
 package cavern.inventory;
 
+import cavern.api.CavernAPI;
+import cavern.api.ICompositingRecipe;
 import cavern.item.ItemMagicalBook;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -43,6 +45,19 @@ public class SlotCompositing extends Slot
 		return true;
 	}
 
+	public boolean isMaterialItem(ItemStack stack)
+	{
+		for (ICompositingRecipe recipe : CavernAPI.compositing.getRecipes())
+		{
+			if (recipe.isMaterialItem(stack))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	@Override
 	public boolean canTakeStack(EntityPlayer player)
 	{
@@ -52,6 +67,6 @@ public class SlotCompositing extends Slot
 	@Override
 	public boolean isItemValid(ItemStack stack)
 	{
-		return (canPut || isValidStack(stack)) && super.isItemValid(stack);
+		return (canPut || isValidStack(stack) && isMaterialItem(stack)) && super.isItemValid(stack);
 	}
 }

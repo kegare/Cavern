@@ -8,6 +8,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class CaveConfigEntries
 {
 	public static Class<? extends IConfigEntry> cycleInteger;
+	public static Class<? extends IConfigEntry> volumeSlider;
 
 	public static Class<? extends IConfigEntry> selectBlocks;
 	public static Class<? extends IConfigEntry> selectBlocksAndItems;
@@ -21,6 +22,7 @@ public class CaveConfigEntries
 	public static void initEntries()
 	{
 		cycleInteger = CycleIntegerEntry.class;
+		volumeSlider = VolumeSliderEntry.class;
 
 		selectBlocks = SelectBlocksEntry.class;
 		selectBlocksAndItems = SelectBlocksAndItemsEntry.class;

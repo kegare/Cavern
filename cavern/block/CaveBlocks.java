@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import cavern.config.GeneralConfig;
+import cavern.config.DisplayConfig;
 import cavern.item.CaveItems;
 import cavern.item.ItemAcresia;
 import cavern.item.ItemBlockCave;
@@ -180,7 +180,7 @@ public class CaveBlocks
 
 		colors.registerBlockColorHandler((state, world, pos, tintIndex) ->
 		{
-			return GeneralConfig.slipperyIceCustomColor ? 0xEFFAFF : -1;
+			return DisplayConfig.slipperyIceCustomColor ? 0xEFFAFF : -1;
 		},
 		SLIPPERY_ICE);
 	}

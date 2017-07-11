@@ -361,11 +361,6 @@ public class MinerStats implements IMinerStats
 
 		for (ItemStack stack : ores)
 		{
-			if (stack.isEmpty())
-			{
-				continue;
-			}
-
 			Block block = Block.getBlockFromItem(stack.getItem());
 
 			if (block == null || block == Blocks.AIR)

@@ -9,7 +9,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 
 import cavern.util.ItemMeta;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
@@ -50,18 +49,15 @@ public class ConfigItems
 
 		for (ItemStack stack : items)
 		{
-			if (!stack.isEmpty())
-			{
-				Item item = stack.getItem();
+			String registryName = stack.getItem().getRegistryName().toString();
 
-				if (stack.getHasSubtypes())
-				{
-					set.add(item.getRegistryName().toString() + ":" + stack.getMetadata());
-				}
-				else
-				{
-					set.add(item.getRegistryName().toString());
-				}
+			if (stack.getHasSubtypes())
+			{
+				set.add(registryName + ":" + stack.getMetadata());
+			}
+			else
+			{
+				set.add(registryName);
 			}
 		}
 

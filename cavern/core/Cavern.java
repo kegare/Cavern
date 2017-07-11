@@ -16,6 +16,7 @@ import cavern.config.CavelandConfig;
 import cavern.config.CaveniaConfig;
 import cavern.config.CavernConfig;
 import cavern.config.Config;
+import cavern.config.DisplayConfig;
 import cavern.config.GeneralConfig;
 import cavern.config.IceCavernConfig;
 import cavern.config.MiningAssistConfig;
@@ -41,6 +42,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -100,6 +102,8 @@ public class Cavern
 			clientConstruct();
 		}
 
+		Config.updateConfig();
+
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -121,8 +125,6 @@ public class Cavern
 	{
 		GeneralConfig.syncConfig();
 
-		MiningAssistConfig.syncConfig();
-
 		GameRegistry.registerFuelHandler(new CaveFuelHandler());
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new CaveGuiHandler());
@@ -134,10 +136,14 @@ public class Cavern
 		CavernAPIHandler.registerItems(CavernAPI.apiHandler);
 		CavernAPIHandler.registerEvents(CavernAPI.apiHandler);
 
+		MiningAssistConfig.syncConfig();
+
 		MinerStats.registerMineBonus();
 
 		if (event.getSide().isClient())
 		{
+			DisplayConfig.syncConfig();
+
 			CaveRenderingRegistry.registerRenderers();
 			CaveRenderingRegistry.registerRenderBlocks();
 
@@ -265,6 +271,11 @@ public class Cavern
 	@EventHandler
 	public void onServerStarting(FMLServerStartingEvent event)
 	{
+		if (event.getSide().isServer() && Config.configChecker.isUpdated())
+		{
+			event.getServer().sendMessage(new TextComponentTranslation("cavern.config.message", metadata.name));
+		}
+
 		event.registerServerCommand(new CommandCavern());
 
 		GeneralConfig.refreshMiningPointItems();

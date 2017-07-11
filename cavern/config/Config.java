@@ -24,7 +24,22 @@ public class Config
 
 	protected static final Side SIDE = FMLLaunchHandler.side();
 
+	public static ConfigChecker configChecker;
+
 	public static boolean highProfiles;
+
+	public static boolean updateConfig()
+	{
+		if (configChecker == null)
+		{
+			File dir = getConfigDir();
+			File file = new File(dir, "internal.properties");
+
+			configChecker = new ConfigChecker(file, dir);
+		}
+
+		return configChecker.updateConfigFiles();
+	}
 
 	public static File getConfigDir()
 	{
@@ -40,7 +55,7 @@ public class Config
 			dir.mkdirs();
 		}
 
-		return new File(dir, "cavern-" + name + ".cfg");
+		return new File(dir, name + ".cfg");
 	}
 
 	public static Configuration loadConfig(String name)

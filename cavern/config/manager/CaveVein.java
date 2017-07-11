@@ -10,6 +10,7 @@ import cavern.config.Config;
 import cavern.util.BlockMeta;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -60,6 +61,15 @@ public class CaveVein
 			if (element instanceof Biome)
 			{
 				biomes.add(((Biome)element).getRegistryName().toString());
+			}
+			else if (element instanceof String)
+			{
+				Biome biome = Biome.REGISTRY.getObject(new ResourceLocation((String)element));
+
+				if (biome != null)
+				{
+					biomes.add((String)element);
+				}
 			}
 			else if (element instanceof Integer)
 			{
