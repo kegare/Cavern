@@ -1,6 +1,7 @@
 package cavern.client.gui;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -388,7 +389,7 @@ public class GuiSelectBiome extends GuiScreen
 			}
 			else if (isCtrlKeyDown() && code == Keyboard.KEY_A)
 			{
-				biomeList.selected.addAll(biomeList.contents);
+				biomeList.contents.forEach(entry -> biomeList.selected.add(entry));
 			}
 		}
 	}
@@ -399,11 +400,11 @@ public class GuiSelectBiome extends GuiScreen
 		return false;
 	}
 
-	protected class BiomeList extends GuiListSlot
+	protected class BiomeList extends GuiListSlot implements Comparator<Biome>
 	{
 		protected final ArrayListExtended<Biome> biomes = new ArrayListExtended<>();
 		protected final ArrayListExtended<Biome> contents = new ArrayListExtended<>();
-		protected final Set<Biome> selected = Sets.newTreeSet(CaveUtils.BIOME_COMPARATOR);
+		protected final Set<Biome> selected = Sets.newTreeSet(this);
 		protected final Map<String, List<Biome>> filterCache = Maps.newHashMap();
 
 		protected boolean clickFlag;
@@ -554,6 +555,19 @@ public class GuiSelectBiome extends GuiScreen
 			Biome biome = contents.get(slot, null);
 
 			return biome != null && selected.contains(biome);
+		}
+
+		@Override
+		public int compare(Biome o1, Biome o2)
+		{
+			int i = CaveUtils.compareWithNull(o1, o2);
+
+			if (i == 0 && o1 != null && o2 != null)
+			{
+				i = Integer.compare(biomes.indexOf(o1), biomes.indexOf(o2));
+			}
+
+			return i;
 		}
 
 		protected void setFilter(String filter)

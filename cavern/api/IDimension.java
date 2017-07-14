@@ -24,6 +24,9 @@ public interface IDimension
 	@Nullable
 	public DimensionType getCaveniaDimension();
 
+	@Nullable
+	public DimensionType getHugeCavernDimension();
+
 	public boolean isAquaCavernDisabled();
 
 	public boolean isCavelandDisabled();
@@ -33,6 +36,8 @@ public interface IDimension
 	public boolean isRuinsCavernDisabled();
 
 	public boolean isCaveniaDisabled();
+
+	public boolean isHugeCavernDisabled();
 
 	public boolean isEntityInCavern(@Nullable Entity entity);
 
@@ -45,6 +50,8 @@ public interface IDimension
 	public boolean isEntityInRuinsCavern(@Nullable Entity entity);
 
 	public boolean isEntityInCavenia(@Nullable Entity entity);
+
+	public boolean isEntityInHugeCavern(@Nullable Entity entity);
 
 	public boolean isEntityInCaves(@Nullable Entity entity);
 
@@ -59,6 +66,8 @@ public interface IDimension
 	public boolean isRuinsCavern(@Nullable DimensionType type);
 
 	public boolean isCavenia(@Nullable DimensionType type);
+
+	public boolean isHugeCavern(@Nullable DimensionType type);
 
 	public boolean isCaves(@Nullable DimensionType type);
 }

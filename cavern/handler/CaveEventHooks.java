@@ -2,17 +2,23 @@ package cavern.handler;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+
+import org.apache.commons.lang3.ObjectUtils;
+
+import com.google.common.collect.Sets;
 
 import cavern.api.CavernAPI;
 import cavern.api.ICavenicMob;
 import cavern.api.IHunterStats;
 import cavern.api.IMagicianStats;
 import cavern.api.IMinerStats;
+import cavern.api.IPlayerData;
 import cavern.block.BlockCave;
+import cavern.block.BlockPortalCavern;
 import cavern.block.CaveBlocks;
 import cavern.config.GeneralConfig;
 import cavern.core.CaveSounds;
-import cavern.item.CaveItems;
 import cavern.item.IAquaTool;
 import cavern.item.IceEquipment;
 import cavern.item.ItemCave;
@@ -25,13 +31,14 @@ import cavern.stats.HunterStats;
 import cavern.stats.MagicianStats;
 import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
+import cavern.stats.PlayerData;
 import cavern.util.BlockMeta;
 import cavern.util.CaveUtils;
 import cavern.util.WeightedItemStack;
-import cavern.world.TeleporterRepatriation;
+import cavern.world.WorldCachedData;
 import cavern.world.WorldProviderIceCavern;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockSapling;
+import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -47,11 +54,9 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
@@ -61,7 +66,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -77,8 +81,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensio
 public class CaveEventHooks
 {
 	protected static final Random RANDOM = new Random();
-
-	public static final String NBT_SLEEPTIME = "Cavern:SleepTime";
 
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event)
@@ -118,45 +120,46 @@ public class CaveEventHooks
 	@SubscribeEvent
 	public void onPlayerChangedDimension(PlayerChangedDimensionEvent event)
 	{
-		if (event.player instanceof EntityPlayerMP)
+		if (!(event.player instanceof EntityPlayerMP))
 		{
-			EntityPlayerMP player = (EntityPlayerMP)event.player;
-			WorldServer world = player.getServerWorld();
+			return;
+		}
 
-			if (GeneralConfig.cavernEscapeMission)
+		EntityPlayerMP player = (EntityPlayerMP)event.player;
+		WorldServer world = player.getServerWorld();
+
+		if (GeneralConfig.cavernEscapeMission)
+		{
+			boolean fromCave = CavernAPI.dimension.isCaves(DimensionType.getById(event.fromDim));
+			boolean toCave = CavernAPI.dimension.isCaves(DimensionType.getById(event.toDim));
+
+			if (fromCave && !toCave && !GeneralConfig.canEscapeFromCaves(player))
 			{
-				boolean fromCave = CavernAPI.dimension.isCaves(DimensionType.getById(event.fromDim));
-				boolean toCave = CavernAPI.dimension.isCaves(DimensionType.getById(event.toDim));
+				MinecraftServer server = player.mcServer;
+				WorldServer worldNew = server.getWorld(event.fromDim);
 
-				if (fromCave && !toCave && !GeneralConfig.canEscapeFromCaves(player))
-				{
-					MinecraftServer server = player.mcServer;
-					WorldServer worldNew = server.getWorld(event.fromDim);
+				player.timeUntilPortal = player.getPortalCooldown();
 
-					if (worldNew != null)
-					{
-						player.timeUntilPortal = player.getPortalCooldown();
+				server.getPlayerList().transferPlayerToDimension(player, event.fromDim, WorldCachedData.get(worldNew).getRepatriationTeleporter());
 
-						server.getPlayerList().transferPlayerToDimension(player, event.fromDim, new TeleporterRepatriation(worldNew));
+				player.sendStatusMessage(new TextComponentTranslation("cavern.escapeMission.bad.message"), true);
 
-						player.sendStatusMessage(new TextComponentTranslation("cavern.escapeMission.bad.message"), true);
-
-						return;
-					}
-				}
+				return;
 			}
+		}
 
-			String suffix = ".LastTeleportTime";
+		if (CavernAPI.dimension.isEntityInCaves(player))
+		{
+			IPlayerData playerData = PlayerData.get(player);
+			DimensionType type = world.provider.getDimensionType();
+			long time = playerData.getLastTeleportTime(type);
 
-			if (CavernAPI.dimension.isEntityInCavern(player))
+			if (time <= 0L || time + 18000L < world.getTotalWorldTime())
 			{
-				NBTTagCompound data = player.getEntityData();
-				String key = "Cavern" + suffix;
+				SoundEvent music = null;
 
-				if (!data.hasKey(key, NBT.TAG_ANY_NUMERIC) || data.getLong(key) + 18000L < world.getTotalWorldTime())
+				if (CavernAPI.dimension.isEntityInCavern(player) || CavernAPI.dimension.isEntityInHugeCavern(player))
 				{
-					SoundEvent music;
-
 					if (world.rand.nextInt(2) == 0)
 					{
 						music = CaveSounds.MUSIC_CAVE;
@@ -165,73 +168,35 @@ public class CaveEventHooks
 					{
 						music = CaveSounds.MUSIC_UNREST;
 					}
+				}
+				else if (CavernAPI.dimension.isEntityInAquaCavern(player))
+				{
+					music = CaveSounds.MUSIC_AQUA;
+				}
+				else if (CavernAPI.dimension.isEntityInCaveland(player))
+				{
+					music = CaveSounds.MUSIC_HOPE;
+				}
+				else if (CavernAPI.dimension.isEntityInIceCavern(player) || CavernAPI.dimension.isEntityInCavenia(player))
+				{
+					music = CaveSounds.MUSIC_UNREST;
+				}
+				else if (CavernAPI.dimension.isEntityInRuinsCavern(player))
+				{
+					music = CaveSounds.MUSIC_CAVE;
+				}
 
+				if (music != null)
+				{
 					CaveNetworkRegistry.sendTo(new CaveMusicMessage(music), player);
 				}
-
-				data.setLong(key, world.getTotalWorldTime());
 			}
-			else if (CavernAPI.dimension.isEntityInAquaCavern(player))
+
+			playerData.setLastTeleportTime(type, world.getTotalWorldTime());
+
+			if (CavernAPI.dimension.isEntityInRuinsCavern(player))
 			{
-				NBTTagCompound data = player.getEntityData();
-				String key = "AquaCavern" + suffix;
-
-				if (!data.hasKey(key, NBT.TAG_ANY_NUMERIC) || data.getLong(key) + 18000L < world.getTotalWorldTime())
-				{
-					CaveNetworkRegistry.sendTo(new CaveMusicMessage(CaveSounds.MUSIC_AQUA), player);
-				}
-
-				data.setLong(key, world.getTotalWorldTime());
-			}
-			else if (CavernAPI.dimension.isEntityInCaveland(player))
-			{
-				NBTTagCompound data = player.getEntityData();
-				String key = "Caveland" + suffix;
-
-				if (!data.hasKey(key, NBT.TAG_ANY_NUMERIC) || data.getLong(key) + 18000L < world.getTotalWorldTime())
-				{
-					CaveNetworkRegistry.sendTo(new CaveMusicMessage(CaveSounds.MUSIC_HOPE), player);
-				}
-
-				data.setLong(key, world.getTotalWorldTime());
-			}
-			else if (CavernAPI.dimension.isEntityInIceCavern(player))
-			{
-				NBTTagCompound data = player.getEntityData();
-				String key = "IceCavern" + suffix;
-
-				if (!data.hasKey(key, NBT.TAG_ANY_NUMERIC) || data.getLong(key) + 18000L < world.getTotalWorldTime())
-				{
-					CaveNetworkRegistry.sendTo(new CaveMusicMessage(CaveSounds.MUSIC_UNREST), player);
-				}
-
-				data.setLong(key, world.getTotalWorldTime());
-			}
-			else if (CavernAPI.dimension.isEntityInRuinsCavern(player))
-			{
-				NBTTagCompound data = player.getEntityData();
-				String key = "RuinsCavern" + suffix;
-
-				if (!data.hasKey(key, NBT.TAG_ANY_NUMERIC) || data.getLong(key) + 18000L < world.getTotalWorldTime())
-				{
-					CaveNetworkRegistry.sendTo(new CaveMusicMessage(CaveSounds.MUSIC_CAVE), player);
-				}
-
-				data.setLong(key, world.getTotalWorldTime());
-
 				CaveUtils.grantToast(player, "ruins_mission");
-			}
-			else if (CavernAPI.dimension.isEntityInCavenia(player))
-			{
-				NBTTagCompound data = player.getEntityData();
-				String key = "Cavenia" + suffix;
-
-				if (!data.hasKey(key, NBT.TAG_ANY_NUMERIC) || data.getLong(key) + 18000L < world.getTotalWorldTime())
-				{
-					CaveNetworkRegistry.sendTo(new CaveMusicMessage(CaveSounds.MUSIC_UNREST), player);
-				}
-
-				data.setLong(key, world.getTotalWorldTime());
 			}
 		}
 	}
@@ -264,58 +229,54 @@ public class CaveEventHooks
 	@SubscribeEvent
 	public void onPlayerRightClickBlock(PlayerInteractEvent.RightClickBlock event)
 	{
-		EntityPlayer player = event.getEntityPlayer();
+		ItemStack stack = event.getItemStack();
+
+		if (stack.isEmpty())
+		{
+			return;
+		}
+
 		World world = event.getWorld();
 		BlockPos pos = event.getPos();
-		EnumFacing face = event.getFace();
-		EnumFacing side = face == null ? EnumFacing.UP : face;
-		Vec3d hit = event.getHitVec();
-		EnumHand hand = event.getHand();
-		ItemStack held = event.getItemStack();
+		IBlockState state = world.getBlockState(pos);
 
-		if (!held.isEmpty())
+		if (state.getBlock() != Blocks.MOSSY_COBBLESTONE && (state.getBlock() != Blocks.STONEBRICK || state.getBlock().getMetaFromState(state) != BlockStoneBrick.MOSSY_META))
 		{
-			Item portal = Items.AIR;
+			return;
+		}
 
-			if (held.getItem() == Items.EMERALD)
+		EntityPlayer player = event.getEntityPlayer();
+		Set<BlockPortalCavern> portals = Sets.newHashSet();
+
+		portals.add(CaveBlocks.CAVERN_PORTAL);
+		portals.add(CaveBlocks.AQUA_CAVERN_PORTAL);
+		portals.add(CaveBlocks.CAVELAND_PORTAL);
+		portals.add(CaveBlocks.ICE_CAVERN_PORTAL);
+		portals.add(CaveBlocks.RUINS_CAVERN_PORTAL);
+		portals.add(CaveBlocks.HUGE_CAVERN_PORTAL);
+
+		Item portalItem = Items.AIR;
+
+		for (BlockPortalCavern portal : portals)
+		{
+			if (portal.isTriggerItem(stack))
 			{
-				portal = Item.getItemFromBlock(CaveBlocks.CAVERN_PORTAL);
+				portalItem = Item.getItemFromBlock(portal);
+
+				break;
 			}
-			else if (held.getItem() == CaveItems.CAVE_ITEM)
-			{
-				switch (ItemCave.EnumType.byItemStack(held))
-				{
-					case AQUAMARINE:
-						portal = Item.getItemFromBlock(CaveBlocks.AQUA_CAVERN_PORTAL);
-						break;
-					case MINER_ORB:
-						portal = Item.getItemFromBlock(CaveBlocks.RUINS_CAVERN_PORTAL);
-						break;
-					default:
-				}
-			}
-			else
-			{
-				Block block = Block.getBlockFromItem(held.getItem());
+		}
 
-				if (block != null && block instanceof BlockSapling)
-				{
-					portal = Item.getItemFromBlock(CaveBlocks.CAVELAND_PORTAL);
-				}
-				else if (block == Blocks.PACKED_ICE)
-				{
-					portal = Item.getItemFromBlock(CaveBlocks.ICE_CAVERN_PORTAL);
-				}
-			}
+		if (portalItem != Items.AIR)
+		{
+			EnumFacing facing = ObjectUtils.defaultIfNull(event.getFace(), EnumFacing.UP);
+			Vec3d hit = event.getHitVec();
+			EnumActionResult result = portalItem.onItemUse(player, world, pos, event.getHand(), facing, (float)hit.x, (float)hit.y, (float)hit.z);
 
-			if (portal != Items.AIR)
+			if (result == EnumActionResult.SUCCESS)
 			{
-				EnumActionResult result = portal.onItemUse(player, world, pos, hand, side, (float)hit.x, (float)hit.y, (float)hit.z);
-
-				if (result == EnumActionResult.SUCCESS)
-				{
-					event.setCanceled(true);
-				}
+				event.setCancellationResult(result);
+				event.setCanceled(true);
 			}
 		}
 	}
@@ -323,69 +284,78 @@ public class CaveEventHooks
 	@SubscribeEvent
 	public void onBlockBreak(BreakEvent event)
 	{
-		EntityPlayer player = event.getPlayer();
+		EntityPlayer entityPlayer = event.getPlayer();
 
-		if (player != null && player instanceof EntityPlayerMP)
+		if (entityPlayer == null || !(entityPlayer instanceof EntityPlayerMP))
 		{
-			EntityPlayerMP thePlayer = (EntityPlayerMP)player;
+			return;
+		}
 
-			if (CavernAPI.dimension.isEntityInCaves(thePlayer))
+		EntityPlayerMP player = (EntityPlayerMP)entityPlayer;
+
+		if (!CavernAPI.dimension.isEntityInCaves(player))
+		{
+			return;
+		}
+
+		if (GeneralConfig.isMiningPointItem(player.getHeldItemMainhand()))
+		{
+			IBlockState state = event.getState();
+			int amount = MinerStats.getPointAmount(state);
+
+			if (amount != 0)
 			{
-				if (GeneralConfig.isMiningPointItem(thePlayer.getHeldItemMainhand()))
+				IMinerStats stats = MinerStats.get(player);
+
+				if (player.inventory.hasItemStack(ItemCave.EnumType.MINER_ORB.getItemStack()))
 				{
-					IBlockState state = event.getState();
-					int amount = MinerStats.getPointAmount(state);
-
-					if (amount != 0)
+					if (RANDOM.nextDouble() < 0.3D)
 					{
-						IMinerStats stats = MinerStats.get(thePlayer);
-
-						if (player.inventory.hasItemStack(ItemCave.EnumType.MINER_ORB.getItemStack()))
-						{
-							if (RANDOM.nextDouble() < 0.3D)
-							{
-								amount += Math.max(amount / 2, 1);
-							}
-						}
-
-						stats.addPoint(amount);
-
-						MinerStats.setLastMine(new BlockMeta(state), amount);
-
-						CaveNetworkRegistry.sendTo(new LastMineMessage(MinerStats.lastMine, MinerStats.lastMinePoint), thePlayer);
+						amount += Math.max(amount / 2, 1);
 					}
 				}
 
-				if (CavernAPI.dimension.isEntityInIceCavern(thePlayer))
+				stats.addPoint(amount);
+
+				MinerStats.setLastMine(new BlockMeta(state), amount);
+
+				CaveNetworkRegistry.sendTo(new LastMineMessage(MinerStats.lastMine, MinerStats.lastMinePoint), player);
+			}
+		}
+
+		if (CavernAPI.dimension.isEntityInIceCavern(player))
+		{
+			if (player.capabilities.isCreativeMode)
+			{
+				return;
+			}
+
+			IBlockState state = event.getState();
+
+			if (state.getBlock() == Blocks.PACKED_ICE)
+			{
+				World world = event.getWorld();
+				BlockPos pos = event.getPos();
+
+				if (RANDOM.nextDouble() < 0.05D)
 				{
-					IBlockState state = event.getState();
+					Block.spawnAsEntity(world, pos, new ItemStack(Blocks.ICE));
+				}
+				else if (RANDOM.nextDouble() < 0.0325D)
+				{
+					WeightedItemStack randomItem = WeightedRandom.getRandomItem(RANDOM, WorldProviderIceCavern.HIBERNATE_ITEMS);
 
-					if (!thePlayer.capabilities.isCreativeMode && state != null && state.getBlock() == Blocks.PACKED_ICE)
-					{
-						World world = event.getWorld();
-						BlockPos pos = event.getPos();
+					Block.spawnAsEntity(world, pos, randomItem.getItemStack());
+				}
+				else if (RANDOM.nextDouble() < 0.0085D)
+				{
+					WeightedItemStack randomItem = WeightedRandom.getRandomItem(RANDOM, BlockCave.RANDOMITE_ITEMS);
 
-						if (RANDOM.nextDouble() < 0.05D)
-						{
-							Block.spawnAsEntity(world, pos, new ItemStack(Blocks.ICE));
-						}
-						else if (RANDOM.nextDouble() < 0.0325D)
-						{
-							WeightedItemStack randomItem = WeightedRandom.getRandomItem(RANDOM, WorldProviderIceCavern.HIBERNATE_ITEMS);
-
-							Block.spawnAsEntity(world, pos, randomItem.getItemStack());
-						}
-						else if (RANDOM.nextDouble() < 0.0085D)
-						{
-							WeightedItemStack randomItem = WeightedRandom.getRandomItem(RANDOM, BlockCave.RANDOMITE_ITEMS);
-
-							Block.spawnAsEntity(world, pos, randomItem.getItemStack());
-						}
-						else if (IceEquipment.isIceEquipment(thePlayer.getHeldItemMainhand()) && RANDOM.nextDouble() < 0.03D || RANDOM.nextDouble() < 0.01D)
-						{
-							Block.spawnAsEntity(world, pos, new ItemStack(Blocks.PACKED_ICE));
-						}
-					}
+					Block.spawnAsEntity(world, pos, randomItem.getItemStack());
+				}
+				else if (IceEquipment.isIceEquipment(player.getHeldItemMainhand()) && RANDOM.nextDouble() < 0.03D || RANDOM.nextDouble() < 0.01D)
+				{
+					Block.spawnAsEntity(world, pos, new ItemStack(Blocks.PACKED_ICE));
 				}
 			}
 		}
@@ -441,41 +411,45 @@ public class CaveEventHooks
 	{
 		EntityLivingBase entity = event.getEntityLiving();
 
+		if (!(entity instanceof EntityPlayer))
+		{
+			return;
+		}
+
+		EntityPlayer player = (EntityPlayer)entity;
+
 		if (CavernAPI.dimension.isEntityInCaves(entity))
 		{
-			if (entity instanceof EntityPlayer)
+			if (player.isInsideOfMaterial(Material.WATER))
 			{
-				EntityPlayer player = (EntityPlayer)entity;
+				IMinerStats stats = MinerStats.get(player);
 
-				if (player.isInsideOfMaterial(Material.WATER))
+				if (stats.getRank() < MinerRank.AQUA_MINER.getRank())
 				{
-					IMinerStats stats = MinerStats.get(player);
+					return;
+				}
 
-					if (stats.getRank() >= MinerRank.AQUA_MINER.getRank())
+				if (!player.canBreatheUnderwater() && !player.isPotionActive(MobEffects.WATER_BREATHING) && player.ticksExisted % 20 == 0)
+				{
+					player.setAir(300);
+				}
+
+				if (!player.capabilities.isFlying && EnchantmentHelper.getDepthStriderModifier(player) <= 1)
+				{
+					double posY = player.posY;
+					float motion = 1.165F;
+
+					player.motionX *= motion;
+					player.motionZ *= motion;
+
+					if (player.isCollidedHorizontally && player.isOffsetPositionInLiquid(player.motionX, player.motionY + 0.6000000238418579D - player.posY + posY, player.motionZ))
 					{
-						if (!player.canBreatheUnderwater() && !player.isPotionActive(MobEffects.WATER_BREATHING) && player.ticksExisted % 20 == 0)
-						{
-							player.setAir(300);
-						}
+						player.motionY = 0.30000001192092896D;
+					}
 
-						if (!player.capabilities.isFlying && EnchantmentHelper.getDepthStriderModifier(player) <= 1)
-						{
-							double posY = player.posY;
-							float motion = 1.165F;
-
-							player.motionX *= motion;
-							player.motionZ *= motion;
-
-							if (player.isCollidedHorizontally && player.isOffsetPositionInLiquid(player.motionX, player.motionY + 0.6000000238418579D - player.posY + posY, player.motionZ))
-							{
-								player.motionY = 0.30000001192092896D;
-							}
-
-							if (player.isSneaking())
-							{
-								player.motionY = 0.0D;
-							}
-						}
+					if (player.isSneaking())
+					{
+						player.motionY = 0.0D;
 					}
 				}
 			}
@@ -483,7 +457,7 @@ public class CaveEventHooks
 
 		if (entity instanceof EntityPlayer)
 		{
-			MagicianStats.get((EntityPlayer)entity).onUpdate();
+			MagicianStats.get(player).onUpdate();
 		}
 	}
 
@@ -562,23 +536,19 @@ public class CaveEventHooks
 		if (CavernAPI.dimension.isEntityInCaves(player))
 		{
 			SleepResult result = null;
-			NBTTagCompound data = player.getEntityData();
 			World world = player.world;
 
 			if (!world.isRemote)
 			{
+				IPlayerData playerData = PlayerData.get(player);
 				long worldTime = world.getTotalWorldTime();
-				long sleepTime;
+				long sleepTime = playerData.getLastSleepTime();
 
-				if (data.hasKey(NBT_SLEEPTIME, NBT.TAG_ANY_NUMERIC))
-				{
-					sleepTime = data.getLong("Cavern:SleepTime");
-				}
-				else
+				if (sleepTime <= 0L)
 				{
 					sleepTime = worldTime;
 
-					data.setLong(NBT_SLEEPTIME, worldTime);
+					playerData.setLastSleepTime(sleepTime);
 				}
 
 				long requireTime = GeneralConfig.sleepWaitTime * 20;
@@ -611,7 +581,7 @@ public class CaveEventHooks
 					MagicianStats.get(player).addMP(100);
 				}
 
-				data.setLong(NBT_SLEEPTIME, world.getTotalWorldTime());
+				PlayerData.get(player).setLastSleepTime(world.getTotalWorldTime());
 			}
 
 			event.setResult(result);

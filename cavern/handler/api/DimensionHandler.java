@@ -44,6 +44,12 @@ public class DimensionHandler implements IDimension
 	}
 
 	@Override
+	public DimensionType getHugeCavernDimension()
+	{
+		return CaveType.DIM_HUGE_CAVERN;
+	}
+
+	@Override
 	public boolean isAquaCavernDisabled()
 	{
 		return getAquaCavernDimension() == null;
@@ -71,6 +77,12 @@ public class DimensionHandler implements IDimension
 	public boolean isCaveniaDisabled()
 	{
 		return getCaveniaDimension() == null;
+	}
+
+	@Override
+	public boolean isHugeCavernDisabled()
+	{
+		return getHugeCavernDimension() == null;
 	}
 
 	@Override
@@ -140,9 +152,20 @@ public class DimensionHandler implements IDimension
 	}
 
 	@Override
+	public boolean isEntityInHugeCavern(Entity entity)
+	{
+		if (entity == null || isHugeCavernDisabled())
+		{
+			return false;
+		}
+
+		return entity.dimension == getHugeCavernDimension().getId();
+	}
+
+	@Override
 	public boolean isEntityInCaves(Entity entity)
 	{
-		return isEntityInCavern(entity) || isEntityInAquaCavern(entity) || isEntityInCaveland(entity) || isEntityInIceCavern(entity) || isEntityInRuinsCavern(entity) || isEntityInCavenia(entity);
+		return isEntityInCavern(entity) || isEntityInAquaCavern(entity) || isEntityInCaveland(entity) || isEntityInIceCavern(entity) || isEntityInRuinsCavern(entity) || isEntityInCavenia(entity) || isEntityInHugeCavern(entity);
 	}
 
 	@Override
@@ -212,8 +235,19 @@ public class DimensionHandler implements IDimension
 	}
 
 	@Override
+	public boolean isHugeCavern(DimensionType type)
+	{
+		if (type == null || isHugeCavernDisabled())
+		{
+			return false;
+		}
+
+		return type == getHugeCavernDimension();
+	}
+
+	@Override
 	public boolean isCaves(DimensionType type)
 	{
-		return isCavern(type) || isAquaCavern(type) || isCaveland(type) || isIceCavern(type) || isRuinsCavern(type) || isCavenia(type);
+		return isCavern(type) || isAquaCavern(type) || isCaveland(type) || isIceCavern(type) || isRuinsCavern(type) || isCavenia(type) || isHugeCavern(type);
 	}
 }

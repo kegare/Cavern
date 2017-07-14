@@ -1,13 +1,7 @@
 package cavern.network.server;
 
-import cavern.api.CavernAPI;
-import cavern.config.AquaCavernConfig;
-import cavern.config.CavelandConfig;
-import cavern.config.CaveniaConfig;
-import cavern.config.CavernConfig;
-import cavern.config.IceCavernConfig;
-import cavern.config.RuinsCavernConfig;
 import cavern.util.DimensionRegeneration;
+import cavern.world.CaveType;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -15,104 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class RegenerationMessage implements IMessage, IMessageHandler<RegenerationMessage, IMessage>
 {
-	private boolean backup;
-
-	protected boolean cavern;
-	protected boolean aquaCavern;
-	protected boolean caveland;
-	protected boolean iceCavern;
-	protected boolean ruinsCavern;
-	protected boolean cavenia;
-
-	public RegenerationMessage() {}
-
-	public RegenerationMessage(boolean backup)
-	{
-		this.backup = backup;
-	}
-
-	public RegenerationMessage(boolean backup, boolean cavern, boolean aquaCavern, boolean caveland, boolean iceCavern, boolean ruinsCavern, boolean cavenia)
-	{
-		this(backup);
-		this.cavern = cavern;
-		this.aquaCavern = aquaCavern;
-		this.caveland = caveland;
-		this.iceCavern = iceCavern;
-		this.ruinsCavern = ruinsCavern;
-		this.cavenia = cavenia;
-	}
-
-	public RegenerationMessage setCavern()
-	{
-		return setCavern(true);
-	}
-
-	public RegenerationMessage setCavern(boolean value)
-	{
-		cavern = value;
-
-		return this;
-	}
-
-	public RegenerationMessage setAquaCavern()
-	{
-		return setAquaCavern(true);
-	}
-
-	public RegenerationMessage setAquaCavern(boolean value)
-	{
-		aquaCavern = value;
-
-		return this;
-	}
-
-	public RegenerationMessage setCaveland()
-	{
-		return setCaveland(true);
-	}
-
-	public RegenerationMessage setCaveland(boolean value)
-	{
-		caveland = value;
-
-		return this;
-	}
-
-	public RegenerationMessage setIceCavern()
-	{
-		return setIceCavern(true);
-	}
-
-	public RegenerationMessage setIceCavern(boolean value)
-	{
-		iceCavern = value;
-
-		return this;
-	}
-
-	public RegenerationMessage setRuinsCavern()
-	{
-		return setRuinsCavern(true);
-	}
-
-	public RegenerationMessage setRuinsCavern(boolean value)
-	{
-		ruinsCavern = value;
-
-		return this;
-	}
-
-	public RegenerationMessage setCavenia()
-	{
-		return setRuinsCavern(true);
-	}
-
-	public RegenerationMessage setCavenia(boolean value)
-	{
-		cavenia = value;
-
-		return this;
-	}
+	public boolean backup, cavern, aquaCavern, caveland, iceCavern, ruinsCavern, cavenia, hugeCavern;
 
 	@Override
 	public void fromBytes(ByteBuf buf)
@@ -124,6 +21,7 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		iceCavern = buf.readBoolean();
 		ruinsCavern = buf.readBoolean();
 		cavenia = buf.readBoolean();
+		hugeCavern = buf.readBoolean();
 	}
 
 	@Override
@@ -136,6 +34,7 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		buf.writeBoolean(iceCavern);
 		buf.writeBoolean(ruinsCavern);
 		buf.writeBoolean(cavenia);
+		buf.writeBoolean(hugeCavern);
 	}
 
 	@Override
@@ -143,32 +42,37 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 	{
 		if (message.cavern)
 		{
-			DimensionRegeneration.regenerate(CavernConfig.dimensionId, message.backup);
+			DimensionRegeneration.regenerate(CaveType.DIM_CAVERN, message.backup);
 		}
 
-		if (message.aquaCavern && !CavernAPI.dimension.isAquaCavernDisabled())
+		if (message.aquaCavern)
 		{
-			DimensionRegeneration.regenerate(AquaCavernConfig.dimensionId, message.backup);
+			DimensionRegeneration.regenerate(CaveType.DIM_AQUA_CAVERN, message.backup);
 		}
 
-		if (message.caveland && !CavernAPI.dimension.isCavelandDisabled())
+		if (message.caveland)
 		{
-			DimensionRegeneration.regenerate(CavelandConfig.dimensionId, message.backup);
+			DimensionRegeneration.regenerate(CaveType.DIM_CAVELAND, message.backup);
 		}
 
-		if (message.iceCavern && !CavernAPI.dimension.isIceCavernDisabled())
+		if (message.iceCavern)
 		{
-			DimensionRegeneration.regenerate(IceCavernConfig.dimensionId, message.backup);
+			DimensionRegeneration.regenerate(CaveType.DIM_ICE_CAVERN, message.backup);
 		}
 
-		if (message.ruinsCavern && !CavernAPI.dimension.isRuinsCavernDisabled())
+		if (message.ruinsCavern)
 		{
-			DimensionRegeneration.regenerate(RuinsCavernConfig.dimensionId, message.backup);
+			DimensionRegeneration.regenerate(CaveType.DIM_RUINS_CAVERN, message.backup);
 		}
 
-		if (message.cavenia && !CavernAPI.dimension.isCaveniaDisabled())
+		if (message.cavenia)
 		{
-			DimensionRegeneration.regenerate(CaveniaConfig.dimensionId, message.backup);
+			DimensionRegeneration.regenerate(CaveType.DIM_CAVENIA, message.backup);
+		}
+
+		if (message.hugeCavern)
+		{
+			DimensionRegeneration.regenerate(CaveType.DIM_HUGE_CAVERN, message.backup);
 		}
 
 		return null;

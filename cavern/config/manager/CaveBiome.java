@@ -1,7 +1,5 @@
 package cavern.config.manager;
 
-import com.google.common.base.Objects;
-
 import cavern.util.BlockMeta;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.WeightedRandom;
@@ -10,6 +8,7 @@ import net.minecraft.world.biome.Biome;
 public class CaveBiome extends WeightedRandom.Item implements Comparable<CaveBiome>
 {
 	private final Biome biome;
+
 	private BlockMeta terrainBlock;
 	private BlockMeta topBlock;
 
@@ -38,21 +37,19 @@ public class CaveBiome extends WeightedRandom.Item implements Comparable<CaveBio
 			return false;
 		}
 
-		CaveBiome biome = (CaveBiome)obj;
-
-		return getBiome() == biome.getBiome();
+		return biome == ((CaveBiome)obj).biome;
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hashCode(Biome.getIdForBiome(getBiome()));
+		return biome.getRegistryName().hashCode();
 	}
 
 	@Override
 	public int compareTo(CaveBiome o)
 	{
-		return o == null ? -1 : Integer.compare(Biome.getIdForBiome(getBiome()), Biome.getIdForBiome(o.getBiome()));
+		return o == null ? -1 : Integer.compare(Biome.getIdForBiome(biome), Biome.getIdForBiome(o.biome));
 	}
 
 	public Biome getBiome()

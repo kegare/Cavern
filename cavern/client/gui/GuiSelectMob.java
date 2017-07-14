@@ -1,10 +1,12 @@
 package cavern.client.gui;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -302,8 +304,7 @@ public class GuiSelectMob extends GuiScreen
 			}
 			else if (isCtrlKeyDown() && code == Keyboard.KEY_A)
 			{
-				mobList.selected.clear();
-				mobList.selected.addAll(mobList.contents);
+				mobList.contents.forEach(entry -> mobList.selected.add(entry));
 			}
 		}
 	}
@@ -352,15 +353,7 @@ public class GuiSelectMob extends GuiScreen
 
 			if (arrayEntry != null)
 			{
-				for (Object obj : arrayEntry.getCurrentValues())
-				{
-					String value = String.valueOf(obj);
-
-					if (!Strings.isNullOrEmpty(value))
-					{
-						selected.add(value);
-					}
-				}
+				Arrays.stream(arrayEntry.getCurrentValues()).map(obj -> Objects.toString(obj, "")).filter(str -> !Strings.isNullOrEmpty(str)).forEach(str -> selected.add(str));
 			}
 		}
 

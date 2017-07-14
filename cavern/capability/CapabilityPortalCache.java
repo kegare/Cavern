@@ -1,6 +1,6 @@
 package cavern.capability;
 
-import cavern.stats.IPortalCache;
+import cavern.api.IPortalCache;
 import cavern.stats.PortalCache;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;

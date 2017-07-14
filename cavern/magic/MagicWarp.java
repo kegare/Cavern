@@ -173,7 +173,10 @@ public class MagicWarp implements IPlainMagic
 				return false;
 			}
 
-			CaveUtils.setLocationAndAngles(player, pos);
+			if (!player.attemptTeleport(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D))
+			{
+				return false;
+			}
 
 			setWarpPoint(null, player.dimension);
 

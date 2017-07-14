@@ -318,7 +318,7 @@ public class GuiMiningPointsEditor extends GuiScreen
 					pointList.selected.clear();
 					break;
 				case 5:
-					pointList.selected.addAll(pointList.points);
+					pointList.points.forEach(entry -> pointList.selected.add(entry));
 
 					actionPerformed(removeButton);
 					break;
@@ -347,29 +347,41 @@ public class GuiMiningPointsEditor extends GuiScreen
 
 	protected GuiSelectBlock createSelectBlockGuiScreen()
 	{
-		return new GuiSelectBlock(this, selected ->
+		Set<BlockMeta> invisibleBlocks = pointList.points.stream().filter(PointEntry::isBlockMeta).map(PointEntry::getBlockMeta).collect(Collectors.toSet());
+
+		return new GuiSelectBlock(this, new ISelectorCallback<BlockMeta>()
 		{
-			if (editMode)
+			@Override
+			public boolean isValidEntry(BlockMeta entry)
 			{
-				return;
+				return entry != null && !invisibleBlocks.contains(entry);
 			}
 
-			pointList.selected.clear();
-
-			for (BlockMeta blockMeta : selected)
+			@Override
+			public void onSelected(List<BlockMeta> selected)
 			{
-				PointEntry entry = new PointEntry(blockMeta, 1);
-
-				if (pointList.points.addIfAbsent(entry))
+				if (editMode)
 				{
-					pointList.contents.addIfAbsent(entry);
-
-					pointList.selected.add(entry);
+					return;
 				}
-			}
 
-			pointList.scrollToTop();
-			pointList.scrollToSelected();
+				pointList.selected.clear();
+
+				for (BlockMeta blockMeta : selected)
+				{
+					PointEntry entry = new PointEntry(blockMeta, 1);
+
+					if (pointList.points.addIfAbsent(entry))
+					{
+						pointList.contents.addIfAbsent(entry);
+
+						pointList.selected.add(entry);
+					}
+				}
+
+				pointList.scrollToTop();
+				pointList.scrollToSelected();
+			}
 		});
 	}
 
@@ -386,12 +398,14 @@ public class GuiMiningPointsEditor extends GuiScreen
 
 	protected GuiSelectOreDict createSelectOreDictGuiScreen()
 	{
+		Set<OreDictEntry> invisibleDicts = pointList.points.stream().filter(PointEntry::isOreDict).map(PointEntry::getOreDict).collect(Collectors.toSet());
+
 		return new GuiSelectOreDict(this, new ISelectorCallback<OreDictEntry>()
 		{
 			@Override
 			public boolean isValidEntry(OreDictEntry entry)
 			{
-				return !entry.getItemStack().isEmpty() && entry.getItemStack().getItem() instanceof ItemBlock;
+				return !entry.getItemStack().isEmpty() && entry.getItemStack().getItem() instanceof ItemBlock && !invisibleDicts.contains(entry);
 			}
 
 			@Override
@@ -668,7 +682,7 @@ public class GuiMiningPointsEditor extends GuiScreen
 				}
 				else if (isCtrlKeyDown() && code == Keyboard.KEY_A)
 				{
-					pointList.selected.addAll(pointList.contents);
+					pointList.contents.forEach(entry -> pointList.selected.add(entry));
 				}
 				else if (code == Keyboard.KEY_DELETE && !pointList.selected.isEmpty())
 				{
@@ -987,6 +1001,11 @@ public class GuiMiningPointsEditor extends GuiScreen
 			oreDict = entry;
 		}
 
+		public boolean isBlockMeta()
+		{
+			return blockMeta != null;
+		}
+
 		public boolean isOreDict()
 		{
 			return oreDict != null;
@@ -1025,7 +1044,7 @@ public class GuiMiningPointsEditor extends GuiScreen
 			{
 				return oreDict.equals(entry.oreDict);
 			}
-			else if (!isOreDict() && !entry.isOreDict())
+			else if (isBlockMeta() && entry.isBlockMeta())
 			{
 				return Objects.equal(blockMeta, entry.blockMeta);
 			}

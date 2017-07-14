@@ -162,12 +162,12 @@ public class EntityCavenicSkeleton extends EntitySkeleton implements ICavenicMob
 			return true;
 		}
 
-		if (source.getImmediateSource() == this || source.getTrueSource() == this)
+		if (source.getTrueSource() == this || source.getImmediateSource() == this)
 		{
 			return true;
 		}
 
-		if (isFriends(source.getImmediateSource()) || isFriends(source.getTrueSource()))
+		if (isFriends(source.getTrueSource()) || isFriends(source.getImmediateSource()))
 		{
 			return true;
 		}

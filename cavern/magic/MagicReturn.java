@@ -2,13 +2,11 @@ package cavern.magic;
 
 import cavern.core.CaveSounds;
 import cavern.magic.IMagic.IPlayerMagic;
-import cavern.util.CaveUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.World;
 
 public class MagicReturn implements IPlayerMagic
 {
@@ -91,12 +89,8 @@ public class MagicReturn implements IPlayerMagic
 			return false;
 		}
 
-		World world = player.world;
-
-		if (world.getBlockState(spawnPos.down()).isFullBlock() && world.isAirBlock(spawnPos.up(2)))
+		if (targetPlayer.attemptTeleport(spawnPos.getX() + 0.5D, spawnPos.getY() + 0.5D, spawnPos.getZ() + 0.5D))
 		{
-			CaveUtils.setLocationAndAngles(targetPlayer, spawnPos);
-
 			return true;
 		}
 

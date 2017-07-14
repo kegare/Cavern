@@ -569,12 +569,9 @@ public class GuiVeinsEditor extends GuiScreen
 						{
 							CaveVein vein = new CaveVein(blockMeta, 1, 1, 1, 255);
 
-							if (veinList.veins.addIfAbsent(vein))
-							{
-								veinList.contents.addIfAbsent(vein);
-
-								veinList.selected.add(vein);
-							}
+							veinList.veins.addIfAbsent(vein);
+							veinList.contents.addIfAbsent(vein);
+							veinList.selected.add(vein);
 						}
 
 						veinList.scrollToTop();
@@ -592,7 +589,7 @@ public class GuiVeinsEditor extends GuiScreen
 					veinList.selected.clear();
 					break;
 				case 5:
-					veinList.selected.addAll(veinList.veins);
+					veinList.veins.forEach(entry -> veinList.selected.add(entry));
 
 					actionPerformed(removeButton);
 					break;
@@ -1036,7 +1033,7 @@ public class GuiVeinsEditor extends GuiScreen
 				}
 				else if (isCtrlKeyDown() && code == Keyboard.KEY_A)
 				{
-					veinList.selected.addAll(veinList.contents);
+					veinList.contents.forEach(entry -> veinList.selected.add(entry));
 				}
 				else if (code == Keyboard.KEY_DELETE && !veinList.selected.isEmpty())
 				{

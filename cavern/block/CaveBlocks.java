@@ -47,6 +47,7 @@ public class CaveBlocks
 	public static final BlockPortalCaveland CAVELAND_PORTAL = new BlockPortalCaveland();
 	public static final BlockPortalIceCavern ICE_CAVERN_PORTAL = new BlockPortalIceCavern();
 	public static final BlockPortalRuinsCavern RUINS_CAVERN_PORTAL = new BlockPortalRuinsCavern();
+	public static final BlockPortalHugeCavern HUGE_CAVERN_PORTAL = new BlockPortalHugeCavern();
 	public static final BlockCave CAVE_BLOCK = new BlockCave();
 	public static final BlockAcresia ACRESIA = new BlockAcresia();
 	public static final BlockLogPerverted PERVERTED_LOG = new BlockLogPerverted();
@@ -73,6 +74,7 @@ public class CaveBlocks
 		registerBlock(registry, CAVELAND_PORTAL.setRegistryName("caveland_portal"));
 		registerBlock(registry, ICE_CAVERN_PORTAL.setRegistryName("ice_cavern_portal"));
 		registerBlock(registry, RUINS_CAVERN_PORTAL.setRegistryName("ruins_cavern_portal"));
+		registerBlock(registry, HUGE_CAVERN_PORTAL.setRegistryName("huge_cavern_portal"));
 		registerBlock(registry, CAVE_BLOCK.setRegistryName("cave_block"));
 		registerBlock(registry, ACRESIA.setRegistryName("acresia"));
 		registerBlock(registry, PERVERTED_LOG.setRegistryName("perverted_log"));
@@ -88,6 +90,7 @@ public class CaveBlocks
 		CaveItems.registerItem(registry, new ItemPortalCave(CAVELAND_PORTAL));
 		CaveItems.registerItem(registry, new ItemPortalCave(ICE_CAVERN_PORTAL));
 		CaveItems.registerItem(registry, new ItemPortalCave(RUINS_CAVERN_PORTAL));
+		CaveItems.registerItem(registry, new ItemPortalCave(HUGE_CAVERN_PORTAL));
 		CaveItems.registerItem(registry, new ItemBlockCave(CAVE_BLOCK));
 		CaveItems.registerItem(registry, new ItemAcresia(ACRESIA));
 		CaveItems.registerItem(registry, new ItemBlockPerverted(PERVERTED_LOG, Blocks.LOG));
@@ -109,6 +112,7 @@ public class CaveBlocks
 		registerModel(CAVELAND_PORTAL);
 		registerModel(ICE_CAVERN_PORTAL);
 		registerModel(RUINS_CAVERN_PORTAL);
+		registerModel(HUGE_CAVERN_PORTAL);
 		registerModels(CAVE_BLOCK, "aquamarine_ore", "aquamarine_block", "magnite_ore", "magnite_block", "randomite_ore",
 			"hexcite_ore", "hexcite_block", "fissured_stone", "fissured_packed_ice", "manalite_ore", "manalite_block");
 		registerModels(ACRESIA, "acresia_seeds", "acresia_fruits");

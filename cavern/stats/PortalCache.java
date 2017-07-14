@@ -3,162 +3,188 @@ package cavern.stats;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 
+import cavern.api.IPortalCache;
 import cavern.capability.CaveCapabilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class PortalCache implements IPortalCache
 {
-	private final Map<Integer, Integer> lastDim = Maps.newHashMap();
-	private final Table<Integer, Integer, BlockPos> lastPos = HashBasedTable.create();
+	private final Map<ResourceLocation, DimensionType> lastDim = Maps.newHashMap();
+	private final Table<ResourceLocation, DimensionType, BlockPos> lastPos = HashBasedTable.create();
 
-	public static IPortalCache get(Entity entity)
+	@Override
+	public DimensionType getLastDim(ResourceLocation key)
 	{
-		IPortalCache cache = CaveCapabilities.getCapability(entity, CaveCapabilities.PORTAL_CACHE);
-
-		if (cache == null)
-		{
-			return new PortalCache();
-		}
-
-		return cache;
+		return getLastDim(key, DimensionType.OVERWORLD);
 	}
 
 	@Override
-	public int getLastDim(int type)
+	public DimensionType getLastDim(ResourceLocation key, DimensionType nullDefault)
 	{
-		Integer ret = lastDim.get(Integer.valueOf(type));
-
-		if (ret == null)
-		{
-			return 0;
-		}
-
-		return ret.intValue();
+		return lastDim.getOrDefault(key, nullDefault);
 	}
 
 	@Override
-	public void setLastDim(int type, int dim)
+	public void setLastDim(ResourceLocation key, DimensionType type)
 	{
-		lastDim.put(Integer.valueOf(type), Integer.valueOf(dim));
+		lastDim.put(key, type);
 	}
 
 	@Override
-	public BlockPos getLastPos(int type, int dim)
+	public BlockPos getLastPos(ResourceLocation key, DimensionType type)
 	{
-		return lastPos.get(Integer.valueOf(type), Integer.valueOf(dim));
+		return lastPos.get(key, type);
 	}
 
 	@Override
-	public BlockPos getLastPos(int type, int dim, BlockPos pos)
+	public BlockPos getLastPos(ResourceLocation key, DimensionType type, BlockPos pos)
 	{
-		BlockPos ret = getLastPos(type, dim);
-
-		return ret == null ? pos == null ? BlockPos.ORIGIN : pos : ret;
+		return ObjectUtils.defaultIfNull(getLastPos(key, type), ObjectUtils.defaultIfNull(pos, BlockPos.ORIGIN));
 	}
 
 	@Override
-	public boolean hasLastPos(int type, int dim)
+	public boolean hasLastPos(ResourceLocation key, DimensionType type)
 	{
-		return lastPos.contains(Integer.valueOf(type), Integer.valueOf(dim));
+		return lastPos.contains(key, type);
 	}
 
 	@Override
-	public void setLastPos(int type, int dim, BlockPos pos)
+	public void setLastPos(ResourceLocation key, DimensionType type, BlockPos pos)
 	{
 		if (pos == null)
 		{
-			lastPos.remove(Integer.valueOf(type), Integer.valueOf(dim));
+			lastPos.remove(key, type);
 		}
 		else
 		{
-			lastPos.put(Integer.valueOf(type), Integer.valueOf(dim), pos);
+			lastPos.put(key, type, pos);
+		}
+	}
+
+	@Override
+	public void clearLastPos(ResourceLocation key, DimensionType type)
+	{
+		for (Cell<ResourceLocation, DimensionType, BlockPos> entry : lastPos.cellSet())
+		{
+			if ((key == null || entry.getRowKey().equals(key)) && entry.getColumnKey() == type)
+			{
+				lastPos.remove(entry.getRowKey(), entry.getColumnKey());
+			}
 		}
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt)
 	{
-		NBTTagList list = new NBTTagList();
+		NBTTagList tagList = new NBTTagList();
 
-		for (Entry<Integer, Integer> entry : lastDim.entrySet())
+		for (Entry<ResourceLocation, DimensionType> entry : lastDim.entrySet())
 		{
-			Integer typeObj = entry.getKey();
-			Integer dimObj = entry.getValue();
+			ResourceLocation key = entry.getKey();
+			DimensionType type = entry.getValue();
 
-			if (typeObj != null && dimObj != null)
+			if (key != null && type != null)
 			{
-				NBTTagCompound data = new NBTTagCompound();
+				NBTTagCompound tag = new NBTTagCompound();
 
-				data.setInteger("Type", typeObj.intValue());
-				data.setInteger("Dim", dimObj.intValue());
+				tag.setString("Key", key.toString());
+				tag.setInteger("Dim", type.getId());
 
-				list.appendTag(data);
+				tagList.appendTag(tag);
 			}
 		}
 
-		nbt.setTag("LastDim", list);
+		nbt.setTag("LastDim", tagList);
 
-		list = new NBTTagList();
+		tagList = new NBTTagList();
 
-		for (Cell<Integer, Integer, BlockPos> entry : lastPos.cellSet())
+		for (Cell<ResourceLocation, DimensionType, BlockPos> entry : lastPos.cellSet())
 		{
-			Integer typeObj = entry.getRowKey();
-			Integer dimObj = entry.getColumnKey();
+			ResourceLocation key = entry.getRowKey();
+			DimensionType type = entry.getColumnKey();
 			BlockPos pos = entry.getValue();
 
-			if (typeObj != null && dimObj != null && pos != null)
+			if (key != null && type != null && pos != null)
 			{
-				NBTTagCompound data = new NBTTagCompound();
+				NBTTagCompound tag = NBTUtil.createPosTag(pos);
 
-				data.setInteger("Type", typeObj.intValue());
-				data.setInteger("Dim", dimObj.intValue());
+				tag.setString("Key", key.toString());
+				tag.setInteger("Dim", type.getId());
 
-				data.setInteger("X", pos.getX());
-				data.setInteger("Y", pos.getY());
-				data.setInteger("Z", pos.getZ());
-
-				list.appendTag(data);
+				tagList.appendTag(tag);
 			}
 		}
 
-		nbt.setTag("LastPos", list);
+		nbt.setTag("LastPos", tagList);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		NBTTagList list = nbt.getTagList("LastDim", NBT.TAG_COMPOUND);
+		NBTTagList tagList = nbt.getTagList("LastDim", NBT.TAG_COMPOUND);
 
-		for (int i = 0; i < list.tagCount(); ++i)
+		if (tagList != null && tagList.tagCount() > 0)
 		{
-			NBTTagCompound data = list.getCompoundTagAt(i);
-			int type = data.getInteger("Type");
-			int dim = data.getInteger("Dim");
+			for (int i = 0; i < tagList.tagCount(); ++i)
+			{
+				NBTTagCompound tag = tagList.getCompoundTagAt(i);
+				DimensionType type = null;
 
-			lastDim.put(Integer.valueOf(type), Integer.valueOf(dim));
+				try
+				{
+					type = DimensionType.getById(tag.getInteger("Dim"));
+				}
+				catch (IllegalArgumentException e)
+				{
+					continue;
+				}
+
+				if (type != null && tag.hasKey("Key", NBT.TAG_STRING))
+				{
+					lastDim.put(new ResourceLocation(tag.getString("Key")), type);
+				}
+			}
 		}
 
-		list = nbt.getTagList("LastPos", NBT.TAG_COMPOUND);
+		tagList = nbt.getTagList("LastPos", NBT.TAG_COMPOUND);
 
-		for (int i = 0; i < list.tagCount(); ++i)
+		for (int i = 0; i < tagList.tagCount(); ++i)
 		{
-			NBTTagCompound data = list.getCompoundTagAt(i);
-			int type = data.getInteger("Type");
-			int dim = data.getInteger("Dim");
-			int x = data.getInteger("X");
-			int y = data.getInteger("Y");
-			int z = data.getInteger("Z");
+			NBTTagCompound tag = tagList.getCompoundTagAt(i);
+			DimensionType type = null;
 
-			lastPos.put(Integer.valueOf(type), Integer.valueOf(dim), new BlockPos(x, y, z));
+			try
+			{
+				type = DimensionType.getById(tag.getInteger("Dim"));
+			}
+			catch (IllegalArgumentException e)
+			{
+				continue;
+			}
+
+			if (type != null && tag.hasKey("Key", NBT.TAG_STRING))
+			{
+				lastPos.put(new ResourceLocation(tag.getString("Key")), type, NBTUtil.getPosFromTag(tag));
+			}
 		}
+	}
+
+	public static IPortalCache get(Entity entity)
+	{
+		return ObjectUtils.defaultIfNull(CaveCapabilities.getCapability(entity, CaveCapabilities.PORTAL_CACHE), new PortalCache());
 	}
 }

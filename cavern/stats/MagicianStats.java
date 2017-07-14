@@ -2,6 +2,8 @@ package cavern.stats;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import cavern.api.IMagicianStats;
 import cavern.api.event.MagicianStatsEvent;
 import cavern.capability.CaveCapabilities;
@@ -303,14 +305,7 @@ public class MagicianStats implements IMagicianStats
 
 	public static IMagicianStats get(EntityPlayer player, boolean nullable)
 	{
-		IMagicianStats stats = CaveCapabilities.getCapability(player, CaveCapabilities.MAGICIAN_STATS);
-
-		if (stats == null)
-		{
-			return nullable ? null : new MagicianStats(player);
-		}
-
-		return stats;
+		return ObjectUtils.defaultIfNull(CaveCapabilities.getCapability(player, CaveCapabilities.MAGICIAN_STATS), nullable ? null : new MagicianStats(player));
 	}
 
 	public static boolean executeMagic(EntityPlayer player, IMagic magic)

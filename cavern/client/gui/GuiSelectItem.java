@@ -426,7 +426,7 @@ public class GuiSelectItem extends GuiScreen
 			}
 			else if (isCtrlKeyDown() && code == Keyboard.KEY_A)
 			{
-				itemList.selected.addAll(itemList.contents);
+				itemList.contents.forEach(entry -> itemList.selected.add(entry));
 			}
 		}
 	}

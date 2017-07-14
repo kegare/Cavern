@@ -1,10 +1,10 @@
 package cavern.world;
 
 import cavern.api.CavernAPI;
+import cavern.api.IPortalCache;
 import cavern.block.BlockPortalCavern;
 import cavern.block.CaveBlocks;
 import cavern.config.GeneralConfig;
-import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
 import cavern.util.CaveUtils;
 import net.minecraft.block.BlockPortal;
@@ -16,10 +16,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 
@@ -41,9 +43,9 @@ public class TeleporterCavern extends Teleporter
 		this(worldServer, CaveBlocks.CAVERN_PORTAL);
 	}
 
-	public int getType()
+	public ResourceLocation getKey()
 	{
-		return portal.getType();
+		return portal.getRegistryName();
 	}
 
 	@Override
@@ -54,18 +56,20 @@ public class TeleporterCavern extends Teleporter
 			CaveUtils.setDimensionChange((EntityPlayerMP)entity);
 		}
 
+		DimensionType type = world.provider.getDimensionType();
 		boolean flag = false;
 
 		if (GeneralConfig.portalCache)
 		{
 			IPortalCache cache = PortalCache.get(entity);
+			ResourceLocation key = getKey();
 			double posX = entity.posX;
 			double posY = entity.posY;
 			double posZ = entity.posZ;
 
-			if (cache.hasLastPos(getType(), entity.dimension))
+			if (cache.hasLastPos(key, type))
 			{
-				CaveUtils.setLocationAndAngles(entity, cache.getLastPos(getType(), entity.dimension));
+				CaveUtils.setPositionAndUpdate(entity, cache.getLastPos(key, type));
 
 				if (placeInExistingPortal(entity, rotationYaw))
 				{
@@ -73,16 +77,16 @@ public class TeleporterCavern extends Teleporter
 				}
 				else
 				{
-					CaveUtils.setLocationAndAngles(entity, posX, posY, posZ);
+					entity.setPositionAndUpdate(posX, posY, posZ);
 				}
 			}
 		}
 
 		if (!flag && !placeInExistingPortal(entity, rotationYaw))
 		{
-			if (portal.getType() == CaveType.RUINS_CAVERN && portal.isEntityInCave(entity))
+			if (CavernAPI.dimension.isRuinsCavern(type) && portal.isEntityInCave(entity))
 			{
-				new TeleporterRuinsCavern(world).placeInPortal(entity, rotationYaw);
+				WorldCachedData.get(world).getRuinsTeleporter().placeInPortal(entity, rotationYaw);
 
 				flag = true;
 			}
@@ -269,7 +273,7 @@ public class TeleporterCavern extends Teleporter
 				entity.rotationYaw = rotationYaw - face0.getHorizontalIndex() * 90 + face.getHorizontalIndex() * 90;
 			}
 
-			CaveUtils.setLocationAndAngles(entity, posX, posY, posZ);
+			entity.setPositionAndUpdate(posX, posY, posZ);
 
 			return true;
 		}

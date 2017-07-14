@@ -51,7 +51,7 @@ public class BreakSpeedCache
 			return false;
 		}
 
-		return breakSpeed == entry.breakSpeed;
+		return Float.compare(breakSpeed, entry.breakSpeed) == 0;
 	}
 
 	@Override

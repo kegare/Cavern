@@ -4,6 +4,7 @@ import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CaveniaConfig;
 import cavern.config.CavernConfig;
+import cavern.config.HugeCavernConfig;
 import cavern.config.IceCavernConfig;
 import cavern.config.RuinsCavernConfig;
 import net.minecraft.world.DimensionType;
@@ -17,6 +18,7 @@ public class CaveType
 	public static final int CAVELAND = 3;
 	public static final int ICE_CAVERN = 4;
 	public static final int CAVENIA = 5;
+	public static final int HUGE_CAVERN = 6;
 
 	public static DimensionType DIM_CAVERN;
 	public static DimensionType DIM_RUINS_CAVERN;
@@ -24,6 +26,7 @@ public class CaveType
 	public static DimensionType DIM_CAVELAND;
 	public static DimensionType DIM_ICE_CAVERN;
 	public static DimensionType DIM_CAVENIA;
+	public static DimensionType DIM_HUGE_CAVERN;
 
 	public static void registerDimensions()
 	{
@@ -64,6 +67,13 @@ public class CaveType
 			DIM_CAVENIA = DimensionType.register("Cavenia", "_cavenia", CaveniaConfig.dimensionId, WorldProviderCavenia.class, false);
 
 			DimensionManager.registerDimension(DIM_CAVENIA.getId(), DIM_CAVENIA);
+		}
+
+		if (!HugeCavernConfig.dimensionDisabled)
+		{
+			DIM_HUGE_CAVERN = DimensionType.register("Huge Cavern", "_huge_cavern", HugeCavernConfig.dimensionId, WorldProviderHugeCavern.class, false);
+
+			DimensionManager.registerDimension(DIM_HUGE_CAVERN.getId(), DIM_HUGE_CAVERN);
 		}
 	}
 }

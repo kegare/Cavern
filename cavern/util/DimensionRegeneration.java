@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
@@ -16,6 +18,7 @@ import com.google.common.base.Joiner;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.RegenerationGuiMessage;
 import cavern.network.client.RegenerationGuiMessage.EnumType;
+import cavern.stats.PortalCache;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
@@ -35,13 +38,18 @@ public class DimensionRegeneration
 {
 	public static boolean backup = true;
 
-	public static boolean regenerate(int dim, boolean backup)
+	public static boolean regenerate(@Nullable DimensionType type, boolean backup)
 	{
+		if (type == null)
+		{
+			return false;
+		}
+
 		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
 
 		for (EntityPlayerMP player : server.getPlayerList().getPlayers())
 		{
-			if (player.dimension == dim)
+			if (player.dimension == type.getId())
 			{
 				CaveNetworkRegistry.sendToAll(new RegenerationGuiMessage(EnumType.FAILED));
 
@@ -49,8 +57,7 @@ public class DimensionRegeneration
 			}
 		}
 
-		WorldServer world = server.getWorld(dim);
-		DimensionType type = world.provider.getDimensionType();
+		WorldServer world = server.getWorld(type.getId());
 		File dir = new File(DimensionManager.getCurrentSaveRootDirectory(), world.provider.getSaveFolder());
 		ITextComponent name, text;
 
@@ -86,7 +93,7 @@ public class DimensionRegeneration
 		world.flush();
 		world.getWorldInfo().setDimensionData(type.getId(), null);
 
-		DimensionManager.setWorld(dim, null, server);
+		DimensionManager.setWorld(type.getId(), null, server);
 
 		if (dir.exists())
 		{
@@ -109,9 +116,9 @@ public class DimensionRegeneration
 
 		if (type.shouldLoadSpawn())
 		{
-			DimensionManager.initDimension(dim);
+			DimensionManager.initDimension(type.getId());
 
-			world = server.getWorld(dim);
+			world = server.getWorld(type.getId());
 
 			try
 			{
@@ -128,6 +135,11 @@ public class DimensionRegeneration
 			world.disableLevelSaving = false;
 			world.flushToDisk();
 			world.disableLevelSaving = prevSaving;
+		}
+
+		for (EntityPlayerMP player : server.getPlayerList().getPlayers())
+		{
+			PortalCache.get(player).clearLastPos(null, type);
 		}
 
 		text = new TextComponentTranslation("cavern.regeneration.regenerated", name);

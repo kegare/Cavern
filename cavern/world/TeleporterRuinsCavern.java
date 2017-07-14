@@ -1,6 +1,5 @@
 package cavern.world;
 
-import cavern.util.CaveUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
@@ -21,7 +20,7 @@ public class TeleporterRuinsCavern extends Teleporter
 		entity.rotationYaw = 90.0F;
 		entity.rotationPitch = 10.0F;
 
-		CaveUtils.setLocationAndAngles(entity, 0.5D, 80.0D, 0.5D);
+		entity.setPositionAndUpdate(0.5D, 80.0D, 0.5D);
 
 		if (entity instanceof EntityLivingBase)
 		{

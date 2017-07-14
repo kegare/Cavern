@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharUtils;
@@ -414,26 +414,38 @@ public class GuiBiomesEditor extends GuiScreen
 
 					break;
 				case 3:
-					mc.displayGuiScreen(new GuiSelectBiome(this, selected ->
+					Set<Biome> invisibleBiomes = biomeList.biomes.stream().map(CaveBiome::getBiome).collect(Collectors.toSet());
+
+					mc.displayGuiScreen(new GuiSelectBiome(this, new ISelectorCallback<Biome>()
 					{
-						if (editMode)
+						@Override
+						public boolean isValidEntry(Biome entry)
 						{
-							return;
+							return entry != null && !invisibleBiomes.contains(entry);
 						}
 
-						biomeList.selected.clear();
-
-						for (Biome biome : selected)
+						@Override
+						public void onSelected(List<Biome> selected)
 						{
-							CaveBiome caveBiome = new CaveBiome(biome, 10);
+							if (editMode)
+							{
+								return;
+							}
 
-							biomeList.biomes.addIfAbsent(caveBiome);
-							biomeList.contents.addIfAbsent(caveBiome);
-							biomeList.selected.add(caveBiome);
+							biomeList.selected.clear();
+
+							for (Biome biome : selected)
+							{
+								CaveBiome caveBiome = new CaveBiome(biome, 10);
+
+								biomeList.biomes.addIfAbsent(caveBiome);
+								biomeList.contents.addIfAbsent(caveBiome);
+								biomeList.selected.add(caveBiome);
+							}
+
+							biomeList.scrollToTop();
+							biomeList.scrollToSelected();
 						}
-
-						biomeList.scrollToTop();
-						biomeList.scrollToSelected();
 					}));
 
 					break;
@@ -447,7 +459,7 @@ public class GuiBiomesEditor extends GuiScreen
 					biomeList.selected.clear();
 					break;
 				case 5:
-					biomeList.selected.addAll(biomeList.biomes);
+					biomeList.biomes.forEach(entry -> biomeList.selected.add(entry));
 
 					actionPerformed(removeButton);
 					break;
@@ -745,7 +757,7 @@ public class GuiBiomesEditor extends GuiScreen
 				}
 				else if (isCtrlKeyDown() && code == Keyboard.KEY_A)
 				{
-					biomeList.selected.addAll(biomeList.contents);
+					biomeList.contents.forEach(entry -> biomeList.selected.add(entry));
 				}
 				else if (code == Keyboard.KEY_DELETE && !biomeList.selected.isEmpty())
 				{
@@ -779,11 +791,11 @@ public class GuiBiomesEditor extends GuiScreen
 		});
 	}
 
-	protected class BiomeList extends GuiListSlot implements Comparator<CaveBiome>
+	protected class BiomeList extends GuiListSlot
 	{
 		protected final ArrayListExtended<CaveBiome> biomes = new ArrayListExtended<>();
 		protected final ArrayListExtended<CaveBiome> contents = new ArrayListExtended<>();
-		protected final Set<CaveBiome> selected = Sets.newTreeSet(this);
+		protected final Set<CaveBiome> selected = Sets.newTreeSet();
 
 		protected final Map<String, List<CaveBiome>> filterCache = Maps.newHashMap();
 
@@ -891,19 +903,6 @@ public class GuiBiomesEditor extends GuiScreen
 			CaveBiome biome = contents.get(slot, null);
 
 			return biome != null && selected.contains(biome);
-		}
-
-		@Override
-		public int compare(CaveBiome o1, CaveBiome o2)
-		{
-			int i = CaveUtils.compareWithNull(o1, o2);
-
-			if (i == 0 && o1 != null && o2 != null)
-			{
-				i = Integer.compare(biomes.indexOf(o1), biomes.indexOf(o2));
-			}
-
-			return i;
 		}
 
 		protected void setFilter(String filter)

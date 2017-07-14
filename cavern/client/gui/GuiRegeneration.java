@@ -20,87 +20,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiRegeneration extends GuiScreen
 {
-	protected boolean cavern, aquaCavern, caveland, iceCavern, ruinsCavern, cavenia;
+	public boolean cavern, aquaCavern, caveland, iceCavern, ruinsCavern, cavenia, hugeCavern;
 
 	protected GuiButton regenButton;
 	protected GuiButton cancelButton;
 
-	protected GuiCheckBox backupCheckBox, cavernCheckBox, aquaCavernCheckBox,
-		cavelandCheckBox, iceCavernCheckBox, ruinsCavernCheckBox, caveniaCheckBox;
+	protected GuiCheckBox backupCheckBox, cavernCheckBox, aquaCavernCheckBox, cavelandCheckBox,
+		iceCavernCheckBox, ruinsCavernCheckBox, caveniaCheckBox, hugeCavernCheckBox;
 
 	private HoverChecker backupHoverChecker;
-
-	public GuiRegeneration setCavern()
-	{
-		return setCavern(true);
-	}
-
-	public GuiRegeneration setCavern(boolean value)
-	{
-		cavern = value;
-
-		return this;
-	}
-
-	public GuiRegeneration setAquaCavern()
-	{
-		return setAquaCavern(true);
-	}
-
-	public GuiRegeneration setAquaCavern(boolean value)
-	{
-		aquaCavern = value;
-
-		return this;
-	}
-
-	public GuiRegeneration setCaveland()
-	{
-		return setCaveland(true);
-	}
-
-	public GuiRegeneration setCaveland(boolean value)
-	{
-		caveland = value;
-
-		return this;
-	}
-
-	public GuiRegeneration setIceCavern()
-	{
-		return setIceCavern(true);
-	}
-
-	public GuiRegeneration setIceCavern(boolean value)
-	{
-		iceCavern = value;
-
-		return this;
-	}
-
-	public GuiRegeneration setRuinsCavern()
-	{
-		return setRuinsCavern(true);
-	}
-
-	public GuiRegeneration setRuinsCavern(boolean value)
-	{
-		ruinsCavern = value;
-
-		return this;
-	}
-
-	public GuiRegeneration setCavenia()
-	{
-		return setCavenia(true);
-	}
-
-	public GuiRegeneration setCavenia(boolean value)
-	{
-		cavenia = value;
-
-		return this;
-	}
 
 	@Override
 	public void initGui()
@@ -215,6 +143,22 @@ public class GuiRegeneration extends GuiScreen
 			before = caveniaCheckBox;
 		}
 
+		if (hugeCavernCheckBox == null)
+		{
+			hugeCavernCheckBox = new GuiCheckBox(9, 10, before.y + before.height + 5, "Huge Cavern", hugeCavern);
+		}
+
+		if (CavernAPI.dimension.isHugeCavernDisabled())
+		{
+			hugeCavernCheckBox.enabled = false;
+			hugeCavernCheckBox.visible = false;
+			hugeCavernCheckBox.setIsChecked(false);
+		}
+		else
+		{
+			before = hugeCavernCheckBox;
+		}
+
 		buttonList.clear();
 		buttonList.add(regenButton);
 		buttonList.add(cancelButton);
@@ -225,6 +169,7 @@ public class GuiRegeneration extends GuiScreen
 		buttonList.add(iceCavernCheckBox);
 		buttonList.add(ruinsCavernCheckBox);
 		buttonList.add(caveniaCheckBox);
+		buttonList.add(hugeCavernCheckBox);
 
 		if (backupHoverChecker == null)
 		{
@@ -250,19 +195,21 @@ public class GuiRegeneration extends GuiScreen
 			switch (button.id)
 			{
 				case 0:
-					boolean b1 = cavernCheckBox.isChecked();
-					boolean b2 = aquaCavernCheckBox.isChecked();
-					boolean b3 = cavelandCheckBox.isChecked();
-					boolean b4 = iceCavernCheckBox.isChecked();
-					boolean b5 = ruinsCavernCheckBox.isChecked();
-					boolean b6 = caveniaCheckBox.isChecked();
+					RegenerationMessage message = new RegenerationMessage();
 
-					if (!b1 && !b2 && !b3 && !b4 && !b5 && !b6)
+					message.backup = backupCheckBox.isChecked();
+					message.cavern = cavernCheckBox.isChecked();
+					message.aquaCavern = aquaCavernCheckBox.isChecked();
+					message.caveland = cavelandCheckBox.isChecked();
+					message.iceCavern = iceCavernCheckBox.isChecked();
+					message.ruinsCavern = ruinsCavernCheckBox.isChecked();
+					message.cavenia = caveniaCheckBox.isChecked();
+					message.hugeCavern = hugeCavernCheckBox.isChecked();
+
+					if (message.cavern || message.aquaCavern || message.caveland || message.iceCavern || message.ruinsCavern || message.cavenia || message.hugeCavern)
 					{
-						break;
+						CaveNetworkRegistry.sendToServer(message);
 					}
-
-					CaveNetworkRegistry.sendToServer(new RegenerationMessage(backupCheckBox.isChecked(), b1, b2, b3, b4, b5, b6));
 
 					regenButton.enabled = false;
 					cancelButton.visible = false;

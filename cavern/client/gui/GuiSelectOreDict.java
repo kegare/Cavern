@@ -398,7 +398,7 @@ public class GuiSelectOreDict extends GuiScreen
 			}
 			else if (isCtrlKeyDown() && code == Keyboard.KEY_A)
 			{
-				oreDictList.selected.addAll(oreDictList.contents);
+				oreDictList.contents.forEach(entry -> oreDictList.selected.add(entry));
 			}
 		}
 	}

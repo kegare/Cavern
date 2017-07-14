@@ -22,6 +22,19 @@
                     }
                 ]
             }
+        },
+        "perverted_sapling": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "cavern:perverted_sapling"
+                    }
+                ]
+            }
         }
-    }
+    },
+    "requirements": [
+        ["sapling", "perverted_sapling"]
+    ]
 }

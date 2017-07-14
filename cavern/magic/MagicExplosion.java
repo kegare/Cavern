@@ -66,7 +66,9 @@ public class MagicExplosion implements IPlainMagic
 		}
 		while (i < 2 + getMagicLevel() * 2 && world.isAirBlock(pos));
 
-		MagicalExplosion.createExplosion(world, player, pos.getX() + 0.5D, pos.getY() + 0.25D, pos.getZ() + 0.5D, 3.0F + 2.5F * getMagicLevel(), true);
+		boolean grief = world.getGameRules().getBoolean("mobGriefing");
+
+		MagicalExplosion.createExplosion(world, player, pos.getX() + 0.5D, pos.getY() + 0.25D, pos.getZ() + 0.5D, 3.0F + 2.5F * getMagicLevel(), grief);
 
 		CaveUtils.grantAdvancement(player, "magic_explosion");
 

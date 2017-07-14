@@ -5,16 +5,15 @@ import java.util.Random;
 import com.google.common.cache.LoadingCache;
 
 import cavern.api.CavernAPI;
+import cavern.api.IPortalCache;
 import cavern.client.gui.GuiRegeneration;
-import cavern.config.CavernConfig;
 import cavern.config.GeneralConfig;
 import cavern.core.CaveSounds;
 import cavern.core.Cavern;
-import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
 import cavern.util.CaveUtils;
 import cavern.world.CaveType;
-import cavern.world.TeleporterCavern;
+import cavern.world.WorldCachedData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPortal;
 import net.minecraft.block.BlockStoneBrick;
@@ -30,15 +29,18 @@ import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -46,6 +48,7 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class BlockPortalCavern extends BlockPortal
 {
@@ -128,17 +131,15 @@ public class BlockPortalCavern extends BlockPortal
 	@SideOnly(Side.CLIENT)
 	public void displayGui(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side)
 	{
-		FMLClientHandler.instance().showGuiScreen(new GuiRegeneration().setCavern());
+		GuiRegeneration regeneration = new GuiRegeneration();
+		regeneration.cavern = true;
+
+		FMLClientHandler.instance().showGuiScreen(regeneration);
 	}
 
-	public int getType()
+	public DimensionType getDimension()
 	{
-		return CaveType.CAVERN;
-	}
-
-	public int getDimension()
-	{
-		return CavernConfig.dimensionId;
+		return CaveType.DIM_CAVERN;
 	}
 
 	public boolean isEntityInCave(Entity entity)
@@ -151,108 +152,121 @@ public class BlockPortalCavern extends BlockPortal
 		return false;
 	}
 
+	public boolean isTriggerItem(ItemStack stack)
+	{
+		if (!stack.isEmpty() && stack.getItem() == Items.EMERALD)
+		{
+			return true;
+		}
+
+		for (ItemStack dictStack : OreDictionary.getOres("gemEmerald", false))
+		{
+			if (CaveUtils.isItemEqual(stack, dictStack))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public Teleporter getTeleporter(WorldServer world)
+	{
+		return WorldCachedData.get(world).getPortalTeleporter(this);
+	}
+
 	@Override
 	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity)
 	{
-		if (!world.isRemote && entity.isEntityAlive() && !isDimensionDisabled() && entity.isNonBoss())
+		if (world.isRemote || isDimensionDisabled())
 		{
-			if (entity.timeUntilPortal <= 0)
+			return;
+		}
+
+		if (entity.isDead || entity.isRiding() || entity.isBeingRidden() || !entity.isNonBoss() || entity instanceof IProjectile)
+		{
+			return;
+		}
+
+		if (entity.timeUntilPortal <= 0)
+		{
+			ResourceLocation key = getRegistryName();
+			IPortalCache cache = PortalCache.get(entity);
+			MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+			DimensionType dimOld = world.provider.getDimensionType();
+			DimensionType dimNew = isEntityInCave(entity) ? cache.getLastDim(key) : getDimension();
+			WorldServer worldOld = server.getWorld(dimOld.getId());
+			WorldServer worldNew = server.getWorld(dimNew.getId());
+			Teleporter teleporter = getTeleporter(worldNew);
+			BlockPos prevPos = entity.getPosition();
+
+			entity.timeUntilPortal = entity.getPortalCooldown();
+
+			if (entity instanceof EntityPlayerMP)
 			{
-				if (entity instanceof IProjectile)
+				EntityPlayerMP player = (EntityPlayerMP)entity;
+
+				if (!player.isSneaking() && !player.isPotionActive(MobEffects.BLINDNESS))
 				{
-					return;
-				}
-
-				IPortalCache cache = PortalCache.get(entity);
-				MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-				int dimOld = entity.dimension;
-				int dimNew = isEntityInCave(entity) ? cache.getLastDim(getType()) : getDimension();
-
-				if (dimOld == dimNew)
-				{
-					dimOld = getDimension();
-					dimNew = 0;
-				}
-
-				WorldServer worldOld = server.getWorld(dimOld);
-				WorldServer worldNew = server.getWorld(dimNew);
-
-				if (worldOld == null || worldNew == null)
-				{
-					return;
-				}
-
-				Teleporter teleporter = new TeleporterCavern(worldNew, this);
-				BlockPos prevPos = entity.getPosition();
-
-				entity.timeUntilPortal = entity.getPortalCooldown();
-
-				if (entity instanceof EntityPlayerMP)
-				{
-					EntityPlayerMP player = (EntityPlayerMP)entity;
-
-					if (!player.isSneaking() && !player.isPotionActive(MobEffects.BLINDNESS))
+					if (GeneralConfig.cavernEscapeMission)
 					{
-						if (GeneralConfig.cavernEscapeMission)
+						boolean fromCave = CavernAPI.dimension.isCaves(dimOld);
+						boolean toCave = CavernAPI.dimension.isCaves(dimNew);
+
+						if (fromCave && !toCave && !GeneralConfig.canEscapeFromCaves(player))
 						{
-							boolean fromCave = CavernAPI.dimension.isCaves(worldOld.provider.getDimensionType());
-							boolean toCave = CavernAPI.dimension.isCaves(worldNew.provider.getDimensionType());
+							player.sendStatusMessage(new TextComponentTranslation("cavern.escapeMission.bad.message"), true);
 
-							if (fromCave && !toCave && !GeneralConfig.canEscapeFromCaves(player))
-							{
-								player.sendStatusMessage(new TextComponentTranslation("cavern.escapeMission.bad.message"), true);
-
-								return;
-							}
+							return;
 						}
-
-						double x = player.posX;
-						double y = player.posY + player.getEyeHeight();
-						double z = player.posZ;
-
-						worldOld.playSound(player, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.5F, 1.0F);
-
-						server.getPlayerList().transferPlayerToDimension(player, dimNew, teleporter);
-
-						x = player.posX;
-						y = player.posY + player.getEyeHeight();
-						z = player.posZ;
-
-						worldNew.playSound(null, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.75F, 1.0F);
-
-						cache.setLastDim(getType(), dimOld);
-						cache.setLastPos(getType(), dimOld, prevPos);
 					}
-				}
-				else
-				{
-					double x = entity.posX;
-					double y = entity.posY + entity.getEyeHeight();
-					double z = entity.posZ;
 
-					worldOld.playSound(null, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.25F, 1.15F);
+					double x = player.posX;
+					double y = player.posY + player.getEyeHeight();
+					double z = player.posZ;
 
-					entity.dimension = dimNew;
-					world.removeEntityDangerously(entity);
+					worldOld.playSound(player, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.5F, 1.0F);
 
-					entity.isDead = false;
+					server.getPlayerList().transferPlayerToDimension(player, dimNew.getId(), teleporter);
 
-					server.getPlayerList().transferEntityToWorld(entity, dimOld, worldOld, worldNew, teleporter);
+					x = player.posX;
+					y = player.posY + player.getEyeHeight();
+					z = player.posZ;
 
-					x = entity.posX;
-					y = entity.posY + entity.getEyeHeight();
-					z = entity.posZ;
+					worldNew.playSound(null, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.75F, 1.0F);
 
-					worldNew.playSound(null, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.5F, 1.15F);
-
-					cache.setLastDim(getType(), dimOld);
-					cache.setLastPos(getType(), dimOld, prevPos);
+					cache.setLastDim(key, dimOld);
+					cache.setLastPos(key, dimOld, prevPos);
 				}
 			}
 			else
 			{
-				entity.timeUntilPortal = entity.getPortalCooldown();
+				double x = entity.posX;
+				double y = entity.posY + entity.getEyeHeight();
+				double z = entity.posZ;
+
+				worldOld.playSound(null, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.25F, 1.15F);
+
+				entity.dimension = dimNew.getId();
+				world.removeEntityDangerously(entity);
+
+				entity.isDead = false;
+
+				server.getPlayerList().transferEntityToWorld(entity, dimOld.getId(), worldOld, worldNew, teleporter);
+
+				x = entity.posX;
+				y = entity.posY + entity.getEyeHeight();
+				z = entity.posZ;
+
+				worldNew.playSound(null, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.5F, 1.15F);
+
+				cache.setLastDim(key, dimOld);
+				cache.setLastPos(key, dimOld, prevPos);
 			}
+		}
+		else
+		{
+			entity.timeUntilPortal = entity.getPortalCooldown();
 		}
 	}
 

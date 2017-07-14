@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -12,18 +11,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public interface ICavernAPI
 {
-	public IMinerStats getMinerStats(EntityPlayer player);
-
 	@SideOnly(Side.CLIENT)
 	public int getMineCombo();
 
 	public Set<IMineBonus> getMineBonus();
 
 	public void addMineBonus(IMineBonus bonus);
-
-	public IHunterStats getHunterStats(EntityPlayer player);
-
-	public IMagicianStats getMagicianStats(EntityPlayer player);
 
 	public void addRandomiteItem(ItemStack item, int weight);
 

@@ -2,8 +2,7 @@ package cavern.entity;
 
 import cavern.api.ISummonMob;
 import cavern.core.Cavern;
-import cavern.util.CaveEntitySelectors;
-import net.minecraft.entity.Entity;
+import cavern.util.CaveUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -57,7 +56,7 @@ public class EntitySummonSkeleton extends EntitySkeleton implements ISummonMob
 		tasks.addTask(5, new EntityAIWanderAvoidWater(this, 1.0D));
 		tasks.addTask(6, new EntityAIWatchClosest(this, EntityMob.class, 8.0F));
 		tasks.addTask(6, new EntityAILookIdle(this));
-		targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 10, true, false, CaveEntitySelectors.CAN_SUMMON_MOB_TARGET));
+		targetTasks.addTask(1, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class, 10, true, false, CAN_SUMMON_MOB_TARGET));
 	}
 
 	@Override
@@ -76,36 +75,17 @@ public class EntitySummonSkeleton extends EntitySkeleton implements ISummonMob
 	@Override
 	public boolean isEntityInvulnerable(DamageSource source)
 	{
-		if (super.isEntityInvulnerable(source))
+		if (super.isEntityInvulnerable(source) || !source.isCreativePlayer())
 		{
 			return true;
 		}
 
-		Entity entity = source.getTrueSource();
-
-		if (entity != null && entity instanceof EntityPlayer)
+		for (EntityPlayer player : CaveUtils.getSourceEntities(EntityPlayer.class, source, true))
 		{
-			if (source.isCreativePlayer() && isSummonerEqual((EntityPlayer)entity))
-			{
-				return false;
-			}
-
-			return true;
+			return !isSummonerEqual(player);
 		}
 
-		entity = source.getImmediateSource();
-
-		if (entity != null && entity instanceof EntityPlayer)
-		{
-			if (source.isCreativePlayer() && isSummonerEqual((EntityPlayer)entity))
-			{
-				return false;
-			}
-
-			return true;
-		}
-
-		return false;
+		return true;
 	}
 
 	@Override

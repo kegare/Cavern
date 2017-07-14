@@ -18,6 +18,7 @@ import cavern.config.CavernConfig;
 import cavern.config.Config;
 import cavern.config.DisplayConfig;
 import cavern.config.GeneralConfig;
+import cavern.config.HugeCavernConfig;
 import cavern.config.IceCavernConfig;
 import cavern.config.MiningAssistConfig;
 import cavern.config.RuinsCavernConfig;
@@ -30,6 +31,7 @@ import cavern.handler.CaveniaEventHooks;
 import cavern.handler.MiningAssistEventHooks;
 import cavern.handler.api.CavernAPIHandler;
 import cavern.handler.api.DimensionHandler;
+import cavern.handler.api.StatsHandler;
 import cavern.item.CaveItems;
 import cavern.network.CaveNetworkRegistry;
 import cavern.recipe.CompositingManager;
@@ -95,6 +97,7 @@ public class Cavern
 
 		CavernAPI.apiHandler = new CavernAPIHandler();
 		CavernAPI.dimension = new DimensionHandler();
+		CavernAPI.stats = new StatsHandler();
 		CavernAPI.compositing = new CompositingManager();
 
 		if (event.getSide().isClient())
@@ -242,6 +245,10 @@ public class Cavern
 		CaveniaConfig.syncBiomesConfig();
 		CaveniaConfig.syncVeinsConfig();
 
+		HugeCavernConfig.syncConfig();
+		HugeCavernConfig.syncBiomesConfig();
+		HugeCavernConfig.syncVeinsConfig();
+
 		CaveType.registerDimensions();
 	}
 
@@ -273,7 +280,7 @@ public class Cavern
 	{
 		if (event.getSide().isServer() && Config.configChecker.isUpdated())
 		{
-			event.getServer().sendMessage(new TextComponentTranslation("cavern.config.message", metadata.name));
+			event.getServer().sendMessage(new TextComponentTranslation("cavern.config.message.update"));
 		}
 
 		event.registerServerCommand(new CommandCavern());

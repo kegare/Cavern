@@ -2,6 +2,8 @@ package cavern.stats;
 
 import java.util.Set;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
@@ -303,14 +305,7 @@ public class MinerStats implements IMinerStats
 
 	public static IMinerStats get(EntityPlayer player, boolean nullable)
 	{
-		IMinerStats stats = CaveCapabilities.getCapability(player, CaveCapabilities.MINER_STATS);
-
-		if (stats == null)
-		{
-			return nullable ? null : new MinerStats(player);
-		}
-
-		return stats;
+		return ObjectUtils.defaultIfNull(CaveCapabilities.getCapability(player, CaveCapabilities.MINER_STATS), nullable ? null : new MinerStats(player));
 	}
 
 	public static int getPointAmount(Block block, int meta)

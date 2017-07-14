@@ -11,8 +11,8 @@ import cavern.config.GeneralConfig;
 import cavern.config.RuinsCavernConfig;
 import cavern.config.property.ConfigCaveborn;
 import cavern.util.ItemMeta;
-import cavern.world.TeleporterCavern;
-import cavern.world.TeleporterRuinsCavern;
+import cavern.world.CaveType;
+import cavern.world.WorldCachedData;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -55,97 +55,101 @@ public class CavebornEventHooks
 	@SubscribeEvent
 	public void onPlayerLoggedIn(PlayerLoggedInEvent event)
 	{
-		if (event.player instanceof EntityPlayerMP)
+		if (!(event.player instanceof EntityPlayerMP))
 		{
-			EntityPlayerMP player = (EntityPlayerMP)event.player;
-			ConfigCaveborn.Type caveborn = GeneralConfig.caveborn.getType();
+			return;
+		}
 
-			if (caveborn != ConfigCaveborn.Type.DISABLED && FIRST_PLAYERS.contains(player.getCachedUniqueIdString()))
+		EntityPlayerMP player = (EntityPlayerMP)event.player;
+		ConfigCaveborn.Type caveborn = GeneralConfig.caveborn.getType();
+
+		if (caveborn == ConfigCaveborn.Type.DISABLED || !FIRST_PLAYERS.contains(player.getCachedUniqueIdString()))
+		{
+			return;
+		}
+
+		MinecraftServer server = player.mcServer;
+
+		if (caveborn == ConfigCaveborn.Type.RUINS_CAVERN && !CavernAPI.dimension.isRuinsCavernDisabled())
+		{
+			int dim = CaveType.DIM_RUINS_CAVERN.getId();
+			Teleporter teleporter = WorldCachedData.get(server.getWorld(dim)).getRuinsTeleporter();
+
+			server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
+
+			WorldServer world = player.getServerWorld();
+
+			world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_STONE_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+
+			player.setSpawnPoint(BlockPos.ORIGIN.up(80), true);
+
+			if (!RuinsCavernConfig.decorateTorches)
 			{
-				MinecraftServer server = player.mcServer;
+				BlockPos pos = player.getPosition();
+				double d0 = world.rand.nextFloat() * 0.5F + 0.25D;
+				double d1 = world.rand.nextFloat() * 0.5F + 0.25D;
+				double d2 = world.rand.nextFloat() * 0.5F + 0.25D;
+				EntityItem entityItem = new EntityItem(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, new ItemStack(Blocks.TORCH, 64));
 
-				if (caveborn == ConfigCaveborn.Type.RUINS_CAVERN && !CavernAPI.dimension.isRuinsCavernDisabled())
-				{
-					int dim = RuinsCavernConfig.dimensionId;
-					Teleporter teleporter = new TeleporterRuinsCavern(server.getWorld(dim));
+				entityItem.setPickupDelay(85);
 
-					server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
+				world.spawnEntity(entityItem);
+			}
+		}
+		else
+		{
+			BlockPortalCavern portal = caveborn.getPortalBlock();
 
-					WorldServer world = player.getServerWorld();
+			if (portal != null && !portal.isDimensionDisabled())
+			{
+				int dim = portal.getDimension().getId();
+				Teleporter teleporter = portal.getTeleporter(server.getWorld(dim));
 
-					world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.BLOCK_STONE_FALL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				boolean force = player.forceSpawn;
 
-					player.setSpawnPoint(BlockPos.ORIGIN.up(80), true);
+				player.forceSpawn = true;
+				player.timeUntilPortal = player.getPortalCooldown();
 
-					if (!RuinsCavernConfig.decorateTorches)
-					{
-						BlockPos pos = player.getPosition();
-						double d0 = world.rand.nextFloat() * 0.5F + 0.25D;
-						double d1 = world.rand.nextFloat() * 0.5F + 0.25D;
-						double d2 = world.rand.nextFloat() * 0.5F + 0.25D;
-						EntityItem entityItem = new EntityItem(world, pos.getX() + d0, pos.getY() + d1, pos.getZ() + d2, new ItemStack(Blocks.TORCH, 64));
+				server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
 
-						entityItem.setPickupDelay(85);
-
-						world.spawnEntity(entityItem);
-					}
-				}
-				else
-				{
-					BlockPortalCavern portal = caveborn.getPortalBlock();
-
-					if (portal != null && !portal.isDimensionDisabled())
-					{
-						int dim = portal.getDimension();
-						Teleporter teleporter = new TeleporterCavern(server.getWorld(dim), portal);
-
-						boolean force = player.forceSpawn;
-
-						player.forceSpawn = true;
-						player.timeUntilPortal = player.getPortalCooldown();
-
-						server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
-
-						player.forceSpawn = force;
-
-						WorldServer world = player.getServerWorld();
-						BlockPos pos = player.getPosition();
-
-						for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
-						{
-							if (world.getBlockState(blockpos).getBlock() == portal)
-							{
-								world.setBlockToAir(blockpos);
-
-								break;
-							}
-						}
-
-						double x = player.posX;
-						double y = player.posY + player.getEyeHeight();
-						double z = player.posZ;
-
-						world.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0F, 0.65F);
-					}
-				}
+				player.forceSpawn = force;
 
 				WorldServer world = player.getServerWorld();
+				BlockPos pos = player.getPosition();
+
+				for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
+				{
+					if (world.getBlockState(blockpos).getBlock() == portal)
+					{
+						world.setBlockToAir(blockpos);
+
+						break;
+					}
+				}
+
 				double x = player.posX;
-				double y = player.posY + 0.25D;
+				double y = player.posY + player.getEyeHeight();
 				double z = player.posZ;
 
-				for (ItemMeta itemMeta : GeneralConfig.cavebornBonusItems.getItems())
-				{
-					ItemStack stack = itemMeta.getItemStack();
-
-					if (stack.isStackable())
-					{
-						stack = itemMeta.getItemStack(MathHelper.getInt(RANDOM, 4, 16));
-					}
-
-					InventoryHelper.spawnItemStack(world, x, y, z, stack);
-				}
+				world.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0F, 0.65F);
 			}
+		}
+
+		WorldServer world = player.getServerWorld();
+		double x = player.posX;
+		double y = player.posY + 0.25D;
+		double z = player.posZ;
+
+		for (ItemMeta itemMeta : GeneralConfig.cavebornBonusItems.getItems())
+		{
+			ItemStack stack = itemMeta.getItemStack();
+
+			if (stack.isStackable())
+			{
+				stack = itemMeta.getItemStack(MathHelper.getInt(RANDOM, 4, 16));
+			}
+
+			InventoryHelper.spawnItemStack(world, x, y, z, stack);
 		}
 	}
 

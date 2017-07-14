@@ -1,8 +1,6 @@
 package cavern.capability;
 
 import cavern.item.OreCompass;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -36,19 +34,6 @@ public class CapabilityOreCompass implements ICapabilityProvider
 
 	public static void register()
 	{
-		CapabilityManager.INSTANCE.register(OreCompass.class,
-			new Capability.IStorage<OreCompass>()
-			{
-				@Override
-				public NBTBase writeNBT(Capability<OreCompass> capability, OreCompass instance, EnumFacing side)
-				{
-					return new NBTTagCompound();
-				}
-
-				@Override
-				public void readNBT(Capability<OreCompass> capability, OreCompass instance, EnumFacing side, NBTBase nbt) {}
-			},
-			OreCompass::new
-		);
+		CapabilityManager.INSTANCE.register(OreCompass.class, new EmptyStorage<>(), OreCompass::new);
 	}
 }

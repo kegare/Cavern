@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ForkJoinPool;
@@ -26,7 +25,6 @@ import cavern.core.Cavern;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.ToastMessage;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -41,13 +39,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -83,78 +82,6 @@ public class CaveUtils
 
 		return mod;
 	}
-
-	public static final Comparator<Block> BLOCK_COMPARATOR = (o1, o2) ->
-	{
-		int i = compareWithNull(o1, o2);
-
-		if (i == 0 && o1 != null && o2 != null)
-		{
-			ResourceLocation name1 = o1.getRegistryName();
-			ResourceLocation name2 = o2.getRegistryName();
-
-			i = compareWithNull(name1, name2);
-
-			if (i == 0 && name1 != null && name2 != null)
-			{
-				i = (name1.getResourceDomain().equals("minecraft") ? 0 : 1) - (name2.getResourceDomain().equals("minecraft") ? 0 : 1);
-
-				if (i == 0)
-				{
-					i = name1.getResourceDomain().compareTo(name2.getResourceDomain());
-
-					if (i == 0)
-					{
-						i = name1.getResourcePath().compareTo(name2.getResourcePath());
-					}
-				}
-			}
-		}
-
-		return i;
-	};
-
-	public static final Comparator<Biome> BIOME_COMPARATOR = (o1, o2) ->
-	{
-		int i = compareWithNull(o1, o2);
-
-		if (i == 0 && o1 != null && o2 != null)
-		{
-			i = Integer.compare(Biome.getIdForBiome(o1), Biome.getIdForBiome(o2));
-
-			if (i == 0)
-			{
-				i = compareWithNull(o1.getBiomeName(), o2.getBiomeName());
-
-				if (i == 0 && o1.getBiomeName() != null && o2.getBiomeName() != null)
-				{
-					i = o1.getBiomeName().compareTo(o2.getBiomeName());
-
-					if (i == 0)
-					{
-						i = Float.compare(o1.getTemperature(), o2.getTemperature());
-
-						if (i == 0)
-						{
-							i = Float.compare(o1.getRainfall(), o2.getRainfall());
-
-							if (i == 0)
-							{
-								i = new BlockMeta(o1.topBlock).compareTo(new BlockMeta(o2.topBlock));
-
-								if (i == 0)
-								{
-									i = new BlockMeta(o1.fillerBlock).compareTo(new BlockMeta(o2.fillerBlock));
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return i;
-	};
 
 	public static ResourceLocation getKey(String key)
 	{
@@ -249,6 +176,24 @@ public class CaveUtils
 		}
 
 		return stateA.getBlock() == stateB.getBlock() && stateA.getBlock().getMetaFromState(stateA) == stateB.getBlock().getMetaFromState(stateB);
+	}
+
+	public static boolean isItemEqual(ItemStack stack1, ItemStack stack2)
+	{
+		if (stack1.getHasSubtypes() && stack2.getHasSubtypes())
+		{
+			if (stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2))
+			{
+				return true;
+			}
+		}
+
+		if (!stack1.getHasSubtypes() && !stack2.getHasSubtypes())
+		{
+			return stack1.getItem() == stack2.getItem() && ItemStack.areItemStackTagsEqual(stack1, stack2);
+		}
+
+		return false;
 	}
 
 	@Nullable
@@ -364,31 +309,55 @@ public class CaveUtils
 		return motionX * motionX + motionY * motionY + motionZ * motionZ > 0.01D;
 	}
 
-	public static void setLocationAndAngles(@Nullable Entity entity, double posX, double posY, double posZ)
+	@Nullable
+	public static <T> T getSourceEntity(Class<? extends T> entityClass, DamageSource source)
 	{
-		if (entity == null)
+		Entity entity = source.getTrueSource();
+
+		if (entity != null && entityClass.isAssignableFrom(entity.getClass()))
 		{
-			return;
+			return entityClass.cast(entity);
 		}
 
-		if (entity instanceof EntityPlayerMP)
+		entity = source.getImmediateSource();
+
+		if (entity != null && entityClass.isAssignableFrom(entity.getClass()))
 		{
-			((EntityPlayerMP)entity).connection.setPlayerLocation(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
+			return entityClass.cast(entity);
 		}
-		else
-		{
-			entity.setLocationAndAngles(posX, posY, posZ, entity.rotationYaw, entity.rotationPitch);
-		}
+
+		return null;
 	}
 
-	public static void setLocationAndAngles(@Nullable Entity entity, @Nullable BlockPos pos)
+	public static <T> NonNullList<T> getSourceEntities(Class<? extends T> entityClass, DamageSource source, boolean duplicate)
 	{
-		if (pos == null)
+		NonNullList<T> list = NonNullList.create();
+		Entity trueEnttiy = source.getTrueSource();
+
+		if (trueEnttiy != null && entityClass.isAssignableFrom(trueEnttiy.getClass()))
 		{
-			return;
+			list.add(entityClass.cast(trueEnttiy));
 		}
 
-		setLocationAndAngles(entity, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+		Entity immediateEntity = source.getImmediateSource();
+
+		if (immediateEntity != null && entityClass.isAssignableFrom(immediateEntity.getClass()))
+		{
+			if (duplicate || trueEnttiy == null || !trueEnttiy.isEntityEqual(immediateEntity))
+			{
+				list.add(entityClass.cast(immediateEntity));
+			}
+		}
+
+		return list;
+	}
+
+	public static void setPositionAndUpdate(@Nullable Entity entity, @Nullable BlockPos pos)
+	{
+		if (entity != null && pos != null)
+		{
+			entity.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+		}
 	}
 
 	public static SleepResult trySleep(EntityPlayer player, BlockPos pos)

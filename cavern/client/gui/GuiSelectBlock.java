@@ -530,7 +530,7 @@ public class GuiSelectBlock extends GuiScreen
 			}
 			else if (isCtrlKeyDown() && code == Keyboard.KEY_A)
 			{
-				blockList.selected.addAll(blockList.contents);
+				blockList.contents.forEach(entry -> blockList.selected.add(entry));
 			}
 		}
 	}

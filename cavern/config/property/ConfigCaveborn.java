@@ -31,7 +31,8 @@ public class ConfigCaveborn
 		CAVERN(2, CaveBlocks.CAVERN_PORTAL),
 		AQUA_CAVERN(3, CaveBlocks.AQUA_CAVERN_PORTAL),
 		CAVELAND(4, CaveBlocks.CAVELAND_PORTAL),
-		ICE_CAVERN(5, CaveBlocks.ICE_CAVERN_PORTAL);
+		ICE_CAVERN(5, CaveBlocks.ICE_CAVERN_PORTAL),
+		HUGE_CAVERN(6, CaveBlocks.HUGE_CAVERN_PORTAL);
 
 		public static final Type[] VALUES = new Type[values().length];
 

@@ -3,7 +3,6 @@ package cavern.entity;
 import cavern.api.CavernAPI;
 import cavern.api.ICavenicMob;
 import cavern.util.CaveUtils;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -379,33 +378,17 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 	}
 
 	@Override
-	public void onDeath(DamageSource cause)
+	public void onDeath(DamageSource source)
 	{
-		super.onDeath(cause);
+		super.onDeath(source);
 
 		if (!world.isRemote)
 		{
-			boolean drop = false;
-			Entity entity = cause.getTrueSource();
+			EntityPlayer player = CaveUtils.getSourceEntity(EntityPlayer.class, source);
 
-			if (entity != null && entity instanceof EntityPlayer)
+			if (player != null)
 			{
-				drop = true;
-			}
-
-			if (!drop)
-			{
-				entity = cause.getImmediateSource();
-
-				if (entity != null && entity instanceof EntityPlayer)
-				{
-					drop = true;
-				}
-			}
-
-			if (drop)
-			{
-				if (cause.isProjectile() || cause.isExplosion() || cause.isFireDamage())
+				if (source.isProjectile() || source.isExplosion() || source.isFireDamage())
 				{
 					for (int i = 0; i < backpackInventory.getSizeInventory(); ++i)
 					{

@@ -13,7 +13,8 @@ cavern.version.message.beta=あなたは %s のベータバージョンを利用
 cavern.version.message.alpha=あなたは %s のアルファバージョンを利用しています
 cavern.version.message.dev=あなたは %s の開発者向けバージョンを利用しています
 
-cavern.config.message=%s のコンフィグファイルが更新され、設定が初期化されました
+cavern.config.message.update=Cavernのコンフィグファイルが更新され、設定が初期化されました
+cavern.config.message.open=Cavernの設定画面を表示しますか？
 
 cavern.config.title=Cavernの設定
 cavern.config.version=Cavernの最新バージョンは %s です
@@ -128,12 +129,13 @@ cavern.config.miningassist.miningAssistNotify.tooltip=ワールドにログイ�
 
 cavern.config.dimension=ディメンションの設定
 cavern.config.dimension.tooltip=洞窟ディメンションの設定を変更できます。
-cavern.config.dimension.cavern.tooltip=cavern-dimension.cfgに含まれる設定を変更できます。
-cavern.config.dimension.aquaCavern.tooltip=aquacavern-dimension.cfgに含まれる設定を変更できます。
-cavern.config.dimension.caveland.tooltip=caveland-dimension.cfgに含まれる設定を変更できます。
-cavern.config.dimension.iceCavern.tooltip=icecavern-dimension.cfgに含まれる設定を変更できます。
-cavern.config.dimension.ruinsCavern.tooltip=ruinscavern-dimension.cfgに含まれる設定を変更できます。
-cavern.config.dimension.cavenia.tooltip=cavenia-dimension.cfgに含まれる設定を変更できます。
+cavern.config.dimension.cavern.tooltip=Cavern ディメンションの設定を変更できます。
+cavern.config.dimension.aquaCavern.tooltip=Aqua Cavern ディメンションの設定を変更できます。
+cavern.config.dimension.caveland.tooltip=Caveland ディメンションの設定を変更できます。
+cavern.config.dimension.iceCavern.tooltip=Ice Cavern ディメンションの設定を変更できます。
+cavern.config.dimension.ruinsCavern.tooltip=Ruins Cavern ディメンションの設定を変更できます。
+cavern.config.dimension.cavenia.tooltip=Cavenia ディメンションの設定を変更できます。
+cavern.config.dimension.hugeCavern.tooltip=Huge Cavern ディメンションの設定を変更できます。
 cavern.config.dimension.dimensionDisabled=ディメンションの無効化
 cavern.config.dimension.dimensionDisabled.tooltip=このディメンションを無効にします。
 cavern.config.dimension.dimension=ディメンション
@@ -296,6 +298,7 @@ tile.portal.aquaCavern.name=Aqua Cavern ポータル
 tile.portal.caveland.name=Caveland ポータル
 tile.portal.iceCavern.name=Ice Cavern ポータル
 tile.portal.ruinsCavern.name=Ruins Cavern ポータル
+tile.portal.hugeCavern.name=Huge Cavern ポータル
 tile.oreAquamarine.name=アクアマリン鉱石
 tile.blockAquamarine.name=アクアマリンブロック
 tile.oreMagnite.name=マグナイト鉱石
@@ -499,6 +502,10 @@ advancements.cavenia.ranger.title=レンジャー
 advancements.cavenia.ranger.description=レンジャーになる
 advancements.cavenia.crazy_ranger.title=クレイジーレンジャー
 advancements.cavenia.crazy_ranger.description=クレイジーレンジャーになり、怪物退治を極める
+advancements.cavern.get_diamond.title=とっておきのカギ
+advancements.cavern.get_diamond.description=ダイヤモンドを手に入れる
+advancements.cavern.enter_the_huge_cavern.title=Huge Cavern
+advancements.cavern.enter_the_huge_cavern.description=果てしなき洞窟
 
 key.cavern.miningAssist=採掘アシストの切り替え
 

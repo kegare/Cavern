@@ -1,5 +1,7 @@
 package cavern.stats;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import cavern.api.IHunterStats;
 import cavern.api.event.HunterStatsEvent;
 import cavern.capability.CaveCapabilities;
@@ -224,13 +226,6 @@ public class HunterStats implements IHunterStats
 
 	public static IHunterStats get(EntityPlayer player, boolean nullable)
 	{
-		IHunterStats stats = CaveCapabilities.getCapability(player, CaveCapabilities.HUNTER_STATS);
-
-		if (stats == null)
-		{
-			return nullable ? null : new HunterStats(player);
-		}
-
-		return stats;
+		return ObjectUtils.defaultIfNull(CaveCapabilities.getCapability(player, CaveCapabilities.HUNTER_STATS), nullable ? null : new HunterStats(player));
 	}
 }

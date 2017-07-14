@@ -6,7 +6,7 @@ import cavern.api.IHunterStats;
 import cavern.item.ItemCave;
 import cavern.stats.HunterRank;
 import cavern.stats.HunterStats;
-import net.minecraft.entity.Entity;
+import cavern.util.CaveUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,23 +61,13 @@ public class CaveniaEventHooks
 			else if (entity instanceof ICavenicMob)
 			{
 				int point = ((ICavenicMob)entity).getHuntingPoint();
-				DamageSource source = event.getSource();
-				Entity sourceEntity = source.getTrueSource();
 
-				if (sourceEntity == null || !(sourceEntity instanceof EntityPlayer))
+				if (point <= 0)
 				{
-					sourceEntity = source.getImmediateSource();
+					return;
 				}
 
-				if (sourceEntity != null && sourceEntity instanceof EntityPlayer)
-				{
-					EntityPlayer player = (EntityPlayer)sourceEntity;
-
-					if (point > 0)
-					{
-						HunterStats.get(player).addPoint(point);
-					}
-				}
+				CaveUtils.getSourceEntities(EntityPlayer.class, event.getSource(), false).forEach(player -> HunterStats.get(player).addPoint(point));
 			}
 		}
 	}
@@ -149,30 +139,26 @@ public class CaveniaEventHooks
 				return;
 			}
 
-			Entity sourceEntity = source.getTrueSource();
+			EntityPlayer player = CaveUtils.getSourceEntity(EntityPlayer.class, source);
 
-			if (sourceEntity == null || !(sourceEntity instanceof EntityPlayer))
+			if (player == null)
 			{
-				sourceEntity = source.getImmediateSource();
+				return;
 			}
 
-			if (sourceEntity != null && sourceEntity instanceof EntityPlayer)
+			IHunterStats hunterStats = HunterStats.get(player);
+			HunterRank hunterRank = HunterRank.get(hunterStats.getRank());
+			float boost = hunterRank.getBoost();
+			int superCritical = hunterRank.getSuperCritical();
+
+			if (superCritical > 0 && CaveEventHooks.RANDOM.nextInt(100) + 1 <= superCritical)
 			{
-				EntityPlayer player = (EntityPlayer)sourceEntity;
-				IHunterStats hunterStats = HunterStats.get(player);
-				HunterRank hunterRank = HunterRank.get(hunterStats.getRank());
-				float boost = hunterRank.getBoost();
-				int superCritical = hunterRank.getSuperCritical();
+				boost *= 2.5F;
 
-				if (superCritical > 0 && CaveEventHooks.RANDOM.nextInt(100) + 1 <= superCritical)
-				{
-					boost *= 2.5F;
-
-					entity.world.newExplosion(player, entity.posX, entity.posY, entity.posZ, 1.75F, false, true);
-				}
-
-				event.setAmount(amount * boost);
+				entity.world.newExplosion(player, entity.posX, entity.posY, entity.posZ, 1.75F, false, true);
 			}
+
+			event.setAmount(amount * boost);
 		}
 	}
 

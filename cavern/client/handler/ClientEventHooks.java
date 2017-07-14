@@ -3,8 +3,6 @@ package cavern.client.handler;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.io.FilenameUtils;
-
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
@@ -20,6 +18,7 @@ import cavern.config.CavernConfig;
 import cavern.config.Config;
 import cavern.config.DisplayConfig;
 import cavern.config.GeneralConfig;
+import cavern.config.HugeCavernConfig;
 import cavern.config.IceCavernConfig;
 import cavern.config.MiningAssistConfig;
 import cavern.config.RuinsCavernConfig;
@@ -31,14 +30,17 @@ import cavern.item.ItemCavenicBow;
 import cavern.miningassist.MiningAssist;
 import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
+import cavern.util.CaveUtils;
 import cavern.util.Version;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.gui.GuiDownloadTerrain;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiWorldSelection;
+import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -63,6 +65,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.GuiModList;
+import net.minecraftforge.fml.client.IModGuiFactory;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -87,11 +90,38 @@ public class ClientEventHooks
 			return;
 		}
 
+		Minecraft mc = FMLClientHandler.instance().getClient();
+
 		if (displayGui != null)
 		{
-			FMLClientHandler.instance().showGuiScreen(displayGui);
+			mc.displayGuiScreen(displayGui);
 
 			displayGui = null;
+		}
+
+		if (mc.currentScreen != null && mc.currentScreen instanceof GuiMainMenu && Config.configChecker.isUpdated() && !Config.configChecker.isNotified())
+		{
+			String line1 = I18n.format("cavern.config.message.update");
+			String line2 = I18n.format("cavern.config.message.open");
+			GuiScreen parentScreen = mc.currentScreen;
+
+			mc.displayGuiScreen(new GuiYesNo((result, id) ->
+			{
+				if (result)
+				{
+					IModGuiFactory guiFactory = FMLClientHandler.instance().getGuiFactoryFor(CaveUtils.getModContainer());
+					GuiScreen guiConfig = guiFactory.createConfigGui(parentScreen);
+
+					mc.displayGuiScreen(guiConfig);
+				}
+				else
+				{
+					mc.displayGuiScreen(parentScreen);
+				}
+			},
+			line1, line2, -1));
+
+			Config.configChecker.setNotified(true);
 		}
 
 		if (!DELAYED_TOAST.isEmpty())
@@ -127,6 +157,7 @@ public class ClientEventHooks
 				IceCavernConfig.syncConfig();
 				RuinsCavernConfig.syncConfig();
 				CaveniaConfig.syncConfig();
+				HugeCavernConfig.syncConfig();
 			}
 			else switch (type)
 			{
@@ -190,6 +221,9 @@ public class ClientEventHooks
 				case "dimension.cavenia":
 					CaveniaConfig.syncConfig();
 					break;
+				case "dimension.hugeCavern":
+					HugeCavernConfig.syncConfig();
+					break;
 			}
 		}
 	}
@@ -225,6 +259,10 @@ public class ClientEventHooks
 			else if (CavernAPI.dimension.isEntityInCavenia(player))
 			{
 				event.getLeft().add("Dim: Cavenia");
+			}
+			else if (CavernAPI.dimension.isEntityInHugeCavern(player))
+			{
+				event.getLeft().add("Dim: Huge Cavern");
 			}
 		}
 	}
@@ -315,18 +353,6 @@ public class ClientEventHooks
 				mc.ingameGUI.getChatGUI().printChatMessage(message);
 			}
 		}
-
-		if (Config.configChecker.isUpdated() && !Config.configChecker.isNotified())
-		{
-			ITextComponent name = new TextComponentString(Cavern.metadata.name);
-			name.getStyle().setColor(TextFormatting.AQUA);
-			ITextComponent message = new TextComponentTranslation("cavern.config.message", name);
-			message.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, FilenameUtils.normalize(Config.getConfigDir().getPath())));
-
-			mc.ingameGUI.getChatGUI().printChatMessage(message);
-
-			Config.configChecker.setNotified(true);
-		}
 	}
 
 	@SubscribeEvent
@@ -387,7 +413,7 @@ public class ClientEventHooks
 				event.setDensity((float)Math.abs(Math.pow((Math.min(entity.posY, 20) - 63) / (255 - 63), 4)));
 				event.setCanceled(true);
 			}
-			else if (CavernAPI.dimension.isEntityInCavenia(entity))
+			else if (CavernAPI.dimension.isEntityInCavenia(entity) || CavernAPI.dimension.isEntityInHugeCavern(entity))
 			{
 				GlStateManager.setFog(GlStateManager.FogMode.EXP);
 
@@ -414,6 +440,10 @@ public class ClientEventHooks
 		else if (CavernAPI.dimension.isEntityInCavenia(entity))
 		{
 			var1 = 0.95F;
+		}
+		else if (CavernAPI.dimension.isEntityInHugeCavern(entity))
+		{
+			var1 = 0.8F;
 		}
 
 		if (var1 > 0.0F)

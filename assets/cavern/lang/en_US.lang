@@ -13,7 +13,8 @@ cavern.version.message.beta=You are using a Beta version of %s
 cavern.version.message.alpha=You are using an Alpha version of %s
 cavern.version.message.dev=You are using a Dev version of %s
 
-cavern.config.message=Updated %s configuration files and it was initialized
+cavern.config.message.update=Updated Cavern config files and it was initialized
+cavern.config.message.open=Do you want to open the mod config for Cavern?
 
 cavern.config.title=Cavern Configuration
 cavern.config.version=The latest version of Cavern is %s
@@ -47,6 +48,7 @@ cavern.config.general.caveborn.2=Cavern
 cavern.config.general.caveborn.3=Aqua Cavern
 cavern.config.general.caveborn.4=Caveland
 cavern.config.general.caveborn.5=Ice Cavern
+cavern.config.general.caveborn.6=Huge Cavern
 cavern.config.general.cavebornBonusItems=Caveborn Bonus Items
 cavern.config.general.cavebornBonusItems.tooltip=Specify the bonus items for caveborn.
 cavern.config.general.cavernEscapeMission=Cavern Escape Mission
@@ -145,6 +147,8 @@ cavern.config.dimension.ruinsCavern=Ruins Cavern
 cavern.config.dimension.ruinsCavern.tooltip=Change the settings contained in ruinscavern-dimension.cfg
 cavern.config.dimension.cavenia=Cavenia
 cavern.config.dimension.cavenia.tooltip=Change the settings contained in cavenia-dimension.cfg
+cavern.config.dimension.hugeCavern=Huge Cavern
+cavern.config.dimension.hugeCavern.tooltip=Change the settings contained in hugecavern-dimension.cfg
 cavern.config.dimension.dimensionDisabled=Dimension Disabled
 cavern.config.dimension.dimensionDisabled.tooltip=Whether to disable the dimension.
 cavern.config.dimension.dimension=Dimension
@@ -307,6 +311,7 @@ tile.portal.aquaCavern.name=Aqua Cavern Portal
 tile.portal.caveland.name=Caveland Portal
 tile.portal.iceCavern.name=Ice Cavern Portal
 tile.portal.ruinsCavern.name=Ruins Cavern Portal
+tile.portal.hugeCavern.name=Huge Cavern Portal
 tile.oreAquamarine.name=Aquamarine Ore
 tile.blockAquamarine.name=Block of Aquamarine
 tile.oreMagnite.name=Magnite Ore
@@ -512,6 +517,10 @@ advancements.cavenia.ranger.title=Ranger
 advancements.cavenia.ranger.description=Become a ranger
 advancements.cavenia.crazy_ranger.title=Crazy Ranger
 advancements.cavenia.crazy_ranger.description=Become a crazy ranger
+advancements.cavern.get_diamond.title=Precious Key
+advancements.cavern.get_diamond.description=Acquire a diamond
+advancements.cavern.enter_the_huge_cavern.title=Huge Cavern
+advancements.cavern.enter_the_huge_cavern.description=Enter the Huge Cavern dimension
 
 key.cavern.miningAssist=Toggle Mining Assist
 

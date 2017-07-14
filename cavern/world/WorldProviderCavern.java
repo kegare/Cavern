@@ -41,6 +41,8 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	@Override
 	protected void init()
 	{
+		super.init();
+
 		hasSkyLight = false;
 		dataManager = new CaveDataManager(world.getWorldInfo().getDimensionData(getDimensionType().getId()).getCompoundTag("WorldData"));
 
@@ -59,8 +61,6 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 				default:
 			}
 		}
-
-		super.init();
 	}
 
 	@Override
@@ -295,12 +295,6 @@ public class WorldProviderCavern extends WorldProviderSurface implements IWorldE
 	public double getHorizon()
 	{
 		return getActualHeight();
-	}
-
-	@Override
-	public boolean hasSkyLight()
-	{
-		return false;
 	}
 
 	@Override

@@ -1,10 +1,13 @@
 package cavern.item;
 
+import javax.annotation.Nullable;
+
 import cavern.api.CavernAPI;
-import cavern.config.CaveniaConfig;
+import cavern.api.IPortalCache;
 import cavern.core.Cavern;
-import cavern.stats.IPortalCache;
 import cavern.stats.PortalCache;
+import cavern.util.CaveUtils;
+import cavern.world.CaveType;
 import cavern.world.TeleporterCavenia;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,15 +20,15 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 public class ItemCave extends Item
 {
-	public static final int CAVENIA = 10;
-
 	public ItemCave()
 	{
 		super();
@@ -79,9 +82,9 @@ public class ItemCave extends Item
 		return super.onItemRightClick(world, player, hand);
 	}
 
-	public boolean transferByCavenia(EntityPlayer entityPlayer)
+	public boolean transferByCavenia(@Nullable EntityPlayer entityPlayer)
 	{
-		if (!CavernAPI.dimension.isEntityInCaves(entityPlayer))
+		if (!CavernAPI.dimension.isEntityInCaves(entityPlayer) || CavernAPI.dimension.isCaveniaDisabled())
 		{
 			return false;
 		}
@@ -93,11 +96,12 @@ public class ItemCave extends Item
 
 		EntityPlayerMP player = (EntityPlayerMP)entityPlayer;
 		IPortalCache cache = PortalCache.get(player);
+		ResourceLocation key = CaveUtils.getKey("cavenia");
 		MinecraftServer server = player.mcServer;
-		int dimOld = player.dimension;
-		int dimNew = CavernAPI.dimension.isEntityInCavenia(player) ? cache.getLastDim(CAVENIA) : CaveniaConfig.dimensionId;
-		WorldServer worldOld = server.getWorld(dimOld);
-		WorldServer worldNew = server.getWorld(dimNew);
+		DimensionType dimOld = player.world.provider.getDimensionType();
+		DimensionType dimNew = CavernAPI.dimension.isEntityInCavenia(player) ? cache.getLastDim(key, CaveType.DIM_CAVERN) : CaveType.DIM_CAVENIA;
+		WorldServer worldOld = server.getWorld(dimOld.getId());
+		WorldServer worldNew = server.getWorld(dimNew.getId());
 		BlockPos prevPos = player.getPosition();
 
 		double x = player.posX;
@@ -106,7 +110,7 @@ public class ItemCave extends Item
 
 		worldOld.playSound(player, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 0.5F, 0.5F);
 
-		server.getPlayerList().transferPlayerToDimension(player, dimNew, new TeleporterCavenia(worldNew));
+		server.getPlayerList().transferPlayerToDimension(player, dimNew.getId(), new TeleporterCavenia(worldNew));
 
 		x = player.posX;
 		y = player.posY + player.getEyeHeight();
@@ -114,12 +118,12 @@ public class ItemCave extends Item
 
 		worldNew.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_FALL, SoundCategory.BLOCKS, 0.75F, 1.0F);
 
-		cache.setLastDim(CAVENIA, dimOld);
-		cache.setLastPos(CAVENIA, dimOld, prevPos);
+		cache.setLastDim(key, dimOld);
+		cache.setLastPos(key, dimOld, prevPos);
 
-		if (player.getBedLocation(dimNew) == null)
+		if (player.getBedLocation(dimNew.getId()) == null)
 		{
-			player.setSpawnChunk(player.getPosition(), true, dimNew);
+			player.setSpawnChunk(player.getPosition(), true, dimNew.getId());
 		}
 
 		return true;

@@ -5,11 +5,8 @@ import java.util.Set;
 
 import cavern.api.ICavernAPI;
 import cavern.api.IFissureBreakEvent;
-import cavern.api.IHunterStats;
 import cavern.api.IIceEquipment;
-import cavern.api.IMagicianStats;
 import cavern.api.IMineBonus;
-import cavern.api.IMinerStats;
 import cavern.block.BlockCave;
 import cavern.block.bonus.FissureBreakEvent;
 import cavern.block.bonus.FissureEventExplosion;
@@ -20,15 +17,12 @@ import cavern.item.IceEquipment;
 import cavern.item.ItemCave;
 import cavern.item.ItemElixir;
 import cavern.item.ItemMagicalBook;
-import cavern.stats.HunterStats;
-import cavern.stats.MagicianStats;
 import cavern.stats.MinerStats;
 import cavern.util.WeightedItemStack;
 import cavern.world.WorldProviderIceCavern;
 import cavern.world.WorldProviderRuinsCavern;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -38,12 +32,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CavernAPIHandler implements ICavernAPI
 {
-	@Override
-	public IMinerStats getMinerStats(EntityPlayer player)
-	{
-		return MinerStats.get(player);
-	}
-
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int getMineCombo()
@@ -61,18 +49,6 @@ public class CavernAPIHandler implements ICavernAPI
 	public void addMineBonus(IMineBonus bonus)
 	{
 		MinerStats.MINE_BONUS.add(bonus);
-	}
-
-	@Override
-	public IHunterStats getHunterStats(EntityPlayer player)
-	{
-		return HunterStats.get(player);
-	}
-
-	@Override
-	public IMagicianStats getMagicianStats(EntityPlayer player)
-	{
-		return MagicianStats.get(player);
 	}
 
 	@Override
