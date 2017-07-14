@@ -14,7 +14,6 @@ import org.lwjgl.input.Keyboard;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -572,34 +571,31 @@ public class GuiSelectBiome extends GuiScreen
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(() ->
+			List<Biome> result;
+
+			if (Strings.isNullOrEmpty(filter))
 			{
-				List<Biome> result;
-
-				if (Strings.isNullOrEmpty(filter))
+				result = biomes;
+			}
+			else if (filter.equals("selected"))
+			{
+				result = Lists.newArrayList(selected);
+			}
+			else
+			{
+				if (!filterCache.containsKey(filter))
 				{
-					result = biomes;
-				}
-				else if (filter.equals("selected"))
-				{
-					result = Lists.newArrayList(selected);
-				}
-				else
-				{
-					if (!filterCache.containsKey(filter))
-					{
-						filterCache.put(filter, Lists.newArrayList(Collections2.filter(biomes, e -> filterMatch(e, filter))));
-					}
-
-					result = filterCache.get(filter);
+					filterCache.put(filter, biomes.parallelStream().filter(e -> filterMatch(e, filter)).collect(Collectors.toList()));
 				}
 
-				if (!contents.equals(result))
-				{
-					contents.clear();
-					contents.addAll(result);
-				}
-			});
+				result = filterCache.get(filter);
+			}
+
+			if (!contents.equals(result))
+			{
+				contents.clear();
+				contents.addAll(result);
+			}
 		}
 
 		protected boolean filterMatch(Biome biome, String filter)

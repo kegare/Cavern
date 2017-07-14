@@ -25,6 +25,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class MagicianStatsHUDEventHooks
 {
+	public static ConfigDisplayPos.Type currentPosition;
+
 	private int posX;
 	private int posY;
 
@@ -38,11 +40,6 @@ public class MagicianStatsHUDEventHooks
 	protected boolean canRenderHUD(Minecraft mc)
 	{
 		if (getDisplayType().isHidden())
-		{
-			return false;
-		}
-
-		if (mc.player == null)
 		{
 			return false;
 		}
@@ -140,16 +137,21 @@ public class MagicianStatsHUDEventHooks
 		}
 
 		Minecraft mc = FMLClientHandler.instance().getClient();
+		ConfigDisplayPos.Type displayType = getDisplayType();
 
-		if (!canRenderHUD(mc))
+		if (canRenderHUD(mc))
 		{
+			currentPosition = displayType;
+		}
+		else
+		{
+			currentPosition = ConfigDisplayPos.Type.HIDDEN;
 			magicianPointPer = -1.0D;
 
 			return;
 		}
 
 		ScaledResolution resolution = event.getResolution();
-		ConfigDisplayPos.Type displayType = getDisplayType();
 
 		IMagicianStats stats = MagicianStats.get(mc.player, true);
 

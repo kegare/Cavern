@@ -15,6 +15,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.DimensionType;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class MagicWarp implements IPlainMagic
@@ -88,14 +89,14 @@ public class MagicWarp implements IPlainMagic
 	}
 
 	@Nullable
-	public Pair<BlockPos, Integer> getWarpPoint()
+	public Pair<BlockPos, DimensionType> getWarpPoint()
 	{
 		return getWarpPoint(magicalBook);
 	}
 
-	public void setWarpPoint(@Nullable BlockPos pos, int dim)
+	public void setWarpPoint(@Nullable BlockPos pos, DimensionType type)
 	{
-		setWarpPoint(magicalBook, pos, dim);
+		setWarpPoint(magicalBook, pos, type);
 	}
 
 	public static boolean hasWarpPoint(ItemStack magicalBook)
@@ -111,7 +112,7 @@ public class MagicWarp implements IPlainMagic
 	}
 
 	@Nullable
-	public static Pair<BlockPos, Integer> getWarpPoint(ItemStack magicalBook)
+	public static Pair<BlockPos, DimensionType> getWarpPoint(ItemStack magicalBook)
 	{
 		if (!hasWarpPoint(magicalBook))
 		{
@@ -121,12 +122,23 @@ public class MagicWarp implements IPlainMagic
 		NBTTagCompound nbt = magicalBook.getTagCompound();
 		NBTTagCompound compound = nbt.getCompoundTag("WarpPoint");
 		BlockPos pos = NBTUtil.getPosFromTag(compound);
-		int dim = compound.getInteger("Dim");
+		DimensionType type;
 
-		return Pair.of(pos, Integer.valueOf(dim));
+		try
+		{
+			type = DimensionType.getById(compound.getInteger("Dim"));
+		}
+		catch (IllegalArgumentException e)
+		{
+			nbt.removeTag("WarpPoint");
+
+			return null;
+		}
+
+		return Pair.of(pos, type);
 	}
 
-	public static void setWarpPoint(ItemStack magicalBook, @Nullable BlockPos pos, int dim)
+	public static void setWarpPoint(ItemStack magicalBook, @Nullable BlockPos pos, DimensionType type)
 	{
 		NBTTagCompound nbt = magicalBook.getTagCompound();
 
@@ -141,12 +153,8 @@ public class MagicWarp implements IPlainMagic
 		}
 		else
 		{
-			NBTTagCompound compound = new NBTTagCompound();
-
-			compound.setInteger("X", pos.getX());
-			compound.setInteger("Y", pos.getY());
-			compound.setInteger("Z", pos.getZ());
-			compound.setInteger("Dim", dim);
+			NBTTagCompound compound = NBTUtil.createPosTag(pos);
+			compound.setInteger("Dim", type.getId());
 
 			nbt.setTag("WarpPoint", compound);
 		}
@@ -157,13 +165,14 @@ public class MagicWarp implements IPlainMagic
 	@Override
 	public boolean execute(EntityPlayer player)
 	{
-		if (hasWarpPoint())
-		{
-			Pair<BlockPos, Integer> warpPoint = getWarpPoint();
-			BlockPos pos = warpPoint.getLeft();
-			int dim = warpPoint.getRight().intValue();
+		DimensionType type = player.world.provider.getDimensionType();
+		Pair<BlockPos, DimensionType> warpPoint = getWarpPoint();
 
-			if (player.dimension != dim)
+		if (warpPoint != null)
+		{
+			BlockPos pos = warpPoint.getLeft();
+
+			if (type != warpPoint.getRight())
 			{
 				return false;
 			}
@@ -178,13 +187,13 @@ public class MagicWarp implements IPlainMagic
 				return false;
 			}
 
-			setWarpPoint(null, player.dimension);
+			setWarpPoint(null, type);
 
 			CaveUtils.grantAdvancement(player, "magic_warp");
 		}
 		else
 		{
-			setWarpPoint(player.getPosition(), player.dimension);
+			setWarpPoint(player.getPosition(), type);
 
 			player.sendStatusMessage(new TextComponentTranslation("item.magicalBook.warp.point.set"), true);
 		}

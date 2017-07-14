@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharUtils;
@@ -18,7 +19,6 @@ import org.lwjgl.input.Mouse;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -1270,34 +1270,31 @@ public class GuiVeinsEditor extends GuiScreen
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(() ->
+			List<CaveVein> result;
+
+			if (Strings.isNullOrEmpty(filter))
 			{
-				List<CaveVein> result;
-
-				if (Strings.isNullOrEmpty(filter))
+				result = veins;
+			}
+			else if (filter.equals("selected"))
+			{
+				result = selected;
+			}
+			else
+			{
+				if (!filterCache.containsKey(filter))
 				{
-					result = veins;
-				}
-				else if (filter.equals("selected"))
-				{
-					result = selected;
-				}
-				else
-				{
-					if (!filterCache.containsKey(filter))
-					{
-						filterCache.put(filter, Lists.newArrayList(Collections2.filter(veins, e -> filterMatch(e, filter))));
-					}
-
-					result = filterCache.get(filter);
+					filterCache.put(filter, veins.parallelStream().filter(e -> filterMatch(e, filter)).collect(Collectors.toList()));
 				}
 
-				if (!contents.equals(result))
-				{
-					contents.clear();
-					contents.addAll(result);
-				}
-			});
+				result = filterCache.get(filter);
+			}
+
+			if (!contents.equals(result))
+			{
+				contents.clear();
+				contents.addAll(result);
+			}
 		}
 
 		protected boolean filterMatch(CaveVein vein, String filter)

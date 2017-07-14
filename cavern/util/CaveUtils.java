@@ -13,10 +13,10 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ForkJoinPool;
-import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
+
+import org.apache.logging.log4j.Level;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
@@ -34,11 +34,9 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayer.SleepResult;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
@@ -51,21 +49,10 @@ import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class CaveUtils
 {
-	private static ForkJoinPool pool;
-
-	public static ForkJoinPool getPool()
-	{
-		if (pool == null || pool.isShutdown())
-		{
-			pool = new ForkJoinPool();
-		}
-
-		return pool;
-	}
-
 	public static ModContainer getModContainer()
 	{
 		ModContainer mod = Loader.instance().getIndexedModList().get(Cavern.MODID);
@@ -93,17 +80,7 @@ public class CaveUtils
 		return (o1 == null ? 1 : 0) - (o2 == null ? 1 : 0);
 	}
 
-	public static boolean containsIgnoreCase(String s1, String s2)
-	{
-		if (Strings.isNullOrEmpty(s1) || Strings.isNullOrEmpty(s2))
-		{
-			return false;
-		}
-
-		return Pattern.compile(Pattern.quote(s2), Pattern.CASE_INSENSITIVE).matcher(s1).find();
-	}
-
-	public static boolean archiveDirZip(File dir, File dest)
+	public static boolean archiveDirectory(File dir, File dest)
 	{
 		Path dirPath = dir.toPath();
 		String parent = dir.getName();
@@ -155,12 +132,12 @@ public class CaveUtils
 
 			return true;
 		}
-		catch (Exception e)
+		catch (IOException e)
 		{
-			e.printStackTrace();
-
-			return false;
+			CaveLog.log(Level.WARN, e, "An error occurred archiving the " + parent + "directory.");
 		}
+
+		return false;
 	}
 
 	public static boolean areBlockStatesEqual(@Nullable IBlockState stateA, @Nullable IBlockState stateB)
@@ -178,22 +155,14 @@ public class CaveUtils
 		return stateA.getBlock() == stateB.getBlock() && stateA.getBlock().getMetaFromState(stateA) == stateB.getBlock().getMetaFromState(stateB);
 	}
 
-	public static boolean isItemEqual(ItemStack stack1, ItemStack stack2)
+	public static boolean isItemEqual(ItemStack target, ItemStack input)
 	{
-		if (stack1.getHasSubtypes() && stack2.getHasSubtypes())
+		if (target.getHasSubtypes())
 		{
-			if (stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2))
-			{
-				return true;
-			}
+			return OreDictionary.itemMatches(target, input, false) && ItemStack.areItemStackTagsEqual(target, input);
 		}
 
-		if (!stack1.getHasSubtypes() && !stack2.getHasSubtypes())
-		{
-			return stack1.getItem() == stack2.getItem() && ItemStack.areItemStackTagsEqual(stack1, stack2);
-		}
-
-		return false;
+		return target.getItem() == input.getItem() && ItemStack.areItemStackTagsEqual(target, input);
 	}
 
 	@Nullable
@@ -263,36 +232,7 @@ public class CaveUtils
 	@Nullable
 	public static String getEntityName(Class<? extends Entity> entityClass)
 	{
-		ResourceLocation key = EntityList.getKey(entityClass);
-
-		return getEntityName(key);
-	}
-
-	public static ItemStack getSpawnEgg(@Nullable ResourceLocation key)
-	{
-		ItemStack item = new ItemStack(Items.SPAWN_EGG);
-
-		if (key == null)
-		{
-			return item;
-		}
-
-		NBTTagCompound nbt = new NBTTagCompound();
-		NBTTagCompound tag = new NBTTagCompound();
-
-		tag.setString("id", key.toString());
-		nbt.setTag("EntityTag", tag);
-
-		item.setTagCompound(nbt);
-
-		return item;
-	}
-
-	public static ItemStack getSpawnEgg(Class<? extends Entity> entityClass)
-	{
-		ResourceLocation key = EntityList.getKey(entityClass);
-
-		return getSpawnEgg(key);
+		return getEntityName(EntityList.getKey(entityClass));
 	}
 
 	public static boolean isMoving(@Nullable Entity entity)

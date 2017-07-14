@@ -218,7 +218,7 @@ public class DimensionRegeneration
 
 		CaveNetworkRegistry.sendToAll(new RegenerationGuiMessage(EnumType.BACKUP));
 
-		if (CaveUtils.archiveDirZip(dir, bak))
+		if (CaveUtils.archiveDirectory(dir, bak))
 		{
 			ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_FILE, FilenameUtils.normalize(bak.getParentFile().getPath()));
 

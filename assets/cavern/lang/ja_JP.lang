@@ -369,6 +369,7 @@ item.magicalBook.torch.exist=トーチの魔法が既に存在します
 item.magicalBook.torch.finish=トーチの魔法が消滅しました
 item.magicalBook.summon.name=サモン
 item.magicalBook.compositing.name=コンポジット
+item.magicalBook.compositing.failed=アイテムの合成に失敗しました
 item.elixir.name=エリクサー
 item.elixirMedium.name=中級エリクサー
 item.elixirHigh.name=上級エリクサー

@@ -382,6 +382,7 @@ item.magicalBook.torch.exist=You are already performing the torch magic
 item.magicalBook.torch.finish=Torch magic has been disappeared
 item.magicalBook.summon.name=Summon
 item.magicalBook.compositing.name=Compositing
+item.magicalBook.compositing.failed=Compositing magic has been failed
 item.elixir.name=Elixir
 item.elixirMedium.name=Medium Elixir
 item.elixirHigh.name=High Elixir

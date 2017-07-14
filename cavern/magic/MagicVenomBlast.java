@@ -56,29 +56,24 @@ public class MagicVenomBlast implements IEntityMagic
 	@Override
 	public boolean isTarget(EntityPlayer player, Entity entity)
 	{
-		return entity instanceof IMob && !(entity instanceof ISummonMob);
+		return entity instanceof EntityLivingBase && entity instanceof IMob && !(entity instanceof ISummonMob);
 	}
 
 	@Override
 	public boolean execute(EntityPlayer player, Entity entity)
 	{
-		if (entity instanceof EntityLivingBase)
+		EntityLivingBase target = (EntityLivingBase)entity;
+		int level = getMagicLevel();
+		int duration = (10 + 5 * (level - 1)) * 20;
+
+		target.addPotionEffect(new PotionEffect(MobEffects.POISON, duration, 2, false, true));
+		target.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, duration * 2, 3, false, true));
+
+		if (target.isNonBoss())
 		{
-			EntityLivingBase target = (EntityLivingBase)entity;
-			int level = getMagicLevel();
-			int duration = (10 + 5 * (level - 1)) * 20;
-
-			target.addPotionEffect(new PotionEffect(MobEffects.POISON, duration, 2, false, true));
-			target.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, duration * 2, 3, false, true));
-
-			if (target.isNonBoss())
-			{
-				target.attackEntityFrom(DamageSource.MAGIC, target.getHealth() * (0.2F * level));
-			}
-
-			return true;
+			target.attackEntityFrom(DamageSource.MAGIC, target.getHealth() * (0.2F * level));
 		}
 
-		return false;
+		return true;
 	}
 }

@@ -2,6 +2,7 @@ package cavern.util;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.base.Strings;
@@ -25,12 +26,12 @@ public class CaveFilters
 			return false;
 		}
 
-		if (CaveUtils.containsIgnoreCase(blockMeta.getName(), filter))
+		if (StringUtils.containsIgnoreCase(blockMeta.getName(), filter))
 		{
 			return true;
 		}
 
-		if (CaveUtils.containsIgnoreCase(blockMeta.getMetaString(), filter))
+		if (StringUtils.containsIgnoreCase(blockMeta.getMetaString(), filter))
 		{
 			return true;
 		}
@@ -40,30 +41,30 @@ public class CaveFilters
 
 		if (stack.getItem() == Items.AIR)
 		{
-			if (CaveUtils.containsIgnoreCase(block.getLocalizedName(), filter))
+			if (StringUtils.containsIgnoreCase(block.getLocalizedName(), filter))
 			{
 				return true;
 			}
 
-			if (CaveUtils.containsIgnoreCase(block.getUnlocalizedName(), filter))
+			if (StringUtils.containsIgnoreCase(block.getUnlocalizedName(), filter))
 			{
 				return true;
 			}
 		}
 		else
 		{
-			if (CaveUtils.containsIgnoreCase(stack.getDisplayName(), filter))
+			if (StringUtils.containsIgnoreCase(stack.getDisplayName(), filter))
 			{
 				return true;
 			}
 
-			if (CaveUtils.containsIgnoreCase(stack.getUnlocalizedName(), filter))
+			if (StringUtils.containsIgnoreCase(stack.getUnlocalizedName(), filter))
 			{
 				return true;
 			}
 		}
 
-		if (CaveUtils.containsIgnoreCase(block.getHarvestTool(blockMeta.getBlockState()), filter))
+		if (StringUtils.containsIgnoreCase(block.getHarvestTool(blockMeta.getBlockState()), filter))
 		{
 			return true;
 		}
@@ -78,19 +79,19 @@ public class CaveFilters
 			return false;
 		}
 
-		if (CaveUtils.containsIgnoreCase(itemMeta.getName(), filter))
+		if (StringUtils.containsIgnoreCase(itemMeta.getName(), filter))
 		{
 			return true;
 		}
 
 		ItemStack stack = itemMeta.getItemStack();
 
-		if (CaveUtils.containsIgnoreCase(stack.getDisplayName(), filter))
+		if (StringUtils.containsIgnoreCase(stack.getDisplayName(), filter))
 		{
 			return true;
 		}
 
-		if (CaveUtils.containsIgnoreCase(stack.getUnlocalizedName(), filter))
+		if (StringUtils.containsIgnoreCase(stack.getUnlocalizedName(), filter))
 		{
 			return true;
 		}
@@ -110,7 +111,7 @@ public class CaveFilters
 			return false;
 		}
 
-		if (Biome.getIdForBiome(biome) == NumberUtils.toInt(filter, -1) || CaveUtils.containsIgnoreCase(biome.getRegistryName().toString(), filter))
+		if (Biome.getIdForBiome(biome) == NumberUtils.toInt(filter, -1) || StringUtils.containsIgnoreCase(biome.getRegistryName().toString(), filter))
 		{
 			return true;
 		}

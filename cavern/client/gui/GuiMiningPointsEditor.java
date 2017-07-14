@@ -8,13 +8,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.CharUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -908,41 +908,38 @@ public class GuiMiningPointsEditor extends GuiScreen
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(() ->
+			List<PointEntry> result;
+
+			if (Strings.isNullOrEmpty(filter))
 			{
-				List<PointEntry> result;
-
-				if (Strings.isNullOrEmpty(filter))
+				result = points;
+			}
+			else if (filter.equals("selected"))
+			{
+				result = Lists.newArrayList(selected);
+			}
+			else
+			{
+				if (!filterCache.containsKey(filter))
 				{
-					result = points;
-				}
-				else if (filter.equals("selected"))
-				{
-					result = Lists.newArrayList(selected);
-				}
-				else
-				{
-					if (!filterCache.containsKey(filter))
-					{
-						filterCache.put(filter, Lists.newArrayList(Collections2.filter(points, e -> filterMatch(e, filter))));
-					}
-
-					result = filterCache.get(filter);
+					filterCache.put(filter, points.parallelStream().filter(e -> filterMatch(e, filter)).collect(Collectors.toList()));
 				}
 
-				if (!contents.equals(result))
-				{
-					contents.clear();
-					contents.addAll(result);
-				}
-			});
+				result = filterCache.get(filter);
+			}
+
+			if (!contents.equals(result))
+			{
+				contents.clear();
+				contents.addAll(result);
+			}
 		}
 
 		protected boolean filterMatch(PointEntry entry, String filter)
 		{
 			if (entry.isOreDict())
 			{
-				return CaveUtils.containsIgnoreCase(entry.getOreDict().getName(), filter);
+				return StringUtils.containsIgnoreCase(entry.getOreDict().getName(), filter);
 			}
 
 			return CaveFilters.blockFilter(entry.getBlockMeta(), filter);

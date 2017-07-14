@@ -4,7 +4,6 @@ import cavern.api.CavernAPI;
 import cavern.api.IHunterStats;
 import cavern.config.DisplayConfig;
 import cavern.config.property.ConfigDisplayPos;
-import cavern.item.CaveItems;
 import cavern.network.server.StatsAdjustRequestMessage;
 import cavern.stats.HunterRank;
 import cavern.stats.HunterStats;
@@ -25,6 +24,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class HunterStatsHUDEventHooks
 {
+	public static ConfigDisplayPos.Type currentPosition;
+
 	private int posX;
 	private int posY;
 
@@ -37,12 +38,9 @@ public class HunterStatsHUDEventHooks
 
 	protected boolean canRenderHUD(Minecraft mc)
 	{
-		if (getDisplayType().isHidden())
-		{
-			return false;
-		}
+		ConfigDisplayPos.Type type = getDisplayType();
 
-		if (!CavernAPI.dimension.isEntityInCavenia(mc.player))
+		if (type.isHidden())
 		{
 			return false;
 		}
@@ -52,12 +50,12 @@ public class HunterStatsHUDEventHooks
 			return false;
 		}
 
-		if (getDisplayType() == DisplayConfig.magicianPointPosition.getType() && CaveItems.hasMagicalItem(mc.player, true))
+		if (type == MinerStatsHUDEventHooks.currentPosition || type == MagicianStatsHUDEventHooks.currentPosition)
 		{
 			return false;
 		}
 
-		return true;
+		return CavernAPI.dimension.isEntityInCavenia(mc.player);
 	}
 
 	protected void setDisplayPos(ConfigDisplayPos.Type type, Minecraft mc, int scaledWidth, int scaledHeight)
@@ -145,16 +143,21 @@ public class HunterStatsHUDEventHooks
 		}
 
 		Minecraft mc = FMLClientHandler.instance().getClient();
+		ConfigDisplayPos.Type displayType = getDisplayType();
 
-		if (!canRenderHUD(mc))
+		if (canRenderHUD(mc))
 		{
+			currentPosition = displayType;
+		}
+		else
+		{
+			currentPosition = ConfigDisplayPos.Type.HIDDEN;
 			huntingPointPer = -1.0D;
 
 			return;
 		}
 
 		ScaledResolution resolution = event.getResolution();
-		ConfigDisplayPos.Type displayType = getDisplayType();
 
 		IHunterStats stats = HunterStats.get(mc.player, true);
 

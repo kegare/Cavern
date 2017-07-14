@@ -14,7 +14,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -25,7 +24,6 @@ import cavern.config.Config;
 import cavern.util.ArrayListExtended;
 import cavern.util.BlockMeta;
 import cavern.util.CaveFilters;
-import cavern.util.CaveUtils;
 import cavern.util.PanoramaPaths;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
@@ -766,34 +764,31 @@ public class GuiSelectBlock extends GuiScreen
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(() ->
+			List<BlockMeta> result;
+
+			if (Strings.isNullOrEmpty(filter))
 			{
-				List<BlockMeta> result;
-
-				if (Strings.isNullOrEmpty(filter))
+				result = entries;
+			}
+			else if (filter.equals("selected"))
+			{
+				result = Lists.newArrayList(selected);
+			}
+			else
+			{
+				if (!filterCache.containsKey(filter))
 				{
-					result = entries;
-				}
-				else if (filter.equals("selected"))
-				{
-					result = Lists.newArrayList(selected);
-				}
-				else
-				{
-					if (!filterCache.containsKey(filter))
-					{
-						filterCache.put(filter, Lists.newArrayList(Collections2.filter(entries, e -> filterMatch(e, filter))));
-					}
-
-					result = filterCache.get(filter);
+					filterCache.put(filter, entries.parallelStream().filter(e -> filterMatch(e, filter)).collect(Collectors.toList()));
 				}
 
-				if (!contents.equals(result))
-				{
-					contents.clear();
-					contents.addAll(result);
-				}
-			});
+				result = filterCache.get(filter);
+			}
+
+			if (!contents.equals(result))
+			{
+				contents.clear();
+				contents.addAll(result);
+			}
 		}
 
 		protected boolean filterMatch(BlockMeta blockMeta, String filter)

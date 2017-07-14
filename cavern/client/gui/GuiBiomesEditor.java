@@ -16,7 +16,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -29,7 +28,6 @@ import cavern.config.manager.CaveBiomeManager;
 import cavern.util.ArrayListExtended;
 import cavern.util.BlockMeta;
 import cavern.util.CaveFilters;
-import cavern.util.CaveUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -907,34 +905,31 @@ public class GuiBiomesEditor extends GuiScreen
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(() ->
+			List<CaveBiome> result;
+
+			if (Strings.isNullOrEmpty(filter))
 			{
-				List<CaveBiome> result;
-
-				if (Strings.isNullOrEmpty(filter))
+				result = biomes;
+			}
+			else if (filter.equals("selected"))
+			{
+				result = Lists.newArrayList(selected);
+			}
+			else
+			{
+				if (!filterCache.containsKey(filter))
 				{
-					result = biomes;
-				}
-				else if (filter.equals("selected"))
-				{
-					result = Lists.newArrayList(selected);
-				}
-				else
-				{
-					if (!filterCache.containsKey(filter))
-					{
-						filterCache.put(filter, Lists.newArrayList(Collections2.filter(biomes, e -> filterMatch(e, filter))));
-					}
-
-					result = filterCache.get(filter);
+					filterCache.put(filter, biomes.parallelStream().filter(e -> filterMatch(e, filter)).collect(Collectors.toList()));
 				}
 
-				if (!contents.equals(result))
-				{
-					contents.clear();
-					contents.addAll(result);
-				}
-			});
+				result = filterCache.get(filter);
+			}
+
+			if (!contents.equals(result))
+			{
+				contents.clear();
+				contents.addAll(result);
+			}
 		}
 
 		protected boolean filterMatch(CaveBiome entry, String filter)

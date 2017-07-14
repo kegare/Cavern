@@ -37,6 +37,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -192,15 +193,15 @@ public class ItemMagicalBook extends Item
 
 				break;
 			case WARP:
-				Pair<BlockPos, Integer> warpPoint = MagicWarp.getWarpPoint(stack);
+				Pair<BlockPos, DimensionType> warpPoint = MagicWarp.getWarpPoint(stack);
 
 				if (warpPoint != null)
 				{
 					BlockPos pos = warpPoint.getLeft();
-					int dim = warpPoint.getRight();
+					DimensionType dim = warpPoint.getRight();
 					String prefix = Cavern.proxy.translate("item.magicalBook.warp.point") + ": ";
 
-					tooltip.add(prefix + String.format("%d, %d, %d (%d)", pos.getX(), pos.getY(), pos.getZ(), dim));
+					tooltip.add(prefix + String.format("%d, %d, %d (%d)", pos.getX(), pos.getY(), pos.getZ(), dim.getName()));
 				}
 
 				break;

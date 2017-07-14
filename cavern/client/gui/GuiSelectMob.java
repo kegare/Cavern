@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -15,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -443,34 +443,31 @@ public class GuiSelectMob extends GuiScreen
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(() ->
+			List<String> result;
+
+			if (Strings.isNullOrEmpty(filter))
 			{
-				List<String> result;
-
-				if (Strings.isNullOrEmpty(filter))
+				result = mobs;
+			}
+			else if (filter.equals("selected"))
+			{
+				result = Lists.newArrayList(selected);
+			}
+			else
+			{
+				if (!filterCache.containsKey(filter))
 				{
-					result = mobs;
-				}
-				else if (filter.equals("selected"))
-				{
-					result = Lists.newArrayList(selected);
-				}
-				else
-				{
-					if (!filterCache.containsKey(filter))
-					{
-						filterCache.put(filter, Lists.newArrayList(Collections2.filter(mobs, e -> filterMatch(e, filter))));
-					}
-
-					result = filterCache.get(filter);
+					filterCache.put(filter, mobs.parallelStream().filter(e -> filterMatch(e, filter)).collect(Collectors.toList()));
 				}
 
-				if (!contents.equals(result))
-				{
-					contents.clear();
-					contents.addAll(result);
-				}
-			});
+				result = filterCache.get(filter);
+			}
+
+			if (!contents.equals(result))
+			{
+				contents.clear();
+				contents.addAll(result);
+			}
 		}
 
 		protected boolean filterMatch(String entry, String filter)

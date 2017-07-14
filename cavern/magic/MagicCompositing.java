@@ -22,6 +22,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -163,6 +164,8 @@ public class MagicCompositing implements IPlainMagic
 
 		if (result.isEmpty())
 		{
+			player.sendStatusMessage(new TextComponentTranslation("item.magicalBook.compositing.failed"), true);
+
 			InventoryHelper.dropInventoryItems(world, player, inventory);
 
 			soundType = 1;

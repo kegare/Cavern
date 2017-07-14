@@ -58,20 +58,7 @@ public class CompositingRecipeBasic implements ICompositingRecipe
 
 		for (ItemStack material : getMaterialItems())
 		{
-			if (stack.getHasSubtypes() && material.getHasSubtypes())
-			{
-				if (material.getMetadata() == OreDictionary.WILDCARD_VALUE)
-				{
-					return stack.getItem() == material.getItem();
-				}
-			}
-
-			if (!stack.getHasSubtypes() && !material.getHasSubtypes())
-			{
-				return stack.getItem() == material.getItem();
-			}
-
-			if (stack.isItemEqual(material) && ItemStack.areItemStackTagsEqual(stack, material))
+			if (OreDictionary.itemMatches(material, stack, false) && ItemStack.areItemStackTagsEqual(material, stack))
 			{
 				return true;
 			}
@@ -110,18 +97,18 @@ public class CompositingRecipeBasic implements ICompositingRecipe
 			return ItemStack.EMPTY;
 		}
 
-		List<ItemStack> list;
+		List<ItemStack> items;
 
 		if (checkItems != null)
 		{
-			list = checkItems;
+			items = checkItems;
 		}
 		else
 		{
-			list = materialItems;
+			items = materialItems;
 		}
 
-		for (ItemStack material : list)
+		for (ItemStack material : items)
 		{
 			if (isItemMatch(material, stack))
 			{
@@ -157,7 +144,7 @@ public class CompositingRecipeBasic implements ICompositingRecipe
 			return false;
 		}
 
-		if (!ItemStack.areItemsEqual(material, stack) || !ItemStack.areItemStackTagsEqual(material, stack))
+		if (!OreDictionary.itemMatches(material, stack, false) || !ItemStack.areItemStackTagsEqual(material, stack))
 		{
 			return false;
 		}

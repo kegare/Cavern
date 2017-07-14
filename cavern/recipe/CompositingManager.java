@@ -13,6 +13,7 @@ import cavern.item.CaveItems;
 import cavern.item.ItemAcresia;
 import cavern.item.ItemCave;
 import cavern.item.ItemElixir;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.item.EnumDyeColor;
@@ -101,5 +102,8 @@ public class CompositingManager implements ICompositingManager
 			manager.addRecipe(new ItemStack(entry.getLeft()), 0.5D, 100,
 				new ItemStack(entry.getRight().getLeft()), new ItemStack(entry.getRight().getRight()));
 		}
+
+		manager.addRecipe(new ItemStack(Items.DIAMOND), 0.05D, 150, new ItemStack(Items.COAL, 64, 0));
+		manager.addRecipe(new ItemStack(Blocks.PACKED_ICE), 1.0D, 50, new ItemStack(Blocks.ICE, 9));
 	}
 }

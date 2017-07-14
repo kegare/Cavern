@@ -17,6 +17,7 @@ import cavern.stats.MagicianRank;
 import cavern.stats.MagicianStats;
 import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
+import cavern.util.Version;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -46,7 +47,7 @@ public class CommandCavern extends CommandBase
 
 	public String[] getCommands()
 	{
-		return new String[] {"regenerate"};
+		return Version.DEV_DEBUG ? new String[] {"regenerate", "miner", "hunter", "magician"} : new String[] {"regenerate"};
 	}
 
 	@Override

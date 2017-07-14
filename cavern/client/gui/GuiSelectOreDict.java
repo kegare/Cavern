@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -560,34 +560,31 @@ public class GuiSelectOreDict extends GuiScreen
 
 		protected void setFilter(String filter)
 		{
-			CaveUtils.getPool().execute(() ->
+			List<OreDictEntry> result;
+
+			if (Strings.isNullOrEmpty(filter))
 			{
-				List<OreDictEntry> result;
-
-				if (Strings.isNullOrEmpty(filter))
+				result = entries;
+			}
+			else if (filter.equals("selected"))
+			{
+				result = Lists.newArrayList(selected);
+			}
+			else
+			{
+				if (!filterCache.containsKey(filter))
 				{
-					result = entries;
-				}
-				else if (filter.equals("selected"))
-				{
-					result = Lists.newArrayList(selected);
-				}
-				else
-				{
-					if (!filterCache.containsKey(filter))
-					{
-						filterCache.put(filter, Lists.newArrayList(Collections2.filter(entries, e -> filterMatch(e, filter))));
-					}
-
-					result = filterCache.get(filter);
+					filterCache.put(filter, entries.parallelStream().filter(e -> filterMatch(e, filter)).collect(Collectors.toList()));
 				}
 
-				if (!contents.equals(result))
-				{
-					contents.clear();
-					contents.addAll(result);
-				}
-			});
+				result = filterCache.get(filter);
+			}
+
+			if (!contents.equals(result))
+			{
+				contents.clear();
+				contents.addAll(result);
+			}
 		}
 
 		protected boolean filterMatch(OreDictEntry entry, String filter)
@@ -597,12 +594,12 @@ public class GuiSelectOreDict extends GuiScreen
 				return false;
 			}
 
-			if (CaveUtils.containsIgnoreCase(entry.getName(), filter))
+			if (StringUtils.containsIgnoreCase(entry.getName(), filter))
 			{
 				return true;
 			}
 
-			return CaveUtils.containsIgnoreCase(entry.getItemStack().getDisplayName(), filter);
+			return StringUtils.containsIgnoreCase(entry.getItemStack().getDisplayName(), filter);
 		}
 	}
 

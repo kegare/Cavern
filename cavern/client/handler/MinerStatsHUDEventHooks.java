@@ -7,7 +7,6 @@ import cavern.config.DisplayConfig;
 import cavern.config.GeneralConfig;
 import cavern.config.MiningAssistConfig;
 import cavern.config.property.ConfigDisplayPos;
-import cavern.item.CaveItems;
 import cavern.miningassist.MiningAssist;
 import cavern.network.server.StatsAdjustRequestMessage;
 import cavern.stats.MinerRank;
@@ -32,6 +31,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class MinerStatsHUDEventHooks
 {
+	public static ConfigDisplayPos.Type currentPosition;
+
 	private int posX;
 	private int posY;
 
@@ -44,17 +45,9 @@ public class MinerStatsHUDEventHooks
 
 	protected boolean canRenderHUD(Minecraft mc)
 	{
-		if (getDisplayType().isHidden())
-		{
-			return false;
-		}
+		ConfigDisplayPos.Type type = getDisplayType();
 
-		if (!CavernAPI.dimension.isEntityInCaves(mc.player))
-		{
-			return false;
-		}
-
-		if (CavernAPI.dimension.isEntityInCavenia(mc.player) && getDisplayType() == DisplayConfig.huntingPointPosition.getType())
+		if (type.isHidden())
 		{
 			return false;
 		}
@@ -64,19 +57,14 @@ public class MinerStatsHUDEventHooks
 			return false;
 		}
 
-		if (getDisplayType() == DisplayConfig.magicianPointPosition.getType() && CaveItems.hasMagicalItem(mc.player, true))
+		if (type == HunterStatsHUDEventHooks.currentPosition || type == MagicianStatsHUDEventHooks.currentPosition)
 		{
 			return false;
 		}
 
-		if (DisplayConfig.alwaysShowMinerStatus)
+		if (!CavernAPI.dimension.isEntityInCaves(mc.player) || CavernAPI.dimension.isEntityInCavenia(mc.player))
 		{
-			return true;
-		}
-
-		if (mc.player.capabilities.isCreativeMode || mc.gameSettings.advancedItemTooltips)
-		{
-			return true;
+			return false;
 		}
 
 		for (ItemStack held : mc.player.getHeldEquipment())
@@ -87,7 +75,7 @@ public class MinerStatsHUDEventHooks
 			}
 		}
 
-		return false;
+		return DisplayConfig.alwaysShowMinerStatus || mc.player.capabilities.isCreativeMode || mc.gameSettings.advancedItemTooltips;
 	}
 
 	protected void setDisplayPos(ConfigDisplayPos.Type type, Minecraft mc, int scaledWidth, int scaledHeight)
@@ -175,16 +163,21 @@ public class MinerStatsHUDEventHooks
 		}
 
 		Minecraft mc = FMLClientHandler.instance().getClient();
+		ConfigDisplayPos.Type displayType = getDisplayType();
 
-		if (!canRenderHUD(mc))
+		if (canRenderHUD(mc))
 		{
+			currentPosition = displayType;
+		}
+		else
+		{
+			currentPosition = ConfigDisplayPos.Type.HIDDEN;
 			miningPointPer = -1.0D;
 
 			return;
 		}
 
 		ScaledResolution resolution = event.getResolution();
-		ConfigDisplayPos.Type displayType = getDisplayType();
 
 		IMinerStats stats = MinerStats.get(mc.player, true);
 
