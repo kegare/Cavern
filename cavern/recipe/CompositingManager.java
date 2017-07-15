@@ -75,14 +75,14 @@ public class CompositingManager implements ICompositingManager
 		manager.addRecipe(ItemElixir.EnumType.ELIXIR_NORMAL.getItemStack(), 1.0D, 50,
 			PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER),
 			ItemAcresia.EnumType.FRUITS.getItemStack(), ItemCave.EnumType.AQUAMARINE.getItemStack());
-		manager.addRecipe(ItemElixir.EnumType.ELIXIR_MEDIUM.getItemStack(), 0.55D, 100,
+		manager.addRecipe(ItemElixir.EnumType.ELIXIR_MEDIUM.getItemStack(), 0.65D, 100,
 			ItemElixir.EnumType.ELIXIR_NORMAL.getItemStack(),
 			ItemAcresia.EnumType.FRUITS.getItemStack(3), new ItemStack(Items.DYE, 1, EnumDyeColor.BLUE.getDyeDamage()));
-		manager.addRecipe(ItemElixir.EnumType.ELIXIR_HIGH.getItemStack(), 0.2D, 250,
+		manager.addRecipe(ItemElixir.EnumType.ELIXIR_HIGH.getItemStack(), 0.35D, 250,
 			ItemElixir.EnumType.ELIXIR_MEDIUM.getItemStack(),
 			ItemAcresia.EnumType.FRUITS.getItemStack(5), ItemCave.EnumType.MAGNITE_INGOT.getItemStack());
 
-		manager.addRecipe(new ItemStack(CaveItems.CAVENIC_BOW), 0.5D, 100,
+		manager.addRecipe(new ItemStack(CaveItems.CAVENIC_BOW), 0.7D, 100,
 			new ItemStack(Items.BOW), ItemCave.EnumType.CAVENIC_ORB.getItemStack(4));
 
 		List<Pair<Item, Pair<Item, Item>>> compositeRecipes = Lists.newArrayList();
@@ -99,7 +99,7 @@ public class CompositingManager implements ICompositingManager
 
 		for (Pair<Item, Pair<Item, Item>> entry : compositeRecipes)
 		{
-			manager.addRecipe(new ItemStack(entry.getLeft()), 0.5D, 100,
+			manager.addRecipe(new ItemStack(entry.getLeft()), 0.55D, 100,
 				new ItemStack(entry.getRight().getLeft()), new ItemStack(entry.getRight().getRight()));
 		}
 

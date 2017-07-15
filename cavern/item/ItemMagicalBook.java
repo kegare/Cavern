@@ -201,7 +201,7 @@ public class ItemMagicalBook extends Item
 					DimensionType dim = warpPoint.getRight();
 					String prefix = Cavern.proxy.translate("item.magicalBook.warp.point") + ": ";
 
-					tooltip.add(prefix + String.format("%d, %d, %d (%d)", pos.getX(), pos.getY(), pos.getZ(), dim.getName()));
+					tooltip.add(prefix + String.format("%d, %d, %d (%s)", pos.getX(), pos.getY(), pos.getZ(), dim.getName()));
 				}
 
 				break;

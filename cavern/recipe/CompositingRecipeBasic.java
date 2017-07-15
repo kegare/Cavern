@@ -10,7 +10,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class CompositingRecipeBasic implements ICompositingRecipe
 {
@@ -58,7 +57,7 @@ public class CompositingRecipeBasic implements ICompositingRecipe
 
 		for (ItemStack material : getMaterialItems())
 		{
-			if (OreDictionary.itemMatches(material, stack, false) && ItemStack.areItemStackTagsEqual(material, stack))
+			if (isItemMatch(material, stack))
 			{
 				return true;
 			}
@@ -135,20 +134,5 @@ public class CompositingRecipeBasic implements ICompositingRecipe
 	public ItemStack getRecipeOutput()
 	{
 		return resultItem;
-	}
-
-	public static boolean isItemMatch(ItemStack material, ItemStack stack)
-	{
-		if (material.isEmpty() || stack.isEmpty())
-		{
-			return false;
-		}
-
-		if (!OreDictionary.itemMatches(material, stack, false) || !ItemStack.areItemStackTagsEqual(material, stack))
-		{
-			return false;
-		}
-
-		return stack.getCount() >= material.getCount();
 	}
 }

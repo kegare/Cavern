@@ -157,12 +157,7 @@ public class CaveUtils
 
 	public static boolean isItemEqual(ItemStack target, ItemStack input)
 	{
-		if (target.getHasSubtypes())
-		{
-			return OreDictionary.itemMatches(target, input, false) && ItemStack.areItemStackTagsEqual(target, input);
-		}
-
-		return target.getItem() == input.getItem() && ItemStack.areItemStackTagsEqual(target, input);
+		return target.getHasSubtypes() && OreDictionary.itemMatches(target, input, false) || target.getItem() == input.getItem();
 	}
 
 	@Nullable

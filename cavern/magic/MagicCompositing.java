@@ -12,7 +12,6 @@ import cavern.core.CaveSounds;
 import cavern.core.Cavern;
 import cavern.item.InventoryEquipment;
 import cavern.magic.IMagic.IPlainMagic;
-import cavern.recipe.CompositingRecipeBasic;
 import cavern.stats.MagicianStats;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -187,7 +186,7 @@ public class MagicCompositing implements IPlainMagic
 
 			for (ItemStack material : materials)
 			{
-				if (checkList.contains(material) && CompositingRecipeBasic.isItemMatch(material, stack))
+				if (checkList.contains(material) && resultRecipe.isItemMatch(material, stack))
 				{
 					stack.shrink(material.getCount());
 
@@ -197,8 +196,6 @@ public class MagicCompositing implements IPlainMagic
 					}
 
 					checkList.remove(material);
-
-					break;
 				}
 			}
 		}

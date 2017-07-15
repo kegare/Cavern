@@ -7,12 +7,23 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 public interface ICompositingRecipe
 {
 	public NonNullList<ItemStack> getMaterialItems();
 
 	public boolean isMaterialItem(ItemStack stack);
+
+	public default boolean isItemMatch(ItemStack material, ItemStack stack)
+	{
+		if (material.isEmpty() || stack.isEmpty())
+		{
+			return false;
+		}
+
+		return OreDictionary.itemMatches(material, stack, false) && stack.getCount() >= material.getCount();
+	}
 
 	public boolean matches(IInventory inventory, World world, @Nullable EntityPlayer player);
 
