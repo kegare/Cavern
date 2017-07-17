@@ -158,7 +158,6 @@ public class HunterStatsHUDEventHooks
 		}
 
 		ScaledResolution resolution = event.getResolution();
-
 		IHunterStats stats = HunterStats.get(mc.player, true);
 
 		if (stats == null || !stats.isClientAdjusted())

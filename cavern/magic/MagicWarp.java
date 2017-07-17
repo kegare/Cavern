@@ -5,30 +5,31 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import cavern.core.CaveSounds;
-import cavern.magic.IMagic.IPlainMagic;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MagicWarp implements IPlainMagic
+public class MagicWarp implements IMagic
 {
 	private final int magicLevel;
 	private final long magicSpellTime;
-	private final ItemStack magicalBook;
 
-	public MagicWarp(int level, long time, ItemStack book)
+	public MagicWarp(int level, long time)
 	{
 		this.magicLevel = level;
 		this.magicSpellTime = time;
-		this.magicalBook = book;
 	}
 
 	@Override
@@ -37,13 +38,13 @@ public class MagicWarp implements IPlainMagic
 		return magicLevel;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public long getMagicSpellTime()
+	public long getMagicSpellTime(ItemStack stack, EnumHand hand)
 	{
-		return hasWarpPoint() ? magicSpellTime : magicSpellTime / 2;
+		return hasWarpPoint(stack) ? magicSpellTime : magicSpellTime / 2;
 	}
 
-	@Override
 	public double getMagicRange()
 	{
 		switch (getMagicLevel())
@@ -60,13 +61,13 @@ public class MagicWarp implements IPlainMagic
 	}
 
 	@Override
-	public int getCostMP()
+	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		return (hasWarpPoint() ? 100 : 50) * getMagicLevel();
+		return (hasWarpPoint(stack) ? 100 : 50) * getMagicLevel();
 	}
 
 	@Override
-	public int getMagicPoint()
+	public int getMagicPoint(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return 2 * getMagicLevel();
 	}
@@ -83,32 +84,11 @@ public class MagicWarp implements IPlainMagic
 		return new TextComponentTranslation("item.magicalBook.warp.point.far");
 	}
 
-	public boolean hasWarpPoint()
-	{
-		return hasWarpPoint(magicalBook);
-	}
-
-	@Nullable
-	public Pair<BlockPos, DimensionType> getWarpPoint()
-	{
-		return getWarpPoint(magicalBook);
-	}
-
-	public void setWarpPoint(@Nullable BlockPos pos, DimensionType type)
-	{
-		setWarpPoint(magicalBook, pos, type);
-	}
-
 	public static boolean hasWarpPoint(ItemStack magicalBook)
 	{
 		NBTTagCompound nbt = magicalBook.getTagCompound();
 
-		if (nbt == null)
-		{
-			return false;
-		}
-
-		return nbt.hasKey("WarpPoint", NBT.TAG_COMPOUND);
+		return nbt != null && nbt.hasKey("WarpPoint", NBT.TAG_COMPOUND);
 	}
 
 	@Nullable
@@ -163,10 +143,10 @@ public class MagicWarp implements IPlainMagic
 	}
 
 	@Override
-	public boolean execute(EntityPlayer player)
+	public boolean executeMagic(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		DimensionType type = player.world.provider.getDimensionType();
-		Pair<BlockPos, DimensionType> warpPoint = getWarpPoint();
+		Pair<BlockPos, DimensionType> warpPoint = getWarpPoint(stack);
 
 		if (warpPoint != null)
 		{
@@ -177,7 +157,7 @@ public class MagicWarp implements IPlainMagic
 				return false;
 			}
 
-			if (Math.sqrt(player.getDistanceSqToCenter(pos)) > getMagicRange(player))
+			if (Math.sqrt(player.getDistanceSqToCenter(pos)) > getMagicRange())
 			{
 				return false;
 			}
@@ -187,13 +167,13 @@ public class MagicWarp implements IPlainMagic
 				return false;
 			}
 
-			setWarpPoint(null, type);
+			setWarpPoint(stack, null, type);
 
 			CaveUtils.grantAdvancement(player, "magic_warp");
 		}
 		else
 		{
-			setWarpPoint(player.getPosition(), type);
+			setWarpPoint(stack, player.getPosition(), type);
 
 			player.sendStatusMessage(new TextComponentTranslation("item.magicalBook.warp.point.set"), true);
 		}

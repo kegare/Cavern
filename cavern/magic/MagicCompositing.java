@@ -11,7 +11,6 @@ import cavern.api.event.PlayerCompositedEvent;
 import cavern.core.CaveSounds;
 import cavern.core.Cavern;
 import cavern.item.InventoryEquipment;
-import cavern.magic.IMagic.IPlainMagic;
 import cavern.stats.MagicianStats;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,25 +18,26 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MagicCompositing implements IPlainMagic
+public class MagicCompositing implements IMagic
 {
 	private final int magicLevel;
 	private final long magicSpellTime;
-	private final ItemStack bookItem;
 
 	private int soundType;
 
-	public MagicCompositing(int level, long time, ItemStack stack)
+	public MagicCompositing(int level, long time)
 	{
 		this.magicLevel = level;
 		this.magicSpellTime = time;
-		this.bookItem = stack;
 	}
 
 	@Override
@@ -46,30 +46,25 @@ public class MagicCompositing implements IPlainMagic
 		return magicLevel;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public long getMagicSpellTime()
+	public long getMagicSpellTime(ItemStack stack, EnumHand hand)
 	{
-		IInventory inventory = InventoryEquipment.get(bookItem).getInventory();
+		IInventory inventory = InventoryEquipment.get(stack).getInventory();
 
 		return inventory == null || inventory.isEmpty() ? magicSpellTime / 4 : magicSpellTime;
 	}
 
 	@Override
-	public double getMagicRange()
-	{
-		return 0.0F;
-	}
-
-	@Override
-	public int getCostMP()
+	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return 50 * getMagicLevel();
 	}
 
 	@Override
-	public int getMagicPoint()
+	public int getMagicPoint(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		IInventory inventory = InventoryEquipment.get(bookItem).getInventory();
+		IInventory inventory = InventoryEquipment.get(stack).getInventory();
 
 		return inventory == null || inventory.isEmpty() ? 1 * getMagicLevel() : 5 * getMagicLevel();
 	}
@@ -87,42 +82,19 @@ public class MagicCompositing implements IPlainMagic
 	}
 
 	@Override
-	public boolean execute(EntityPlayer player)
+	public boolean executeMagic(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		int index = -1;
-		ItemStack held = player.getHeldItemMainhand();
-
-		if (ItemStack.areItemStacksEqual(held, bookItem))
-		{
-			index = 0;
-		}
-		else
-		{
-			held = player.getHeldItemOffhand();
-
-			if (ItemStack.areItemStacksEqual(held, bookItem))
-			{
-				index = 1;
-			}
-		}
-
-		if (index < 0)
-		{
-			return false;
-		}
-
-		IInventory inventory = InventoryEquipment.get(bookItem).getInventory();
+		IInventory inventory = InventoryEquipment.get(stack).getInventory();
 
 		if (inventory == null || inventory.isEmpty())
 		{
-			player.openGui(Cavern.instance, 1, player.world, index, getMagicLevel(), 0);
+			player.openGui(Cavern.instance, 1, player.world, hand == EnumHand.MAIN_HAND ? 0 : 1, getMagicLevel(), 0);
 
 			soundType = 1;
 
 			return true;
 		}
 
-		World world = player.world;
 		ICompositingRecipe resultRecipe = null;
 
 		for (ICompositingRecipe recipe : CavernAPI.compositing.getRecipes())
@@ -147,7 +119,7 @@ public class MagicCompositing implements IPlainMagic
 			int cost = resultRecipe.getCostMP(inventory, world, player);
 			IMagicianStats magician = MagicianStats.get(player);
 
-			if (magician.getMP() >= cost + getCostMP(player))
+			if (magician.getMP() >= cost + getMagicCost(player, world, stack, hand))
 			{
 				magician.addMP(cost);
 			}
@@ -177,20 +149,20 @@ public class MagicCompositing implements IPlainMagic
 
 		for (int i = 0; i < inventory.getSizeInventory(); ++i)
 		{
-			ItemStack stack = inventory.getStackInSlot(i);
+			ItemStack item = inventory.getStackInSlot(i);
 
-			if (stack.isEmpty())
+			if (item.isEmpty())
 			{
 				continue;
 			}
 
 			for (ItemStack material : materials)
 			{
-				if (checkList.contains(material) && resultRecipe.isItemMatch(material, stack))
+				if (checkList.contains(material) && resultRecipe.isItemMatch(material, item))
 				{
-					stack.shrink(material.getCount());
+					item.shrink(material.getCount());
 
-					if (stack.getCount() <= 0)
+					if (item.getCount() <= 0)
 					{
 						inventory.setInventorySlotContents(i, ItemStack.EMPTY);
 					}

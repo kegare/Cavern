@@ -10,6 +10,7 @@ import cavern.block.BlockPortalCavern;
 import cavern.config.GeneralConfig;
 import cavern.config.RuinsCavernConfig;
 import cavern.config.property.ConfigCaveborn;
+import cavern.util.CaveUtils;
 import cavern.util.ItemMeta;
 import cavern.world.CaveType;
 import cavern.world.WorldCachedData;
@@ -23,6 +24,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -72,10 +74,10 @@ public class CavebornEventHooks
 
 		if (caveborn == ConfigCaveborn.Type.RUINS_CAVERN && !CavernAPI.dimension.isRuinsCavernDisabled())
 		{
-			int dim = CaveType.DIM_RUINS_CAVERN.getId();
-			Teleporter teleporter = WorldCachedData.get(server.getWorld(dim)).getRuinsTeleporter();
+			DimensionType type = CaveType.DIM_RUINS_CAVERN;
+			Teleporter teleporter = WorldCachedData.get(server.getWorld(type.getId())).getRuinsTeleporter();
 
-			server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
+			CaveUtils.transferPlayerToDimension(player, type, teleporter);
 
 			WorldServer world = player.getServerWorld();
 
@@ -102,15 +104,15 @@ public class CavebornEventHooks
 
 			if (portal != null && !portal.isDimensionDisabled())
 			{
-				int dim = portal.getDimension().getId();
-				Teleporter teleporter = portal.getTeleporter(server.getWorld(dim));
+				DimensionType type = portal.getDimension();
+				Teleporter teleporter = portal.getTeleporter(server.getWorld(type.getId()));
 
 				boolean force = player.forceSpawn;
 
 				player.forceSpawn = true;
 				player.timeUntilPortal = player.getPortalCooldown();
 
-				server.getPlayerList().transferPlayerToDimension(player, dim, teleporter);
+				CaveUtils.transferPlayerToDimension(player, type, teleporter);
 
 				player.forceSpawn = force;
 

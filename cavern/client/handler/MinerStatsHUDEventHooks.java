@@ -178,7 +178,6 @@ public class MinerStatsHUDEventHooks
 		}
 
 		ScaledResolution resolution = event.getResolution();
-
 		IMinerStats stats = MinerStats.get(mc.player, true);
 
 		if (stats == null || !stats.isClientAdjusted())

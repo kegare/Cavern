@@ -126,19 +126,15 @@ public class ConfigChecker implements FilenameFilter
 
 		updateFile();
 
-		if (!configDir.exists())
-		{
-			return false;
-		}
-
 		for (File file : configDir.listFiles(this))
 		{
-			file.delete();
+			if (file.delete())
+			{
+				isUpdated = true;
+			}
 		}
 
-		isUpdated = true;
-
-		return true;
+		return isUpdated;
 	}
 
 	@Override

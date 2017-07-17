@@ -11,12 +11,13 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import cavern.client.handler.MagicSpellEventHooks;
+import cavern.client.handler.MagicEventHooks;
 import cavern.core.Cavern;
 import cavern.magic.IMagic;
 import cavern.magic.MagicCompositing;
 import cavern.magic.MagicExplosion;
 import cavern.magic.MagicFlameBreath;
+import cavern.magic.MagicFlying;
 import cavern.magic.MagicHeal;
 import cavern.magic.MagicHolyBless;
 import cavern.magic.MagicReturn;
@@ -133,7 +134,7 @@ public class ItemMagicalBook extends Item
 			case FLAME_BREATH:
 				return new MagicFlameBreath(level, type.getMagicSpellTime(level), type.getMagicRange(level));
 			case EXPLOSION:
-				return new MagicExplosion(level, type.getMagicSpellTime(level), type.getMagicRange(level));
+				return new MagicExplosion(level, type.getMagicSpellTime(level));
 			case THUNDERBOLT:
 				return new MagicThunderbolt(level, type.getMagicSpellTime(level), type.getMagicRange(level));
 			case VENOM_BLAST:
@@ -145,17 +146,19 @@ public class ItemMagicalBook extends Item
 			case HOLY_BLESS:
 				return new MagicHolyBless(level, type.getMagicSpellTime(level), type.getMagicRange(level));
 			case STORAGE:
-				return new MagicStorage(level, type.getMagicSpellTime(level), stack);
+				return new MagicStorage(level, type.getMagicSpellTime(level));
 			case WARP:
-				return new MagicWarp(level, type.getMagicSpellTime(level), stack);
+				return new MagicWarp(level, type.getMagicSpellTime(level));
 			case UNKNOWN:
-				return new MagicUnknown(level, type.getMagicSpellTime(level), stack);
+				return new MagicUnknown(level, type.getMagicSpellTime(level));
 			case TORCH:
 				return new MagicTorch(level, type.getMagicSpellTime(level), type.getMagicRange(level));
 			case SUMMON:
 				return new MagicSummon(level, type.getMagicSpellTime(level <= 2 ? 1 : 2));
 			case COMPOSITING:
-				return new MagicCompositing(level, type.getMagicSpellTime(level), stack);
+				return new MagicCompositing(level, type.getMagicSpellTime(level));
+			case FLYING:
+				return new MagicFlying(level, type.getMagicSpellTime(level));
 			default:
 		}
 
@@ -235,15 +238,15 @@ public class ItemMagicalBook extends Item
 	@Override
 	public boolean showDurabilityBar(ItemStack stack)
 	{
-		return MagicSpellEventHooks.spellingProgress > 0.0D &&
-			MagicSpellEventHooks.spellingBook != null && MagicSpellEventHooks.spellingBook == stack;
+		return MagicEventHooks.spellingProgress > 0.0D &&
+			MagicEventHooks.spellingBook != null && MagicEventHooks.spellingBook == stack;
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack)
 	{
-		return 1.0D - MathHelper.clamp(MagicSpellEventHooks.spellingProgress, 0.0D, 1.0D);
+		return 1.0D - MathHelper.clamp(MagicEventHooks.spellingProgress, 0.0D, 1.0D);
 	}
 
 	@Override
@@ -266,7 +269,8 @@ public class ItemMagicalBook extends Item
 		UNKNOWN(9, "unknown", 1, new long[] {5000L}, 0.0D, 0.0D),
 		TORCH(10, "torch", 3, null, 7.0D, 0.2D),
 		SUMMON(11, "summon", 4, null, 0.0D, 0.15D),
-		COMPOSITING(12, "compositing", 1, new long[] {15000L}, 0.0D, 0.1D);
+		COMPOSITING(12, "compositing", 1, new long[] {15000L}, 0.0D, 0.1D),
+		FLYING(13, "flying", 3, new long[] {1000L * 30, 1000L * 90, 1000L * 180}, 0.0D, 0.1D);
 
 		public static final EnumType[] VALUES = new EnumType[values().length];
 

@@ -152,7 +152,6 @@ public class MagicianStatsHUDEventHooks
 		}
 
 		ScaledResolution resolution = event.getResolution();
-
 		IMagicianStats stats = MagicianStats.get(mc.player, true);
 
 		if (stats == null || !stats.isClientAdjusted())

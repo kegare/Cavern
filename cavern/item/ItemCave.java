@@ -110,7 +110,7 @@ public class ItemCave extends Item
 
 		worldOld.playSound(player, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 0.5F, 0.5F);
 
-		server.getPlayerList().transferPlayerToDimension(player, dimNew.getId(), new TeleporterCavenia(worldNew));
+		CaveUtils.transferPlayerToDimension(player, dimNew, new TeleporterCavenia(worldNew));
 
 		x = player.posX;
 		y = player.posY + player.getEyeHeight();

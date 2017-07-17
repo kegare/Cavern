@@ -281,9 +281,9 @@ cavern.magicianrank.mage=Mage
 cavern.magicianrank.grandMage=Grand Mage
 cavern.magicianrank.promoted=Congratulations! %s has promoted to the %s rank.
 
-cavern.magicianstats.rank.short=The magic beyond your magical knowledge
-cavern.magicianstats.mp.short=You did not have enough MP
-cavern.magicianstats.magic.short=The magic does not meet the conditions
+cavern.magic.rank.short=The magic beyond your magical knowledge
+cavern.magic.mp.short=You did not have enough MP
+cavern.magic.condition.short=The magic does not meet the conditions
 
 cavern.terrain.wait=Please wait a moment
 cavern.terrain.load=Loading terrain
@@ -383,6 +383,7 @@ item.magicalBook.torch.finish=Torch magic has been disappeared
 item.magicalBook.summon.name=Summon
 item.magicalBook.compositing.name=Compositing
 item.magicalBook.compositing.failed=Compositing magic has been failed
+item.magicalBook.flying.name=Flying
 item.elixir.name=Elixir
 item.elixirMedium.name=Medium Elixir
 item.elixirHigh.name=High Elixir
@@ -524,6 +525,7 @@ advancements.cavern.enter_the_huge_cavern.title=Huge Cavern
 advancements.cavern.enter_the_huge_cavern.description=Enter the Huge Cavern dimension
 
 key.cavern.miningAssist=Toggle Mining Assist
+key.cavern.magicSpelling=Spell Magical Book
 
 key.categories.cavern=Cavern
 

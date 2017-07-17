@@ -5,13 +5,19 @@ import java.util.Set;
 import com.google.common.collect.Sets;
 
 import cavern.core.CaveSounds;
-import cavern.magic.IMagic.IPlayerMagic;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MagicHeal implements IPlayerMagic
+public class MagicHeal implements IEntityMagic
 {
 	private final int magicLevel;
 	private final long magicSpellTime;
@@ -30,26 +36,27 @@ public class MagicHeal implements IPlayerMagic
 		return magicLevel;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public long getMagicSpellTime()
+	public long getMagicSpellTime(ItemStack stack, EnumHand hand)
 	{
 		return magicSpellTime;
 	}
 
 	@Override
-	public double getMagicRange()
+	public double getMagicRange(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return magicRange;
 	}
 
 	@Override
-	public int getCostMP()
+	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return 50 * getMagicLevel();
 	}
 
 	@Override
-	public int getMagicPoint()
+	public int getMagicPoint(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return getMagicLevel() + 1;
 	}
@@ -61,20 +68,36 @@ public class MagicHeal implements IPlayerMagic
 	}
 
 	@Override
-	public boolean isTarget(EntityPlayer player, EntityPlayer targetPlayer)
+	public boolean isTargetEntity(EntityPlayer player, Entity entity)
 	{
-		return getMagicLevel() > 2 || player.getCachedUniqueIdString().equals(targetPlayer.getCachedUniqueIdString());
+		if (player.isEntityEqual(entity))
+		{
+			return true;
+		}
+
+		if (getMagicLevel() <= 2)
+		{
+			return false;
+		}
+
+		return player.canEntityBeSeen(entity);
+	}
+
+	public boolean shouldHeal(EntityLivingBase entity)
+	{
+		return entity.getHealth() > 0.0F && entity.getHealth() < entity.getMaxHealth();
 	}
 
 	@Override
-	public boolean execute(EntityPlayer player, EntityPlayer targetPlayer)
+	public boolean execute(EntityPlayer player, Entity entity, World world, ItemStack stack, EnumHand hand)
 	{
+		EntityLivingBase target = (EntityLivingBase)entity;
 		boolean healBadPotion = getMagicLevel() > 1;
 		boolean healed = false;
 
-		if (targetPlayer.shouldHeal())
+		if (shouldHeal(target))
 		{
-			targetPlayer.heal(player.getMaxHealth() * 0.5F);
+			target.heal(player.getMaxHealth() * 0.5F);
 
 			healed = true;
 		}
@@ -83,7 +106,7 @@ public class MagicHeal implements IPlayerMagic
 		{
 			Set<Potion> potions = Sets.newHashSet();
 
-			for (PotionEffect effect : targetPlayer.getActivePotionEffects())
+			for (PotionEffect effect : target.getActivePotionEffects())
 			{
 				Potion potion = effect.getPotion();
 
@@ -95,7 +118,7 @@ public class MagicHeal implements IPlayerMagic
 
 			for (Potion potion : potions)
 			{
-				targetPlayer.removePotionEffect(potion);
+				target.removePotionEffect(potion);
 
 				healed = true;
 			}

@@ -43,6 +43,19 @@ public class MagicianStatsAdjustMessage implements IMessage, IMessageHandler<Mag
 	}
 
 	@SideOnly(Side.CLIENT)
+	public void execute(EntityPlayer player)
+	{
+		IMagicianStats stats = MagicianStats.get(player, true);
+
+		if (stats != null)
+		{
+			stats.setPoint(point, false);
+			stats.setRank(rank, false);
+			stats.setMP(mp, false);
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
 	@Override
 	public IMessage onMessage(MagicianStatsAdjustMessage message, MessageContext ctx)
 	{
@@ -50,14 +63,7 @@ public class MagicianStatsAdjustMessage implements IMessage, IMessageHandler<Mag
 
 		if (player != null)
 		{
-			IMagicianStats stats = MagicianStats.get(player, true);
-
-			if (stats != null)
-			{
-				stats.setPoint(message.point, false);
-				stats.setRank(message.rank, false);
-				stats.setMP(message.mp, false);
-			}
+			message.execute(player);
 		}
 
 		return null;

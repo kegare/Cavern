@@ -55,12 +55,8 @@ public class CaveMusicMessage implements IMessage, IMessageHandler<CaveMusicMess
 	}
 
 	@SideOnly(Side.CLIENT)
-	@Override
-	public IMessage onMessage(CaveMusicMessage message, MessageContext ctx)
+	public void execute(Minecraft mc)
 	{
-		Minecraft mc = FMLClientHandler.instance().getClient();
-		boolean stop = message.stop;
-		String name = message.name;
 		SoundHandler handler = mc.getSoundHandler();
 
 		if (prevMusic != null)
@@ -73,7 +69,7 @@ public class CaveMusicMessage implements IMessage, IMessageHandler<CaveMusicMess
 			}
 			else if (handler.isSoundPlaying(prevMusic))
 			{
-				return null;
+				return;
 			}
 		}
 
@@ -92,6 +88,13 @@ public class CaveMusicMessage implements IMessage, IMessageHandler<CaveMusicMess
 				prevMusic = music;
 			}
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public IMessage onMessage(CaveMusicMessage message, MessageContext ctx)
+	{
+		message.execute(FMLClientHandler.instance().getClient());
 
 		return null;
 	}

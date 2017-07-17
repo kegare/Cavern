@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import cavern.api.ISummonMob;
 import cavern.world.CustomExplosion;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -38,6 +39,11 @@ public class MagicalExplosion extends CustomExplosion
 		}
 
 		if (entity instanceof ISummonMob)
+		{
+			return false;
+		}
+
+		if (entity instanceof IEntityOwnable && ((IEntityOwnable)entity).getOwner() != null)
 		{
 			return false;
 		}

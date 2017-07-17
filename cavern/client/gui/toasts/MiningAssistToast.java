@@ -5,8 +5,9 @@ import org.lwjgl.input.Keyboard;
 import cavern.block.BlockCave;
 import cavern.client.CaveKeyBindings;
 import cavern.config.MiningAssistConfig;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.toasts.GuiToast;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -28,9 +29,9 @@ public class MiningAssistToast extends CaveToast
 
 		if (result == Visibility.SHOW && !pressMessage)
 		{
-			EntityPlayer player = FMLClientHandler.instance().getClientPlayerEntity();
+			Minecraft mc = FMLClientHandler.instance().getClient();
 
-			player.sendStatusMessage(new TextComponentTranslation("cavern.miningassist.toggle.press", Keyboard.getKeyName(CaveKeyBindings.KEY_MINING_ASSIST.getKeyCode())), true);
+			mc.ingameGUI.setOverlayMessage(I18n.format("cavern.miningassist.toggle.press", Keyboard.getKeyName(CaveKeyBindings.KEY_MINING_ASSIST.getKeyCode())), false);
 
 			pressMessage = true;
 		}

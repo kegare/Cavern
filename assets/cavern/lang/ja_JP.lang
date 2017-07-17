@@ -268,9 +268,9 @@ cavern.magicianrank.mage=魔道師
 cavern.magicianrank.grandMage=大魔道師
 cavern.magicianrank.promoted=おめでとうございます！ %s の魔術ランクが %s になりました。
 
-cavern.magicianstats.rank.short=魔法の知識が足りません
-cavern.magicianstats.mp.short=必要なMPが足りません
-cavern.magicianstats.magic.short=魔法の発動条件を満たしていません
+cavern.magic.rank.short=魔法の知識が足りません
+cavern.magic.mp.short=必要なMPが足りません
+cavern.magic.condition.short=魔法の発動条件を満たしていません
 
 cavern.terrain.wait=しばらくお待ちください
 cavern.terrain.load=地形情報を読み込んでいます
@@ -370,6 +370,7 @@ item.magicalBook.torch.finish=トーチの魔法が消滅しました
 item.magicalBook.summon.name=サモン
 item.magicalBook.compositing.name=コンポジット
 item.magicalBook.compositing.failed=アイテムの合成に失敗しました
+item.magicalBook.flying.name=フライング
 item.elixir.name=エリクサー
 item.elixirMedium.name=中級エリクサー
 item.elixirHigh.name=上級エリクサー
@@ -509,6 +510,7 @@ advancements.cavern.enter_the_huge_cavern.title=Huge Cavern
 advancements.cavern.enter_the_huge_cavern.description=果てしなき洞窟
 
 key.cavern.miningAssist=採掘アシストの切り替え
+key.cavern.magicSpelling=魔術書の詠唱
 
 cavern.miningassist.name=採掘アシスト
 cavern.miningassist.disabled=無効

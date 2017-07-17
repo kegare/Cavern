@@ -37,43 +37,48 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		buf.writeBoolean(hugeCavern);
 	}
 
+	public void execute()
+	{
+		if (cavern)
+		{
+			DimensionRegeneration.regenerate(CaveType.DIM_CAVERN, backup);
+		}
+
+		if (aquaCavern)
+		{
+			DimensionRegeneration.regenerate(CaveType.DIM_AQUA_CAVERN, backup);
+		}
+
+		if (caveland)
+		{
+			DimensionRegeneration.regenerate(CaveType.DIM_CAVELAND, backup);
+		}
+
+		if (iceCavern)
+		{
+			DimensionRegeneration.regenerate(CaveType.DIM_ICE_CAVERN, backup);
+		}
+
+		if (ruinsCavern)
+		{
+			DimensionRegeneration.regenerate(CaveType.DIM_RUINS_CAVERN, backup);
+		}
+
+		if (cavenia)
+		{
+			DimensionRegeneration.regenerate(CaveType.DIM_CAVENIA, backup);
+		}
+
+		if (hugeCavern)
+		{
+			DimensionRegeneration.regenerate(CaveType.DIM_HUGE_CAVERN, backup);
+		}
+	}
+
 	@Override
 	public IMessage onMessage(RegenerationMessage message, MessageContext ctx)
 	{
-		if (message.cavern)
-		{
-			DimensionRegeneration.regenerate(CaveType.DIM_CAVERN, message.backup);
-		}
-
-		if (message.aquaCavern)
-		{
-			DimensionRegeneration.regenerate(CaveType.DIM_AQUA_CAVERN, message.backup);
-		}
-
-		if (message.caveland)
-		{
-			DimensionRegeneration.regenerate(CaveType.DIM_CAVELAND, message.backup);
-		}
-
-		if (message.iceCavern)
-		{
-			DimensionRegeneration.regenerate(CaveType.DIM_ICE_CAVERN, message.backup);
-		}
-
-		if (message.ruinsCavern)
-		{
-			DimensionRegeneration.regenerate(CaveType.DIM_RUINS_CAVERN, message.backup);
-		}
-
-		if (message.cavenia)
-		{
-			DimensionRegeneration.regenerate(CaveType.DIM_CAVENIA, message.backup);
-		}
-
-		if (message.hugeCavern)
-		{
-			DimensionRegeneration.regenerate(CaveType.DIM_HUGE_CAVERN, message.backup);
-		}
+		message.execute();
 
 		return null;
 	}

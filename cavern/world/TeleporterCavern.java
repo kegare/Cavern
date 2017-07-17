@@ -51,11 +51,6 @@ public class TeleporterCavern extends Teleporter
 	@Override
 	public void placeInPortal(Entity entity, float rotationYaw)
 	{
-		if (entity instanceof EntityPlayerMP)
-		{
-			CaveUtils.setDimensionChange((EntityPlayerMP)entity);
-		}
-
 		DimensionType type = world.provider.getDimensionType();
 		boolean flag = false;
 
@@ -106,8 +101,6 @@ public class TeleporterCavern extends Teleporter
 		if (entity instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = (EntityPlayerMP)entity;
-
-			player.addExperienceLevel(0);
 
 			if (CavernAPI.dimension.isEntityInCaves(player) && player.getBedLocation() == null)
 			{

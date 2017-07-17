@@ -174,7 +174,7 @@ public class CaveItems
 		registerModel(ICE_BOW);
 		registerModels(MAGICAL_BOOK, "magical_book_flame_breath", "magical_book_explosion", "magical_book_thunderbolt",
 			"magical_book_venom_blast", "magical_book_return", "magical_book_heal", "magical_book_holy_bless", "magical_book_storage", "magical_book_warp",
-			"magical_book_unknown", "magical_book_torch", "magical_book_summon", "magical_book_compositing");
+			"magical_book_unknown", "magical_book_torch", "magical_book_summon", "magical_book_compositing", "magical_book_flying");
 		registerModels(ELIXIR, "elixir", "elixir_medium", "elixir_high");
 		registerModel(CAVENIC_BOW);
 		registerModel(MANALITE_SWORD);

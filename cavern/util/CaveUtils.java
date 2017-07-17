@@ -44,6 +44,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.DummyModContainer;
 import net.minecraftforge.fml.common.Loader;
@@ -157,7 +159,12 @@ public class CaveUtils
 
 	public static boolean isItemEqual(ItemStack target, ItemStack input)
 	{
-		return target.getHasSubtypes() && OreDictionary.itemMatches(target, input, false) || target.getItem() == input.getItem();
+		if (target.getHasSubtypes())
+		{
+			return OreDictionary.itemMatches(target, input, false);
+		}
+
+		return target.getItem() == input.getItem();
 	}
 
 	@Nullable
@@ -196,14 +203,6 @@ public class CaveUtils
 		}
 
 		return false;
-	}
-
-	public static void setDimensionChange(EntityPlayerMP player)
-	{
-		if (!player.capabilities.isCreativeMode)
-		{
-			ObfuscationReflectionHelper.setPrivateValue(EntityPlayerMP.class, player, true, "invulnerableDimensionChange", "field_184851_cj");
-		}
 	}
 
 	@Nullable
@@ -293,6 +292,22 @@ public class CaveUtils
 		{
 			entity.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 		}
+	}
+
+	public static void setDimensionChange(EntityPlayerMP player)
+	{
+		if (!player.capabilities.isCreativeMode)
+		{
+			ObfuscationReflectionHelper.setPrivateValue(EntityPlayerMP.class, player, true, "invulnerableDimensionChange", "field_184851_cj");
+		}
+	}
+
+	public static void transferPlayerToDimension(EntityPlayerMP player, DimensionType type, Teleporter teleporter)
+	{
+		setDimensionChange(player);
+
+		player.mcServer.getPlayerList().transferPlayerToDimension(player, type.getId(), teleporter);
+		player.addExperienceLevel(0);
 	}
 
 	public static SleepResult trySleep(EntityPlayer player, BlockPos pos)

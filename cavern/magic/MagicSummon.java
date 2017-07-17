@@ -7,19 +7,22 @@ import cavern.entity.EntitySummonCavenicSkeleton;
 import cavern.entity.EntitySummonCavenicZombie;
 import cavern.entity.EntitySummonSkeleton;
 import cavern.entity.EntitySummonZombie;
-import cavern.magic.IMagic.IPlainMagic;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MagicSummon implements IPlainMagic
+public class MagicSummon implements IMagic
 {
 	private final int magicLevel;
 	private final long magicSpellTime;
@@ -36,26 +39,21 @@ public class MagicSummon implements IPlainMagic
 		return magicLevel;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public long getMagicSpellTime()
+	public long getMagicSpellTime(ItemStack stack, EnumHand hand)
 	{
 		return magicSpellTime;
 	}
 
 	@Override
-	public double getMagicRange()
-	{
-		return 0.0D;
-	}
-
-	@Override
-	public int getCostMP()
+	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return 50 * Math.max(getMagicLevel(), 1);
 	}
 
 	@Override
-	public int getMagicPoint()
+	public int getMagicPoint(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return 2 * getMagicLevel();
 	}
@@ -67,7 +65,7 @@ public class MagicSummon implements IPlainMagic
 	}
 
 	@Override
-	public boolean execute(EntityPlayer player)
+	public boolean executeMagic(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		EnumFacing frontFace = player.getHorizontalFacing();
 		BlockPos origin = player.getPosition();

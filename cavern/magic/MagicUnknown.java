@@ -5,28 +5,28 @@ import java.util.Random;
 import cavern.core.CaveSounds;
 import cavern.item.ItemMagicalBook;
 import cavern.item.ItemMagicalBook.EnumType;
-import cavern.magic.IMagic.IPlainMagic;
 import cavern.stats.MagicianStats;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MagicUnknown implements IPlainMagic
+public class MagicUnknown implements IMagic
 {
 	private static final Random RANDOM = new Random();
 
 	private final int magicLevel;
 	private final long magicSpellTime;
-	private final ItemStack magicalBook;
 
-	public MagicUnknown(int level, long time, ItemStack book)
+	public MagicUnknown(int level, long time)
 	{
 		this.magicLevel = level;
 		this.magicSpellTime = time;
-		this.magicalBook = book;
 	}
 
 	@Override
@@ -35,26 +35,21 @@ public class MagicUnknown implements IPlainMagic
 		return magicLevel;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public long getMagicSpellTime()
+	public long getMagicSpellTime(ItemStack stack, EnumHand hand)
 	{
 		return magicSpellTime;
 	}
 
 	@Override
-	public double getMagicRange()
-	{
-		return 0.0D;
-	}
-
-	@Override
-	public int getCostMP()
+	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return 50 * Math.max(getMagicLevel(), 1);
 	}
 
 	@Override
-	public int getMagicPoint()
+	public int getMagicPoint(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return 3;
 	}
@@ -72,9 +67,9 @@ public class MagicUnknown implements IPlainMagic
 	}
 
 	@Override
-	public boolean execute(EntityPlayer player)
+	public boolean executeMagic(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		EnumType[] books = EnumType.values();
+		EnumType[] books = EnumType.VALUES;
 		int count = books.length - 1;
 		ItemStack bookItem = null;
 
@@ -104,7 +99,7 @@ public class MagicUnknown implements IPlainMagic
 
 		if (!player.capabilities.isCreativeMode)
 		{
-			magicalBook.shrink(1);
+			stack.shrink(1);
 		}
 
 		if (bookItem == null || bookItem.isEmpty())
@@ -128,7 +123,6 @@ public class MagicUnknown implements IPlainMagic
 			}
 		}
 
-		World world = player.world;
 		EntityItem drop = new EntityItem(world, player.posX, player.posY + 0.5D, player.posZ, bookItem);
 
 		drop.setPickupDelay(15);

@@ -155,7 +155,7 @@ public class CaveniaEventHooks
 			{
 				boost *= 2.5F;
 
-				entity.world.newExplosion(player, entity.posX, entity.posY, entity.posZ, 1.75F, false, true);
+				entity.world.newExplosion(player, entity.posX, entity.posY, entity.posZ, 1.75F, false, false);
 			}
 
 			event.setAmount(amount * boost);

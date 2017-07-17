@@ -12,10 +12,10 @@ public enum HunterRank
 	NOOB(1, 2, 1.3F, 0, "noob", new ItemStack(Items.PORKCHOP)),
 	NOVICE_HUNTER(2, 10, 2.0F, 1, "noviceHunter", new ItemStack(Items.WOODEN_SWORD)),
 	HUNTER(3, 50, 2.5F, 3, "hunter", new ItemStack(Items.IRON_SWORD)),
-	CAVENIC_HUNTER(4, 300, 3.5F, 5, "cavenicHunter", new ItemStack(CaveItems.HEXCITE_SWORD)),
-	CRAZY_HUNTER(5, 500, 7.0F, 10, "crazyHunter", new ItemStack(CaveItems.MAGNITE_SWORD)),
-	RANGER(6, 1000, 15.0F, 15, "ranger", new ItemStack(Items.GOLDEN_SWORD)),
-	CRAZY_RANGER(7, 3000, 20.0F, 20, "crazyRanger", new ItemStack(Items.DIAMOND_SWORD));
+	CAVENIC_HUNTER(4, 300, 3.0F, 5, "cavenicHunter", new ItemStack(CaveItems.HEXCITE_SWORD)),
+	CRAZY_HUNTER(5, 500, 5.0F, 10, "crazyHunter", new ItemStack(CaveItems.MAGNITE_SWORD)),
+	RANGER(6, 1000, 7.0F, 15, "ranger", new ItemStack(Items.GOLDEN_SWORD)),
+	CRAZY_RANGER(7, 3000, 10.0F, 20, "crazyRanger", new ItemStack(Items.DIAMOND_SWORD));
 
 	public static final HunterRank[] VALUES = new HunterRank[values().length];
 

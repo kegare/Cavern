@@ -33,14 +33,10 @@ public class MineBonusMessage implements IMessage, IMessageHandler<MineBonusMess
 		buf.writeInt(combo);
 	}
 
-	@Override
-	public IMessage onMessage(MineBonusMessage message, MessageContext ctx)
+	public void execute(EntityPlayerMP player)
 	{
 		if (GeneralConfig.miningCombo)
 		{
-			EntityPlayerMP player = ctx.getServerHandler().player;
-			int combo = message.combo;
-
 			for (IMineBonus bonus : MinerStats.MINE_BONUS)
 			{
 				if (bonus.canMineBonus(combo, player))
@@ -54,6 +50,12 @@ public class MineBonusMessage implements IMessage, IMessageHandler<MineBonusMess
 				CaveUtils.grantAdvancement(player, "good_mine");
 			}
 		}
+	}
+
+	@Override
+	public IMessage onMessage(MineBonusMessage message, MessageContext ctx)
+	{
+		message.execute(ctx.getServerHandler().player);
 
 		return null;
 	}

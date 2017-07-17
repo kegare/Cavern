@@ -36,10 +36,9 @@ public class ToastMessage implements IMessage, IMessageHandler<ToastMessage, IMe
 	}
 
 	@SideOnly(Side.CLIENT)
-	@Override
-	public IMessage onMessage(ToastMessage message, MessageContext ctx)
+	public void execute()
 	{
-		switch (message.key)
+		switch (key)
 		{
 			case "mining_assist":
 				ClientEventHooks.DELAYED_TOAST.add(new DelayedToast(new MiningAssistToast(), 10000L));
@@ -48,6 +47,13 @@ public class ToastMessage implements IMessage, IMessageHandler<ToastMessage, IMe
 				ClientEventHooks.DELAYED_TOAST.add(new DelayedToast(new RuinsMissionToast(), 10000L));
 				break;
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public IMessage onMessage(ToastMessage message, MessageContext ctx)
+	{
+		message.execute();
 
 		return null;
 	}

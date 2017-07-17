@@ -8,7 +8,7 @@ import cavern.client.CaveRenderingRegistry;
 import cavern.client.config.CaveConfigEntries;
 import cavern.client.handler.ClientEventHooks;
 import cavern.client.handler.HunterStatsHUDEventHooks;
-import cavern.client.handler.MagicSpellEventHooks;
+import cavern.client.handler.MagicEventHooks;
 import cavern.client.handler.MagicianStatsHUDEventHooks;
 import cavern.client.handler.MinerStatsHUDEventHooks;
 import cavern.config.AquaCavernConfig;
@@ -156,7 +156,7 @@ public class Cavern
 			MinecraftForge.EVENT_BUS.register(new MinerStatsHUDEventHooks());
 			MinecraftForge.EVENT_BUS.register(new HunterStatsHUDEventHooks());
 			MinecraftForge.EVENT_BUS.register(new MagicianStatsHUDEventHooks());
-			MinecraftForge.EVENT_BUS.register(new MagicSpellEventHooks());
+			MinecraftForge.EVENT_BUS.register(new MagicEventHooks());
 		}
 
 		MinecraftForge.EVENT_BUS.register(new CaveEventHooks());

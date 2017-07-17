@@ -7,7 +7,6 @@ import com.google.common.base.Objects;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemMeta implements Comparable<ItemMeta>
@@ -28,7 +27,7 @@ public class ItemMeta implements Comparable<ItemMeta>
 
 	public ItemMeta(String name, int meta)
 	{
-		this(ObjectUtils.defaultIfNull(Item.REGISTRY.getObject(new ResourceLocation(name)), Items.AIR), meta);
+		this(ObjectUtils.defaultIfNull(Item.getByNameOrId(name), Items.AIR), meta);
 	}
 
 	public Item getItem()
@@ -39,6 +38,11 @@ public class ItemMeta implements Comparable<ItemMeta>
 	public int getMeta()
 	{
 		return meta;
+	}
+
+	public boolean getHasSubtypes()
+	{
+		return item.getHasSubtypes();
 	}
 
 	public ItemStack getItemStack()

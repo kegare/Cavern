@@ -3,7 +3,6 @@ package cavern.network.server;
 import cavern.handler.CaveEventHooks;
 import cavern.network.CaveNetworkRegistry;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -23,9 +22,7 @@ public class StatsAdjustRequestMessage implements IMessage, IMessageHandler<Stat
 	@Override
 	public IMessage onMessage(StatsAdjustRequestMessage message, MessageContext ctx)
 	{
-		EntityPlayerMP player = ctx.getServerHandler().player;
-
-		CaveEventHooks.adjustPlayerStats(player);
+		CaveEventHooks.adjustPlayerStats(ctx.getServerHandler().player);
 
 		return null;
 	}

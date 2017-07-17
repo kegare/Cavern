@@ -130,17 +130,19 @@ public class CaveEventHooks
 
 		if (GeneralConfig.cavernEscapeMission)
 		{
-			boolean fromCave = CavernAPI.dimension.isCaves(DimensionType.getById(event.fromDim));
-			boolean toCave = CavernAPI.dimension.isCaves(DimensionType.getById(event.toDim));
+			DimensionType fromDim = DimensionType.getById(event.fromDim);
+			DimensionType toDim = DimensionType.getById(event.toDim);
+			boolean fromCave = CavernAPI.dimension.isCaves(fromDim);
+			boolean toCave = CavernAPI.dimension.isCaves(toDim);
 
 			if (fromCave && !toCave && !GeneralConfig.canEscapeFromCaves(player))
 			{
 				MinecraftServer server = player.mcServer;
-				WorldServer worldNew = server.getWorld(event.fromDim);
+				WorldServer worldNew = server.getWorld(fromDim.getId());
 
 				player.timeUntilPortal = player.getPortalCooldown();
 
-				server.getPlayerList().transferPlayerToDimension(player, event.fromDim, WorldCachedData.get(worldNew).getRepatriationTeleporter());
+				CaveUtils.transferPlayerToDimension(player, fromDim, WorldCachedData.get(worldNew).getRepatriationTeleporter());
 
 				player.sendStatusMessage(new TextComponentTranslation("cavern.escapeMission.bad.message"), true);
 
@@ -469,7 +471,7 @@ public class CaveEventHooks
 
 		if (CavernAPI.dimension.isEntityInCaves(entity) && world.getGameRules().getBoolean("doMobLoot"))
 		{
-			double bookChance = 0.001D;
+			double bookChance = 0.0D;
 			double elixirChance = 0.01D;
 
 			if (entity instanceof EntityWitch)

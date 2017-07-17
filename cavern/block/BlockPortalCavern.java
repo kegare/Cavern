@@ -227,7 +227,7 @@ public class BlockPortalCavern extends BlockPortal
 
 					worldOld.playSound(player, x, y, z, CaveSounds.CAVE_PORTAL, SoundCategory.BLOCKS, 0.5F, 1.0F);
 
-					server.getPlayerList().transferPlayerToDimension(player, dimNew.getId(), teleporter);
+					CaveUtils.transferPlayerToDimension(player, dimNew, teleporter);
 
 					x = player.posX;
 					y = player.posY + player.getEyeHeight();

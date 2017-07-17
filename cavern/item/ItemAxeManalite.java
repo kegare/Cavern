@@ -8,6 +8,7 @@ import cavern.stats.MagicianStats;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -47,14 +48,26 @@ public class ItemAxeManalite extends ItemAxeCave
 			{
 				for (EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, target.getEntityBoundingBox().grow(2.5D)))
 				{
-					if (entity instanceof IMob && !(entity instanceof ISummonMob))
+					if (!(entity instanceof IMob))
 					{
-						double dist = target.getDistanceSqToEntity(entity);
-						Vec3d vec = getSmashVector(player, dist <= 2.0D, (itemRand.nextDouble() + 1.0D) * 1.15D, 0.1D);
-
-						entity.attackEntityFrom(DamageSource.MAGIC, 5.0F);
-						entity.addVelocity(vec.x, vec.y, vec.z);
+						continue;
 					}
+
+					if (entity instanceof ISummonMob)
+					{
+						continue;
+					}
+
+					if (entity instanceof IEntityOwnable && ((IEntityOwnable)entity).getOwner() != null)
+					{
+						continue;
+					}
+
+					double dist = target.getDistanceSqToEntity(entity);
+					Vec3d vec = getSmashVector(player, dist <= 2.0D, (itemRand.nextDouble() + 1.0D) * 1.15D, 0.1D);
+
+					entity.attackEntityFrom(DamageSource.MAGIC, 5.0F);
+					entity.addVelocity(vec.x, vec.y, vec.z);
 				}
 
 				world.playSound(null, target.posX, target.posY + 0.85D, target.posZ, SoundEvents.ENTITY_PLAYER_ATTACK_WEAK,

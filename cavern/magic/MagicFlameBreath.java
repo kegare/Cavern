@@ -3,18 +3,22 @@ package cavern.magic;
 import java.util.Random;
 
 import cavern.api.ISummonMob;
-import cavern.magic.IMagic.IPlainMagic;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MagicFlameBreath implements IPlainMagic
+public class MagicFlameBreath implements IMagic
 {
 	private static final Random RANDOM = new Random();
 
@@ -35,36 +39,29 @@ public class MagicFlameBreath implements IPlainMagic
 		return magicLevel;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public long getMagicSpellTime()
+	public long getMagicSpellTime(ItemStack stack, EnumHand hand)
 	{
 		return magicSpellTime;
 	}
 
 	@Override
+	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
+	{
+		return 20 * getMagicLevel();
+	}
+
 	public double getMagicRange()
 	{
 		return magicRange;
 	}
 
 	@Override
-	public int getCostMP()
-	{
-		return 20 * getMagicLevel();
-	}
-
-	@Override
-	public int getMagicPoint()
-	{
-		return getMagicLevel();
-	}
-
-	@Override
-	public boolean execute(EntityPlayer player)
+	public boolean executeMagic(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		int level = getMagicLevel();
 		double range = getMagicRange();
-		World world = player.world;
 		BlockPos blockPos = player.getPosition();
 		int count = 0;
 
@@ -109,6 +106,11 @@ public class MagicFlameBreath implements IPlainMagic
 				}
 
 				if (entity instanceof ISummonMob)
+				{
+					continue;
+				}
+
+				if (entity instanceof IEntityOwnable && ((IEntityOwnable)entity).getOwner() != null)
 				{
 					continue;
 				}

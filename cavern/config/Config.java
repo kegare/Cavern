@@ -33,6 +33,12 @@ public class Config
 		if (configChecker == null)
 		{
 			File dir = getConfigDir();
+
+			if (!dir.exists())
+			{
+				dir.mkdirs();
+			}
+
 			File file = new File(dir, "internal.properties");
 
 			configChecker = new ConfigChecker(file, dir);

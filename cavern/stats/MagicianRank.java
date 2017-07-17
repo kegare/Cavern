@@ -21,7 +21,7 @@ public enum MagicianRank
 	private final int phase;
 	private final int maxMP;
 	private final float boost;
-	private final int spellSpeed;
+	private final int spellingSpeed;
 	private final String name;
 	private final ItemStack theItemStack;
 
@@ -31,7 +31,7 @@ public enum MagicianRank
 		this.phase = phase;
 		this.maxMP = max;
 		this.boost = boost;
-		this.spellSpeed = speed;
+		this.spellingSpeed = speed;
 		this.name = name;
 		this.theItemStack = stack;
 	}
@@ -80,9 +80,9 @@ public enum MagicianRank
 		return boost;
 	}
 
-	public int getSpellSpeed()
+	public int getSpellingSpeed()
 	{
-		return spellSpeed;
+		return spellingSpeed;
 	}
 
 	public String getName()

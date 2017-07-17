@@ -22,7 +22,17 @@ public interface ICompositingRecipe
 			return false;
 		}
 
-		return OreDictionary.itemMatches(material, stack, false) && stack.getCount() >= material.getCount();
+		if (stack.getCount() < material.getCount())
+		{
+			return false;
+		}
+
+		if (material.getHasSubtypes())
+		{
+			return OreDictionary.itemMatches(material, stack, false);
+		}
+
+		return stack.getItem() == material.getItem();
 	}
 
 	public boolean matches(IInventory inventory, World world, @Nullable EntityPlayer player);

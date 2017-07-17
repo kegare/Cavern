@@ -44,6 +44,19 @@ public class MinerStatsAdjustMessage implements IMessage, IMessageHandler<MinerS
 	}
 
 	@SideOnly(Side.CLIENT)
+	public void execute(EntityPlayer player)
+	{
+		IMinerStats stats = MinerStats.get(player, true);
+
+		if (stats != null)
+		{
+			stats.setPoint(point, false);
+			stats.setRank(rank, false);
+			stats.setMiningAssist(miningAssist, false);
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
 	@Override
 	public IMessage onMessage(MinerStatsAdjustMessage message, MessageContext ctx)
 	{
@@ -52,14 +65,7 @@ public class MinerStatsAdjustMessage implements IMessage, IMessageHandler<MinerS
 
 		if (player != null)
 		{
-			IMinerStats stats = MinerStats.get(player, true);
-
-			if (stats != null)
-			{
-				stats.setPoint(message.point, false);
-				stats.setRank(message.rank, false);
-				stats.setMiningAssist(message.miningAssist, false);
-			}
+			message.execute(player);
 		}
 
 		return null;

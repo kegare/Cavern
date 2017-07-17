@@ -35,14 +35,12 @@ public class RegenerationGuiMessage implements IMessage, IMessageHandler<Regener
 	}
 
 	@SideOnly(Side.CLIENT)
-	@Override
-	public IMessage onMessage(RegenerationGuiMessage message, MessageContext ctx)
+	public void execute(Minecraft mc)
 	{
-		Minecraft mc = FMLClientHandler.instance().getClient();
-		EnumType type = EnumType.values()[message.type];
+		EnumType actionType = EnumType.values()[type];
 		boolean isOpen = mc.currentScreen != null && mc.currentScreen instanceof GuiRegeneration;
 
-		if (type == EnumType.OPEN)
+		if (actionType == EnumType.OPEN)
 		{
 			if (!isOpen)
 			{
@@ -51,8 +49,15 @@ public class RegenerationGuiMessage implements IMessage, IMessageHandler<Regener
 		}
 		else if (isOpen)
 		{
-			((GuiRegeneration)mc.currentScreen).updateProgress(type);
+			((GuiRegeneration)mc.currentScreen).updateProgress(actionType);
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public IMessage onMessage(RegenerationGuiMessage message, MessageContext ctx)
+	{
+		message.execute(FMLClientHandler.instance().getClient());
 
 		return null;
 	}

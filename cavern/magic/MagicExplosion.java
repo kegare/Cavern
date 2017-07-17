@@ -1,23 +1,24 @@
 package cavern.magic;
 
-import cavern.magic.IMagic.IPlainMagic;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MagicExplosion implements IPlainMagic
+public class MagicExplosion implements IMagic
 {
 	private final int magicLevel;
 	private final long magicSpellTime;
-	private final double magicRange;
 
-	public MagicExplosion(int level, long time, double range)
+	public MagicExplosion(int level, long time)
 	{
 		this.magicLevel = level;
 		this.magicSpellTime = time;
-		this.magicRange = range;
 	}
 
 	@Override
@@ -26,34 +27,22 @@ public class MagicExplosion implements IPlainMagic
 		return magicLevel;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public long getMagicSpellTime()
+	public long getMagicSpellTime(ItemStack stack, EnumHand hand)
 	{
 		return magicSpellTime;
 	}
 
 	@Override
-	public double getMagicRange()
-	{
-		return magicRange;
-	}
-
-	@Override
-	public int getCostMP()
+	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return 30 * getMagicLevel();
 	}
 
 	@Override
-	public int getMagicPoint()
+	public boolean executeMagic(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		return getMagicLevel();
-	}
-
-	@Override
-	public boolean execute(EntityPlayer player)
-	{
-		World world = player.world;
 		EnumFacing front = player.getHorizontalFacing();
 		BlockPos pos = player.getPosition().up();
 		int i = 0;

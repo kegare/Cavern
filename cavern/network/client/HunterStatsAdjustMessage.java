@@ -39,6 +39,18 @@ public class HunterStatsAdjustMessage implements IMessage, IMessageHandler<Hunte
 	}
 
 	@SideOnly(Side.CLIENT)
+	public void execute(EntityPlayer player)
+	{
+		IHunterStats stats = HunterStats.get(player, true);
+
+		if (stats != null)
+		{
+			stats.setPoint(point, false);
+			stats.setRank(rank, false);
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
 	@Override
 	public IMessage onMessage(HunterStatsAdjustMessage message, MessageContext ctx)
 	{
@@ -46,13 +58,7 @@ public class HunterStatsAdjustMessage implements IMessage, IMessageHandler<Hunte
 
 		if (player != null)
 		{
-			IHunterStats stats = HunterStats.get(player, true);
-
-			if (stats != null)
-			{
-				stats.setPoint(message.point, false);
-				stats.setRank(message.rank, false);
-			}
+			message.execute(player);
 		}
 
 		return null;

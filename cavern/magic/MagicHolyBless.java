@@ -3,14 +3,20 @@ package cavern.magic;
 import java.util.Random;
 
 import cavern.core.CaveSounds;
-import cavern.magic.IMagic.IPlayerMagic;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MagicHolyBless implements IPlayerMagic
+public class MagicHolyBless implements IEntityMagic
 {
 	private static final Random RANDOM = new Random();
 
@@ -31,26 +37,27 @@ public class MagicHolyBless implements IPlayerMagic
 		return magicLevel;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public long getMagicSpellTime()
+	public long getMagicSpellTime(ItemStack stack, EnumHand hand)
 	{
 		return magicSpellTime;
 	}
 
 	@Override
-	public double getMagicRange()
+	public double getMagicRange(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return magicRange;
 	}
 
 	@Override
-	public int getCostMP()
+	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return 50 * getMagicLevel();
 	}
 
 	@Override
-	public int getMagicPoint()
+	public int getMagicPoint(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return getMagicLevel() + 1;
 	}
@@ -62,14 +69,25 @@ public class MagicHolyBless implements IPlayerMagic
 	}
 
 	@Override
-	public boolean isTarget(EntityPlayer player, EntityPlayer targetPlayer)
+	public boolean isTargetEntity(EntityPlayer player, Entity entity)
 	{
-		return getMagicLevel() > 1 || player.getCachedUniqueIdString().equals(targetPlayer.getCachedUniqueIdString());
+		if (player.isEntityEqual(entity))
+		{
+			return true;
+		}
+
+		if (getMagicLevel() <= 1)
+		{
+			return false;
+		}
+
+		return player.canEntityBeSeen(entity);
 	}
 
 	@Override
-	public boolean execute(EntityPlayer player, EntityPlayer targetPlayer)
+	public boolean execute(EntityPlayer player, Entity entity, World world, ItemStack stack, EnumHand hand)
 	{
+		EntityLivingBase target = (EntityLivingBase)entity;
 		int level = getMagicLevel();
 
 		for (int i = 0; i < level; ++i)
@@ -77,7 +95,7 @@ public class MagicHolyBless implements IPlayerMagic
 			Potion potion = null;
 			int timeout = 0;
 
-			while (potion == null || potion.isBadEffect() || targetPlayer.isPotionActive(potion))
+			while (potion == null || potion.isBadEffect() || target.isPotionActive(potion))
 			{
 				potion = Potion.REGISTRY.getRandomObject(RANDOM);
 
@@ -96,16 +114,16 @@ public class MagicHolyBless implements IPlayerMagic
 			{
 				if (potion.isInstant())
 				{
-					potion.affectEntity(player, player, targetPlayer, level - 1, 1.0D);
+					potion.affectEntity(player, player, target, level - 1, 1.0D);
 				}
 				else
 				{
-					targetPlayer.addPotionEffect(new PotionEffect(potion, (60 + 30 * (level - 1)) * 20, level - 1, false, false));
+					target.addPotionEffect(new PotionEffect(potion, (60 + 30 * (level - 1)) * 20, level - 1, false, false));
 				}
 			}
 		}
 
-		targetPlayer.extinguish();
+		target.extinguish();
 
 		return true;
 	}

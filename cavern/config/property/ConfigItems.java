@@ -75,12 +75,7 @@ public class ConfigItems
 		{
 			if (itemMeta.getItem() == stack.getItem())
 			{
-				if (stack.isItemStackDamageable())
-				{
-					return true;
-				}
-
-				if (stack.getHasSubtypes())
+				if (itemMeta.getHasSubtypes())
 				{
 					if (itemMeta.getMeta() == stack.getMetadata())
 					{

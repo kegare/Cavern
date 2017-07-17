@@ -2,18 +2,21 @@ package cavern.magic;
 
 import cavern.core.CaveSounds;
 import cavern.entity.EntityMagicTorcher;
-import cavern.magic.IMagic.IPlainMagic;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MagicTorch implements IPlainMagic
+public class MagicTorch implements IMagic
 {
 	private final int magicLevel;
 	private final long magicSpellTime;
@@ -34,40 +37,24 @@ public class MagicTorch implements IPlainMagic
 		return magicLevel;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public long getMagicSpellTime()
+	public long getMagicSpellTime(ItemStack stack, EnumHand hand)
 	{
-		return magicSpellTime;
+		EntityPlayer player = FMLClientHandler.instance().getClientPlayerEntity();
+
+		return player.isSneaking() ? magicSpellTime : magicSpellTime / 2;
 	}
 
-	@Override
-	public long getMagicSpellTime(EntityPlayer player)
-	{
-		return player.isSneaking() ? getMagicSpellTime() : getMagicSpellTime() / 2;
-	}
-
-	@Override
-	public double getMagicRange()
-	{
-		return magicRange;
-	}
-
-	@Override
 	public double getMagicRange(EntityPlayer player)
 	{
-		return player.isSneaking() ? getMagicRange() : 6.0D;
+		return player.isSneaking() ? magicRange : 6.0D;
 	}
 
 	@Override
-	public int getCostMP()
+	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return 10 * getMagicLevel();
-	}
-
-	@Override
-	public int getMagicPoint()
-	{
-		return getMagicLevel();
 	}
 
 	@Override
@@ -87,11 +74,11 @@ public class MagicTorch implements IPlainMagic
 				return new TextComponentTranslation("item.magicalBook.torch.exist");
 		}
 
-		return IPlainMagic.super.getFailedMessage();
+		return IMagic.super.getFailedMessage();
 	}
 
 	@Override
-	public boolean execute(EntityPlayer player)
+	public boolean executeMagic(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		if (!player.inventory.hasItemStack(new ItemStack(Blocks.TORCH)))
 		{
@@ -100,7 +87,6 @@ public class MagicTorch implements IPlainMagic
 			return false;
 		}
 
-		World world = player.world;
 		double range = getMagicRange(player);
 
 		for (EntityMagicTorcher torcher : world.getEntitiesWithinAABB(EntityMagicTorcher.class, player.getEntityBoundingBox().expand(range, 5.0D, range), EntitySelectors.IS_ALIVE))

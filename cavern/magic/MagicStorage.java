@@ -1,25 +1,26 @@
 package cavern.magic;
 
 import cavern.core.Cavern;
-import cavern.magic.IMagic.IPlainMagic;
 import cavern.stats.MagicianRank;
 import cavern.stats.MagicianStats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MagicStorage implements IPlainMagic
+public class MagicStorage implements IMagic
 {
 	private final int magicLevel;
 	private final long magicSpellTime;
-	private final ItemStack storageItem;
 
-	public MagicStorage(int level, long time, ItemStack stack)
+	public MagicStorage(int level, long time)
 	{
 		this.magicLevel = level;
 		this.magicSpellTime = time;
-		this.storageItem = stack;
 	}
 
 	@Override
@@ -28,34 +29,23 @@ public class MagicStorage implements IPlainMagic
 		return magicLevel;
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
-	public long getMagicSpellTime()
+	public long getMagicSpellTime(ItemStack stack, EnumHand hand)
 	{
 		return magicSpellTime;
 	}
 
 	@Override
-	public double getMagicRange()
-	{
-		return 0.0F;
-	}
-
-	@Override
-	public int getCostMP()
+	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		return 15 * getMagicLevel();
 	}
 
 	@Override
-	public int getMagicPoint()
+	public int getMagicPoint(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		return 1;
-	}
-
-	@Override
-	public int getMagicPoint(EntityPlayer player)
-	{
-		return MagicianStats.get(player).getRank() > MagicianRank.NOVICE_MAGICIAN.getRank() ? 0 : getMagicPoint();
+		return MagicianStats.get(player).getRank() > MagicianRank.NOVICE_MAGICIAN.getRank() ? 0 : 1;
 	}
 
 	@Override
@@ -65,31 +55,9 @@ public class MagicStorage implements IPlainMagic
 	}
 
 	@Override
-	public boolean execute(EntityPlayer player)
+	public boolean executeMagic(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		int index = -1;
-		ItemStack held = player.getHeldItemMainhand();
-
-		if (ItemStack.areItemStacksEqual(held, storageItem))
-		{
-			index = 0;
-		}
-		else
-		{
-			held = player.getHeldItemOffhand();
-
-			if (ItemStack.areItemStacksEqual(held, storageItem))
-			{
-				index = 1;
-			}
-		}
-
-		if (index < 0)
-		{
-			return false;
-		}
-
-		player.openGui(Cavern.instance, 0, player.world, index, 2 + getMagicLevel(), 0);
+		player.openGui(Cavern.instance, 0, player.world, hand == EnumHand.MAIN_HAND ? 0 : 1, 2 + getMagicLevel(), 0);
 
 		return true;
 	}
