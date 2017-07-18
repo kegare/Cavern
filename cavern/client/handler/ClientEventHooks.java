@@ -78,8 +78,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ClientEventHooks
 {
-	public static GuiScreen displayGui;
-
 	public static final List<DelayedToast> DELAYED_TOAST = Lists.newArrayList();
 
 	@SubscribeEvent
@@ -91,13 +89,6 @@ public class ClientEventHooks
 		}
 
 		Minecraft mc = FMLClientHandler.instance().getClient();
-
-		if (displayGui != null)
-		{
-			mc.displayGuiScreen(displayGui);
-
-			displayGui = null;
-		}
 
 		if (mc.currentScreen != null && mc.currentScreen instanceof GuiMainMenu && Config.configChecker.isUpdated() && !Config.configChecker.isNotified())
 		{

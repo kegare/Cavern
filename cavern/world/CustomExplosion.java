@@ -120,65 +120,6 @@ public class CustomExplosion extends Explosion
 		}
 
 		affectedBlockPositions.addAll(set);
-
-		float f = size * 2.0F;
-		int minX = MathHelper.floor(x - f - 1.0D);
-		int maxX = MathHelper.floor(x + f + 1.0D);
-		int minY = MathHelper.floor(y - f - 1.0D);
-		int maxY = MathHelper.floor(y + f + 1.0D);
-		int minZ = MathHelper.floor(z - f - 1.0D);
-		int maxZ = MathHelper.floor(z + f + 1.0D);
-		List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(exploder, new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ));
-
-		ForgeEventFactory.onExplosionDetonate(world, this, list, f);
-
-		Vec3d posVec = new Vec3d(x, y, z);
-
-		for (Entity entity : list)
-		{
-			if (canExplodeEntity(entity))
-			{
-				double dist = entity.getDistance(x, y, z) / f;
-
-				if (dist <= 1.0D)
-				{
-					double ex = entity.posX - x;
-					double ey = entity.posY + entity.getEyeHeight() - y;
-					double ez = entity.posZ - z;
-					double ed = MathHelper.sqrt(ex * ex + ey * ey + ez * ez);
-
-					if (ed != 0.0D)
-					{
-						ex = ex / ed;
-						ey = ey / ed;
-						ez = ez / ed;
-						double density = world.getBlockDensity(posVec, entity.getEntityBoundingBox());
-						double damage = (1.0D - dist) * density;
-						entity.attackEntityFrom(DamageSource.causeExplosionDamage(this), (int)((damage * damage + damage) / 2.0D * 7.0D * f + 1.0D));
-						double blast = damage;
-
-						if (entity instanceof EntityLivingBase)
-						{
-							blast = EnchantmentProtection.getBlastDamageReduction((EntityLivingBase)entity, damage);
-						}
-
-						entity.motionX += ex * blast;
-						entity.motionY += ey * blast;
-						entity.motionZ += ez * blast;
-
-						if (entity instanceof EntityPlayer)
-						{
-							EntityPlayer player = (EntityPlayer)entity;
-
-							if (!player.isSpectator() && (!player.isCreative() || !player.capabilities.isFlying))
-							{
-								playerKnockbackMap.put(player, new Vec3d(ex * damage, ey * damage, ez * damage));
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	@Override
@@ -186,13 +127,16 @@ public class CustomExplosion extends Explosion
 	{
 		world.playSound(null, x, y, z, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (random.nextFloat() - random.nextFloat()) * 0.2F) * 0.7F);
 
-		if (size >= 2.0F && damagesTerrain)
+		if (spawnParticles)
 		{
-			world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, x, y, z, 1.0D, 0.0D, 0.0D);
-		}
-		else
-		{
-			world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, x, y, z, 1.0D, 0.0D, 0.0D);
+			if (size >= 2.0F && damagesTerrain)
+			{
+				world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, x, y, z, 1.0D, 0.0D, 0.0D);
+			}
+			else
+			{
+				world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, x, y, z, 1.0D, 0.0D, 0.0D);
+			}
 		}
 
 		if (damagesTerrain)
@@ -246,6 +190,64 @@ public class CustomExplosion extends Explosion
 				}
 			}
 		}
+	}
+
+	public void doExplosionEntities()
+	{
+		float f = size * 2.0F;
+		int minX = MathHelper.floor(x - f - 1.0D);
+		int maxX = MathHelper.floor(x + f + 1.0D);
+		int minY = MathHelper.floor(y - f - 1.0D);
+		int maxY = MathHelper.floor(y + f + 1.0D);
+		int minZ = MathHelper.floor(z - f - 1.0D);
+		int maxZ = MathHelper.floor(z + f + 1.0D);
+
+		List<Entity> entities = world.getEntitiesWithinAABBExcludingEntity(exploder, new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ));
+
+		ForgeEventFactory.onExplosionDetonate(world, this, entities, f);
+
+		if (entities.isEmpty())
+		{
+			return;
+		}
+
+		entities.stream().filter(this::canExplodeEntity).forEach(entity ->
+		{
+			double dist = entity.getDistance(x, y, z) / f;
+
+			if (dist <= 1.0D)
+			{
+				double ex = entity.posX - x;
+				double ey = entity.posY + entity.getEyeHeight() - y;
+				double ez = entity.posZ - z;
+				double ed = MathHelper.sqrt(ex * ex + ey * ey + ez * ez);
+
+				if (ed != 0.0D)
+				{
+					ex = ex / ed;
+					ey = ey / ed;
+					ez = ez / ed;
+					double density = world.getBlockDensity(position, entity.getEntityBoundingBox());
+					double damage = (1.0D - dist) * density;
+					entity.attackEntityFrom(DamageSource.causeExplosionDamage(this), getExplosionAttackDamage(entity, (int)((damage * damage + damage) / 2.0D * 7.0D * f + 1.0D)));
+					double blast = damage;
+
+					if (entity instanceof EntityLivingBase)
+					{
+						blast = EnchantmentProtection.getBlastDamageReduction((EntityLivingBase)entity, damage);
+					}
+
+					entity.motionX += ex * blast;
+					entity.motionY += ey * blast;
+					entity.motionZ += ez * blast;
+				}
+			}
+		});
+	}
+
+	protected int getExplosionAttackDamage(Entity entity, int damage)
+	{
+		return damage;
 	}
 
 	@Override

@@ -4,10 +4,8 @@ import cavern.util.DimensionRegeneration;
 import cavern.world.CaveType;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class RegenerationMessage implements IMessage, IMessageHandler<RegenerationMessage, IMessage>
+public class RegenerationMessage implements ISimpleMessage<RegenerationMessage, IMessage>
 {
 	public boolean backup, cavern, aquaCavern, caveland, iceCavern, ruinsCavern, cavenia, hugeCavern;
 
@@ -37,7 +35,8 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		buf.writeBoolean(hugeCavern);
 	}
 
-	public void execute()
+	@Override
+	public IMessage process()
 	{
 		if (cavern)
 		{
@@ -73,12 +72,6 @@ public class RegenerationMessage implements IMessage, IMessageHandler<Regenerati
 		{
 			DimensionRegeneration.regenerate(CaveType.DIM_HUGE_CAVERN, backup);
 		}
-	}
-
-	@Override
-	public IMessage onMessage(RegenerationMessage message, MessageContext ctx)
-	{
-		message.execute();
 
 		return null;
 	}

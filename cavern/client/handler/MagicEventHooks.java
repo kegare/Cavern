@@ -65,7 +65,9 @@ public class MagicEventHooks
 			return;
 		}
 
-		if (mc.gameSettings.keyBindUseItem.isKeyDown() || CaveKeyBindings.KEY_MAGIC_SPELLING.isKeyDown())
+		boolean isSpellingKeyDown = CaveKeyBindings.KEY_MAGIC_SPELLING.isKeyDown();
+
+		if (mc.gameSettings.keyBindUseItem.isKeyDown() || isSpellingKeyDown)
 		{
 			if (!magicSpelled)
 			{
@@ -90,9 +92,24 @@ public class MagicEventHooks
 							}
 						}
 
+						if (hand == null && isSpellingKeyDown)
+						{
+							for (int i = 0; i < mc.player.inventory.getSizeInventory(); ++i)
+							{
+								ItemStack stack = mc.player.inventory.getStackInSlot(i);
+
+								if (!stack.isEmpty() && stack.getItem() instanceof ItemMagicalBook)
+								{
+									mc.playerController.pickItem(i);
+
+									return;
+								}
+							}
+						}
+
 						if (hand != null)
 						{
-							spellingMagic = ((ItemMagicalBook)held.getItem()).getMagic(held);
+							spellingMagic = ((ItemMagicalBook)held.getItem()).getMagic(mc.player, held);
 
 							if (spellingMagic != null)
 							{

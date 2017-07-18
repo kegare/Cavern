@@ -7,10 +7,8 @@ import cavern.util.CaveUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MineBonusMessage implements IMessage, IMessageHandler<MineBonusMessage, IMessage>
+public class MineBonusMessage implements IPlayerMessage<MineBonusMessage, IMessage>
 {
 	private int combo;
 
@@ -33,7 +31,8 @@ public class MineBonusMessage implements IMessage, IMessageHandler<MineBonusMess
 		buf.writeInt(combo);
 	}
 
-	public void execute(EntityPlayerMP player)
+	@Override
+	public IMessage process(EntityPlayerMP player)
 	{
 		if (GeneralConfig.miningCombo)
 		{
@@ -50,12 +49,6 @@ public class MineBonusMessage implements IMessage, IMessageHandler<MineBonusMess
 				CaveUtils.grantAdvancement(player, "good_mine");
 			}
 		}
-	}
-
-	@Override
-	public IMessage onMessage(MineBonusMessage message, MessageContext ctx)
-	{
-		message.execute(ctx.getServerHandler().player);
 
 		return null;
 	}

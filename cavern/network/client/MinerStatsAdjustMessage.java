@@ -3,16 +3,12 @@ package cavern.network.client;
 import cavern.api.IMinerStats;
 import cavern.stats.MinerStats;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MinerStatsAdjustMessage implements IMessage, IMessageHandler<MinerStatsAdjustMessage, IMessage>
+public class MinerStatsAdjustMessage implements IPlayerMessage<MinerStatsAdjustMessage, IMessage>
 {
 	private int point;
 	private int rank;
@@ -44,7 +40,8 @@ public class MinerStatsAdjustMessage implements IMessage, IMessageHandler<MinerS
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void execute(EntityPlayer player)
+	@Override
+	public IMessage process(EntityPlayerSP player)
 	{
 		IMinerStats stats = MinerStats.get(player, true);
 
@@ -53,19 +50,6 @@ public class MinerStatsAdjustMessage implements IMessage, IMessageHandler<MinerS
 			stats.setPoint(point, false);
 			stats.setRank(rank, false);
 			stats.setMiningAssist(miningAssist, false);
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IMessage onMessage(MinerStatsAdjustMessage message, MessageContext ctx)
-	{
-		Minecraft mc = FMLClientHandler.instance().getClient();
-		EntityPlayer player = mc.player;
-
-		if (player != null)
-		{
-			message.execute(player);
 		}
 
 		return null;

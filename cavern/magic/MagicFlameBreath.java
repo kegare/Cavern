@@ -6,6 +6,7 @@ import cavern.api.ISummonMob;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.MobEffects;
@@ -96,8 +97,6 @@ public class MagicFlameBreath implements IMagic
 
 		if (count > 0)
 		{
-			int i = 0;
-
 			for (EntityLivingBase entity : world.getEntitiesWithinAABB(EntityLivingBase.class, player.getEntityBoundingBox().grow(range * 0.5F)))
 			{
 				if (entity instanceof EntityPlayer)
@@ -117,12 +116,12 @@ public class MagicFlameBreath implements IMagic
 
 				if (entity.isEntityAlive() && !entity.isImmuneToFire())
 				{
-					entity.attackEntityFrom(DamageSource.MAGIC, 1.0F * level);
-
-					if (++i >= 10)
+					if (entity instanceof IMob)
 					{
-						break;
+						entity.setFire(5 * level);
 					}
+
+					entity.attackEntityFrom(DamageSource.MAGIC, 1.0F * level);
 				}
 			}
 		}

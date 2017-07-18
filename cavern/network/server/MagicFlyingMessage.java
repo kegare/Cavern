@@ -10,10 +10,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MagicFlyingMessage implements IMessage, IMessageHandler<MagicFlyingMessage, IMessage>
+public class MagicFlyingMessage implements IPlayerMessage<MagicFlyingMessage, IMessage>
 {
 	private boolean isFlying;
 	private boolean allowFlying;
@@ -44,7 +42,8 @@ public class MagicFlyingMessage implements IMessage, IMessageHandler<MagicFlying
 		buf.writeInt(point);
 	}
 
-	public void execute(EntityPlayerMP player)
+	@Override
+	public IMessage process(EntityPlayerMP player)
 	{
 		WorldServer world = player.getServerWorld();
 		IMagicianStats stats = MagicianStats.get(player);
@@ -75,12 +74,6 @@ public class MagicFlyingMessage implements IMessage, IMessageHandler<MagicFlying
 		}
 
 		world.playSound(null, player.posX, player.posY + 0.15D, player.posZ, sound, SoundCategory.PLAYERS, 0.35F, 1.5F);
-	}
-
-	@Override
-	public IMessage onMessage(MagicFlyingMessage message, MessageContext ctx)
-	{
-		message.execute(ctx.getServerHandler().player);
 
 		return null;
 	}

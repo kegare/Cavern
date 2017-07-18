@@ -13,10 +13,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MagicExecuteMessage implements IMessage, IMessageHandler<MagicExecuteMessage, IMessage>
+public class MagicExecuteMessage implements IPlayerMessage<MagicExecuteMessage, IMessage>
 {
 	private boolean heldMain;
 
@@ -39,14 +37,15 @@ public class MagicExecuteMessage implements IMessage, IMessageHandler<MagicExecu
 		buf.writeBoolean(heldMain);
 	}
 
-	public void execute(EntityPlayerMP player)
+	@Override
+	public IMessage process(EntityPlayerMP player)
 	{
 		EnumHand hand =  heldMain ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
 		ItemStack stack = player.getHeldItem(hand);
 
 		if (!stack.isEmpty() && stack.getItem() instanceof ItemMagicalBook)
 		{
-			IMagic magic = ((ItemMagicalBook)stack.getItem()).getMagic(stack);
+			IMagic magic = ((ItemMagicalBook)stack.getItem()).getMagic(player, stack);
 			IMagicianStats stats = MagicianStats.get(player);
 			WorldServer world = player.getServerWorld();
 
@@ -78,12 +77,6 @@ public class MagicExecuteMessage implements IMessage, IMessageHandler<MagicExecu
 				}
 			}
 		}
-	}
-
-	@Override
-	public IMessage onMessage(MagicExecuteMessage message, MessageContext ctx)
-	{
-		message.execute(ctx.getServerHandler().player);
 
 		return null;
 	}

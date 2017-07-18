@@ -2,27 +2,17 @@ package cavern.network.server;
 
 import cavern.handler.CaveEventHooks;
 import cavern.network.CaveNetworkRegistry;
-import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class StatsAdjustRequestMessage implements IMessage, IMessageHandler<StatsAdjustRequestMessage, IMessage>
+public class StatsAdjustRequestMessage implements IPlayerMessage<StatsAdjustRequestMessage, IMessage>
 {
 	private static long requestTime;
 
-	public StatsAdjustRequestMessage() {}
-
 	@Override
-	public void fromBytes(ByteBuf buf) {}
-
-	@Override
-	public void toBytes(ByteBuf buf) {}
-
-	@Override
-	public IMessage onMessage(StatsAdjustRequestMessage message, MessageContext ctx)
+	public IMessage process(EntityPlayerMP player)
 	{
-		CaveEventHooks.adjustPlayerStats(ctx.getServerHandler().player);
+		CaveEventHooks.adjustPlayerStats(player);
 
 		return null;
 	}

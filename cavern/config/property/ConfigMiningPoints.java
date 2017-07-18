@@ -99,6 +99,8 @@ public class ConfigMiningPoints
 		entries.add(new PointEntry("oreMagnetite", 1));
 		entries.add(new PointEntry("oreNiter", 1));
 		entries.add(new PointEntry("oreSchorl", 1));
+		entries.add(new PointEntry("oreCobalt", 1));
+		entries.add(new PointEntry("oreArdite", 1));
 		entries.add(new PointEntry("oreAquamarine", 2));
 		entries.add(new PointEntry("oreMagnite", 1));
 		entries.add(new PointEntry("oreRandomite", 2));

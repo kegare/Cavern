@@ -5,10 +5,8 @@ import cavern.stats.MagicianStats;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MagicResultMessage implements IMessage, IMessageHandler<MagicResultMessage, IMessage>
+public class MagicResultMessage implements IPlayerMessage<MagicResultMessage, IMessage>
 {
 	private int cost;
 	private int point;
@@ -35,7 +33,8 @@ public class MagicResultMessage implements IMessage, IMessageHandler<MagicResult
 		buf.writeInt(point);
 	}
 
-	public void execute(EntityPlayerMP player)
+	@Override
+	public IMessage process(EntityPlayerMP player)
 	{
 		IMagicianStats stats = MagicianStats.get(player);
 
@@ -45,12 +44,6 @@ public class MagicResultMessage implements IMessage, IMessageHandler<MagicResult
 		}
 
 		stats.addPoint(point);
-	}
-
-	@Override
-	public IMessage onMessage(MagicResultMessage message, MessageContext ctx)
-	{
-		message.execute(ctx.getServerHandler().player);
 
 		return null;
 	}

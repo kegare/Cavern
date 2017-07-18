@@ -7,16 +7,13 @@ import cavern.stats.MinerStats;
 import cavern.util.BlockMeta;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class LastMineMessage implements IMessage, IMessageHandler<LastMineMessage, IMessage>
+public class LastMineMessage implements IPlayerMessage<LastMineMessage, IMessage>
 {
 	private String name;
 	private int meta;
@@ -49,16 +46,14 @@ public class LastMineMessage implements IMessage, IMessageHandler<LastMineMessag
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public IMessage onMessage(LastMineMessage message, MessageContext ctx)
+	public IMessage process(EntityPlayerSP player)
 	{
-		MinerStats.setLastMine(new BlockMeta(message.name, message.meta), message.point);
+		MinerStats.setLastMine(new BlockMeta(name, meta), point);
 
 		long time = Minecraft.getSystemTime();
 
 		if (GeneralConfig.miningCombo)
 		{
-			EntityPlayer player = FMLClientHandler.instance().getClientPlayerEntity();
-
 			if (time - MinerStats.lastMineTime <= 15000L)
 			{
 				++MinerStats.mineCombo;

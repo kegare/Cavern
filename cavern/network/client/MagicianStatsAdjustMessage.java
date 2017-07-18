@@ -3,15 +3,12 @@ package cavern.network.client;
 import cavern.api.IMagicianStats;
 import cavern.stats.MagicianStats;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MagicianStatsAdjustMessage implements IMessage, IMessageHandler<MagicianStatsAdjustMessage, IMessage>
+public class MagicianStatsAdjustMessage implements IPlayerMessage<MagicianStatsAdjustMessage, IMessage>
 {
 	private int point;
 	private int rank;
@@ -43,7 +40,8 @@ public class MagicianStatsAdjustMessage implements IMessage, IMessageHandler<Mag
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void execute(EntityPlayer player)
+	@Override
+	public IMessage process(EntityPlayerSP player)
 	{
 		IMagicianStats stats = MagicianStats.get(player, true);
 
@@ -52,18 +50,6 @@ public class MagicianStatsAdjustMessage implements IMessage, IMessageHandler<Mag
 			stats.setPoint(point, false);
 			stats.setRank(rank, false);
 			stats.setMP(mp, false);
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IMessage onMessage(MagicianStatsAdjustMessage message, MessageContext ctx)
-	{
-		EntityPlayer player = FMLClientHandler.instance().getClientPlayerEntity();
-
-		if (player != null)
-		{
-			message.execute(player);
 		}
 
 		return null;

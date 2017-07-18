@@ -9,16 +9,13 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class CaveMusicMessage implements IMessage, IMessageHandler<CaveMusicMessage, IMessage>
+public class CaveMusicMessage implements IClientMessage<CaveMusicMessage, IMessage>
 {
 	@SideOnly(Side.CLIENT)
 	public static ISound prevMusic;
@@ -55,7 +52,8 @@ public class CaveMusicMessage implements IMessage, IMessageHandler<CaveMusicMess
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void execute(Minecraft mc)
+	@Override
+	public IMessage process(Minecraft mc)
 	{
 		SoundHandler handler = mc.getSoundHandler();
 
@@ -69,7 +67,7 @@ public class CaveMusicMessage implements IMessage, IMessageHandler<CaveMusicMess
 			}
 			else if (handler.isSoundPlaying(prevMusic))
 			{
-				return;
+				return null;
 			}
 		}
 
@@ -88,13 +86,6 @@ public class CaveMusicMessage implements IMessage, IMessageHandler<CaveMusicMess
 				prevMusic = music;
 			}
 		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IMessage onMessage(CaveMusicMessage message, MessageContext ctx)
-	{
-		message.execute(FMLClientHandler.instance().getClient());
 
 		return null;
 	}

@@ -18,6 +18,7 @@ import cavern.magic.MagicCompositing;
 import cavern.magic.MagicExplosion;
 import cavern.magic.MagicFlameBreath;
 import cavern.magic.MagicFlying;
+import cavern.magic.MagicFlyingElytra;
 import cavern.magic.MagicHeal;
 import cavern.magic.MagicHolyBless;
 import cavern.magic.MagicReturn;
@@ -31,6 +32,7 @@ import cavern.magic.MagicWarp;
 import cavern.util.Roman;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -124,7 +126,7 @@ public class ItemMagicalBook extends Item
 	}
 
 	@Nullable
-	public IMagic getMagic(ItemStack stack)
+	public IMagic getMagic(EntityPlayer player, ItemStack stack)
 	{
 		EnumType type = EnumType.byItemStack(stack);
 		int level = getMagicLevel(stack);
@@ -158,7 +160,7 @@ public class ItemMagicalBook extends Item
 			case COMPOSITING:
 				return new MagicCompositing(level, type.getMagicSpellTime(level));
 			case FLYING:
-				return new MagicFlying(level, type.getMagicSpellTime(level));
+				return player.isElytraFlying() ? new MagicFlyingElytra(level) : new MagicFlying(level, type.getMagicSpellTime(level));
 			default:
 		}
 

@@ -5,24 +5,16 @@ import cavern.config.MiningAssistConfig;
 import cavern.miningassist.MiningAssist;
 import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MiningAssistMessage implements IMessage, IMessageHandler<MiningAssistMessage, IMessage>
+public class MiningAssistMessage implements IPlayerMessage<MiningAssistMessage, IMessage>
 {
 	@Override
-	public void fromBytes(ByteBuf buf) {}
-
-	@Override
-	public void toBytes(ByteBuf buf) {}
-
-	public void execute(EntityPlayerMP player)
+	public IMessage process(EntityPlayerMP player)
 	{
 		IMinerStats stats = MinerStats.get(player);
 
@@ -46,12 +38,6 @@ public class MiningAssistMessage implements IMessage, IMessageHandler<MiningAssi
 
 			player.sendMessage(component);
 		}
-	}
-
-	@Override
-	public IMessage onMessage(MiningAssistMessage message, MessageContext ctx)
-	{
-		message.execute(ctx.getServerHandler().player);
 
 		return null;
 	}
