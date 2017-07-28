@@ -14,8 +14,8 @@ public class ConfigEntities
 {
 	private String[] values;
 
-	private final Set<Class<? extends Entity>> entities = Sets.newConcurrentHashSet();
-	private final Set<ResourceLocation> keys = Sets.newConcurrentHashSet();
+	private final Set<Class<? extends Entity>> entities = Sets.newHashSet();
+	private final Set<ResourceLocation> keys = Sets.newHashSet();
 
 	public String[] getValues()
 	{

@@ -95,9 +95,9 @@ public class ContainerStorage extends Container
 		storageInventory.closeInventory(player);
 	}
 
-	 @RowSizeCallback
-	 public int getRowSize()
-	 {
-		 return numRows + 3;
-	 }
+	@RowSizeCallback
+	public int getRowSize()
+	{
+		return numRows + 3;
+	}
 }

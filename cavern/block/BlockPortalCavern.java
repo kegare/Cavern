@@ -10,6 +10,8 @@ import cavern.client.gui.GuiRegeneration;
 import cavern.config.GeneralConfig;
 import cavern.core.CaveSounds;
 import cavern.core.Cavern;
+import cavern.network.CaveNetworkRegistry;
+import cavern.network.client.RegenerationGuiMessage;
 import cavern.stats.PortalCache;
 import cavern.util.CaveUtils;
 import cavern.world.CaveType;
@@ -120,9 +122,23 @@ public class BlockPortalCavern extends BlockPortal
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
 	{
-		if (world.isRemote)
+		if (!GeneralConfig.portalMenu)
+		{
+			return true;
+		}
+
+		if (Cavern.proxy.isSinglePlayer() && world.isRemote)
 		{
 			displayGui(world, pos, state, player, hand, side);
+		}
+		else if (player instanceof EntityPlayerMP)
+		{
+			EntityPlayerMP playerMP = (EntityPlayerMP)player;
+
+			if (playerMP.mcServer.getPlayerList().canSendCommands(playerMP.getGameProfile()))
+			{
+				CaveNetworkRegistry.sendTo(new RegenerationGuiMessage(RegenerationGuiMessage.EnumType.OPEN), playerMP);
+			}
 		}
 
 		return true;

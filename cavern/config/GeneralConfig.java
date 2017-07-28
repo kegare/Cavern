@@ -40,6 +40,7 @@ public class GeneralConfig
 	public static boolean cavernEscapeMission;
 
 	public static boolean portalCache;
+	public static boolean portalMenu;
 
 	public static int sleepWaitTime;
 	public static boolean sleepRefresh;
@@ -171,6 +172,16 @@ public class GeneralConfig
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		portalCache = prop.getBoolean(portalCache);
+
+		prop = config.get(category, "portalMenu", true);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [default: " + prop.getDefault() + "]";
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		portalMenu = prop.getBoolean(portalMenu);
 
 		prop = config.get(category, "sleepWaitTime", 300);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());

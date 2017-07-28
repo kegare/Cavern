@@ -12,6 +12,7 @@ import cavern.api.IPortalCache;
 import cavern.item.IceEquipment;
 import cavern.item.ItemMagicalBook;
 import cavern.item.OreCompass;
+import cavern.miningassist.MiningAssistUnit;
 import cavern.util.CaveUtils;
 import cavern.world.WorldCachedData;
 import net.minecraft.entity.Entity;
@@ -40,6 +41,8 @@ public class CaveCapabilities
 	public static Capability<IHunterStats> HUNTER_STATS = null;
 	@CapabilityInject(IMagicianStats.class)
 	public static Capability<IMagicianStats> MAGICIAN_STATS = null;
+	@CapabilityInject(MiningAssistUnit.class)
+	public static Capability<MiningAssistUnit> MINING_ASSIST = null;
 	@CapabilityInject(IIceEquipment.class)
 	public static Capability<IIceEquipment> ICE_EQUIP = null;
 	@CapabilityInject(IInventoryEquipment.class)
@@ -56,6 +59,7 @@ public class CaveCapabilities
 		CapabilityMinerStats.register();
 		CapabilityHunterStats.register();
 		CapabilityMagicianStats.register();
+		CapabilityMiningAssistUnit.register();
 		CapabilityIceEquipment.register();
 		CapabilityInventoryEquipment.register();
 		CapabilityOreCompass.register();
@@ -93,6 +97,7 @@ public class CaveCapabilities
 			event.addCapability(CaveUtils.getKey("MinerStats"), new CapabilityMinerStats(player));
 			event.addCapability(CaveUtils.getKey("HunterStats"), new CapabilityHunterStats(player));
 			event.addCapability(CaveUtils.getKey("MagicianStats"), new CapabilityMagicianStats(player));
+			event.addCapability(CaveUtils.getKey("MiningAssist"), new CapabilityMiningAssistUnit(player));
 		}
 	}
 

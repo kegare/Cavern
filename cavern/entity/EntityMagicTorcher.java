@@ -46,23 +46,9 @@ public class EntityMagicTorcher extends Entity
 		this.setPosition(player.posX, player.posY, player.posZ);
 	}
 
-	public EntityMagicTorcher setPlayer(EntityPlayer player)
-	{
-		entityPlayer = player;
-
-		return this;
-	}
-
 	public EntityPlayer getPlayer()
 	{
 		return entityPlayer;
-	}
-
-	public EntityMagicTorcher setRange(int range)
-	{
-		torcherRange = range;
-
-		return this;
 	}
 
 	public int getRange()
@@ -93,16 +79,14 @@ public class EntityMagicTorcher extends Entity
 	}
 
 	@Override
-	public void onUpdate()
+	public void onEntityUpdate()
 	{
-		super.onUpdate();
-
 		if (world.isRemote)
 		{
 			return;
 		}
 
-		if (entityPlayer == null || !entityPlayer.isEntityAlive())
+		if (entityPlayer == null || entityPlayer.isDead)
 		{
 			setDead();
 

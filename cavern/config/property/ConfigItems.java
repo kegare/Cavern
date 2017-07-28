@@ -16,7 +16,7 @@ public class ConfigItems
 {
 	private String[] values;
 
-	private final Set<ItemMeta> items = Sets.newConcurrentHashSet();
+	private final Set<ItemMeta> items = Sets.newHashSet();
 
 	public String[] getValues()
 	{

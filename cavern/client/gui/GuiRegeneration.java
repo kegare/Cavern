@@ -6,7 +6,6 @@ import cavern.api.CavernAPI;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.RegenerationGuiMessage.EnumType;
 import cavern.network.server.RegenerationMessage;
-import cavern.util.DimensionRegeneration;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,6 +19,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiRegeneration extends GuiScreen
 {
+	private static boolean backup = true;
+
 	public boolean cavern, aquaCavern, caveland, iceCavern, ruinsCavern, cavenia, hugeCavern;
 
 	protected GuiButton regenButton;
@@ -51,7 +52,7 @@ public class GuiRegeneration extends GuiScreen
 
 		if (backupCheckBox == null)
 		{
-			backupCheckBox = new GuiCheckBox(2, 10, 0, I18n.format("cavern.regeneration.gui.backup"), DimensionRegeneration.backup);
+			backupCheckBox = new GuiCheckBox(2, 10, 0, I18n.format("cavern.regeneration.gui.backup"), backup);
 		}
 
 		backupCheckBox.y = height - 20;
@@ -219,7 +220,7 @@ public class GuiRegeneration extends GuiScreen
 					mc.setIngameFocus();
 					break;
 				case 2:
-					DimensionRegeneration.backup = backupCheckBox.isChecked();
+					backup = backupCheckBox.isChecked();
 					break;
 			}
 		}

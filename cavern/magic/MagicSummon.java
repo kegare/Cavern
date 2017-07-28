@@ -3,6 +3,7 @@ package cavern.magic;
 import javax.annotation.Nullable;
 
 import cavern.core.CaveSounds;
+import cavern.core.Cavern;
 import cavern.entity.EntitySummonCavenicSkeleton;
 import cavern.entity.EntitySummonCavenicZombie;
 import cavern.entity.EntitySummonSkeleton;
@@ -19,6 +20,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -67,9 +69,23 @@ public class MagicSummon implements IMagic
 	@Override
 	public boolean executeMagic(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		EnumFacing frontFace = player.getHorizontalFacing();
-		BlockPos origin = player.getPosition();
 		BlockPos summonPos;
+		Vec3d hitVec = ForgeHooks.rayTraceEyeHitVec(player, Cavern.proxy.getBlockReachDistance(player));
+
+		if (hitVec != null)
+		{
+			summonPos = getSummonPos(player, new BlockPos(hitVec.x, hitVec.y + 1, hitVec.z));
+
+			if (summonPos != null)
+			{
+				summon(player, summonPos);
+
+				return true;
+			}
+		}
+
+		BlockPos origin = player.getPosition();
+		EnumFacing frontFace = player.getHorizontalFacing();
 
 		for (int i = 0; i < 3; ++i)
 		{

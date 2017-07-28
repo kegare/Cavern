@@ -1,5 +1,9 @@
 package cavern.core;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -18,5 +22,15 @@ public class CommonProxy
 	public boolean isSinglePlayer()
 	{
 		return FMLCommonHandler.instance().getMinecraftServerInstance().isSinglePlayer();
+	}
+
+	public float getBlockReachDistance(@Nullable EntityPlayer player)
+	{
+		if (player != null && player instanceof EntityPlayerMP)
+		{
+			((EntityPlayerMP)player).interactionManager.getBlockReachDistance();
+		}
+
+		return 0.0F;
 	}
 }

@@ -17,7 +17,7 @@ public class ConfigBlocks
 {
 	private String[] values;
 
-	private final Set<BlockMeta> blocks = Sets.newConcurrentHashSet();
+	private final Set<BlockMeta> blocks = Sets.newHashSet();
 
 	public String[] getValues()
 	{

@@ -1,41 +1,35 @@
 package cavern.handler;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
 
 import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
-import com.google.common.collect.Sets;
-
 import cavern.api.IMinerStats;
 import cavern.client.CaveKeyBindings;
 import cavern.config.MiningAssistConfig;
-import cavern.config.property.ConfigBlocks;
 import cavern.core.Cavern;
-import cavern.miningassist.AditMiningExecutor;
-import cavern.miningassist.IMiningAssistExecutor;
 import cavern.miningassist.MiningAssist;
-import cavern.miningassist.QuickMiningExecutor;
-import cavern.miningassist.RangedMiningExecutor;
+import cavern.miningassist.MiningAssistUnit;
+import cavern.miningassist.MiningSnapshot;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.server.MiningAssistMessage;
 import cavern.stats.MinerRank;
 import cavern.stats.MinerStats;
-import cavern.util.BreakSpeedCache;
-import cavern.util.CaveUtils;
-import net.minecraft.block.BlockOre;
-import net.minecraft.block.BlockRedstoneOre;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.management.PlayerInteractionManager;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
@@ -48,240 +42,228 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MiningAssistEventHooks
 {
-	private static boolean captureDrops;
-	private static boolean captureExps;
+	private boolean breaking;
 
-	private static final Set<ItemStack> DROPS = Sets.newHashSet();
-	private static final Set<Integer> EXPS = Sets.newHashSet();
-
-	public static Set<ItemStack> captureDrops(boolean start)
+	private boolean isActive(EntityPlayer player, IBlockState state)
 	{
-		if (!MiningAssistConfig.collectDrops)
+		ItemStack held = player.getHeldItemMainhand();
+
+		if (!MiningAssistConfig.isEffectiveItem(held))
 		{
-			return Collections.emptySet();
+			return false;
 		}
 
-		if (start)
-		{
-			captureDrops = true;
-			DROPS.clear();
+		IMinerStats stats = MinerStats.get(player);
 
-			return null;
-		}
-		else
+		if (stats.getRank() < MiningAssistConfig.minerRank.getValue())
 		{
-			captureDrops = false;
-
-			return DROPS;
+			return false;
 		}
+
+		MiningAssist type = MiningAssist.get(stats.getMiningAssist());
+
+		if (type == MiningAssist.DISABLED)
+		{
+			return false;
+		}
+
+		return type.isEffectiveTarget(held, state);
 	}
 
-	public static int captureExps(boolean start)
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onBreakSpeed(BreakSpeed event)
 	{
-		if (!MiningAssistConfig.collectExps)
+		if (!MiningAssistConfig.modifiedHardness || !Cavern.proxy.isSinglePlayer())
 		{
-			return 0;
+			return;
 		}
 
-		if (start)
-		{
-			captureExps = true;
-			EXPS.clear();
+		EntityPlayer player = event.getEntityPlayer();
+		IBlockState state = event.getState();
 
-			return 0;
-		}
-		else
+		if (!isActive(player, state))
 		{
-			captureExps = false;
-
-			return EXPS.stream().filter(i -> i != null).mapToInt(i -> i.intValue()).sum();
+			return;
 		}
+
+		MiningAssistUnit assist = MiningAssistUnit.get(player);
+		MiningAssist type = MiningAssist.byPlayer(player);
+		BlockPos pos = event.getPos();
+		MiningSnapshot snapshot = assist.getSnapshot(type, pos, state);
+
+		if (snapshot.isEmpty())
+		{
+			return;
+		}
+
+		MinerRank rank = MinerRank.get(MinerStats.get(player).getRank());
+		float speed = event.getNewSpeed();
+		float power = rank.getBoost() * 1.7145F;
+		float newSpeed = Math.min(speed / (snapshot.getTargetCount() * (0.5F - power * 0.1245F)), speed);
+
+		event.setNewSpeed(newSpeed);
 	}
 
-	public static boolean canMiningAssist(EntityPlayer player, IBlockState state)
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onBlockBreak(BreakEvent event)
 	{
-		if (MiningAssistConfig.isEffectiveItem(player.getHeldItemMainhand()))
-		{
-			IMinerStats stats = MinerStats.get(player);
+		World world = event.getWorld();
 
-			if (stats.getRank() >= MiningAssistConfig.minerRank.getValue())
+		if (world.isRemote)
+		{
+			return;
+		}
+
+		EntityPlayer player = event.getPlayer();
+		BlockPos pos = event.getPos();
+		MiningAssistUnit assist = MiningAssistUnit.get(player);
+
+		if (assist.addExperience(pos, event.getExpToDrop()))
+		{
+			event.setExpToDrop(0);
+		}
+
+		if (breaking)
+		{
+			return;
+		}
+
+		if (!(player instanceof EntityPlayerMP))
+		{
+			return;
+		}
+
+		IBlockState state = event.getState();
+
+		if (!isActive(player, state))
+		{
+			return;
+		}
+
+		MiningAssist type = MiningAssist.byPlayer(player);
+		MiningSnapshot snapshot = assist.getSnapshot(type, pos, state);
+
+		if (snapshot.isEmpty())
+		{
+			return;
+		}
+
+		PlayerInteractionManager im = ((EntityPlayerMP)player).interactionManager;
+
+		assist.captureDrops(MiningAssistConfig.collectDrops);
+		assist.captureExperiences(MiningAssistConfig.collectExps);
+
+		breaking = true;
+
+		for (BlockPos target : snapshot.getTargets())
+		{
+			if (snapshot.validTarget(target) && !harvestBlock(im, target))
 			{
-				MiningAssist type = MiningAssist.get(stats.getMiningAssist());
-
-				if (type == MiningAssist.DISABLED)
-				{
-					return false;
-				}
-
-				ConfigBlocks targetBlocks = null;
-
-				switch (type)
-				{
-					case QUICK:
-						targetBlocks = MiningAssistConfig.quickTargetBlocks;
-						break;
-					case RANGED:
-						targetBlocks = MiningAssistConfig.rangedTargetBlocks;
-						break;
-					case ADIT:
-						targetBlocks = MiningAssistConfig.aditTargetBlocks;
-						break;
-					default:
-				}
-
-				if (targetBlocks == null || targetBlocks.isEmpty())
-				{
-					switch (type)
-					{
-						case QUICK:
-							return state.getBlock() instanceof BlockOre || state.getBlock() instanceof BlockRedstoneOre || MinerStats.getPointAmount(state) > 0;
-						case RANGED:
-						case ADIT:
-							return player.getHeldItemMainhand().canHarvestBlock(state);
-						default:
-					}
-
-					return false;
-				}
-
-				return targetBlocks.hasBlockState(state);
+				break;
 			}
+		}
+
+		breaking = false;
+
+		Map<BlockPos, NonNullList<ItemStack>> drops = assist.captureDrops(false);
+
+		if (drops != null && !drops.isEmpty())
+		{
+			for (NonNullList<ItemStack> items : drops.values())
+			{
+				for (ItemStack stack : items)
+				{
+					Block.spawnAsEntity(world, pos, stack);
+				}
+			}
+		}
+
+		Map<BlockPos, Integer> experiences = assist.captureExperiences(false);
+
+		if (experiences != null && !experiences.isEmpty() && !im.isCreative() && world.getGameRules().getBoolean("doTileDrops"))
+		{
+			int exp = experiences.values().stream().mapToInt(Integer::intValue).sum();
+
+			while (exp > 0)
+			{
+				int i = EntityXPOrb.getXPSplit(exp);
+				exp -= i;
+
+				world.spawnEntity(new EntityXPOrb(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, i));
+			}
+		}
+	}
+
+	private boolean harvestBlock(PlayerInteractionManager im, @Nullable BlockPos pos)
+	{
+		if (pos == null)
+		{
+			return false;
+		}
+
+		if (Cavern.proxy.isSinglePlayer())
+		{
+			World world = im.world;
+			IBlockState state = world.getBlockState(pos);
+
+			if (im.tryHarvestBlock(pos))
+			{
+				if (!im.isCreative())
+				{
+					world.playEvent(2001, pos, Block.getStateId(state));
+				}
+
+				return true;
+			}
+		}
+		else if (im.tryHarvestBlock(pos))
+		{
+			return true;
 		}
 
 		return false;
 	}
-
-	@Nullable
-	public static IMiningAssistExecutor createExecutor(@Nullable MiningAssist type, World world, EntityPlayer player, BlockPos origin, @Nullable IBlockState target)
-	{
-		if (type == null)
-		{
-			type = MiningAssist.byPlayer(player);
-		}
-
-		switch (type)
-		{
-			case QUICK:
-				return new QuickMiningExecutor(world, player, origin, target).setTargetBlockLimit(MiningAssistConfig.quickMiningLimit);
-			case RANGED:
-				return new RangedMiningExecutor(world, player, origin, target).setRange(MiningAssistConfig.rangedMining);
-			case ADIT:
-				return new AditMiningExecutor(world, player, origin, target);
-			default:
-		}
-
-		return null;
-	}
-
-	private static final Map<BlockPos, BreakSpeedCache> SPEED_CACHES = new WeakHashMap<>();
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onHarvestDrops(HarvestDropsEvent event)
 	{
 		World world = event.getWorld();
 
-		if (captureDrops)
+		if (world.isRemote)
 		{
-			List<ItemStack> drops = event.getDrops();
-			float chance = event.getDropChance();
-
-			for (ItemStack stack : drops)
-			{
-				if (world.rand.nextFloat() < chance)
-				{
-					DROPS.add(stack);
-				}
-			}
-
-			drops.clear();
-		}
-	}
-
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onBlockBreak(BreakEvent event)
-	{
-		if (captureExps)
-		{
-			EXPS.add(Integer.valueOf(event.getExpToDrop()));
-
-			event.setExpToDrop(0);
+			return;
 		}
 
-		EntityPlayer player = event.getPlayer();
-		World world = event.getWorld();
+		EntityPlayer player = event.getHarvester();
 
-		if (player != null && !world.isRemote)
+		if (player == null || player instanceof FakePlayer)
 		{
-			IBlockState state = event.getState();
+			return;
+		}
 
-			if (canMiningAssist(player, state))
+		BlockPos pos = event.getPos();
+		MiningAssistUnit assist = MiningAssistUnit.get(player);
+
+		if (!assist.getCaptureDrops())
+		{
+			return;
+		}
+
+		NonNullList<ItemStack> items = NonNullList.create();
+		List<ItemStack> drops = event.getDrops();
+		float chance = event.getDropChance();
+
+		for (ItemStack stack : drops)
+		{
+			if (world.rand.nextFloat() < chance)
 			{
-				if (captureDrops)
-				{
-					return;
-				}
-
-				BlockPos pos = event.getPos();
-				IMiningAssistExecutor executor = createExecutor(null, world, player, pos, state);
-
-				if (executor != null)
-				{
-					executor.execute();
-				}
+				items.add(stack);
 			}
 		}
-	}
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onBreakSpeed(BreakSpeed event)
-	{
-		EntityPlayer player = event.getEntityPlayer();
-		IBlockState state = event.getState();
+		drops.clear();
 
-		if (MiningAssistConfig.modifiedHardness && Cavern.proxy.isSinglePlayer() && canMiningAssist(player, state))
-		{
-			BlockPos pos = event.getPos();
-			BreakSpeedCache cache = SPEED_CACHES.get(pos);
-			long time = System.currentTimeMillis();
-			float cachedSpeed = 0.0F;
-
-			if (cache != null)
-			{
-				if (CaveUtils.areBlockStatesEqual(state, cache.getBlockState()) && time - cache.getCachedTime() <= 5000L)
-				{
-					cachedSpeed = cache.getBreakSpeed();
-				}
-				else
-				{
-					SPEED_CACHES.remove(pos);
-
-					return;
-				}
-			}
-
-			if (cachedSpeed > 0.0F)
-			{
-				event.setNewSpeed(cachedSpeed);
-
-				return;
-			}
-
-			IMiningAssistExecutor executor = createExecutor(null, player.world, player, pos, state);
-
-			if (executor == null)
-			{
-				return;
-			}
-
-			MinerRank rank = MinerRank.get(MinerStats.get(player).getRank());
-			float speed = event.getNewSpeed();
-			float power = rank.getBoost() * 1.7145F;
-			float newSpeed = Math.min(speed / (executor.calc() * (0.5F - power * 0.1245F)), speed);
-
-			event.setNewSpeed(newSpeed);
-
-			SPEED_CACHES.put(pos, new BreakSpeedCache(state, newSpeed, time));
-		}
+		assist.addDrops(pos, items);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -293,15 +275,18 @@ public class MiningAssistEventHooks
 			return;
 		}
 
-		int key = Keyboard.getEventKey();
 		Minecraft mc = FMLClientHandler.instance().getClient();
+
+		if (mc.player == null)
+		{
+			return;
+		}
+
+		int key = Keyboard.getEventKey();
 
 		if (CaveKeyBindings.KEY_MINING_ASSIST.isActiveAndMatches(key))
 		{
-			if (mc.player != null)
-			{
-				CaveNetworkRegistry.sendToServer(new MiningAssistMessage());
-			}
+			CaveNetworkRegistry.sendToServer(new MiningAssistMessage());
 		}
 	}
 }
