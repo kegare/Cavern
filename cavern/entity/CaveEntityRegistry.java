@@ -5,6 +5,8 @@ import java.util.List;
 import cavern.core.Cavern;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving.SpawnPlacementType;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -32,6 +34,8 @@ public class CaveEntityRegistry
 	public static void registerMob(Class<? extends Entity> entityClass, String key, String name, int primaryColor, int secondaryColor)
 	{
 		registerEntity(entityClass, key, name, 128, 3, true, primaryColor, secondaryColor);
+
+		EntitySpawnPlacementRegistry.setPlacementType(entityClass, SpawnPlacementType.ON_GROUND);
 	}
 
 	public static void registerEntities()
@@ -54,8 +58,10 @@ public class CaveEntityRegistry
 
 		registerEntity(EntityAquaSquid.class, "squid", "Squid", 64, 3, true);
 
-		registerEntity(EntityMagicTorcher.class, "magic_torcher", "MagicTorcher", 64, 3, true);
+		registerEntity(EntityMagicTorcher.class, "magic_torcher", "MagicTorcher", 16, 3, false);
 		registerEntity(EntityMagicalArrow.class, "magical_arrow", "MagicalArrow", 64, 3, true);
+
+		EntitySpawnPlacementRegistry.setPlacementType(EntityAquaSquid.class, SpawnPlacementType.IN_WATER);
 	}
 
 	public static void addSpawns()
@@ -63,7 +69,7 @@ public class CaveEntityRegistry
 		List<Biome> biomes = ForgeRegistries.BIOMES.getValues();
 		Biome[] biomeArray = biomes.toArray(new Biome[biomes.size()]);
 
-		EntityRegistry.addSpawn(EntityCavenicSkeleton.class, 15, 1, 1, EnumCreatureType.MONSTER, biomeArray);
+		EntityRegistry.addSpawn(EntityCavenicSkeleton.class, 20, 1, 1, EnumCreatureType.MONSTER, biomeArray);
 		EntityRegistry.addSpawn(EntityCavenicCreeper.class, 30, 1, 1, EnumCreatureType.MONSTER, biomeArray);
 		EntityRegistry.addSpawn(EntityCavenicZombie.class, 30, 2, 2, EnumCreatureType.MONSTER, biomeArray);
 		EntityRegistry.addSpawn(EntityCavenicSpider.class, 30, 1, 1, EnumCreatureType.MONSTER, biomeArray);

@@ -39,7 +39,7 @@ public class EntitySummonCavenicZombie extends EntityCavenicZombie implements IS
 
 	public EntitySummonCavenicZombie(World world, EntityPlayer player)
 	{
-		this(world, 1200, player);
+		this(world, 3600, player);
 	}
 
 	public EntitySummonCavenicZombie(World world, int lifeTime, EntityPlayer player)

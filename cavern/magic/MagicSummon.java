@@ -51,7 +51,7 @@ public class MagicSummon implements IMagic
 	@Override
 	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		return 50 * Math.max(getMagicLevel(), 1);
+		return 50 * getMagicLevel();
 	}
 
 	@Override
@@ -68,6 +68,27 @@ public class MagicSummon implements IMagic
 
 	@Override
 	public boolean executeMagic(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
+	{
+		if (getMagicLevel() >= 5)
+		{
+			int count = getMagicLevel() - 2;
+			boolean flag = false;
+
+			for (int i = 0; i < count; ++i)
+			{
+				if (executeSummonMagic(player, world, stack, hand))
+				{
+					flag = true;
+				}
+			}
+
+			return flag;
+		}
+
+		return executeSummonMagic(player, world, stack, hand);
+	}
+
+	public boolean executeSummonMagic(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
 		BlockPos summonPos;
 		Vec3d hitVec = ForgeHooks.rayTraceEyeHitVec(player, Cavern.proxy.getBlockReachDistance(player));
@@ -165,33 +186,27 @@ public class MagicSummon implements IMagic
 		return pos;
 	}
 
+	protected EntityLivingBase getSummonMob(World world, EntityPlayer player, int level)
+	{
+		switch (level)
+		{
+			case 1:
+				return new EntitySummonZombie(world, player);
+			case 2:
+				return new EntitySummonSkeleton(world, player);
+			case 3:
+				return new EntitySummonCavenicZombie(world, player);
+			case 4:
+				return new EntitySummonCavenicSkeleton(world, player);
+			default:
+				return getSummonMob(world, player, player.getRNG().nextInt(4) + 1);
+		}
+	}
+
 	public void summon(EntityPlayer player, BlockPos pos)
 	{
 		World world = player.world;
-		EntityLivingBase entity;
-
-		switch (getMagicLevel())
-		{
-			case 1:
-				entity = new EntitySummonZombie(world, player);
-				break;
-			case 2:
-				entity = new EntitySummonSkeleton(world, player);
-				break;
-			case 3:
-				entity = new EntitySummonCavenicZombie(world, player);
-				break;
-			case 4:
-				entity = new EntitySummonCavenicSkeleton(world, player);
-				break;
-			default:
-				entity = null;
-		}
-
-		if (entity == null)
-		{
-			return;
-		}
+		EntityLivingBase entity = getSummonMob(world, player, getMagicLevel());
 
 		entity.setLocationAndAngles(pos.getX() + 0.5D, pos.getY() + 0.25D, pos.getZ() + 0.5D, world.rand.nextFloat() * 360.0F, 0.0F);
 

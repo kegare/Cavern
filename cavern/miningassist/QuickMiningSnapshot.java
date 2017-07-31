@@ -2,11 +2,13 @@ package cavern.miningassist;
 
 import com.google.common.collect.Sets;
 
+import cavern.config.MiningAssistConfig;
 import cavern.util.CaveUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class QuickMiningSnapshot extends MiningSnapshot
@@ -63,6 +65,11 @@ public class QuickMiningSnapshot extends MiningSnapshot
 	@Override
 	public boolean offer(BlockPos pos)
 	{
+		if (MathHelper.floor(Math.sqrt(originPos.distanceSq(pos))) >= MiningAssistConfig.quickMiningLimit)
+		{
+			return false;
+		}
+
 		if (super.offer(pos))
 		{
 			checkPos = pos;

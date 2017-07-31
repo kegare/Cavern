@@ -70,7 +70,7 @@ public class MiningAssistEventHooks
 		return type.isEffectiveTarget(held, state);
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
+	@SubscribeEvent
 	public void onBreakSpeed(BreakSpeed event)
 	{
 		if (!MiningAssistConfig.modifiedHardness || !Cavern.proxy.isSinglePlayer())
@@ -104,7 +104,7 @@ public class MiningAssistEventHooks
 		event.setNewSpeed(newSpeed);
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
+	@SubscribeEvent
 	public void onBlockBreak(BreakEvent event)
 	{
 		World world = event.getWorld();

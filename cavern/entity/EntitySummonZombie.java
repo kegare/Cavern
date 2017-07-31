@@ -40,7 +40,7 @@ public class EntitySummonZombie extends EntityZombie implements ISummonMob
 
 	public EntitySummonZombie(World world, EntityPlayer player)
 	{
-		this(world, 3600, player);
+		this(world, 6000, player);
 	}
 
 	public EntitySummonZombie(World world, int lifeTime, EntityPlayer player)

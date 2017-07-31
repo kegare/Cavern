@@ -124,7 +124,7 @@ public class MiningAssistConfig
 		propOrder.add(prop.getName());
 		aditTargetBlocks.setValues(prop.getStringList());
 
-		prop = config.get(category, "quickMiningLimit", 50);
+		prop = config.get(category, "quickMiningLimit", 30);
 		prop.setMinValue(1).setMaxValue(100);
 		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
 		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");

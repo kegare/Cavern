@@ -19,6 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -309,6 +310,11 @@ public class CaveItems
 			IceEquipment.getChargedItem(ICE_BOW, 36), new ItemStack(Items.BOW, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Blocks.PACKED_ICE)));
 
 		registry.register(RecipeHelper.getRecipe("charge_ice_equip", new RecipeChargeIceEquipment()));
+	}
+
+	public static void registerSmeltingRecipes()
+	{
+		FurnaceRecipes.instance().addSmeltingRecipe(new ItemStack(MAGICAL_BOOK, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(Items.BOOK), 0);
 	}
 
 	public static boolean hasMagicalItem(EntityPlayer player, boolean handOnly)

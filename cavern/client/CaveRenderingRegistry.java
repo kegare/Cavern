@@ -32,13 +32,7 @@ import cavern.entity.EntityCrazySpider;
 import cavern.entity.EntityCrazyZombie;
 import cavern.entity.EntityMagicTorcher;
 import cavern.entity.EntityMagicalArrow;
-import cavern.entity.EntitySummonCavenicSkeleton;
-import cavern.entity.EntitySummonCavenicZombie;
-import cavern.entity.EntitySummonSkeleton;
-import cavern.entity.EntitySummonZombie;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.entity.RenderSkeleton;
-import net.minecraft.client.renderer.entity.RenderZombie;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -61,12 +55,9 @@ public class CaveRenderingRegistry
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrazyZombie.class, RenderCrazyZombie::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityCrazySpider.class, RenderCrazySpider::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityCavenicBear.class, RenderCavenicBear::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityMagicTorcher.class, RenderMagicTorcher::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntitySummonZombie.class, RenderZombie::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntitySummonSkeleton.class, RenderSkeleton::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntitySummonCavenicZombie.class, RenderCavenicZombie::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntitySummonCavenicSkeleton.class, RenderCavenicSkeleton::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityCaveman.class, RenderCaveman::new);
+
+		RenderingRegistry.registerEntityRenderingHandler(EntityMagicTorcher.class, RenderMagicTorcher::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityMagicalArrow.class, RenderMagicalArrow::new);
 	}
 

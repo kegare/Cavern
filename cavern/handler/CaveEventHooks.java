@@ -368,10 +368,10 @@ public class CaveEventHooks
 	{
 		float original = event.getOriginalSpeed();
 		EntityPlayer player = event.getEntityPlayer();
-		ItemStack heldMain = player.getHeldItemMainhand();
-		boolean miner = CavernAPI.dimension.isEntityInCaves(player) && CaveUtils.isItemPickaxe(heldMain);
+		ItemStack held = player.getHeldItemMainhand();
+		boolean miner = CavernAPI.dimension.isEntityInCaves(player) && CaveUtils.isItemPickaxe(held);
 
-		if (!heldMain.isEmpty() && player.isInsideOfMaterial(Material.WATER))
+		if (!held.isEmpty() && player.isInsideOfMaterial(Material.WATER))
 		{
 			if (miner && MinerStats.get(player).getRank() >= MinerRank.AQUA_MINER.getRank())
 			{
@@ -384,10 +384,10 @@ public class CaveEventHooks
 					event.setNewSpeed(original * 7.0F);
 				}
 			}
-			else if (heldMain.getItem() instanceof IAquaTool)
+			else if (held.getItem() instanceof IAquaTool)
 			{
-				IAquaTool tool = (IAquaTool)heldMain.getItem();
-				float speed = tool.getAquaBreakSpeed(heldMain, player, event.getPos(), event.getState(), original);
+				IAquaTool tool = (IAquaTool)held.getItem();
+				float speed = tool.getAquaBreakSpeed(held, player, event.getPos(), event.getState(), original);
 
 				if (speed > 0.0F)
 				{
@@ -401,10 +401,7 @@ public class CaveEventHooks
 			int rank = MinerStats.get(player).getRank();
 			float boost = MinerRank.get(rank).getBoost();
 
-			if (boost != 1.0F)
-			{
-				event.setNewSpeed(event.getNewSpeed() * boost);
-			}
+			event.setNewSpeed(event.getNewSpeed() * boost);
 		}
 	}
 

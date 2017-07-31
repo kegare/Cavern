@@ -50,7 +50,7 @@ public class MagicFlameBreath implements IMagic
 	@Override
 	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		return 20 * getMagicLevel();
+		return 30 * getMagicLevel();
 	}
 
 	public double getMagicRange()
@@ -79,7 +79,7 @@ public class MagicFlameBreath implements IMagic
 
 			if (world.isAirBlock(pos))
 			{
-				if (world.isAirBlock(down) || !world.getBlockState(down).isFullBlock())
+				if (world.isAirBlock(down) || !world.isRainingAt(down))
 				{
 					continue;
 				}

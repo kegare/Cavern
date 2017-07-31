@@ -270,7 +270,7 @@ public class ItemMagicalBook extends Item
 		WARP(8, "warp", 4, new long[] {15000L, 20000L, 22000L, 25000L}, 0.0D, 0.1D),
 		UNKNOWN(9, "unknown", 1, new long[] {5000L}, 0.0D, 0.0D),
 		TORCH(10, "torch", 3, null, 7.0D, 0.2D),
-		SUMMON(11, "summon", 4, null, 0.0D, 0.15D),
+		SUMMON(11, "summon", 5, null, 0.0D, 0.15D),
 		COMPOSITING(12, "compositing", 1, new long[] {15000L}, 0.0D, 0.1D),
 		FLYING(13, "flying", 3, new long[] {1000L * 30, 1000L * 90, 1000L * 180}, 0.0D, 0.1D);
 

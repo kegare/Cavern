@@ -162,7 +162,7 @@ public class CaveEntitySpawner
 
 												try
 												{
-													entity = entry.entityClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {world});
+													entity = entry.newInstance(world);
 												}
 												catch (Exception e)
 												{

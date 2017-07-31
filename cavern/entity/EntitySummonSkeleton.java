@@ -37,7 +37,7 @@ public class EntitySummonSkeleton extends EntitySkeleton implements ISummonMob
 
 	public EntitySummonSkeleton(World world, EntityPlayer player)
 	{
-		this(world, 3600, player);
+		this(world, 6000, player);
 	}
 
 	public EntitySummonSkeleton(World world, int lifeTime, EntityPlayer player)

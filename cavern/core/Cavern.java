@@ -221,6 +221,7 @@ public class Cavern
 		CaveItems.registerEquipments();
 
 		CaveBlocks.registerSmeltingRecipes();
+		CaveItems.registerSmeltingRecipes();
 
 		CompositingManager.registerRecipes(CavernAPI.compositing);
 

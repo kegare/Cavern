@@ -37,7 +37,7 @@ public class EntitySummonCavenicSkeleton extends EntityCavenicSkeleton implement
 
 	public EntitySummonCavenicSkeleton(World world, EntityPlayer player)
 	{
-		this(world, 1200, player);
+		this(world, 2400, player);
 	}
 
 	public EntitySummonCavenicSkeleton(World world, int lifeTime, EntityPlayer player)

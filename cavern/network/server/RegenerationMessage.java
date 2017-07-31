@@ -7,7 +7,6 @@ import java.util.Calendar;
 import javax.annotation.Nullable;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.client.RegenerationGuiMessage;
@@ -23,7 +22,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -180,7 +178,7 @@ public class RegenerationMessage implements ISimpleMessage<RegenerationMessage, 
 			if (CaveUtils.archiveDirectory(dimDir, bak))
 			{
 				message = new TextComponentTranslation("cavern.regeneration.backup.success", name);
-				message.getStyle().setColor(TextFormatting.GRAY).setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, FilenameUtils.normalize(rootDir.getPath())));
+				message.getStyle().setColor(TextFormatting.GRAY);
 
 				server.getPlayerList().sendMessage(message);
 			}

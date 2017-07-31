@@ -62,7 +62,7 @@ public class BiomeProviderCavern extends BiomeProvider
 	}
 
 	@Override
-	public Biome getBiome(BlockPos pos, Biome biomeIn)
+	public Biome getBiome(BlockPos pos, Biome defaultBiome)
 	{
 		Biome biome = biomeCache.getBiome(pos.getX(), pos.getZ(), null);
 
@@ -71,7 +71,7 @@ public class BiomeProviderCavern extends BiomeProvider
 			biome = getCaveBiomeGenAt(pos);
 		}
 
-		return biome == null ? biomeIn : biome;
+		return biome == null ? defaultBiome : biome;
 	}
 
 	@Override

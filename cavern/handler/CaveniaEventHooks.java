@@ -3,24 +3,20 @@ package cavern.handler;
 import cavern.api.CavernAPI;
 import cavern.api.ICavenicMob;
 import cavern.api.IHunterStats;
+import cavern.api.IPlayerData;
 import cavern.item.ItemCave;
 import cavern.stats.HunterRank;
 import cavern.stats.HunterStats;
+import cavern.stats.PlayerData;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
@@ -31,9 +27,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
 public class CaveniaEventHooks
 {
-	public static final String NBT_INVENTORY = "Cavenia:Inventory";
-	public static final String NBT_BUFFTIME = "Cavenia:BuffTime";
-
 	@SubscribeEvent
 	public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event)
 	{
@@ -56,7 +49,7 @@ public class CaveniaEventHooks
 			{
 				EntityPlayer player = (EntityPlayer)entity;
 
-				player.getEntityData().setTag(NBT_INVENTORY, player.inventory.writeToNBT(new NBTTagList()));
+				PlayerData.get(player).setInventoryCache(player.inventory.writeToNBT(new NBTTagList()));
 			}
 			else if (entity instanceof ICavenicMob)
 			{
@@ -80,9 +73,14 @@ public class CaveniaEventHooks
 
 		if (event.isWasDeath() && CavernAPI.dimension.isEntityInCavenia(player))
 		{
-			if (old.getEntityData().hasKey(NBT_INVENTORY))
+			IPlayerData playerData = PlayerData.get(player);
+			NBTTagList list = playerData.getInventoryCache();
+
+			if (list != null)
 			{
-				player.inventory.readFromNBT(old.getEntityData().getTagList(NBT_INVENTORY, NBT.TAG_COMPOUND));
+				player.inventory.readFromNBT(list);
+
+				playerData.setInventoryCache(null);
 			}
 
 			player.experienceLevel = old.experienceLevel;
@@ -159,74 +157,6 @@ public class CaveniaEventHooks
 			}
 
 			event.setAmount(amount * boost);
-		}
-	}
-
-	@SubscribeEvent
-	public void onLivingUpdate(LivingUpdateEvent event)
-	{
-		EntityLivingBase entity = event.getEntityLiving();
-
-		if (CavernAPI.dimension.isEntityInCavenia(entity))
-		{
-			if (entity.ticksExisted % 200 == 0 && entity instanceof EntityPlayer)
-			{
-				EntityPlayer player = (EntityPlayer)entity;
-				float health = player.getHealth();
-
-				if (health <= 10.0F)
-				{
-					NBTTagCompound data = player.getEntityData();
-					World world = player.world;
-
-					if (!data.hasKey(NBT_BUFFTIME, NBT.TAG_ANY_NUMERIC) || data.getLong(NBT_BUFFTIME) + 3600L < world.getTotalWorldTime())
-					{
-						Potion potion;
-
-						if (health <= 2.0F)
-						{
-							potion = MobEffects.REGENERATION;
-						}
-						else switch (CaveEventHooks.RANDOM.nextInt(4))
-						{
-							case 1:
-								potion = MobEffects.RESISTANCE;
-								break;
-							case 2:
-								potion = MobEffects.STRENGTH;
-								break;
-							case 3:
-								potion = MobEffects.SPEED;
-								break;
-							default:
-								potion = MobEffects.REGENERATION;
-						}
-
-						if (player.isPotionActive(potion))
-						{
-							return;
-						}
-
-						int sec;
-
-						switch (world.getDifficulty())
-						{
-							case EASY:
-								sec = 120;
-								break;
-							case HARD:
-								sec = 60;
-								break;
-							default:
-								sec = 90;
-						}
-
-						player.addPotionEffect(new PotionEffect(potion, sec * 20, CaveEventHooks.RANDOM.nextInt(2) + 1));
-
-						data.setLong(NBT_BUFFTIME, world.getTotalWorldTime());
-					}
-				}
-			}
 		}
 	}
 }
