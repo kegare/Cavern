@@ -30,6 +30,10 @@ public interface IMagicianStats
 
 	public void addMP(int value, boolean adjust);
 
+	public int getInfinity();
+
+	public void setInfinity(int level, int time);
+
 	public boolean isClientAdjusted();
 
 	public void adjustData();

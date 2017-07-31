@@ -195,7 +195,7 @@ public class MagicianStatsHUDEventHooks
 			point = displayType.isLeft() ? point + " < " + per : per + " > " + point;
 		}
 
-		String mp = TextFormatting.GRAY + String.format("%d / %d", stats.getMP(), magicianRank.getMaxMP(mc.player)) + TextFormatting.RESET;
+		String mp = TextFormatting.GRAY + (stats.getInfinity() > 0 ? "INFINITY" : String.format("%d / %d", stats.getMP(), magicianRank.getMaxMP(mc.player))) + TextFormatting.RESET;
 		boolean showRank = DisplayConfig.showMagicianRank;
 		int pointX = displayType.isLeft() ? x + 5 : x + 17 - renderer.getStringWidth(point);
 		int pointY = y + 9;

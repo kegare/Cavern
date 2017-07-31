@@ -3,11 +3,9 @@ package cavern.handler;
 import cavern.api.CavernAPI;
 import cavern.api.ICavenicMob;
 import cavern.api.IHunterStats;
-import cavern.api.IPlayerData;
 import cavern.item.ItemCave;
 import cavern.stats.HunterRank;
 import cavern.stats.HunterStats;
-import cavern.stats.PlayerData;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.IMob;
@@ -16,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
@@ -27,6 +26,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerRespawnEvent;
 
 public class CaveniaEventHooks
 {
+	private static final String NBT_INVENTORY = "Cavenia:Inventory";
+
 	@SubscribeEvent
 	public void onLivingSpawn(LivingSpawnEvent.CheckSpawn event)
 	{
@@ -49,7 +50,7 @@ public class CaveniaEventHooks
 			{
 				EntityPlayer player = (EntityPlayer)entity;
 
-				PlayerData.get(player).setInventoryCache(player.inventory.writeToNBT(new NBTTagList()));
+				player.getEntityData().setTag(NBT_INVENTORY, player.inventory.writeToNBT(new NBTTagList()));
 			}
 			else if (entity instanceof ICavenicMob)
 			{
@@ -73,14 +74,9 @@ public class CaveniaEventHooks
 
 		if (event.isWasDeath() && CavernAPI.dimension.isEntityInCavenia(player))
 		{
-			IPlayerData playerData = PlayerData.get(player);
-			NBTTagList list = playerData.getInventoryCache();
-
-			if (list != null)
+			if (old.getEntityData().hasKey(NBT_INVENTORY))
 			{
-				player.inventory.readFromNBT(list);
-
-				playerData.setInventoryCache(null);
+				player.inventory.readFromNBT(old.getEntityData().getTagList(NBT_INVENTORY, NBT.TAG_COMPOUND));
 			}
 
 			player.experienceLevel = old.experienceLevel;

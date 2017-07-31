@@ -16,13 +16,11 @@ import cavern.stats.MagicianStats;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -178,11 +176,28 @@ public class MagicEventHooks
 		spellingTime = Minecraft.getSystemTime() - spellingStartTime;
 
 		Minecraft mc = FMLClientHandler.instance().getClient();
-		World world = mc.world;
-		EntityPlayer player = mc.player;
-		IMagicianStats stats = MagicianStats.get(player);
+		IMagicianStats stats = MagicianStats.get(mc.player);
+		int infinity = stats.getInfinity();
+
+		if (infinity > 0 && spellingMagic.getMagicLevel() > infinity)
+		{
+			stopSpelling();
+
+			return;
+		}
+
 		MagicianRank rank = MagicianRank.get(stats.getRank());
-		long magicSpellTime = MathHelper.lfloor((double)spellingMagic.getMagicSpellTime(spellingBook, spellingHand) * rank.getBoost());
+		long magicSpellTime = spellingMagic.getMagicSpellTime(spellingBook, spellingHand);
+
+		if (!spellingMagic.isClientMagic())
+		{
+			magicSpellTime = MathHelper.lfloor(magicSpellTime * rank.getBoost());
+		}
+
+		if (infinity > 0)
+		{
+			magicSpellTime = MathHelper.lfloor(magicSpellTime * 0.5F);
+		}
 
 		if (spellingMagic.isFinishedSpelling(spellingBook, spellingHand, spellingTime, magicSpellTime))
 		{
@@ -200,13 +215,13 @@ public class MagicEventHooks
 			{
 				int var1 = RANDOM.nextInt(2) * 2 - 1;
 				int var2 = RANDOM.nextInt(2) * 2 - 1;
-				double ptX = player.posX + 0.25D * var1;
-				double ptY = player.posY + 0.7D + RANDOM.nextFloat();
-				double ptZ = player.posZ + 0.25D * var2;
+				double ptX = mc.player.posX + 0.25D * var1;
+				double ptY = mc.player.posY + 0.7D + RANDOM.nextFloat();
+				double ptZ = mc.player.posZ + 0.25D * var2;
 				double motionX = RANDOM.nextFloat() * 1.0F * var1;
 				double motionY = (RANDOM.nextFloat() - 0.25D) * 0.125D;
 				double motionZ = RANDOM.nextFloat() * 1.0F * var2;
-				ParticleMagicSpell particle = new ParticleMagicSpell(world, ptX, ptY, ptZ, motionX, motionY, motionZ);
+				ParticleMagicSpell particle = new ParticleMagicSpell(mc.world, ptX, ptY, ptZ, motionX, motionY, motionZ);
 
 				mc.effectRenderer.addEffect(particle);
 			}
@@ -249,10 +264,11 @@ public class MagicEventHooks
 	private void finishSpelling()
 	{
 		Minecraft mc = FMLClientHandler.instance().getClient();
+		IMagicianStats stats = MagicianStats.get(mc.player);
+		int infinity = stats.getInfinity();
 
-		if (!mc.player.capabilities.isCreativeMode)
+		if (!mc.player.capabilities.isCreativeMode && infinity <= 0)
 		{
-			IMagicianStats stats = MagicianStats.get(mc.player);
 			boolean flag = false;
 
 			if (spellingMagic.getMagicLevel() > stats.getRank() + 1)
@@ -277,6 +293,11 @@ public class MagicEventHooks
 
 				return;
 			}
+		}
+
+		if (infinity > 0 && spellingMagic.getMagicLevel() > infinity)
+		{
+			return;
 		}
 
 		if (spellingMagic.isClientMagic())

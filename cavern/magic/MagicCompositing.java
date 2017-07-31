@@ -116,18 +116,22 @@ public class MagicCompositing implements IMagic
 
 		if (!player.capabilities.isCreativeMode)
 		{
-			int cost = resultRecipe.getCostMP(inventory, world, player);
 			IMagicianStats magician = MagicianStats.get(player);
 
-			if (magician.getMP() >= cost + getMagicCost(player, world, stack, hand))
+			if (magician.getInfinity() <= 0)
 			{
-				magician.addMP(cost);
-			}
-			else
-			{
-				InventoryHelper.dropInventoryItems(world, player, inventory);
+				int cost = resultRecipe.getCostMP(inventory, world, player);
 
-				return false;
+				if (magician.getMP() >= cost + getMagicCost(player, world, stack, hand))
+				{
+					magician.addMP(cost);
+				}
+				else
+				{
+					InventoryHelper.dropInventoryItems(world, player, inventory);
+
+					return false;
+				}
 			}
 		}
 

@@ -20,7 +20,6 @@ public class PlayerData implements IPlayerData
 	private final Map<DimensionType, Long> lastTeleportTimes = Maps.newHashMap();
 
 	private long lastSleepTime;
-	private NBTTagList inventoryCache;
 
 	@Override
 	public long getLastTeleportTime(DimensionType type)
@@ -93,18 +92,6 @@ public class PlayerData implements IPlayerData
 		}
 
 		lastSleepTime = nbt.getLong("LastSleepTime");
-	}
-
-	@Override
-	public NBTTagList getInventoryCache()
-	{
-		return inventoryCache;
-	}
-
-	@Override
-	public void setInventoryCache(NBTTagList list)
-	{
-		inventoryCache = list;
 	}
 
 	public static IPlayerData get(EntityPlayer player)

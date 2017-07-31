@@ -106,5 +106,17 @@
     "sounds": [
       "cavern:magic/holy"
     ]
+  },
+  "magic.summon": {
+    "category": "player",
+    "sounds": [
+      "cavern:magic/summon"
+    ]
+  },
+  "magic.infinity": {
+    "category": "player",
+    "sounds": [
+      "cavern:magic/infinity"
+    ]
   }
 }

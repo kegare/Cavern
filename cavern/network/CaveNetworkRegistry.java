@@ -5,6 +5,7 @@ import cavern.network.client.CaveMusicMessage;
 import cavern.network.client.ExplosionEffectMessage;
 import cavern.network.client.HunterStatsAdjustMessage;
 import cavern.network.client.LastMineMessage;
+import cavern.network.client.MagicInfinityMessage;
 import cavern.network.client.MagicianStatsAdjustMessage;
 import cavern.network.client.MinerStatsAdjustMessage;
 import cavern.network.client.RegenerationGuiMessage;
@@ -65,6 +66,7 @@ public class CaveNetworkRegistry
 		registerMessage(RegenerationGuiMessage.class, RegenerationGuiMessage.class, Side.CLIENT);
 		registerMessage(ToastMessage.class, ToastMessage.class, Side.CLIENT);
 		registerMessage(ExplosionEffectMessage.class, ExplosionEffectMessage.class, Side.CLIENT);
+		registerMessage(MagicInfinityMessage.class, MagicInfinityMessage.class, Side.CLIENT);
 
 		registerMessage(MineBonusMessage.class, MineBonusMessage.class, Side.SERVER);
 		registerMessage(RegenerationMessage.class, RegenerationMessage.class, Side.SERVER);

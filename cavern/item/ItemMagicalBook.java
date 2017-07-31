@@ -21,6 +21,7 @@ import cavern.magic.MagicFlying;
 import cavern.magic.MagicFlyingElytra;
 import cavern.magic.MagicHeal;
 import cavern.magic.MagicHolyBless;
+import cavern.magic.MagicInfinity;
 import cavern.magic.MagicReturn;
 import cavern.magic.MagicStorage;
 import cavern.magic.MagicSummon;
@@ -29,6 +30,7 @@ import cavern.magic.MagicTorch;
 import cavern.magic.MagicUnknown;
 import cavern.magic.MagicVenomBlast;
 import cavern.magic.MagicWarp;
+import cavern.stats.MagicianStats;
 import cavern.util.Roman;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -42,6 +44,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -161,10 +164,28 @@ public class ItemMagicalBook extends Item
 				return new MagicCompositing(level, type.getMagicSpellTime(level));
 			case FLYING:
 				return player.isElytraFlying() ? new MagicFlyingElytra(level) : new MagicFlying(level, type.getMagicSpellTime(level));
+			case INFINITY:
+				return MagicianStats.get(player).getInfinity() > 0 ? null : new MagicInfinity(level, type.getMagicSpellTime(level));
 			default:
 		}
 
 		return null;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean hasEffect(ItemStack stack)
+	{
+		EntityPlayer player = FMLClientHandler.instance().getClientPlayerEntity();
+
+		if (player == null || EnumType.byItemStack(stack) == EnumType.INFINITY)
+		{
+			return false;
+		}
+
+		int infinity = MagicianStats.get(player).getInfinity();
+
+		return infinity > 0 && getMagicLevel(stack) <= infinity;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -272,7 +293,8 @@ public class ItemMagicalBook extends Item
 		TORCH(10, "torch", 3, null, 7.0D, 0.2D),
 		SUMMON(11, "summon", 5, null, 0.0D, 0.15D),
 		COMPOSITING(12, "compositing", 1, new long[] {15000L}, 0.0D, 0.1D),
-		FLYING(13, "flying", 3, new long[] {1000L * 30, 1000L * 90, 1000L * 180}, 0.0D, 0.1D);
+		FLYING(13, "flying", 3, new long[] {1000L * 30, 1000L * 90, 1000L * 180}, 0.0D, 0.1D),
+		INFINITY(14, "infinity", 5, new long[] {5000L, 6500L, 8000L, 10000L, 12000L}, 0.0D, 0.05D);
 
 		public static final EnumType[] VALUES = new EnumType[values().length];
 

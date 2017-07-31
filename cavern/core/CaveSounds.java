@@ -16,6 +16,8 @@ public class CaveSounds
 	public static final CaveSoundEvent MAGIC_SUCCESS_MISC = new CaveSoundEvent("magic.success.misc");
 	public static final CaveSoundEvent MAGIC_SUCCESS_SHORT = new CaveSoundEvent("magic.success.short");
 	public static final CaveSoundEvent MAGIC_HOLY = new CaveSoundEvent("magic.holy");
+	public static final CaveSoundEvent MAGIC_SUMMON = new CaveSoundEvent("magic.summon");
+	public static final CaveSoundEvent MAGIC_INFINITY = new CaveSoundEvent("magic.infinity");
 
 	public static final CaveSoundEvent MUSIC_CAVE = new CaveSoundEvent("cavemusic.cave");
 	public static final CaveSoundEvent MUSIC_UNREST = new CaveSoundEvent("cavemusic.unrest");
@@ -35,6 +37,8 @@ public class CaveSounds
 		registry.register(MAGIC_SUCCESS_MISC);
 		registry.register(MAGIC_SUCCESS_SHORT);
 		registry.register(MAGIC_HOLY);
+		registry.register(MAGIC_SUMMON);
+		registry.register(MAGIC_INFINITY);
 
 		registry.register(MUSIC_CAVE);
 		registry.register(MUSIC_UNREST);

@@ -48,6 +48,12 @@ public class MagicExecuteMessage implements IPlayerMessage<MagicExecuteMessage, 
 			IMagic magic = ((ItemMagicalBook)stack.getItem()).getMagic(player, stack);
 			IMagicianStats stats = MagicianStats.get(player);
 			WorldServer world = player.getServerWorld();
+			int infinity = stats.getInfinity();
+
+			if (infinity > 0 && magic.getMagicLevel() > infinity)
+			{
+				return null;
+			}
 
 			if (magic.executeMagic(player, world, stack, hand))
 			{

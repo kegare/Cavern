@@ -7,6 +7,7 @@ import cavern.api.event.MagicianStatsEvent;
 import cavern.capability.CaveCapabilities;
 import cavern.core.CaveSounds;
 import cavern.network.CaveNetworkRegistry;
+import cavern.network.client.MagicInfinityMessage;
 import cavern.network.client.MagicianStatsAdjustMessage;
 import cavern.util.CaveUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +30,10 @@ public class MagicianStats implements IMagicianStats
 	private int mp = -1;
 
 	private long refreshTime;
+
+	private int infinityLevel;
+	private int infinityTime;
+
 	private boolean clientAdjusted;
 
 	public MagicianStats(EntityPlayer player)
@@ -193,7 +198,7 @@ public class MagicianStats implements IMagicianStats
 	@Override
 	public int getMP()
 	{
-		return mp;
+		return getInfinity() > 0 ? Integer.MAX_VALUE : mp;
 	}
 
 	@Override
@@ -233,7 +238,30 @@ public class MagicianStats implements IMagicianStats
 	@Override
 	public void addMP(int value, boolean adjust)
 	{
+		if (value < 0 && getInfinity() > 0)
+		{
+			return;
+		}
+
 		setMP(mp + value, adjust);
+	}
+
+	@Override
+	public int getInfinity()
+	{
+		return infinityTime > 0 ? infinityLevel : 0;
+	}
+
+	@Override
+	public void setInfinity(int level, int time)
+	{
+		infinityLevel = level;
+		infinityTime = time;
+
+		if (entityPlayer != null && entityPlayer instanceof EntityPlayerMP)
+		{
+			CaveNetworkRegistry.sendTo(new MagicInfinityMessage(infinityLevel), (EntityPlayerMP)entityPlayer);
+		}
 	}
 
 	@Override
@@ -267,6 +295,11 @@ public class MagicianStats implements IMagicianStats
 				addMP(getRank() + 1);
 
 				refreshTime = time;
+			}
+
+			if (infinityTime > 0 && --infinityTime <= 0)
+			{
+				setInfinity(0, 0);
 			}
 		}
 	}

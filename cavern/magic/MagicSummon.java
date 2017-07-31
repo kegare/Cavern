@@ -63,7 +63,7 @@ public class MagicSummon implements IMagic
 	@Override
 	public SoundEvent getMagicSound()
 	{
-		return CaveSounds.MAGIC_SUCCESS_MISC;
+		return CaveSounds.MAGIC_SUMMON;
 	}
 
 	@Override

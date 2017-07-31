@@ -1,9 +1,6 @@
 package cavern.api;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.DimensionType;
 
 public interface IPlayerData
@@ -15,11 +12,6 @@ public interface IPlayerData
 	public long getLastSleepTime();
 
 	public void setLastSleepTime(long time);
-
-	@Nullable
-	public NBTTagList getInventoryCache();
-
-	public void setInventoryCache(@Nullable NBTTagList list);
 
 	public void writeToNBT(NBTTagCompound nbt);
 
