@@ -138,55 +138,57 @@ public class ChunkGeneratorRuinsCavern implements IChunkGenerator
 	@Override
 	public void populate(int chunkX, int chunkZ)
 	{
-		if (chunkX == 0 && chunkZ == 0)
+		if (chunkX != 0 || chunkZ != 0)
 		{
-			for (Pair<BlockPos, IBlockState> data : RuinsBlockData.Torch.BLOCKS)
-			{
-				BlockPos pos = data.getLeft();
-				IBlockState state = data.getRight();
+			return;
+		}
 
-				if (RuinsCavernConfig.decorateTorches)
-				{
-					world.setBlockState(pos, state, 3);
-					world.checkLightFor(EnumSkyBlock.BLOCK, pos);
-				}
-				else
-				{
-					world.setBlockState(pos, AIR, 2);
-				}
+		for (Pair<BlockPos, IBlockState> data : RuinsBlockData.Torch.BLOCKS)
+		{
+			BlockPos pos = data.getLeft();
+			IBlockState state = data.getRight();
+
+			if (RuinsCavernConfig.decorateTorches)
+			{
+				world.setBlockState(pos, state, 3);
+				world.checkLightFor(EnumSkyBlock.BLOCK, pos);
 			}
-
-			for (Pair<BlockPos, IBlockState> data : RuinsBlockData.TileEntity.BLOCKS)
+			else
 			{
-				BlockPos pos = data.getLeft();
-				IBlockState state = data.getRight();
+				world.setBlockState(pos, AIR, 2);
+			}
+		}
 
-				world.setBlockState(pos, state, 2);
+		for (Pair<BlockPos, IBlockState> data : RuinsBlockData.TileEntity.BLOCKS)
+		{
+			BlockPos pos = data.getLeft();
+			IBlockState state = data.getRight();
 
-				TileEntity tile = world.getTileEntity(pos);
+			world.setBlockState(pos, state, 2);
 
-				if (tile != null && rand.nextDouble() <= RuinsCavernConfig.bonusChest && tile instanceof TileEntityChest)
+			TileEntity tile = world.getTileEntity(pos);
+
+			if (tile != null && rand.nextDouble() <= RuinsCavernConfig.bonusChest && tile instanceof TileEntityChest)
+			{
+				TileEntityChest chest = (TileEntityChest)tile;
+
+				for (int i = 0; i < 18; ++i)
 				{
-					TileEntityChest chest = (TileEntityChest)tile;
+					WeightedItemStack randomItem = WeightedRandom.getRandomItem(rand, WorldProviderRuinsCavern.RUINS_CHEST_ITEMS);
+					ItemStack stack = randomItem.getItemStack();
 
-					for (int i = 0; i < 18; ++i)
+					if (!stack.isEmpty())
 					{
-						WeightedItemStack randomItem = WeightedRandom.getRandomItem(rand, WorldProviderRuinsCavern.RUINS_CHEST_ITEMS);
-						ItemStack stack = randomItem.getItemStack();
+						int count = stack.getCount();
 
-						if (!stack.isEmpty())
+						if (count > 1)
 						{
-							int count = stack.getCount();
+							int min = count / 2;
 
-							if (count > 1)
-							{
-								int min = count / 2;
-
-								stack.setCount(Math.max(rand.nextInt(count) + 1, min));
-							}
-
-							chest.setInventorySlotContents(i, stack);
+							stack.setCount(Math.max(rand.nextInt(count) + 1, min));
 						}
+
+						chest.setInventorySlotContents(i, stack);
 					}
 				}
 			}

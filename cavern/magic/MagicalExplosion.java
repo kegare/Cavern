@@ -62,17 +62,17 @@ public class MagicalExplosion extends CustomExplosion
 
 		if (entity.isBurning())
 		{
-			return MathHelper.ceil(damage * 3.0F);
+			return MathHelper.ceil(damage * 2.0F);
 		}
 
 		if (!entity.onGround || entity.isAirBorne)
 		{
-			return MathHelper.ceil(damage * 2.0F);
+			return MathHelper.ceil(damage * 1.75F);
 		}
 
 		if (entity instanceof IMob)
 		{
-			return MathHelper.ceil(damage * 1.65F);
+			return MathHelper.ceil(damage * 1.45F);
 		}
 
 		return damage;

@@ -37,22 +37,16 @@ public class RuinsBlockData
 	protected static void addData(int x, int y, int z, Block block, int meta)
 	{
 		ChunkPos chunkPos = new ChunkPos(x >> 4, z >> 4);
-		BlockPos pos = new BlockPos(x & 15, y, z & 15);
-		IBlockState state = block.getStateFromMeta(meta);
+		List<Pair<BlockPos, IBlockState>> list = BLOCKS_MAP.get(chunkPos);
 
-		if (state != null)
+		if (list == null)
 		{
-			List<Pair<BlockPos, IBlockState>> list = BLOCKS_MAP.get(chunkPos);
-
-			if (list == null)
-			{
-				list = Lists.newArrayList();
-			}
-
-			list.add(Pair.of(pos, state));
+			list = Lists.newArrayList();
 
 			BLOCKS_MAP.put(chunkPos, list);
 		}
+
+		list.add(Pair.of(new BlockPos(x & 15, y, z & 15), block.getStateFromMeta(meta)));
 	}
 
 	private static void stage1()

@@ -40,7 +40,7 @@ public class EntityAIAttackCavenicBow<T extends EntityMob & IRangedAttackMob> ex
 	@Override
 	public boolean shouldExecute()
 	{
-		return attacker.getAttackTarget() == null ? false : isBowInMainhand();
+		return attacker.getAttackTarget() != null && isBowInMainhand();
 	}
 
 	@Override

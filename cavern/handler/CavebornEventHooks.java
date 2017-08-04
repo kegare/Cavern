@@ -7,6 +7,7 @@ import com.google.common.collect.Sets;
 
 import cavern.api.CavernAPI;
 import cavern.block.BlockPortalCavern;
+import cavern.block.CaveBlocks;
 import cavern.config.GeneralConfig;
 import cavern.config.RuinsCavernConfig;
 import cavern.config.property.ConfigCaveborn;
@@ -97,6 +98,24 @@ public class CavebornEventHooks
 
 				world.spawnEntity(entityItem);
 			}
+
+			BlockPos pos = player.getPosition();
+
+			for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-1, -1, -1), pos.add(1, 1, 1)))
+			{
+				if (world.getBlockState(blockpos).getBlock() == CaveBlocks.RUINS_CAVERN_PORTAL)
+				{
+					world.setBlockToAir(blockpos);
+
+					break;
+				}
+			}
+
+			double x = player.posX;
+			double y = player.posY + player.getEyeHeight();
+			double z = player.posZ;
+
+			world.playSound(null, x, y, z, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.0F, 0.65F);
 		}
 		else
 		{
@@ -119,7 +138,7 @@ public class CavebornEventHooks
 				WorldServer world = player.getServerWorld();
 				BlockPos pos = player.getPosition();
 
-				for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-2, -2, -2), pos.add(2, 2, 2)))
+				for (BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-1, -1, -1), pos.add(1, 1, 1)))
 				{
 					if (world.getBlockState(blockpos).getBlock() == portal)
 					{

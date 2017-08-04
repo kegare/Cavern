@@ -544,8 +544,6 @@ cavern.miningassist.toggle.press=Press %s key to toggle mode
 cavern.miningassist.notify.message=Mining Assist is set to %s
 
 cavern.toast.ability.title=Ability Unlocked!
-cavern.toast.mission.title=Mission
-cavern.toast.mission.ruins=In Search of Lost Orb
 
 tooltip.iceEquipment.charge=Ice Charge: %s
 

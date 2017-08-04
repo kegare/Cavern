@@ -54,7 +54,7 @@ public class TeleporterCavern extends Teleporter
 		DimensionType type = world.provider.getDimensionType();
 		boolean flag = false;
 
-		if (GeneralConfig.portalCache)
+		if (GeneralConfig.portalCache || portal == CaveBlocks.RUINS_CAVERN_PORTAL)
 		{
 			IPortalCache cache = PortalCache.get(entity);
 			ResourceLocation key = getKey();

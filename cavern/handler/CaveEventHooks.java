@@ -195,11 +195,6 @@ public class CaveEventHooks
 			}
 
 			playerData.setLastTeleportTime(type, world.getTotalWorldTime());
-
-			if (CavernAPI.dimension.isEntityInRuinsCavern(player))
-			{
-				CaveUtils.grantToast(player, "ruins_mission");
-			}
 		}
 	}
 
@@ -473,14 +468,14 @@ public class CaveEventHooks
 
 			if (entity instanceof EntityWitch)
 			{
-				bookChance = 0.7D;
+				bookChance = 0.35D;
 				elixirChance = 1.0D;
 			}
 			else if (entity instanceof ICavenicMob)
 			{
 				if (entity.isNonBoss())
 				{
-					bookChance = 0.1D;
+					bookChance = 0.035D;
 					elixirChance = 0.35D;
 				}
 				else

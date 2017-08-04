@@ -527,8 +527,6 @@ cavern.miningassist.toggle.press=%sキーを押すとモードが切り替わり
 cavern.miningassist.notify.message=採掘アシストは %s に設定されています
 
 cavern.toast.ability.title=能力解放！
-cavern.toast.mission.title=ミッション
-cavern.toast.mission.ruins=失われたオーブを探して
 
 tooltip.iceEquipment.charge=アイスチャージ: %s
 
