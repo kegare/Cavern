@@ -181,6 +181,10 @@ cavern.config.dimension.decorateTorches=松明の設置
 cavern.config.dimension.decorateTorches.tooltip=このディメンションの生成時に松明を設置します。
 cavern.config.dimension.bonusChest=ボーナスチェスト
 cavern.config.dimension.bonusChest.tooltip=このディメンションの生成時に設置されるチェストにボーナスアイテムを入れる確率を指定します。
+cavern.config.dimension.keepInventory=インベントリの保持
+cavern.config.dimension.keepInventory.tooltip=このディメンションで死亡したときにインベントリのアイテムを保持します。
+cavern.config.dimension.keepExperiences=経験値の保持
+cavern.config.dimension.keepExperiences.tooltip=このディメンションで死亡したときに経験値を保持します。
 
 cavern.config.biomes=バイオームのカスタマイズ
 cavern.config.biomes.tooltip=ディメンションのバイオームの生成設定を変更できます。

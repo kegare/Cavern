@@ -12,7 +12,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -67,7 +69,10 @@ public class OreCompass
 			return false;
 		}
 
-		orePos = findOrePos(mc.world, mc.player.getPosition(), 50);
+		BlockPos pos = mc.player.getPosition();
+		IBlockAccess blockAccess = MinecraftForgeClient.getRegionRenderCache(mc.world, pos);
+
+		orePos = findOrePos(blockAccess, pos, 50);
 
 		return orePos != null;
 	}
@@ -85,7 +90,7 @@ public class OreCompass
 	}
 
 	@Nullable
-	public static BlockPos findOrePos(@Nullable World world, @Nullable BlockPos origin, int range)
+	public static BlockPos findOrePos(@Nullable IBlockAccess world, @Nullable BlockPos origin, int range)
 	{
 		if (world == null || origin == null || range <= 0)
 		{

@@ -194,6 +194,10 @@ cavern.config.dimension.decorateTorches=Decorate Torches
 cavern.config.dimension.decorateTorches.tooltip=Whether to decorate torches in the dimension.
 cavern.config.dimension.bonusChest=Bonus Chest
 cavern.config.dimension.bonusChest.tooltip=Specify the chances of include bonus in chest.
+cavern.config.dimension.keepInventory=Keep Inventory
+cavern.config.dimension.keepInventory.tooltip=Whether to enable keep inventory on death in the dimension.
+cavern.config.dimension.keepExperiences=Keep Experiences
+cavern.config.dimension.keepExperiences.tooltip=Whether to enable keep experiences on death in the dimension.
 
 cavern.config.biomes=Biomes Customize
 cavern.config.biomes.tooltip=Change the biome generation settings of the dimension.

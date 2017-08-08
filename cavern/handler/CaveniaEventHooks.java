@@ -3,6 +3,7 @@ package cavern.handler;
 import cavern.api.CavernAPI;
 import cavern.api.ICavenicMob;
 import cavern.api.IHunterStats;
+import cavern.config.CaveniaConfig;
 import cavern.item.ItemCave;
 import cavern.stats.HunterRank;
 import cavern.stats.HunterStats;
@@ -74,14 +75,18 @@ public class CaveniaEventHooks
 
 		if (event.isWasDeath() && CavernAPI.dimension.isEntityInCavenia(player))
 		{
-			if (old.getEntityData().hasKey(NBT_INVENTORY))
+			if (CaveniaConfig.keepInventory && old.getEntityData().hasKey(NBT_INVENTORY))
 			{
 				player.inventory.readFromNBT(old.getEntityData().getTagList(NBT_INVENTORY, NBT.TAG_COMPOUND));
 			}
 
-			player.experienceLevel = old.experienceLevel;
-			player.experienceTotal = old.experienceTotal;
-			player.experience = old.experience;
+			if (CaveniaConfig.keepExperiences)
+			{
+				player.experienceLevel = old.experienceLevel;
+				player.experienceTotal = old.experienceTotal;
+				player.experience = old.experience;
+			}
+
 			player.setScore(old.getScore());
 		}
 	}
@@ -91,7 +96,7 @@ public class CaveniaEventHooks
 	{
 		EntityPlayer player = event.getEntityPlayer();
 
-		if (CavernAPI.dimension.isEntityInCavenia(player))
+		if (CaveniaConfig.keepInventory && CavernAPI.dimension.isEntityInCavenia(player))
 		{
 			event.setCanceled(true);
 		}

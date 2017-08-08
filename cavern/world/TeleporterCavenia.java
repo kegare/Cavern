@@ -52,7 +52,7 @@ public class TeleporterCavenia extends Teleporter
 		{
 			BlockPos pos = cache.getLastPos(key, type);
 
-			if (world.getBlockState(pos.down()).isBlockNormalCube() && world.isAirBlock(pos.up(2)))
+			if (world.getBlockState(pos.down()).isNormalCube() && world.isAirBlock(pos.up(2)))
 			{
 				CaveUtils.setPositionAndUpdate(entity, pos);
 
@@ -85,8 +85,16 @@ public class TeleporterCavenia extends Teleporter
 				pos = pos.up();
 			}
 
-			if (world.getBlockState(pos.down()).isBlockNormalCube() && world.isAirBlock(pos.up(2)))
+			if (world.getBlockState(pos.down()).isNormalCube() && world.isAirBlock(pos.up(2)))
 			{
+				for (BlockPos around : BlockPos.getAllInBoxMutable(pos.add(-4, 0, -4), pos.add(4, 0, 4)))
+				{
+					if (world.getBlockState(around).getMaterial().isLiquid())
+					{
+						return false;
+					}
+				}
+
 				CaveUtils.setPositionAndUpdate(entity, pos);
 
 				return true;

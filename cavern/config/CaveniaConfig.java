@@ -42,6 +42,9 @@ public class CaveniaConfig
 	public static int monsterSpawn;
 	public static double caveBrightness;
 
+	public static boolean keepInventory;
+	public static boolean keepExperiences;
+
 	public static CaveBiomeManager biomeManager = new CaveBiomeManager(CaveType.CAVENIA);
 	public static CaveVeinManager veinManager = new CaveVeinManager(CaveType.CAVENIA);
 
@@ -160,6 +163,26 @@ public class CaveniaConfig
 		prop.setComment(comment);
 		propOrder.add(prop.getName());
 		caveBrightness = prop.getDouble(caveBrightness);
+
+		prop = config.get(category, "keepInventory", true);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [default: " + prop.getDefault() + "]";
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		keepInventory = prop.getBoolean(keepInventory);
+
+		prop = config.get(category, "keepExperiences", true);
+		prop.setLanguageKey(Config.LANG_KEY + category + "." + prop.getName());
+		comment = Cavern.proxy.translate(prop.getLanguageKey() + ".tooltip");
+		comment += " [default: " + prop.getDefault() + "]";
+		comment += Configuration.NEW_LINE;
+		comment += "Note: If multiplayer, server-side only.";
+		prop.setComment(comment);
+		propOrder.add(prop.getName());
+		keepExperiences = prop.getBoolean(keepExperiences);
 
 		config.setCategoryPropertyOrder(category, propOrder);
 

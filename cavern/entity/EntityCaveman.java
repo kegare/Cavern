@@ -41,7 +41,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 
 public class EntityCaveman extends EntityMob implements ICavenicMob
 {
-	private static final DataParameter<Boolean> IS_SITTING = EntityDataManager.createKey(EntityCaveman.class, DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> SITTING = EntityDataManager.createKey(EntityCaveman.class, DataSerializers.BOOLEAN);
 
 	private final InventoryBasic backpackInventory;
 	private final EntityAIAttackMelee aiAttackOnCollide = new EntityAIAttackMelee(this, 1.15F, false);
@@ -61,7 +61,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 	{
 		super.entityInit();
 
-		dataManager.register(IS_SITTING, Boolean.valueOf(false));
+		dataManager.register(SITTING, Boolean.valueOf(false));
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 	@Override
 	public void notifyDataManagerChange(DataParameter<?> key)
 	{
-		if (IS_SITTING.equals(key))
+		if (SITTING.equals(key))
 		{
 			setSizeForSitting(isSitting());
 		}
@@ -110,12 +110,12 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 
 	public boolean isSitting()
 	{
-		return dataManager.get(IS_SITTING).booleanValue();
+		return dataManager.get(SITTING).booleanValue();
 	}
 
 	public void setSitting(boolean sit)
 	{
-		dataManager.set(IS_SITTING, Boolean.valueOf(sit));
+		dataManager.set(SITTING, Boolean.valueOf(sit));
 	}
 
 	public int getRestTime()
