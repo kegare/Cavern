@@ -249,9 +249,10 @@ public class CavernAPIHandler implements ICavernAPI
 		handler.addHibernateItem(Items.COAL, 4, 15);
 		handler.addHibernateItem(ItemCave.EnumType.AQUAMARINE.getItemStack(), 10);
 		handler.addHibernateItem(ItemCave.EnumType.HEXCITE.getItemStack(), 5);
-		handler.addHibernateItem(ItemElixir.EnumType.ELIXIR_NORMAL.getItemStack(), 20);
-		handler.addHibernateItem(ItemElixir.EnumType.ELIXIR_MEDIUM.getItemStack(), 15);
-		handler.addHibernateItem(ItemElixir.EnumType.ELIXIR_HIGH.getItemStack(), 8);
+		handler.addHibernateItem(ItemElixir.EnumType.NORMAL.getItemStack(), 20);
+		handler.addHibernateItem(ItemElixir.EnumType.MEDIUM.getItemStack(), 15);
+		handler.addHibernateItem(ItemElixir.EnumType.HIGH.getItemStack(), 8);
+		handler.addHibernateItem(ItemElixir.EnumType.AWAKEN.getItemStack(), 6);
 		handler.addHibernateItem(ItemMagicalBook.EnumType.UNKNOWN.getItemStack(), 15);
 
 		handler.addRuinsChestItem(Blocks.DIRT, 64, 15);

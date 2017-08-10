@@ -29,10 +29,14 @@ public class MagicianStats implements IMagicianStats
 	private int rank;
 	private int mp = -1;
 
+	private int bonusMP;
+
 	private long refreshTime;
 
 	private int infinityLevel;
 	private int infinityTime;
+
+	private boolean invisible;
 
 	private boolean clientAdjusted;
 
@@ -247,6 +251,51 @@ public class MagicianStats implements IMagicianStats
 	}
 
 	@Override
+	public int getBonusMP()
+	{
+		return bonusMP;
+	}
+
+	@Override
+	public void setBonusMP(int value)
+	{
+		setBonusMP(value, true);
+	}
+
+	@Override
+	public void setBonusMP(int value, boolean adjust)
+	{
+		int prev = bonusMP;
+
+		bonusMP = value;
+
+		if (bonusMP != prev)
+		{
+			if (adjust)
+			{
+				adjustData();
+			}
+
+			if (entityPlayer != null && entityPlayer.world.isRemote)
+			{
+				clientAdjusted = true;
+			}
+		}
+	}
+
+	@Override
+	public void addBonusMP(int value)
+	{
+		addBonusMP(value, true);
+	}
+
+	@Override
+	public void addBonusMP(int value, boolean adjust)
+	{
+		setBonusMP(bonusMP + value, adjust);
+	}
+
+	@Override
 	public int getInfinity()
 	{
 		return infinityTime > 0 ? infinityLevel : 0;
@@ -262,6 +311,18 @@ public class MagicianStats implements IMagicianStats
 		{
 			CaveNetworkRegistry.sendTo(new MagicInfinityMessage(infinityLevel), (EntityPlayerMP)entityPlayer);
 		}
+	}
+
+	@Override
+	public boolean isInvisible()
+	{
+		return invisible;
+	}
+
+	@Override
+	public void setInvisible(boolean value)
+	{
+		invisible = value;
 	}
 
 	@Override
@@ -310,6 +371,7 @@ public class MagicianStats implements IMagicianStats
 		nbt.setInteger("Point", getPoint());
 		nbt.setInteger("Rank", getRank());
 		nbt.setInteger("MP", getMP());
+		nbt.setInteger("BonusMP", getBonusMP());
 	}
 
 	@Override
@@ -318,6 +380,7 @@ public class MagicianStats implements IMagicianStats
 		setPoint(nbt.getInteger("Point"), false);
 		setRank(nbt.getInteger("Rank"), false);
 		setMP(nbt.getInteger("MP"), false);
+		setBonusMP(nbt.getInteger("BonusMP"), false);
 	}
 
 	public static IMagicianStats get(EntityPlayer player)

@@ -13,6 +13,7 @@ public class MagicianStatsAdjustMessage implements IPlayerMessage<MagicianStatsA
 	private int point;
 	private int rank;
 	private int mp;
+	private int bonusMP;
 
 	public MagicianStatsAdjustMessage() {}
 
@@ -21,6 +22,7 @@ public class MagicianStatsAdjustMessage implements IPlayerMessage<MagicianStatsA
 		this.point = stats.getPoint();
 		this.rank = stats.getRank();
 		this.mp = stats.getMP();
+		this.bonusMP = stats.getBonusMP();
 	}
 
 	@Override
@@ -29,6 +31,7 @@ public class MagicianStatsAdjustMessage implements IPlayerMessage<MagicianStatsA
 		point = buf.readInt();
 		rank = buf.readInt();
 		mp = buf.readInt();
+		bonusMP = buf.readInt();
 	}
 
 	@Override
@@ -37,6 +40,7 @@ public class MagicianStatsAdjustMessage implements IPlayerMessage<MagicianStatsA
 		buf.writeInt(point);
 		buf.writeInt(rank);
 		buf.writeInt(mp);
+		buf.writeInt(bonusMP);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -50,6 +54,7 @@ public class MagicianStatsAdjustMessage implements IPlayerMessage<MagicianStatsA
 			stats.setPoint(point, false);
 			stats.setRank(rank, false);
 			stats.setMP(mp, false);
+			stats.setBonusMP(bonusMP, false);
 		}
 
 		return null;

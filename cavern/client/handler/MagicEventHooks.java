@@ -9,7 +9,6 @@ import cavern.item.ItemMagicalBook;
 import cavern.magic.IMagic;
 import cavern.network.CaveNetworkRegistry;
 import cavern.network.server.MagicExecuteMessage;
-import cavern.network.server.MagicResultMessage;
 import cavern.network.server.MagicShortMessage;
 import cavern.stats.MagicianRank;
 import cavern.stats.MagicianStats;
@@ -227,7 +226,12 @@ public class MagicEventHooks
 			}
 		}
 
-		spellingMagic.onSpellingTick(spellingBook, spellingHand, spellingTime, magicSpellTime, spellingProgress);
+		if (!spellingMagic.onSpellingTick(spellingBook, spellingHand, spellingTime, magicSpellTime, spellingProgress))
+		{
+			stopSpelling();
+
+			return;
+		}
 
 		if (++spellingSoundTime >= spellingMagic.getSpellingSpeed(rank.getSpellingSpeed()))
 		{
@@ -259,6 +263,11 @@ public class MagicEventHooks
 		{
 			mc.getSoundHandler().playDelayedSound(PositionedSoundRecord.getMasterRecord(sound, 1.0F), 3);
 		}
+
+		int cost = spellingMagic.getMagicCost(mc.player, mc.world, spellingBook, spellingHand);
+		int point = spellingMagic.getMagicPoint(mc.player, mc.world, spellingBook, spellingHand);
+
+		spellingMagic.sendMagicResult(cost, point, false);
 	}
 
 	private void finishSpelling()
@@ -307,7 +316,7 @@ public class MagicEventHooks
 				int cost = spellingMagic.getMagicCost(mc.player, mc.world, spellingBook, spellingHand);
 				int point = spellingMagic.getMagicPoint(mc.player, mc.world, spellingBook, spellingHand);
 
-				CaveNetworkRegistry.sendToServer(new MagicResultMessage(cost, point));
+				spellingMagic.sendMagicResult(cost, point, true);
 			}
 			else
 			{

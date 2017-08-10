@@ -12,8 +12,10 @@ import cavern.network.client.RegenerationGuiMessage;
 import cavern.network.client.ToastMessage;
 import cavern.network.server.MagicExecuteMessage;
 import cavern.network.server.MagicFlyingMessage;
+import cavern.network.server.MagicInvisibleMessage;
 import cavern.network.server.MagicResultMessage;
 import cavern.network.server.MagicShortMessage;
+import cavern.network.server.MagicTeleportMessage;
 import cavern.network.server.MineBonusMessage;
 import cavern.network.server.MiningAssistMessage;
 import cavern.network.server.RegenerationMessage;
@@ -75,6 +77,8 @@ public class CaveNetworkRegistry
 		registerMessage(MagicResultMessage.class, MagicResultMessage.class, Side.SERVER);
 		registerMessage(MagicExecuteMessage.class, MagicExecuteMessage.class, Side.SERVER);
 		registerMessage(MagicFlyingMessage.class, MagicFlyingMessage.class, Side.SERVER);
+		registerMessage(MagicInvisibleMessage.class, MagicInvisibleMessage.class, Side.SERVER);
+		registerMessage(MagicTeleportMessage.class, MagicTeleportMessage.class, Side.SERVER);
 		registerMessage(StatsAdjustRequestMessage.class, StatsAdjustRequestMessage.class, Side.SERVER);
 	}
 }

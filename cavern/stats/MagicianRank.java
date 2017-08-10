@@ -72,7 +72,7 @@ public enum MagicianRank
 			bonus += 0.15D * hunterRank;
 		}
 
-		return MathHelper.floor(getMaxMP() * MathHelper.clamp(bonus, 1.0D, 3.0D));
+		return MathHelper.floor(getMaxMP() * MathHelper.clamp(bonus, 1.0D, 3.0D)) + MagicianStats.get(player).getBonusMP();
 	}
 
 	public float getBoost()

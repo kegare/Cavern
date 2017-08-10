@@ -80,11 +80,6 @@ public class ItemElixir extends Item
 	{
 		EntityPlayer player = entityLiving instanceof EntityPlayer ? (EntityPlayer)entityLiving : null;
 
-		if (player == null || !player.capabilities.isCreativeMode)
-		{
-			stack.shrink(1);
-		}
-
 		if (player != null)
 		{
 			EnumType type = EnumType.byItemStack(stack);
@@ -103,7 +98,17 @@ public class ItemElixir extends Item
 				stats.addMP(amount);
 			}
 
+			if (type == EnumType.AWAKEN)
+			{
+				stats.addBonusMP(100);
+			}
+
 			player.addStat(StatList.getObjectUseStats(this));
+		}
+
+		if (player == null || !player.capabilities.isCreativeMode)
+		{
+			stack.shrink(1);
 		}
 
 		if (player == null || !player.capabilities.isCreativeMode)
@@ -127,7 +132,14 @@ public class ItemElixir extends Item
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag)
 	{
 		EnumType type = EnumType.byItemStack(stack);
-		String healAmount = String.valueOf(type.getHealMPAmount());
+		int amount = type.getHealMPAmount();
+
+		if (amount <= 0)
+		{
+			return;
+		}
+
+		String healAmount = String.valueOf(amount);
 
 		if (type.isHealPercentages())
 		{
@@ -139,9 +151,10 @@ public class ItemElixir extends Item
 
 	public enum EnumType
 	{
-		ELIXIR_NORMAL(0, "elixir", 50, false),
-		ELIXIR_MEDIUM(1, "elixirMedium", 50, true),
-		ELIXIR_HIGH(2, "elixirHigh", 100, true);
+		NORMAL(0, "elixir", 50, false),
+		MEDIUM(1, "elixirMedium", 50, true),
+		HIGH(2, "elixirHigh", 100, true),
+		AWAKEN(3, "elixirAwaken", 0, false);
 
 		public static final EnumType[] VALUES = new EnumType[values().length];
 

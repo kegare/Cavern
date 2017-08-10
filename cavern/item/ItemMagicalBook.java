@@ -22,9 +22,11 @@ import cavern.magic.MagicFlyingElytra;
 import cavern.magic.MagicHeal;
 import cavern.magic.MagicHolyBless;
 import cavern.magic.MagicInfinity;
+import cavern.magic.MagicInvisible;
 import cavern.magic.MagicReturn;
 import cavern.magic.MagicStorage;
 import cavern.magic.MagicSummon;
+import cavern.magic.MagicTeleport;
 import cavern.magic.MagicThunderbolt;
 import cavern.magic.MagicTorch;
 import cavern.magic.MagicUnknown;
@@ -84,33 +86,6 @@ public class ItemMagicalBook extends Item
 		return name + ": " + bookName;
 	}
 
-	public int getMagicLevel(ItemStack stack)
-	{
-		NBTTagCompound nbt = stack.getTagCompound();
-
-		if (nbt == null)
-		{
-			return 1;
-		}
-
-		return MathHelper.clamp(nbt.getInteger("MagicLevel"), 1, EnumType.byItemStack(stack).getMaxLevel());
-	}
-
-	public ItemStack setMagicLevel(ItemStack stack, int level)
-	{
-		NBTTagCompound nbt = stack.getTagCompound();
-
-		if (nbt == null)
-		{
-			nbt = new NBTTagCompound();
-		}
-
-		nbt.setInteger("MagicLevel", level);
-		stack.setTagCompound(nbt);
-
-		return stack;
-	}
-
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
 	{
@@ -166,6 +141,10 @@ public class ItemMagicalBook extends Item
 				return player.isElytraFlying() ? new MagicFlyingElytra(level) : new MagicFlying(level, type.getMagicSpellTime(level));
 			case INFINITY:
 				return MagicianStats.get(player).getInfinity() > 0 ? null : new MagicInfinity(level, type.getMagicSpellTime(level));
+			case INVISIBLE:
+				return new MagicInvisible(level, type.getMagicSpellTime(level));
+			case TELEPORT:
+				return new MagicTeleport(level, type.getMagicSpellTime(level));
 			default:
 		}
 
@@ -278,6 +257,33 @@ public class ItemMagicalBook extends Item
 		return 0x00A2D0;
 	}
 
+	public static int getMagicLevel(ItemStack stack)
+	{
+		NBTTagCompound nbt = stack.getTagCompound();
+
+		if (nbt == null)
+		{
+			return 1;
+		}
+
+		return MathHelper.clamp(nbt.getInteger("MagicLevel"), 1, EnumType.byItemStack(stack).getMaxLevel());
+	}
+
+	public static ItemStack setMagicLevel(ItemStack stack, int level)
+	{
+		NBTTagCompound nbt = stack.getTagCompound();
+
+		if (nbt == null)
+		{
+			nbt = new NBTTagCompound();
+		}
+
+		nbt.setInteger("MagicLevel", level);
+		stack.setTagCompound(nbt);
+
+		return stack;
+	}
+
 	public enum EnumType
 	{
 		FLAME_BREATH(0, "flameBreath", 4, null, 5.0D, 0.235D),
@@ -294,7 +300,9 @@ public class ItemMagicalBook extends Item
 		SUMMON(11, "summon", 5, null, 0.0D, 0.15D),
 		COMPOSITING(12, "compositing", 1, new long[] {15000L}, 0.0D, 0.1D),
 		FLYING(13, "flying", 3, new long[] {1000L * 30, 1000L * 90, 1000L * 180}, 0.0D, 0.1D),
-		INFINITY(14, "infinity", 5, new long[] {5000L, 6500L, 8000L, 10000L, 12000L}, 0.0D, 0.05D);
+		INFINITY(14, "infinity", 5, new long[] {5000L, 6500L, 8000L, 10000L, 12000L}, 0.0D, 0.05D),
+		INVISIBLE(15, "invisible", 4, null, 0.0D, 0.1D),
+		TELEPORT(16, "teleport", 4, new long[] {5000L, 6000L, 7000L, 8000L}, 0.0D, 0.1D);
 
 		public static final EnumType[] VALUES = new EnumType[values().length];
 
@@ -379,7 +387,7 @@ public class ItemMagicalBook extends Item
 
 		public ItemStack getItemStack(int level)
 		{
-			return CaveItems.MAGICAL_BOOK.setMagicLevel(new ItemStack(CaveItems.MAGICAL_BOOK, 1, getMetadata()), level);
+			return setMagicLevel(new ItemStack(CaveItems.MAGICAL_BOOK, 1, getMetadata()), level);
 		}
 
 		public static EnumType byMetadata(int meta)

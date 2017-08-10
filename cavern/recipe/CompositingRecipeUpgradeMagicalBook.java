@@ -1,28 +1,30 @@
 package cavern.recipe;
 
-import java.util.Set;
-
-import com.google.common.collect.Sets;
-
 import cavern.api.ICompositingRecipe;
-import cavern.item.CaveItems;
 import cavern.item.ItemMagicalBook;
 import cavern.item.ItemMagicalBook.EnumType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class CompositingRecipeUpgradeMagicalBook implements ICompositingRecipe
 {
 	private final NonNullList<ItemStack> materialItems = NonNullList.create();
 
-	private EnumType targetType;
+	private EnumType bookType;
+	private int resultLevel;
 
 	@Override
 	public NonNullList<ItemStack> getMaterialItems()
 	{
+		if (bookType == null)
+		{
+			materialItems.clear();
+		}
+
 		return materialItems;
 	}
 
@@ -35,7 +37,8 @@ public class CompositingRecipeUpgradeMagicalBook implements ICompositingRecipe
 	@Override
 	public boolean matches(IInventory inventory, World world, EntityPlayer player)
 	{
-		Set<EnumType> checkSet = Sets.newHashSet();
+		materialItems.clear();
+		bookType = null;
 
 		for (int i = 0; i < inventory.getSizeInventory(); ++i)
 		{
@@ -50,97 +53,73 @@ public class CompositingRecipeUpgradeMagicalBook implements ICompositingRecipe
 					continue;
 				}
 
-				if (checkSet.contains(type))
+				if (bookType == null)
 				{
-					targetType = type;
+					bookType = type;
 
-					return true;
+					materialItems.add(stack);
 				}
-
-				checkSet.add(type);
+				else if (bookType == type)
+				{
+					materialItems.add(stack);
+				}
+				else return false;
 			}
 		}
 
-		return false;
+		if (bookType == null)
+		{
+			return false;
+		}
+
+		resultLevel = 0;
+
+		for (ItemStack stack : materialItems)
+		{
+			resultLevel += MathHelper.clamp(ItemMagicalBook.getMagicLevel(stack), 1, bookType.getMaxLevel());
+		}
+
+		if (resultLevel > bookType.getMaxLevel())
+		{
+			bookType = null;
+
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
 	public ItemStack getCompositingResult(IInventory inventory, World world, EntityPlayer player)
 	{
-		if (targetType == null)
+		if (bookType == null || resultLevel <= 1)
 		{
 			return ItemStack.EMPTY;
 		}
 
-		materialItems.clear();
-
-		for (int i = 0; i < inventory.getSizeInventory(); ++i)
+		if (resultLevel > 2)
 		{
-			ItemStack stack = inventory.getStackInSlot(i);
+			int max = bookType.getMaxLevel();
 
-			if (!stack.isEmpty() && stack.getItem() instanceof ItemMagicalBook)
+			if (max >= 3 && resultLevel >= max - 1)
 			{
-				if (targetType == EnumType.byItemStack(stack))
+				if (Math.random() < 0.6D)
 				{
-					materialItems.add(stack);
+					return ItemStack.EMPTY;
 				}
 			}
-		}
-
-		int resultLevel = 0;
-
-		for (ItemStack stack : materialItems)
-		{
-			int level = CaveItems.MAGICAL_BOOK.getMagicLevel(stack);
-
-			if (level >= 2 || resultLevel < 3)
-			{
-				++resultLevel;
-			}
-		}
-
-		if (resultLevel <= 0)
-		{
-			return ItemStack.EMPTY;
-		}
-
-		int maxLevel = targetType.getMaxLevel();
-
-		resultLevel = Math.min(resultLevel, maxLevel);
-
-		if (maxLevel >= 3 && resultLevel >= maxLevel - 1)
-		{
-			if (Math.random() < 0.6D)
+			else if (Math.random() < 0.3D)
 			{
 				return ItemStack.EMPTY;
 			}
 		}
-		else if (Math.random() < 0.3D)
-		{
-			return ItemStack.EMPTY;
-		}
 
-		return targetType.getItemStack(resultLevel);
+		return bookType.getItemStack(resultLevel);
 	}
 
 	@Override
 	public int getCostMP(IInventory inventory, World world, EntityPlayer player)
 	{
-		int cost = 0;
-
-		for (int i = 0; i < inventory.getSizeInventory(); ++i)
-		{
-			ItemStack stack = inventory.getStackInSlot(i);
-
-			if (!stack.isEmpty() && stack.getItem() instanceof ItemMagicalBook)
-			{
-				if (targetType == EnumType.byItemStack(stack))
-				{
-					cost += 15 * CaveItems.MAGICAL_BOOK.getMagicLevel(stack);
-				}
-			}
-		}
-
-		return Math.min(cost, 300);
+		return 25 * resultLevel;
 	}
 }

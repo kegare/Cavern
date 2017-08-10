@@ -30,9 +30,23 @@ public interface IMagicianStats
 
 	public void addMP(int value, boolean adjust);
 
+	public int getBonusMP();
+
+	public void setBonusMP(int value);
+
+	public void setBonusMP(int value, boolean adjust);
+
+	public void addBonusMP(int value);
+
+	public void addBonusMP(int value, boolean adjust);
+
 	public int getInfinity();
 
 	public void setInfinity(int level, int time);
+
+	public boolean isInvisible();
+
+	public void setInvisible(boolean value);
 
 	public boolean isClientAdjusted();
 

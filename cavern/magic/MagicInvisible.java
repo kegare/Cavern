@@ -1,10 +1,12 @@
 package cavern.magic;
 
+import cavern.api.IMagicianStats;
 import cavern.network.CaveNetworkRegistry;
-import cavern.network.server.MagicFlyingMessage;
+import cavern.network.server.MagicInvisibleMessage;
 import cavern.network.server.MagicResultMessage;
 import cavern.stats.MagicianStats;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -14,17 +16,14 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class MagicFlying implements IMagic
+public class MagicInvisible implements IMagic
 {
 	private final int magicLevel;
 	private final long magicSpellTime;
 
-	private boolean prevFlying;
-	private boolean allowFlying;
+	private boolean invisible;
 
-	private int flyingTime;
-
-	public MagicFlying(int level, long time)
+	public MagicInvisible(int level, long time)
 	{
 		this.magicLevel = level;
 		this.magicSpellTime = time;
@@ -40,42 +39,25 @@ public class MagicFlying implements IMagic
 	@Override
 	public boolean onSpellingTick(ItemStack stack, EnumHand hand, long spellingTime, long magicSpellTime, double progress)
 	{
-		Minecraft mc = FMLClientHandler.instance().getClient();
-		EntityPlayer player = mc.player;
-		World world = mc.world;
-
-		if (!allowFlying && spellingTime >= 3000L)
+		if (!invisible && spellingTime > 300L)
 		{
-			if (player.capabilities.isFlying || player.isElytraFlying())
+			Minecraft mc = FMLClientHandler.instance().getClient();
+			EntityPlayer player = mc.player;
+			IMagicianStats stats = MagicianStats.get(player);
+			int cost = getMagicCost(player, mc.world, stack, hand);
+
+			if (cost > 0 && stats.getMP() < cost)
 			{
-				return false;
-			}
-
-			prevFlying = player.capabilities.allowFlying;
-
-			player.capabilities.isFlying = true;
-			player.capabilities.allowFlying = true;
-			player.onGround = false;
-			player.addVelocity(0.0D, 0.5D, 0.0D);
-
-			CaveNetworkRegistry.sendToServer(new MagicFlyingMessage(true, true, getMagicPoint(player, world, stack, hand)));
-
-			allowFlying = true;
-		}
-
-		if (allowFlying)
-		{
-			if (player.isDead || player.onGround || MagicianStats.get(player).getMP() < getMagicCost(player, world, stack, hand))
-			{
-				allowFlying = false;
+				mc.ingameGUI.setOverlayMessage(I18n.format("cavern.magic.mp.short"), false);
 
 				return false;
 			}
 
-			if (++flyingTime % (player.isSprinting() ? 10 : 20) == 0)
-			{
-				CaveNetworkRegistry.sendToServer(new MagicResultMessage(getMagicCost(player, world, stack, hand), 0));
-			}
+			stats.setInvisible(true);
+
+			CaveNetworkRegistry.sendToServer(new MagicInvisibleMessage(true, cost));
+
+			invisible = true;
 		}
 
 		return true;
@@ -85,26 +67,24 @@ public class MagicFlying implements IMagic
 	@Override
 	public void onStopSpelling(ItemStack stack, EnumHand hand, long spellingTime, double progress)
 	{
-		if (flyingTime <= 0)
+		if (!invisible)
 		{
 			return;
 		}
 
 		Minecraft mc = FMLClientHandler.instance().getClient();
 		EntityPlayer player = mc.player;
-		World world = mc.world;
 
-		player.capabilities.isFlying = false;
-		player.capabilities.allowFlying = prevFlying;
+		MagicianStats.get(player).setInvisible(false);
 
-		CaveNetworkRegistry.sendToServer(new MagicFlyingMessage(false, prevFlying, getMagicPoint(player, world, stack, hand)));
+		CaveNetworkRegistry.sendToServer(new MagicInvisibleMessage(false, 0));
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int getSpellingSpeed(int spellingSpeed)
 	{
-		return allowFlying ? 30 : spellingSpeed;
+		return invisible ? 30 : spellingSpeed;
 	}
 
 	@Override
@@ -123,13 +103,13 @@ public class MagicFlying implements IMagic
 	@Override
 	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		return Math.max(6 - getMagicLevel(), 1);
+		return 25 * getMagicLevel();
 	}
 
 	@Override
 	public int getMagicPoint(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		return flyingTime > 0 ? IMagic.super.getMagicPoint(player, world, stack, hand) : 0;
+		return invisible ? IMagic.super.getMagicPoint(player, world, stack, hand) : 0;
 	}
 
 	@Override

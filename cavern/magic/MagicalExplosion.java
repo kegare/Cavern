@@ -80,10 +80,10 @@ public class MagicalExplosion extends CustomExplosion
 
 	public static MagicalExplosion createExplosion(World world, @Nullable Entity entity, double x, double y, double z, float strength, boolean damagesTerrain)
 	{
-		return newExplosion(world, entity, x, y, z, strength, false, damagesTerrain);
+		return newExplosion(world, entity, x, y, z, strength, false, damagesTerrain, true);
 	}
 
-	public static MagicalExplosion newExplosion(World world, @Nullable Entity entity, double x, double y, double z, float strength, boolean flaming, boolean damagesTerrain)
+	public static MagicalExplosion newExplosion(World world, @Nullable Entity entity, double x, double y, double z, float strength, boolean flaming, boolean damagesTerrain, boolean attackEntities)
 	{
 		if (FMLCommonHandler.instance().getSide().isServer())
 		{
@@ -105,7 +105,10 @@ public class MagicalExplosion extends CustomExplosion
 			explosion.clearAffectedBlockPositions();
 		}
 
-		explosion.doExplosionEntities();
+		if (attackEntities)
+		{
+			explosion.doExplosionEntities();
+		}
 
 		for (EntityPlayer player : world.playerEntities)
 		{

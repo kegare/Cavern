@@ -72,15 +72,18 @@ public class CompositingManager implements ICompositingManager
 		manager.addRecipe(new CompositingRecipeUpgradeMagicalBook());
 		manager.addRecipe(new CompositingRecipeRepair());
 
-		manager.addRecipe(ItemElixir.EnumType.ELIXIR_NORMAL.getItemStack(), 1.0D, 50,
+		manager.addRecipe(ItemElixir.EnumType.NORMAL.getItemStack(), 1.0D, 50,
 			PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER),
 			ItemAcresia.EnumType.FRUITS.getItemStack(), ItemCave.EnumType.AQUAMARINE.getItemStack());
-		manager.addRecipe(ItemElixir.EnumType.ELIXIR_MEDIUM.getItemStack(), 0.65D, 100,
-			ItemElixir.EnumType.ELIXIR_NORMAL.getItemStack(),
+		manager.addRecipe(ItemElixir.EnumType.MEDIUM.getItemStack(), 0.65D, 100,
+			ItemElixir.EnumType.NORMAL.getItemStack(),
 			ItemAcresia.EnumType.FRUITS.getItemStack(3), new ItemStack(Items.DYE, 1, EnumDyeColor.BLUE.getDyeDamage()));
-		manager.addRecipe(ItemElixir.EnumType.ELIXIR_HIGH.getItemStack(), 0.35D, 250,
-			ItemElixir.EnumType.ELIXIR_MEDIUM.getItemStack(),
+		manager.addRecipe(ItemElixir.EnumType.HIGH.getItemStack(), 0.35D, 250,
+			ItemElixir.EnumType.MEDIUM.getItemStack(),
 			ItemAcresia.EnumType.FRUITS.getItemStack(5), ItemCave.EnumType.MAGNITE_INGOT.getItemStack());
+		manager.addRecipe(ItemElixir.EnumType.AWAKEN.getItemStack(), 0.35D, 250,
+			ItemElixir.EnumType.HIGH.getItemStack(),
+			ItemAcresia.EnumType.FRUITS.getItemStack(5), ItemCave.EnumType.MANALITE.getItemStack());
 
 		manager.addRecipe(new ItemStack(CaveItems.CAVENIC_BOW), 0.7D, 100,
 			new ItemStack(Items.BOW), ItemCave.EnumType.CAVENIC_ORB.getItemStack(4));

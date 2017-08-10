@@ -43,6 +43,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityWitch;
@@ -70,6 +71,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
@@ -504,21 +506,53 @@ public class CaveEventHooks
 				}
 				else if (elixirChance >= 1.0D || elixirChance > 0.0D && RANDOM.nextDouble() < elixirChance)
 				{
-					int elixirRank = 1;
+					ItemElixir.EnumType type = ItemElixir.EnumType.NORMAL;
 
-					if (RANDOM.nextDouble() < 0.5D)
+					if (RANDOM.nextDouble() < 0.45D)
 					{
-						++elixirRank;
+						type = ItemElixir.EnumType.MEDIUM;
 					}
 
-					if (RANDOM.nextDouble() < 0.125D)
+					if (RANDOM.nextDouble() < 0.15D)
 					{
-						++elixirRank;
+						type = type == ItemElixir.EnumType.MEDIUM ? ItemElixir.EnumType.HIGH : ItemElixir.EnumType.NORMAL;
 					}
 
-					drops.add(new EntityItem(world, posX, posY, posZ, ItemElixir.EnumType.byMetadata(elixirRank - 1).getItemStack()));
+					if (RANDOM.nextDouble() < 0.03D)
+					{
+						type = ItemElixir.EnumType.AWAKEN;
+					}
+
+					drops.add(new EntityItem(world, posX, posY, posZ, type.getItemStack()));
 				}
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onLivingSetAttackTarget(LivingSetAttackTargetEvent event)
+	{
+		EntityLivingBase target = event.getTarget();
+
+		if (target == null || !(target instanceof EntityPlayer))
+		{
+			return;
+		}
+
+		EntityPlayer player = (EntityPlayer)target;
+
+		if (!MagicianStats.get(player).isInvisible())
+		{
+			return;
+		}
+
+		EntityLivingBase entity = event.getEntityLiving();
+
+		entity.setRevengeTarget(null);
+
+		if (entity instanceof EntityLiving)
+		{
+			((EntityLiving)entity).setAttackTarget(null);
 		}
 	}
 

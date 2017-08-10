@@ -3,6 +3,8 @@ package cavern.magic;
 import javax.annotation.Nullable;
 
 import cavern.core.CaveSounds;
+import cavern.network.CaveNetworkRegistry;
+import cavern.network.server.MagicResultMessage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -22,7 +24,10 @@ public interface IMagic
 	}
 
 	@SideOnly(Side.CLIENT)
-	public default void onSpellingTick(ItemStack stack, EnumHand hand, long spellingTime, long magicSpellTime, double progress) {}
+	public default boolean onSpellingTick(ItemStack stack, EnumHand hand, long spellingTime, long magicSpellTime, double progress)
+	{
+		return true;
+	}
 
 	@SideOnly(Side.CLIENT)
 	public default boolean shouldCauseSpellingParticles(ItemStack stack, EnumHand hand, long spellingTime, long magicSpellTime, double progress)
@@ -78,6 +83,15 @@ public interface IMagic
 	}
 
 	public boolean executeMagic(EntityPlayer player, World world, ItemStack stack, EnumHand hand);
+
+	@SideOnly(Side.CLIENT)
+	public default void sendMagicResult(int cost, int point, boolean finish)
+	{
+		if (finish)
+		{
+			CaveNetworkRegistry.sendToServer(new MagicResultMessage(cost, point));
+		}
+	}
 
 	@Nullable
 	public default SoundEvent getMagicSound()
