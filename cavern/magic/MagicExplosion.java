@@ -40,7 +40,7 @@ public class MagicExplosion implements IMagic
 	@Override
 	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		return 30 * getMagicLevel();
+		return 50 * getMagicLevel();
 	}
 
 	@Override

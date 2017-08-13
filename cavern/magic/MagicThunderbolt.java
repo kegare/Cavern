@@ -54,7 +54,7 @@ public class MagicThunderbolt implements IEntityMagic
 	@Override
 	public int getMagicCost(EntityPlayer player, World world, ItemStack stack, EnumHand hand)
 	{
-		return 25 * getMagicLevel();
+		return 30 * getMagicLevel();
 	}
 
 	@Override

@@ -116,6 +116,11 @@ public class MagicReturn implements IEntityMagic
 		EntityLivingBase target = (EntityLivingBase)entity;
 		BlockPos spawnPos = player.getBedLocation();
 
+		if (spawnPos != null)
+		{
+			spawnPos = EntityPlayer.getBedSpawnLocation(world, spawnPos, true);
+		}
+
 		if (spawnPos == null)
 		{
 			errorCode = 1;

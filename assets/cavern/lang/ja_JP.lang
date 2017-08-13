@@ -363,6 +363,7 @@ item.magicalBook.return.name=リターン
 item.magicalBook.return.no=リスポーン地点が存在しません
 item.magicalBook.heal.name=ヒール
 item.magicalBook.holyBless.name=ホーリーブレス
+item.magicalBook.holyBless.failed=ホーリーブレスはまだ発動できません
 item.magicalBook.storage.name=ストレージ
 item.magicalBook.storage.stock=在庫
 item.magicalBook.warp.name=ワープ

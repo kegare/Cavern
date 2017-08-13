@@ -248,7 +248,12 @@ public class MagicEventHooks
 
 	private void stopSpelling()
 	{
+		Minecraft mc = FMLClientHandler.instance().getClient();
+
 		spellingMagic.onStopSpelling(spellingBook, spellingHand, spellingTime, spellingProgress);
+
+		int cost = spellingMagic.getMagicCost(mc.player, mc.world, spellingBook, spellingHand);
+		int point = spellingMagic.getMagicPoint(mc.player, mc.world, spellingBook, spellingHand);
 
 		spellingStartTime = 0L;
 		magicSpelled = true;
@@ -256,16 +261,12 @@ public class MagicEventHooks
 		spellingBook = null;
 		spellingProgress = 0.0D;
 
-		Minecraft mc = FMLClientHandler.instance().getClient();
 		SoundEvent sound = spellingMagic.getStopSpellingSound();
 
 		if (sound != null)
 		{
 			mc.getSoundHandler().playDelayedSound(PositionedSoundRecord.getMasterRecord(sound, 1.0F), 3);
 		}
-
-		int cost = spellingMagic.getMagicCost(mc.player, mc.world, spellingBook, spellingHand);
-		int point = spellingMagic.getMagicPoint(mc.player, mc.world, spellingBook, spellingHand);
 
 		spellingMagic.sendMagicResult(cost, point, false);
 	}

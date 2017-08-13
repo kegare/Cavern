@@ -7,12 +7,14 @@ import com.google.common.collect.Sets;
 import cavern.core.CaveSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -75,12 +77,27 @@ public class MagicHeal implements IEntityMagic
 			return true;
 		}
 
-		if (getMagicLevel() <= 2)
+		if (getMagicLevel() <= 1 || !player.canEntityBeSeen(entity))
 		{
 			return false;
 		}
 
-		return player.canEntityBeSeen(entity);
+		if (entity instanceof EntityPlayer)
+		{
+			return true;
+		}
+
+		if (entity instanceof IEntityOwnable)
+		{
+			IEntityOwnable ownable = (IEntityOwnable)entity;
+
+			if (player.isEntityEqual(ownable.getOwner()) || player.getCachedUniqueIdString().equals(ownable.getOwnerId().toString()))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public boolean shouldHeal(EntityLivingBase entity)
@@ -92,12 +109,12 @@ public class MagicHeal implements IEntityMagic
 	public boolean execute(EntityPlayer player, Entity entity, World world, ItemStack stack, EnumHand hand)
 	{
 		EntityLivingBase target = (EntityLivingBase)entity;
-		boolean healBadPotion = getMagicLevel() > 1;
+		boolean healBadPotion = getMagicLevel() > 2;
 		boolean healed = false;
 
 		if (shouldHeal(target))
 		{
-			target.heal(player.getMaxHealth() * 0.5F);
+			target.heal(player.getMaxHealth() * MathHelper.clamp(0.25F * getMagicLevel(), 0.5F, 1.0F));
 
 			healed = true;
 		}

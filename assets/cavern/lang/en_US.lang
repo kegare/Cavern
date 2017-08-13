@@ -376,6 +376,7 @@ item.magicalBook.return.name=Return
 item.magicalBook.return.no=Your respawn point does not exist
 item.magicalBook.heal.name=Heal
 item.magicalBook.holyBless.name=Holy Bless
+item.magicalBook.holyBless.failed=Holy Bless magic cannot use yet
 item.magicalBook.storage.name=Storage
 item.magicalBook.storage.stock=Stock
 item.magicalBook.warp.name=Warp
