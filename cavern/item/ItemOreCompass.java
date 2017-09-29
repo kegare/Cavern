@@ -83,7 +83,7 @@ public class ItemOreCompass extends Item
 			@SideOnly(Side.CLIENT)
 			private double getFrameRotation(EntityItemFrame entity)
 			{
-				return MathHelper.clampAngle(180 + entity.facingDirection.getHorizontalIndex() * 90);
+				return MathHelper.wrapDegrees(180 + entity.facingDirection.getHorizontalIndex() * 90);
 			}
 		});
 	}

@@ -63,7 +63,7 @@ public class ItemAxeManalite extends ItemAxeCave
 						continue;
 					}
 
-					double dist = target.getDistanceSqToEntity(entity);
+					double dist = target.getDistanceSq(entity);
 					Vec3d vec = getSmashVector(player, dist <= 2.0D, (itemRand.nextDouble() + 1.0D) * 1.15D, 0.1D);
 
 					entity.attackEntityFrom(DamageSource.MAGIC, 5.0F);

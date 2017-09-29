@@ -235,7 +235,7 @@ public class ItemCavenicBow extends ItemBow
 				entityArrow = arrow.createArrow(world, ammo, player);
 			}
 
-			entityArrow.setAim(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
+			entityArrow.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
 
 			if (f >= 1.0D || mode == BowMode.SNIPE && f >= 0.65D)
 			{

@@ -131,7 +131,7 @@ public class EntityCavenicWitch extends EntityWitch implements ICavenicMob
 				EntityPotion entity = new EntityPotion(world, this, PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), potion));
 
 				entity.rotationPitch -= -20.0F;
-				entity.setThrowableHeading(d1, d2 + f * 0.2F, d3, 0.75F, 8.0F);
+				entity.shoot(d1, d2 + f * 0.2F, d3, 0.75F, 8.0F);
 
 				world.playSound(null, posX, posY, posZ, SoundEvents.ENTITY_WITCH_THROW, getSoundCategory(), 1.0F, 0.8F + rand.nextFloat() * 0.4F);
 				world.spawnEntity(entity);

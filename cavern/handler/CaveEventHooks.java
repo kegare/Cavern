@@ -316,9 +316,7 @@ public class CaveEventHooks
 
 				stats.addPoint(amount);
 
-				MinerStats.setLastMine(new BlockMeta(state), amount);
-
-				CaveNetworkRegistry.sendTo(new LastMineMessage(MinerStats.lastMine, MinerStats.lastMinePoint), player);
+				CaveNetworkRegistry.sendTo(new LastMineMessage(new BlockMeta(state), amount), player);
 			}
 		}
 
@@ -438,7 +436,7 @@ public class CaveEventHooks
 					player.motionX *= motion;
 					player.motionZ *= motion;
 
-					if (player.isCollidedHorizontally && player.isOffsetPositionInLiquid(player.motionX, player.motionY + 0.6000000238418579D - player.posY + posY, player.motionZ))
+					if (player.collidedHorizontally && player.isOffsetPositionInLiquid(player.motionX, player.motionY + 0.6000000238418579D - player.posY + posY, player.motionZ))
 					{
 						player.motionY = 0.30000001192092896D;
 					}

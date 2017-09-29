@@ -65,7 +65,7 @@ public class BlockMeta implements Comparable<BlockMeta>
 
 	public IBlockState getBlockState()
 	{
-		return block.getStateFromMeta(meta);
+		return ObjectUtils.defaultIfNull(CaveUtils.getBlockStateFromMeta(block, meta), block.getDefaultState());
 	}
 
 	public String getBlockName()

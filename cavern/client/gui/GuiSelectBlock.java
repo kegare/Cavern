@@ -24,8 +24,10 @@ import cavern.config.Config;
 import cavern.util.ArrayListExtended;
 import cavern.util.BlockMeta;
 import cavern.util.CaveFilters;
+import cavern.util.CaveUtils;
 import cavern.util.PanoramaPaths;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -85,7 +87,14 @@ public class GuiSelectBlock extends GuiScreen
 
 				int meta = stack.getMetadata();
 
-				if (meta < 0 || meta > 15 || sub.hasTileEntity(sub.getStateFromMeta(meta)))
+				if (meta < 0 || meta > 15)
+				{
+					continue;
+				}
+
+				IBlockState state = CaveUtils.getBlockStateFromMeta(sub, meta);
+
+				if (state == null || sub.hasTileEntity(state))
 				{
 					continue;
 				}

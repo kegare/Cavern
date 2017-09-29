@@ -48,16 +48,16 @@ public class ItemPickaxeIce extends ItemPickaxeCave
 	}
 
 	@Override
-	public float getStrVsBlock(ItemStack stack, IBlockState state)
+	public float getDestroySpeed(ItemStack stack, IBlockState state)
 	{
 		Material material = state.getMaterial();
 
 		if (material == Material.ICE || material == Material.PACKED_ICE)
 		{
-			return efficiencyOnProperMaterial;
+			return efficiency;
 		}
 
-		return super.getStrVsBlock(stack, state);
+		return super.getDestroySpeed(stack, state);
 	}
 
 	@Override

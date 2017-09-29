@@ -110,7 +110,7 @@ public class ItemBowManalite extends ItemBow
 		{
 			EntityArrow entityArrow = new EntityMagicalArrow(world, player);
 
-			entityArrow.setAim(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 2.85F, 1.0F);
+			entityArrow.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 2.85F, 1.0F);
 
 			if (f >= 1.0D)
 			{

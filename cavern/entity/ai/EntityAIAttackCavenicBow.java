@@ -115,7 +115,7 @@ public class EntityAIAttackCavenicBow<T extends EntityMob & IRangedAttackMob> ex
 
 			if (dist <= maxAttackDistance && seeTime >= 15)
 			{
-				attacker.getNavigator().clearPathEntity();
+				attacker.getNavigator().clearPath();
 				++strafingTime;
 			}
 			else

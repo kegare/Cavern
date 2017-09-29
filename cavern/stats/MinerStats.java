@@ -45,9 +45,10 @@ public class MinerStats implements IMinerStats
 	public static final Table<Block, Integer, Integer> MINING_POINTS = HashBasedTable.create();
 	public static final Set<IMineBonus> MINE_BONUS = Sets.newHashSet();
 
+	@SideOnly(Side.CLIENT)
 	public static BlockMeta lastMine;
+	@SideOnly(Side.CLIENT)
 	public static int lastMinePoint;
-
 	@SideOnly(Side.CLIENT)
 	public static long lastMineTime;
 	@SideOnly(Side.CLIENT)
@@ -367,6 +368,7 @@ public class MinerStats implements IMinerStats
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public static void setLastMine(BlockMeta blockMeta, int point)
 	{
 		lastMine = blockMeta;

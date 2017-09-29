@@ -282,7 +282,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 	{
 		ItemStack held = player.getHeldItem(hand);
 
-		if (held.isEmpty() || getDistanceSqToEntity(player) > 5.0D)
+		if (held.isEmpty() || getDistanceSq(player) > 5.0D)
 		{
 			return false;
 		}
