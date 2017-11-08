@@ -6,7 +6,6 @@ import org.lwjgl.util.glu.Project;
 import cavern.util.PanoramaPaths;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiDownloadTerrain;
-import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -30,9 +29,9 @@ public class GuiDownloadCaveTerrain extends GuiDownloadTerrain
 
 	public PanoramaPaths currentPanoramaPaths;
 
-	public GuiDownloadCaveTerrain(NetHandlerPlayClient handler)
+	public GuiDownloadCaveTerrain()
 	{
-		super(handler);
+		super();
 		this.mc = FMLClientHandler.instance().getClient();
 		this.viewportTexture = new DynamicTexture(256, 256);
 		this.panoramaBackground = mc.getTextureManager().getDynamicTextureLocation("background", viewportTexture);

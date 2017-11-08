@@ -2,7 +2,6 @@ package cavern.client.gui;
 
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,11 +13,6 @@ public class GuiLoadCaveTerrain extends GuiDownloadCaveTerrain
 	private int progress;
 
 	private boolean renderWorker;
-
-	public GuiLoadCaveTerrain(NetHandlerPlayClient handler)
-	{
-		super(handler);
-	}
 
 	@Override
 	public String getInfoText()
