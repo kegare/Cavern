@@ -15,7 +15,10 @@ import cavern.api.IMagicianStats;
 import cavern.api.IMinerStats;
 import cavern.api.IPlayerData;
 import cavern.block.BlockCave;
+import cavern.block.BlockLeavesPerverted;
+import cavern.block.BlockLogPerverted;
 import cavern.block.BlockPortalCavern;
+import cavern.block.BlockSaplingPerverted;
 import cavern.block.CaveBlocks;
 import cavern.config.GeneralConfig;
 import cavern.core.CaveSounds;
@@ -35,6 +38,7 @@ import cavern.stats.PlayerData;
 import cavern.util.BlockMeta;
 import cavern.util.CaveUtils;
 import cavern.util.WeightedItemStack;
+import cavern.world.CaveType;
 import cavern.world.WorldCachedData;
 import cavern.world.WorldProviderIceCavern;
 import net.minecraft.block.Block;
@@ -75,6 +79,7 @@ import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
+import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
@@ -197,6 +202,17 @@ public class CaveEventHooks
 			}
 
 			playerData.setLastTeleportTime(type, world.getTotalWorldTime());
+
+			if (type == CaveType.DIM_CAVENIA)
+			{
+				CaveUtils.grantCriterion(player, "cavenia/root", "entered_cavenia");
+			}
+			else if (type != CaveType.DIM_CAVERN)
+			{
+				String suffix = type.getSuffix();
+
+				CaveUtils.grantCriterion(player, "enter_the" + suffix, "entered" + suffix);
+			}
 		}
 	}
 
@@ -632,6 +648,27 @@ public class CaveEventHooks
 					CaveUtils.grantAdvancement(player, "ice_charge");
 				}
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onFurnaceFuelBurnTime(FurnaceFuelBurnTimeEvent event)
+	{
+		ItemStack stack = event.getItemStack();
+		Block block = Block.getBlockFromItem(stack.getItem());
+
+		if (block == null)
+		{
+			return;
+		}
+
+		if (block instanceof BlockLogPerverted)
+		{
+			event.setBurnTime(100);
+		}
+		else if (block instanceof BlockLeavesPerverted || block instanceof BlockSaplingPerverted)
+		{
+			event.setBurnTime(35);
 		}
 	}
 }

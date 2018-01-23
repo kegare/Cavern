@@ -13,10 +13,7 @@
     "parent": "cavern:get_diamond",
     "criteria": {
         "entered_huge_cavern": {
-            "trigger": "minecraft:changed_dimension",
-            "conditions": {
-                "to": "Huge Cavern"
-            }
+            "trigger": "minecraft:impossible"
         }
     }
 }

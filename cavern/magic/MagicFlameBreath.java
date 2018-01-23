@@ -70,28 +70,25 @@ public class MagicFlameBreath implements IMagic
 		{
 			double dist = Math.sqrt(blockPos.distanceSq(pos));
 
-			if (dist > range)
+			if (dist > range || !world.isAirBlock(pos))
 			{
 				continue;
 			}
 
 			BlockPos down = pos.down();
 
-			if (world.isAirBlock(pos))
+			if (world.isAirBlock(down) || world.isRainingAt(down))
 			{
-				if (world.isAirBlock(down) || !world.isRainingAt(down))
-				{
-					continue;
-				}
+				continue;
+			}
 
-				BlockPos up = pos.up();
+			BlockPos up = pos.up();
 
-				if (world.isAirBlock(up) && RANDOM.nextInt(Math.max(5 - level, 2)) == 0)
-				{
-					world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+			if (world.isAirBlock(up) && RANDOM.nextInt(Math.max(5 - level, 2)) == 0)
+			{
+				world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 
-					++count;
-				}
+				++count;
 			}
 		}
 

@@ -13,7 +13,6 @@ import cavern.config.manager.CaveVein;
 import cavern.config.manager.CaveVeinManager;
 import cavern.core.Cavern;
 import cavern.util.BlockMeta;
-import cavern.world.CaveType;
 import net.minecraft.block.BlockSand;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.config.Configuration;
@@ -34,7 +33,7 @@ public class CavelandConfig
 	public static int monsterSpawn;
 	public static double caveBrightness;
 
-	public static CaveVeinManager veinManager = new CaveVeinManager(CaveType.CAVELAND);
+	public static CaveVeinManager veinManager = new CaveVeinManager();
 
 	public static void syncConfig()
 	{

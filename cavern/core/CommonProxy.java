@@ -28,7 +28,7 @@ public class CommonProxy
 	{
 		if (player != null && player instanceof EntityPlayerMP)
 		{
-			((EntityPlayerMP)player).interactionManager.getBlockReachDistance();
+			((EntityPlayerMP)player).interactionManager.player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
 		}
 
 		return 0.0F;

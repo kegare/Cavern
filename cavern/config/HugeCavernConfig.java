@@ -17,7 +17,6 @@ import cavern.config.manager.CaveVeinManager;
 import cavern.config.property.ConfigBiomeType;
 import cavern.core.Cavern;
 import cavern.util.BlockMeta;
-import cavern.world.CaveType;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.BlockStone;
 import net.minecraft.init.Biomes;
@@ -42,8 +41,8 @@ public class HugeCavernConfig
 	public static int monsterSpawn;
 	public static double caveBrightness;
 
-	public static CaveBiomeManager biomeManager = new CaveBiomeManager(CaveType.HUGE_CAVERN);
-	public static CaveVeinManager veinManager = new CaveVeinManager(CaveType.HUGE_CAVERN);
+	public static CaveBiomeManager biomeManager = new CaveBiomeManager();
+	public static CaveVeinManager veinManager = new CaveVeinManager();
 
 	public static void syncConfig()
 	{

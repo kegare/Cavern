@@ -14,10 +14,7 @@
     },
     "criteria": {
         "entered_cavenia": {
-            "trigger": "minecraft:changed_dimension",
-            "conditions": {
-                "to": "Cavenia"
-            }
+            "trigger": "minecraft:impossible"
         }
     }
 }

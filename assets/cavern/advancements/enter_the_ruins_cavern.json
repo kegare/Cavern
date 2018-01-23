@@ -13,10 +13,7 @@
     "parent": "cavern:get_miner_orb",
     "criteria": {
         "entered_ruins_cavern": {
-            "trigger": "minecraft:changed_dimension",
-            "conditions": {
-                "to": "Ruins Cavern"
-            }
+            "trigger": "minecraft:impossible"
         }
     }
 }

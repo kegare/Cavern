@@ -13,10 +13,7 @@
     "parent": "cavern:mine_aquamarine",
     "criteria": {
         "entered_aqua_cavern": {
-            "trigger": "minecraft:changed_dimension",
-            "conditions": {
-                "to": "Aqua Cavern"
-            }
+            "trigger": "minecraft:impossible"
         }
     }
 }

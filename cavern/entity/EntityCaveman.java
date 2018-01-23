@@ -282,7 +282,7 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 	{
 		ItemStack held = player.getHeldItem(hand);
 
-		if (held.isEmpty() || getDistanceSq(player) > 5.0D)
+		if (held.isEmpty() || getDistanceSq(player) > 3.0D)
 		{
 			return false;
 		}
@@ -291,8 +291,6 @@ public class EntityCaveman extends EntityMob implements ICavenicMob
 
 		if (!world.isRemote)
 		{
-			player.setHeldItem(hand, onItemStackPickup(held));
-
 			player.displayGUIChest(backpackInventory);
 
 			playPickupSound();

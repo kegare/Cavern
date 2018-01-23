@@ -25,7 +25,6 @@ import cavern.entity.EntityCavenicSkeleton;
 import cavern.entity.EntityCavenicSpider;
 import cavern.entity.EntityCavenicZombie;
 import cavern.util.BlockMeta;
-import cavern.world.CaveType;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.BlockStone;
 import net.minecraft.entity.Entity;
@@ -70,8 +69,8 @@ public class CavernConfig
 	public static int monsterSpawn;
 	public static double caveBrightness;
 
-	public static CaveBiomeManager biomeManager = new CaveBiomeManager(CaveType.CAVERN);
-	public static CaveVeinManager veinManager = new CaveVeinManager(CaveType.CAVERN);
+	public static CaveBiomeManager biomeManager = new CaveBiomeManager();
+	public static CaveVeinManager veinManager = new CaveVeinManager();
 
 	public static void syncConfig()
 	{

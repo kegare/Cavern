@@ -13,10 +13,7 @@
     "parent": "cavern:pick_sapling",
     "criteria": {
         "entered_caveland": {
-            "trigger": "minecraft:changed_dimension",
-            "conditions": {
-                "to": "Caveland"
-            }
+            "trigger": "minecraft:impossible"
         }
     }
 }

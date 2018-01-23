@@ -12,18 +12,6 @@ public class CaveVeinManager
 
 	public Configuration config;
 
-	private int type;
-
-	public CaveVeinManager(int type)
-	{
-		this.type = type;
-	}
-
-	public int getType()
-	{
-		return type;
-	}
-
 	public boolean addCaveVein(CaveVein vein)
 	{
 		return getCaveVeins().add(vein);

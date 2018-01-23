@@ -17,7 +17,6 @@ import cavern.config.manager.CaveVeinManager;
 import cavern.config.property.ConfigEntities;
 import cavern.core.Cavern;
 import cavern.util.BlockMeta;
-import cavern.world.CaveType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -47,7 +46,7 @@ public class IceCavernConfig
 	public static int monsterSpawn;
 	public static double caveBrightness;
 
-	public static CaveVeinManager veinManager = new CaveVeinManager(CaveType.ICE_CAVERN);
+	public static CaveVeinManager veinManager = new CaveVeinManager();
 
 	public static void syncConfig()
 	{

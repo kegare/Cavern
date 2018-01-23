@@ -17,7 +17,6 @@ import cavern.config.manager.CaveVeinManager;
 import cavern.config.property.ConfigBiomeType;
 import cavern.core.Cavern;
 import cavern.util.BlockMeta;
-import cavern.world.CaveType;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.BlockStone;
 import net.minecraft.init.Biomes;
@@ -45,8 +44,8 @@ public class CaveniaConfig
 	public static boolean keepInventory;
 	public static boolean keepExperiences;
 
-	public static CaveBiomeManager biomeManager = new CaveBiomeManager(CaveType.CAVENIA);
-	public static CaveVeinManager veinManager = new CaveVeinManager(CaveType.CAVENIA);
+	public static CaveBiomeManager biomeManager = new CaveBiomeManager();
+	public static CaveVeinManager veinManager = new CaveVeinManager();
 
 	public static void syncConfig()
 	{

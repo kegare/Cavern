@@ -24,7 +24,6 @@ import cavern.config.MiningAssistConfig;
 import cavern.config.RuinsCavernConfig;
 import cavern.entity.CaveEntityRegistry;
 import cavern.handler.CaveEventHooks;
-import cavern.handler.CaveFuelHandler;
 import cavern.handler.CaveGuiHandler;
 import cavern.handler.CavebornEventHooks;
 import cavern.handler.CaveniaEventHooks;
@@ -41,10 +40,13 @@ import cavern.world.CaveType;
 import cavern.world.RuinsBlockData;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -64,7 +66,6 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -127,8 +128,6 @@ public class Cavern
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		GeneralConfig.syncConfig();
-
-		GameRegistry.registerFuelHandler(new CaveFuelHandler());
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new CaveGuiHandler());
 
@@ -212,6 +211,25 @@ public class Cavern
 		CaveItems.registerRecipes(registry);
 	}
 
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void registerBlockColors(ColorHandlerEvent.Block event)
+	{
+		BlockColors colors = event.getBlockColors();
+
+		CaveBlocks.registerBlockColors(colors);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void registerItemColors(ColorHandlerEvent.Item event)
+	{
+		ItemColors itemColors = event.getItemColors();
+		BlockColors blockColors = event.getBlockColors();
+
+		CaveBlocks.registerItemBlockColors(blockColors, itemColors);
+	}
+
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
@@ -256,12 +274,6 @@ public class Cavern
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		if (event.getSide().isClient())
-		{
-			CaveBlocks.registerBlockColors();
-			CaveBlocks.registerItemBlockColors();
-		}
-
 		RuinsBlockData.init();
 	}
 

@@ -1,5 +1,7 @@
 package cavern.world;
 
+import com.google.common.base.Strings;
+
 import cavern.config.AquaCavernConfig;
 import cavern.config.CavelandConfig;
 import cavern.config.CaveniaConfig;
@@ -8,18 +10,11 @@ import cavern.config.HugeCavernConfig;
 import cavern.config.IceCavernConfig;
 import cavern.config.RuinsCavernConfig;
 import net.minecraft.world.DimensionType;
+import net.minecraft.world.WorldProvider;
 import net.minecraftforge.common.DimensionManager;
 
 public class CaveType
 {
-	public static final int CAVERN = 0;
-	public static final int RUINS_CAVERN = 1;
-	public static final int AQUA_CAVERN = 2;
-	public static final int CAVELAND = 3;
-	public static final int ICE_CAVERN = 4;
-	public static final int CAVENIA = 5;
-	public static final int HUGE_CAVERN = 6;
-
 	public static DimensionType DIM_CAVERN;
 	public static DimensionType DIM_RUINS_CAVERN;
 	public static DimensionType DIM_AQUA_CAVERN;
@@ -28,52 +23,52 @@ public class CaveType
 	public static DimensionType DIM_CAVENIA;
 	public static DimensionType DIM_HUGE_CAVERN;
 
+	public static DimensionType register(String name, int id, Class<? extends WorldProvider> provider)
+	{
+		if (Strings.isNullOrEmpty(name) || id == 0 || DimensionManager.isDimensionRegistered(id))
+		{
+			return null;
+		}
+
+		DimensionType type = DimensionType.register(name, "_" + name.replace(" ", "_").toLowerCase(), id, provider, false);
+
+		DimensionManager.registerDimension(id, type);
+
+		return type;
+	}
+
 	public static void registerDimensions()
 	{
-		DIM_CAVERN = DimensionType.register("Cavern", "_cavern", CavernConfig.dimensionId, WorldProviderCavern.class, false);
-
-		DimensionManager.registerDimension(DIM_CAVERN.getId(), DIM_CAVERN);
+		DIM_CAVERN = register("Cavern", CavernConfig.dimensionId, WorldProviderCavern.class);
 
 		if (!AquaCavernConfig.dimensionDisabled)
 		{
-			DIM_AQUA_CAVERN = DimensionType.register("Aqua Cavern", "_aqua_cavern", AquaCavernConfig.dimensionId, WorldProviderAquaCavern.class, false);
-
-			DimensionManager.registerDimension(DIM_AQUA_CAVERN.getId(), DIM_AQUA_CAVERN);
+			DIM_AQUA_CAVERN = register("Aqua Cavern", AquaCavernConfig.dimensionId, WorldProviderAquaCavern.class);
 		}
 
 		if (!CavelandConfig.dimensionDisabled)
 		{
-			DIM_CAVELAND = DimensionType.register("Caveland", "_caveland", CavelandConfig.dimensionId, WorldProviderCaveland.class, false);
-
-			DimensionManager.registerDimension(DIM_CAVELAND.getId(), DIM_CAVELAND);
+			DIM_CAVELAND = register("Caveland", CavelandConfig.dimensionId, WorldProviderCaveland.class);
 		}
 
 		if (!IceCavernConfig.dimensionDisabled)
 		{
-			DIM_ICE_CAVERN = DimensionType.register("Ice Cavern", "_ice_cavern", IceCavernConfig.dimensionId, WorldProviderIceCavern.class, false);
-
-			DimensionManager.registerDimension(DIM_ICE_CAVERN.getId(), DIM_ICE_CAVERN);
+			DIM_ICE_CAVERN = register("Ice Cavern", IceCavernConfig.dimensionId, WorldProviderIceCavern.class);
 		}
 
 		if (!RuinsCavernConfig.dimensionDisabled)
 		{
-			DIM_RUINS_CAVERN = DimensionType.register("Ruins Cavern", "_ruins_cavern", RuinsCavernConfig.dimensionId, WorldProviderRuinsCavern.class, false);
-
-			DimensionManager.registerDimension(DIM_RUINS_CAVERN.getId(), DIM_RUINS_CAVERN);
+			DIM_RUINS_CAVERN = register("Ruins Cavern", RuinsCavernConfig.dimensionId, WorldProviderRuinsCavern.class);
 		}
 
 		if (!CaveniaConfig.dimensionDisabled)
 		{
-			DIM_CAVENIA = DimensionType.register("Cavenia", "_cavenia", CaveniaConfig.dimensionId, WorldProviderCavenia.class, false);
-
-			DimensionManager.registerDimension(DIM_CAVENIA.getId(), DIM_CAVENIA);
+			DIM_CAVENIA = register("Cavenia", CaveniaConfig.dimensionId, WorldProviderCavenia.class);
 		}
 
 		if (!HugeCavernConfig.dimensionDisabled)
 		{
-			DIM_HUGE_CAVERN = DimensionType.register("Huge Cavern", "_huge_cavern", HugeCavernConfig.dimensionId, WorldProviderHugeCavern.class, false);
-
-			DimensionManager.registerDimension(DIM_HUGE_CAVERN.getId(), DIM_HUGE_CAVERN);
+			DIM_HUGE_CAVERN = register("Huge Cavern", HugeCavernConfig.dimensionId, WorldProviderHugeCavern.class);
 		}
 	}
 }

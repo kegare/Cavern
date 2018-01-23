@@ -16,18 +16,6 @@ public class CaveBiomeManager
 
 	public Configuration config;
 
-	private int type;
-
-	public CaveBiomeManager(int type)
-	{
-		this.type = type;
-	}
-
-	public int getType()
-	{
-		return type;
-	}
-
 	public boolean addCaveBiome(CaveBiome biomeEntry)
 	{
 		return addCaveBiome(biomeEntry, false);

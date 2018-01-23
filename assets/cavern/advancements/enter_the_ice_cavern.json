@@ -13,10 +13,7 @@
     "parent": "cavern:ice_stuff",
     "criteria": {
         "entered_ice_cavern": {
-            "trigger": "minecraft:changed_dimension",
-            "conditions": {
-                "to": "Ice Cavern"
-            }
+            "trigger": "minecraft:impossible"
         }
     }
 }

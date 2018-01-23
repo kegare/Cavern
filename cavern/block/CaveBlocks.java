@@ -153,10 +153,9 @@ public class CaveBlocks
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerBlockColors()
+	public static void registerBlockColors(BlockColors colors)
 	{
 		Minecraft mc = FMLClientHandler.instance().getClient();
-		BlockColors colors = mc.getBlockColors();
 
 		colors.registerBlockColorHandler((state, world, pos, tintIndex) ->
 		{
@@ -190,13 +189,9 @@ public class CaveBlocks
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void registerItemBlockColors()
+	public static void registerItemBlockColors(BlockColors blockColors, ItemColors itemColors)
 	{
-		Minecraft mc = FMLClientHandler.instance().getClient();
-		BlockColors blockColors = mc.getBlockColors();
-		ItemColors colors = mc.getItemColors();
-
-		colors.registerItemColorHandler((stack, tintIndex) ->
+		itemColors.registerItemColorHandler((stack, tintIndex) ->
 		{
 			IBlockState state = ((ItemBlock)stack.getItem()).getBlock().getStateFromMeta(stack.getMetadata());
 
