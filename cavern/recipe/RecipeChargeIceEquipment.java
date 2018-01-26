@@ -138,4 +138,10 @@ public class RecipeChargeIceEquipment extends IForgeRegistryEntry.Impl<IRecipe> 
 	{
 		return resultItem;
 	}
+
+	@Override
+	public boolean isDynamic()
+	{
+		return false;
+	}
 }

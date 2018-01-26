@@ -64,12 +64,12 @@ public enum MagicianRank
 
 		if (minerRank > 0)
 		{
-			bonus += 0.1D * minerRank;
+			bonus += 0.025D * minerRank;
 		}
 
 		if (hunterRank > 0)
 		{
-			bonus += 0.15D * hunterRank;
+			bonus += 0.05D * hunterRank;
 		}
 
 		return MathHelper.floor(getMaxMP() * MathHelper.clamp(bonus, 1.0D, 3.0D)) + MagicianStats.get(player).getBonusMP();

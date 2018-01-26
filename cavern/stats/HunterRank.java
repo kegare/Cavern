@@ -9,13 +9,13 @@ import net.minecraft.item.ItemStack;
 public enum HunterRank
 {
 	CHICKEN(0, 0, 1.0F, 0, "chicken", new ItemStack(Items.CHICKEN)),
-	NOOB(1, 2, 1.1F, 0, "noob", new ItemStack(Items.PORKCHOP)),
-	NOVICE_HUNTER(2, 10, 1.25F, 0, "noviceHunter", new ItemStack(Items.WOODEN_SWORD)),
-	HUNTER(3, 50, 1.5F, 1, "hunter", new ItemStack(Items.IRON_SWORD)),
-	CAVENIC_HUNTER(4, 300, 1.75F, 3, "cavenicHunter", new ItemStack(CaveItems.HEXCITE_SWORD)),
-	CRAZY_HUNTER(5, 500, 2.0F, 5, "crazyHunter", new ItemStack(CaveItems.MAGNITE_SWORD)),
-	RANGER(6, 1000, 3.0F, 10, "ranger", new ItemStack(Items.GOLDEN_SWORD)),
-	CRAZY_RANGER(7, 3000, 5.0F, 15, "crazyRanger", new ItemStack(Items.DIAMOND_SWORD));
+	NOOB(1, 2, 1.0F, 0, "noob", new ItemStack(Items.PORKCHOP)),
+	NOVICE_HUNTER(2, 10, 1.1F, 0, "noviceHunter", new ItemStack(Items.WOODEN_SWORD)),
+	HUNTER(3, 50, 1.2F, 1, "hunter", new ItemStack(Items.IRON_SWORD)),
+	CAVENIC_HUNTER(4, 300, 1.3F, 3, "cavenicHunter", new ItemStack(CaveItems.HEXCITE_SWORD)),
+	CRAZY_HUNTER(5, 500, 1.5F, 5, "crazyHunter", new ItemStack(CaveItems.MAGNITE_SWORD)),
+	RANGER(6, 2000, 2.0F, 10, "ranger", new ItemStack(Items.GOLDEN_SWORD)),
+	CRAZY_RANGER(7, 5000, 3.0F, 15, "crazyRanger", new ItemStack(Items.DIAMOND_SWORD));
 
 	public static final HunterRank[] VALUES = new HunterRank[values().length];
 
